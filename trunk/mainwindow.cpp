@@ -8,10 +8,9 @@ MWindow::MWindow(QWidget *parent)
     keyEventTimer(new QTimer),
     buttonPressed_(false)
 {
-    QRectF footballGround(0,0,401,601);
-    QRectF footballPitch(0,0,400,600);
+    QRectF footballGround(0,0,400,600);
     scoreLabel = new QLabel(QString("XXX"));
-    pitch = new Pitch(footballGround, footballPitch, scoreLabel);
+    pitch = new Pitch(footballGround, scoreLabel);
 
     createActions();
     createKeyboardActions();

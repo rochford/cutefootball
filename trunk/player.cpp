@@ -6,12 +6,12 @@
 #include <QDebug>
 #include <QGraphicsItem>
 
-const int KPlayerDefaultSpeed = 4;
+const int KPlayerDefaultSpeed = 2;
 
 namespace {
 
     MWindow::Action calculateAction(QPointF source,
-                                      QPointF destination)
+                                    QPointF destination)
     {
         const int dx = source.x() - destination.x();
         const int dy = source.y() - destination.y();
@@ -52,10 +52,11 @@ Player::Player(bool computerControlled,
     buttonDown_(false),
     speed_(computerControlled ? KPlayerDefaultSpeed - 1 : KPlayerDefaultSpeed),
     step(0),
-    outOfAction_(new QTimer())
+    outOfAction_(NULL)
 {
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
 
+    outOfAction_ = new QTimer(this);
     outOfAction_->setSingleShot(true);
 
     moveDistance_.insert(MWindow::North, QPointF(0,-speed_));
@@ -211,7 +212,6 @@ void Player::specialAction(MWindow::Action action)
     // if not have ball then must be tackle
     // if have ball then either shot or pass
     if ( hasBall_ ) {
-
         if ( withinShootingDistance() ) {
             QPointF goal;
             // prefer the player closest to the opposition goal
@@ -225,7 +225,6 @@ void Player::specialAction(MWindow::Action action)
         }
         else
         {
-
             qDebug() << "specialAction pass Ball";
 
             Player *p = findAvailableTeamMate();
@@ -274,11 +273,11 @@ void Player::specialAction(MWindow::Action action)
             moveBy(moveDistance_[lastAction_].x(), moveDistance_[lastAction_].y());
             break;
         }
-        outOfAction_->stop();
-        outOfAction_->start(500);
+        //outOfAction_->stop();
+        //outOfAction_->start(500);
 
         // if tackle causes contact with the ball then transfer the ownership
-        if ( 0 ) {
+        if ( ballCollisionCheck() ) {
             Player *p = pitch_->getBall()->controlledBy();
             qDebug() << "specialAction tackle";
             if (p)
@@ -288,10 +287,11 @@ void Player::specialAction(MWindow::Action action)
         }
     }
 }
+
 void Player::isTackled(bool defeated)
 {
     if (defeated) {
-        setPixmap(QPixmap(QString(":/images/tackleWest.PNG")));
+        // TODO use a different pixmap
         // start an out of action timer
         outOfAction_->stop();
         outOfAction_->start(1500);
@@ -302,6 +302,7 @@ bool Player::canPass() const
 {
     return findAvailableTeamMate();
 }
+
 void Player::move(MWindow::Action action)
 {
     //qDebug() << "move start";
@@ -355,23 +356,8 @@ Player* Player::findAvailableTeamMate() const
     return bestPlayer;
 }
 
-bool Player::playerCollisionCheck()
-{
-    // collision check before move...
-    QList<QGraphicsItem*> list = collidingItems(Qt::IntersectsItemBoundingRect);
-    foreach (QGraphicsItem *item, list) {
-        if (item == this)
-            continue;
-        Player *p = qgraphicsitem_cast<Player *>(item);
-        if ( p )
-            return true;
-    }
-    return false;
-}
-
 bool Player::ballCollisionCheck()
 {
-//    qDebug() << "ballCollisionCheck start";
     // collision check before move...
     QList<QGraphicsItem*> list = collidingItems(Qt::IntersectsItemBoundingRect);
     foreach (QGraphicsItem *item, list) {
@@ -379,19 +365,15 @@ bool Player::ballCollisionCheck()
             continue;
         Ball *b = qgraphicsitem_cast<Ball *>(item);
         if ( b ) {
-            // qDebug() << "ballCollisionCheck true";
             return true;
         }
     }
-  //  qDebug() << "ballCollisionCheck false";
     return false;
 }
 
 // player is being man marked
 bool Player::isManMarked() const
 {
-//    qDebug() << "isManMarked start";
-
     // find out where this player is
     QPointF myPos(this->pos());
     // if there is a player of the opposite team within
@@ -446,9 +428,9 @@ void Player::computerAdvanceWithBall()
     //qDebug() << "computerAdvanceWithBall start";
     QPointF destination;
     if (team_->getDirection() == Team::SouthToNorth )
-        destination = QPointF(pitch_->topGoal->rect().right(), pitch_->topGoal->rect().center().y());
+        destination = QPointF(pitch_->topGoal->rect().center().x(), pitch_->topGoal->rect().top());
     else
-        destination = QPointF(pitch_->bottomGoal->rect().left(), pitch_->bottomGoal->rect().center().y());
+        destination = QPointF(pitch_->bottomGoal->rect().center().x(), pitch_->bottomGoal->rect().bottom());
 
     MWindow::Action act = calculateAction(pos(), destination);
 
@@ -460,8 +442,6 @@ void Player::computerAdvanceWithBall()
     // defenders run with it until man marked
     case Player::LeftDefence:
     case Player::RightDefence:
-        move(act);
-        break;
     case Player::LeftMidfield:
     case Player::CentralMidfield:
     case Player::RightMidfield:
@@ -516,13 +496,8 @@ QVariant Player::itemChange(GraphicsItemChange change, const QVariant &value)
      if (change == ItemPositionChange && scene()) {
          // value is the new position.
          QPointF newPos = value.toPointF();
-         QRectF rect = pitch_->footballPitch_;
-         if (!rect.contains(newPos)) {
-             // Keep the item inside the scene rect.
-         //    newPos.setX(qMin(rect.right(), qMax(newPos.x(), rect.left())));
-           //  newPos.setY(qMin(rect.bottom(), qMax(newPos.y(), rect.top())));
-          //   return newPos;
+            // TODO penalty scecnarios
+            // offside scenarios
          }
-     }
      return QGraphicsItem::itemChange(change, value);
  }

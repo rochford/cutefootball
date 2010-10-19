@@ -8,14 +8,12 @@
 #include "team.h"
 
 Pitch::Pitch(const QRectF& footballGroundRect,
-             const QRectF& footballPitchRect,
              QLabel* scoreLabel)
   : QObject(),
     scene(new QGraphicsScene(footballGroundRect)),
     view(new QGraphicsView(scene)),
-    footballPitch_(footballPitchRect),
-    motionTimer_(new QTimer),
-    gameTimer_(new QTimer),
+    motionTimer_(NULL),
+    gameTimer_(NULL),
     nextGameState_(NotStarted),
     lastNearestPlayer(NULL),
     bottomGoal(NULL),
@@ -28,16 +26,23 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view->setAutoFillBackground(false);
 
+    motionTimer_ = new QTimer(this);
+    gameTimer_ = new QTimer(this);
+
+    // create the pitch
+    footballPitch_ = scene->addRect(30, 30, scene->width()-60, scene->height() -60,
+                                    QPen(Qt::white),
+                                    QBrush(Qt::white,Qt::NoBrush) );
+
     // divide the pitch into areas
     // makes it easier for computer based movement
-    QPointF tlTopHalf = scene->sceneRect().topLeft();
-    QPointF brBottomHalf = scene->sceneRect().bottomRight();
-    QPointF brTopHalf = brBottomHalf - QPointF(scene->sceneRect().height()/2,0);
-    QPointF tlBottomHalf = tlTopHalf + QPointF(scene->sceneRect().height()/2,0);
+    QPointF tlTopHalf = footballPitch_->rect().topLeft();
+    QPointF brBottomHalf = footballPitch_->rect().bottomRight();
+    QPointF brTopHalf = brBottomHalf - QPointF(footballPitch_->rect().height()/2,0);
+    QPointF tlBottomHalf = tlTopHalf + QPointF(footballPitch_->rect().height()/2,0);
 
-    const int w = scene->sceneRect().width();
-    const int h = scene->sceneRect().height();
-
+    const int w = footballPitch_->rect().width();
+    const int h = footballPitch_->rect().height();
 
     for (int row = 0; row < KRow; row++) {
         for (int col = 0; col < KColumn; col++) {
@@ -109,7 +114,6 @@ void Pitch::setPiece(Team::Direction, SetPiece s)
 {
 }
 
-
 void Pitch::selectNearestPlayer()
 {
     Player *p = selectNearestPlayer(homeTeam_);
@@ -131,10 +135,6 @@ Pitch::~Pitch()
 {
     lastNearestPlayer = NULL;
     delete ball_;
-    if (motionTimer_) {
-        motionTimer_->stop();
-        delete motionTimer_;
-    }
     delete awayTeam_;
     delete homeTeam_;
 }
@@ -285,8 +285,8 @@ void Pitch::newGame()
 
     createTeamPlayers(homeTeam_);
     connect(ball_, SIGNAL(goalScored(bool)), homeTeam_, SLOT(goalScored(bool)));
-//    createTeamPlayers(awayTeam_);
-//    connect(ball_, SIGNAL(goalScored(bool)), awayTeam_, SLOT(goalScored(bool)));
+    createTeamPlayers(awayTeam_);
+    connect(ball_, SIGNAL(goalScored(bool)), awayTeam_, SLOT(goalScored(bool)));
     kickOff();
 }
 

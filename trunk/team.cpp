@@ -15,7 +15,6 @@ void Team::setHasBall(bool hasBall)
     hasBall ? state_ = Attacking : state_ = Defending;
 }
 
-
 void Team::goalScored(bool isNorthGoal)
 {
     if ( (isNorthGoal && dir_ == Team::SouthToNorth)

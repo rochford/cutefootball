@@ -45,7 +45,6 @@ public:
         GoalScored // reason for another kickoff
     };
     Pitch(const QRectF& footballGroundRect,
-          const QRectF& footballPitchRect,
           QLabel* scoreLabel);
     ~Pitch();
     void action(MWindow::Action act);
@@ -82,7 +81,7 @@ public:
     QList<Player*> players;
     QGraphicsScene *scene;
     QGraphicsView *view;
-    QRectF footballPitch_;
+    QGraphicsRectItem *footballPitch_;
     Team *homeTeam_;
     Team *awayTeam_;
 private:

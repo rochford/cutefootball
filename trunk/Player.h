@@ -37,7 +37,7 @@ public:
     void advance(int phase);
     int speed() { return speed_; }
     bool ballCollisionCheck();
-    bool playerCollisionCheck();
+
     bool isManMarked() const;
 
     void move(MWindow::Action action);
