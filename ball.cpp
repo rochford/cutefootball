@@ -4,8 +4,6 @@
 
 #include <QDebug>
 
-const int KPassFrames = 20.0;
-
 Ball::Ball(Pitch* pitch)
     : QObject(),
     QGraphicsPixmapItem(QPixmap(QString(":/images/ball.png")),NULL),
@@ -13,13 +11,15 @@ Ball::Ball(Pitch* pitch)
     destination_(QPointF(0,0)),
     start_(pitch_->scene->sceneRect().center()),
     step_(0),
-    animation_(new QGraphicsItemAnimation),
-    animationTimer_(new QTimeLine),
+    animation_(NULL),
+    animationTimer_(NULL),
     controlledBy_(NULL)
 {
     setPos(start_.x(), start_.y());
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
 
+    animation_ = new QGraphicsItemAnimation(this);
+    animationTimer_ = new QTimeLine(1000, this);
     animationTimer_->setFrameRange(0, 20);
 
     animation_->setItem(this);
@@ -113,8 +113,7 @@ void Ball::moveBall(MWindow::Action action, int speed)
 
 void Ball::moveBall(MWindow::Action action, QPointF destination)
 {
-    // calculate the differene between present and destination
-//    destination_ = destination;
+    // calculate the difference between present and destination
     QPointF tmp = pos();
 
     const int stepX = (destination.x() - tmp.x()) / 20;
@@ -142,7 +141,7 @@ QVariant Ball::itemChange(GraphicsItemChange change, const QVariant &value)
 
          // value is the new position.
          QPointF newPos = value.toPointF();
-         QRectF rect = pitch_->footballPitch_;
+         QRectF rect = pitch_->footballPitch_->rect();
 
          // has a goal been scored?
          if (pitch_->topGoal->contains(newPos)
@@ -155,33 +154,26 @@ QVariant Ball::itemChange(GraphicsItemChange change, const QVariant &value)
 
          // is the ball out of bounds?
          if (!rect.contains(newPos)) {
+             // no player controls ball now
+             setControlledBy(NULL);
+
              // goal kick or corner?
-
              bool homeTeamTouchedLast = pitch_->homeTeam_->teamHasBall_;
-
-             if (pitch_->scene->sceneRect().x() > newPos.x()) {
-                 // leftToRight goal kick
-                 pitch_->setPiece(Team::NorthToSouth, Pitch::GoalKick);
-                 newPos = pitch_->bottomGoal->rect().topRight();
-                 return newPos;
-             }
-             else if ( pitch_->scene->sceneRect().width() < newPos.x()) {
-                 // rightToLeft goal kick
-                 pitch_->setPiece(Team::SouthToNorth, Pitch::GoalKick);
-                 newPos = pitch_->topGoal->rect().topLeft();
-                 return newPos;
-             }
+             Team::Direction dir;
+             if (homeTeamTouchedLast)
+                 dir = pitch_->awayTeam_->getDirection();
+             else
+                 dir = pitch_->homeTeam_->getDirection();
 
              // throw in?
-             if (pitch_->scene->sceneRect().height() < newPos.y()) {
-                 pitch_->setPiece(Team::NorthToSouth, Pitch::ThrowIn);
-                 newPos.setY(pitch_->scene->sceneRect().height());
+             if (rect.right() < newPos.x()) {
+                 pitch_->setPiece(dir, Pitch::ThrowIn);
+                 newPos.setX(pitch_->footballPitch_->rect().right());
                  return newPos;
              }
-             if (0 > newPos.y()) {
-                 pitch_->setPiece(Team::NorthToSouth, Pitch::ThrowIn);
-                 newPos = pitch_->bottomGoal->rect().topRight();
-                 newPos.setY(0);
+             if (rect.x() > newPos.x()) {
+                 pitch_->setPiece(dir, Pitch::ThrowIn);
+                 newPos.setX(pitch_->footballPitch_->rect().x());
                  return newPos;
              }
          }

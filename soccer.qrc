@@ -1,11 +1,9 @@
 <RCC>
     <qresource prefix="/">
         <file>images/ball.png</file>
-        <file>images/pitch.GIF</file>
         <file>images/ball1.png</file>
         <file>images/ball2.png</file>
         <file>images/ball3.png</file>
-        <file>images/tackleWest.PNG</file>
         <file>images/red/playerEast.PNG</file>
         <file>images/red/playerEast1.PNG</file>
         <file>images/red/playerEast2.PNG</file>
