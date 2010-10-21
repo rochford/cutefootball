@@ -61,5 +61,6 @@
         <file>images/blue/playerWest.PNG</file>
         <file>images/blue/playerWest1.PNG</file>
         <file>images/blue/playerWest2.PNG</file>
+        <file>images/ref.png</file>
     </qresource>
 </RCC>

@@ -13,7 +13,7 @@
 class Player : public QObject,
                public QGraphicsPixmapItem
 {
-        Q_OBJECT;
+    Q_OBJECT
 public:
     enum Role {GoalKeeper = 1,
                LeftDefence,
@@ -73,6 +73,9 @@ private:
 
     void automove();
     bool canPass() const;
+
+    void createMoves();
+    void createPixmaps();
 
 public:
     bool hasBall_;
