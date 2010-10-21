@@ -2,12 +2,15 @@
 #include <QtGlobal>
 #include <QDebug>
 
+#include <QGraphicsItemAnimation>
+
 #include "pitch.h"
 #include "ball.h"
 #include "Player.h"
 #include "team.h"
+#include "referee.h"
 
-#include <QGraphicsItemAnimation>
+
 
 const int KReplayFrameRate = 40.00; // ms
 const int KReallyHighZValue = 10;
@@ -29,6 +32,7 @@ Pitch::Pitch(const QRectF& footballGroundRect)
     replayTimeLine_ = new QTimeLine(KGameLength, this);
     replayTimeLine_->setFrameRange(0, KGameLength/KReplayFrameRate);
     replayTimeLine_->setUpdateInterval(KReplayFrameRate);
+    replayTimeLine_->setCurveShape(QTimeLine::LinearCurve);
 
     scene->setBackgroundBrush(QPixmap(QString(":/images/pitch2.GIF")));
 
@@ -107,7 +111,7 @@ Player* Pitch::selectNearestPlayer(Team* team)
     Player *nearestPlayer(NULL);
     Ball *ball = getBall();
     // nobody has ball, select the closest hometeam
-    foreach (Player *p, players) {
+    foreach (Player *p, players_) {
         if ( p->team_== team ) {
 
             if (!nearestPlayer)
@@ -162,10 +166,10 @@ Pitch::~Pitch()
 
 void Pitch::removePlayers()
 {
-    foreach( Player *p, this->players)
+    foreach( Player *p, players_)
         scene->removeItem(p);
 
-    players.clear();
+    players_.clear();
 }
 
 void Pitch::kickOff(Game state)
@@ -199,6 +203,7 @@ void Pitch::kickOff(Game state)
         needRestartTimers = true;
 
         scene->addItem(ball_);
+        scene->addItem(referee_);
 
         replaySnapShotTimer_->start(KReplayFrameRate);
 
@@ -239,6 +244,7 @@ void Pitch::kickOff(Game state)
         scene->clearFocus();
         // which team won?
         scene->removeItem(ball_);
+        scene->removeItem(referee_);
         removePlayers();
         updateDisplayTime();
         break;
@@ -272,7 +278,7 @@ void Pitch::updateDisplayTime()
         str.append(homeTeam_->name());
         str.append(" ");
         str.append(QString::number(homeTeam_->goals_));
-        str.append(" vs ");
+        str.append(" - ");
 
         str.append(awayTeam_->name());
         str.append(" ");
@@ -288,7 +294,7 @@ void Pitch::hasBallCheck()
     scoreText_->setPos(view->mapToScene(view->rect().topLeft()));
 
     // which team has the ball?
-    foreach (Player *p, players) {
+    foreach (Player *p, players_) {
         if ( p->hasBall_ ) {
             homeTeam_->setHasBall(p->team_== this->homeTeam_);
             awayTeam_->setHasBall(p->team_== this->awayTeam_);
@@ -313,12 +319,14 @@ void Pitch::newGame()
     createTeamPlayers(awayTeam_);
     connect(ball_, SIGNAL(goalScored(bool)), awayTeam_, SLOT(goalScored(bool)));
 
+    referee_ = new Referee(this);
+
     QGraphicsItemAnimation* anim = new QGraphicsItemAnimation(this);
     anim->setItem(ball_);
     anim->setTimeLine(replayTimeLine_);
     animationItems.append(anim);
 
-    foreach (Player *p, players) {
+    foreach (Player *p, players_) {
         QGraphicsItemAnimation* anim = new QGraphicsItemAnimation(this);
         anim->setItem(p);
         anim->setTimeLine(replayTimeLine_);
@@ -357,7 +365,7 @@ void Pitch::action(MWindow::Action action)
         return;
 
     // action is only applicabled to the human controlled player
-    foreach (Player *p, players) {
+    foreach (Player *p, players_) {
         if ( p->humanControlled() && ( p->team_== homeTeam_ ) ) {
             p->move(action);
             return;
@@ -378,7 +386,7 @@ void Pitch::createTeamPlayers(Team *team)
                 this,
                 team,
                 (Player::Role)i);
-        players.append(pl);
+        players_.append(pl);
         scene->addItem(pl);
     }
 }
@@ -410,7 +418,7 @@ void Pitch::setPlayerStartPositions(Team *team)
                          pitchArea[nToS ? 3 : 4][2]);
 
     // action is only applicabled to the human controlled player
-    foreach (Player *p, players) {
+    foreach (Player *p, players_) {
         if (p->team_ == team) {
             p->hasBall_ = false;
             p->startPosition_ = startPositions[p->role_];
@@ -446,7 +454,7 @@ void Pitch::setPlayerDefendPositions(Team *team)
                          pitchArea[nToS ? 3 : 4][2]);
 
     // action is only applicabled to the human controlled player
-    foreach (Player *p, players) {
+    foreach (Player *p, players_) {
         if (p->team_ == team)
             p->defencePosition_ = defendPositions[p->role_];
     }
@@ -479,7 +487,7 @@ void Pitch::setPlayerAttackPositions(Team *team)
                          pitchArea[nToS ? 6 : 1][2]);
 
     // action is only applicabled to the human controlled player
-    foreach (Player *p, players) {
+    foreach (Player *p, players_) {
         if (p->team_ == team)
             p->attackPosition_ = attackPositions[p->role_];
     }
@@ -493,11 +501,13 @@ void Pitch::goalScored(bool isNorthGoal)
 }
 
 
-void Pitch::replay()
+void Pitch::replayStart()
 {
     qDebug() << "replay secondCounter_" << frameCounter_;
     motionTimer_->stop();
     gameTimer_->stop();
+
+    scoreText_->setText(QString("REPLAY"));
 
     // dont make snapshots while replaying
     replaySnapShotTimer_->stop();
@@ -510,7 +520,8 @@ void Pitch::replay()
     // only display last 5 seconds
     int startFrame = frameCounter_ - 5*(1000/KReplayFrameRate);
     qDebug() << "replay startFrame" << startFrame;
- //   replayTimeLine_->setStartFrame(startFrame);
+    // replayTimeLine_->setStartFrame(startFrame);
+    // replayTimeLine_->setEndFrame(frameCounter_);
     replayTimeLine_->start();
 }
 
@@ -524,7 +535,7 @@ void Pitch::makeReplaySnapshot()
     animationItems[0]->setPosAt(f, ball_->pos());
 
     int cnt = 1;
-    foreach (Player *p, players) {
+    foreach (Player *p, players_) {
 
         f = frameCounter_ / (KGameLength/KReplayFrameRate);
         animationItems[cnt++]->setPosAt(f, p->pos());
@@ -540,6 +551,9 @@ void Pitch::replayFrame(int frame)
     if (frame == frameCounter_) {
         // all done, stop the time line now
         replayTimeLine_->stop();
+        scene->setBackgroundBrush(QPixmap(QString(":/images/pitch2.GIF")));
+        motionTimer_->start(remainingGameTime_);
+        gameTimer_->start(remainingGameTime_);
     }
     qDebug() << "replayFrame frame" << frame;
     foreach (QGraphicsItemAnimation *anim, animationItems) {

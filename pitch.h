@@ -17,6 +17,7 @@
 class Ball;
 class Player;
 class Team;
+class Referee;
 
 const int KGameRefreshRate = 1000 / 24; // ms
 const int KGameLength = 80*1000; // 80 seconds
@@ -24,6 +25,10 @@ const int KColumn = 3; // Left, Centre, Right
 // goalkepper-defence-midfield-attack,attack-midfield-defence-goalkepper
 const int KRow = 8;
 
+const int KPlayerDefaultSpeed = 2;
+
+// scale factor for players & ball
+const qreal KScaleFactor = 1.3;
 
 class Pitch : public QObject
 {
@@ -58,7 +63,8 @@ public:
     void setPlayerAttackPositions(Team *team);
     void setPiece(Team::Direction, SetPiece s);
 
-    void replay();
+    void replayStart();
+    bool isReplay() const { return replayTimeLine_->state() == QTimeLine::Running; }
 
 
 public slots:
@@ -84,7 +90,7 @@ private:
     void removePlayers();
 
 public:
-    QList<Player*> players;
+    QList<Player*> players_;
     QGraphicsScene *scene;
     QGraphicsView *view;
     QGraphicsRectItem *footballPitch_;
@@ -92,6 +98,7 @@ public:
     Team *awayTeam_;
 private:
     Ball *ball_;
+    Referee *referee_;
     QTimer *motionTimer_;
     QTimer *gameTimer_;
     QTimer *replaySnapShotTimer_;

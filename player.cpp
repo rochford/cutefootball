@@ -6,8 +6,6 @@
 #include <QDebug>
 #include <QGraphicsItem>
 
-const int KPlayerDefaultSpeed = 2;
-
 namespace {
 
     MWindow::Action calculateAction(QPointF source,
@@ -34,31 +32,8 @@ namespace {
     }
 }
 
-#include <QImage>
-
-Player::Player(bool computerControlled,
-               Pitch *pitch,
-               Team* team,
-               Role role)
-    : QObject(),
-    QGraphicsPixmapItem(NULL,NULL),
-    hasBall_(false),
-    team_(team),
-    role_(role),
-    pitch_(pitch),
-    humanControlled_(false),
-    computerControlled(computerControlled),
-    color(team->color),
-    buttonDown_(false),
-    speed_(computerControlled ? KPlayerDefaultSpeed - 1 : KPlayerDefaultSpeed),
-    step(0),
-    outOfAction_(NULL)
+void Player::createMoves()
 {
-    setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
-
-    outOfAction_ = new QTimer(this);
-    outOfAction_->setSingleShot(true);
-
     moveDistance_.insert(MWindow::North, QPointF(0,-speed_));
     moveDistance_.insert(MWindow::NorthEast, QPointF(speed_,-speed_));
     moveDistance_.insert(MWindow::East, QPointF(speed_,0));
@@ -67,10 +42,12 @@ Player::Player(bool computerControlled,
     moveDistance_.insert(MWindow::SouthWest, QPointF(-speed_,speed_));
     moveDistance_.insert(MWindow::West, QPointF(-speed_,0));
     moveDistance_.insert(MWindow::NorthWest, QPointF(-speed_,-speed_));
+}
 
-#define RED ""
+void Player::createPixmaps()
+{
     QString s(":/images/");
-    if (team == pitch_->homeTeam_)
+    if (team_ == pitch_->homeTeam_)
         s.append("red/");
     else
         s.append("blue/");
@@ -114,13 +91,41 @@ Player::Player(bool computerControlled,
     n1 = s; n2 = s; n3 = s;
     list << n1.append("playerNorthWest.PNG") << n2.append("playerNorthWest1.PNG")<< n3.append("playerNorthWest2.PNG");
     images_.insert(MWindow::NorthWest, list);
+}
+
+Player::Player(bool computerControlled,
+               Pitch *pitch,
+               Team* team,
+               Role role)
+    : QObject(),
+    QGraphicsPixmapItem(NULL,NULL),
+    hasBall_(false),
+    team_(team),
+    role_(role),
+    pitch_(pitch),
+    humanControlled_(false),
+    computerControlled(computerControlled),
+    color(team->color),
+    buttonDown_(false),
+    speed_(computerControlled ? KPlayerDefaultSpeed - 1 : KPlayerDefaultSpeed),
+    step(0),
+    outOfAction_(NULL)
+{
+    setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
+
+    outOfAction_ = new QTimer(this);
+    outOfAction_->setSingleShot(true);
+
+    createMoves();
+    createPixmaps();
 
     connect(pitch_->getBall(), SIGNAL(goalScored(bool)),this,SLOT(goalScored(bool)));
 }
 
 QRectF Player::boundingRect() const
 {
-    return QRectF(-18, -18, 18, 18);
+    return QRectF(-18*KScaleFactor, -18*KScaleFactor,
+                  18*KScaleFactor, 18*KScaleFactor);
 }
 
 void Player::paint(QPainter *painter,
@@ -128,14 +133,14 @@ void Player::paint(QPainter *painter,
                    QWidget *widget)
 {
     // the player that is focused get red circle around them
-    if ( humanControlled_ ) {
+    if ( humanControlled_ && !pitch_->isReplay()) {
         QBrush brush(Qt::white, Qt::SolidPattern);
         painter->setBrush(brush);
-        painter->drawEllipse(QPointF(0,0), 10, 10);
+        painter->drawEllipse(QPointF(0,0), 10*KScaleFactor, 10*KScaleFactor);
     }
 
     QSize pixmapSize = pixmap().size();
-    pixmapSize.scale(QSizeF(36,36).toSize(), Qt::KeepAspectRatio);
+    pixmapSize.scale(QSizeF(36*KScaleFactor,36*KScaleFactor).toSize(), Qt::KeepAspectRatio);
 
     // Draw QGraphicsPixmapItem face
     painter->drawPixmap(boundingRect().toRect(), pixmap());
@@ -150,7 +155,8 @@ void Player::goalScored(bool isLeftGoal)
 QPainterPath Player::shape() const
 {
     QPainterPath path;
-    path.addRect(-18, -18, 18, 18);
+    path.addRect(-18*KScaleFactor, -18*KScaleFactor,
+                 18*KScaleFactor, 18*KScaleFactor);
     return path;
 }
 
@@ -322,7 +328,7 @@ Player* Player::findAvailableTeamMate() const
     // 1 find an attacker to pass to
     Player *bestPlayer = NULL;
     int nearest = 0xffff;
-    foreach (Player *p, pitch_->players) {
+    foreach (Player *p, pitch_->players_) {
         if ( p->team_!= team_)
             continue;
         // not self

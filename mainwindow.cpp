@@ -126,7 +126,7 @@ void MWindow::keyPressEvent( QKeyEvent *event )
         keyEventTimer->start(KGameRefreshRate);
         break;
     case Replay:
-        pitch->replay();
+        pitch->replayStart();
         break;
     default:
         break;
