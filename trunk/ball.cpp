@@ -34,7 +34,7 @@ Ball::~Ball()
 
 QRectF Ball::boundingRect() const
 {
-    return QRectF(0, 0, 12, 12);
+    return QRectF(-9, -9, 9, 9);
 }
 
 void Ball::paint(QPainter *painter,
@@ -57,7 +57,7 @@ void Ball::paint(QPainter *painter,
     }
     // Scale QGraphicsPixmapItem to wanted 'size' and keep the aspect ratio
     QSize pixmapSize = pixmap().size();
-    pixmapSize.scale(QSizeF(10,10).toSize(), Qt::KeepAspectRatio);
+    pixmapSize.scale(QSizeF(20,20).toSize(), Qt::KeepAspectRatio);
 
     // Draw QGraphicsPixmapItem face
     painter->drawPixmap(boundingRect().toRect(), pixmap());
@@ -66,7 +66,7 @@ void Ball::paint(QPainter *painter,
 QPainterPath Ball::shape() const
 {
     QPainterPath path;
-    path.addRect(0, 0, 10, 10);
+    path.addRect(-10, -10, 10, 10);
     return path;
 }
 

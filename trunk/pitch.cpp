@@ -7,8 +7,12 @@
 #include "Player.h"
 #include "team.h"
 
-Pitch::Pitch(const QRectF& footballGroundRect,
-             QLabel* scoreLabel)
+#include <QGraphicsItemAnimation>
+
+const int KReplayFrameRate = 40.00; // ms
+const int KReallyHighZValue = 10;
+
+Pitch::Pitch(const QRectF& footballGroundRect)
   : QObject(),
     scene(new QGraphicsScene(footballGroundRect)),
     view(new QGraphicsView(scene)),
@@ -18,8 +22,14 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     lastNearestPlayer(NULL),
     bottomGoal(NULL),
     topGoal(NULL),
-    scoreLabel_(scoreLabel)
+    replayTimeLine_(NULL),
+    frameCounter_(0.0)
 {
+    // replay will show 1 frame per second, for each second of the game
+    replayTimeLine_ = new QTimeLine(KGameLength, this);
+    replayTimeLine_->setFrameRange(0, KGameLength/KReplayFrameRate);
+    replayTimeLine_->setUpdateInterval(KReplayFrameRate);
+
     scene->setBackgroundBrush(QPixmap(QString(":/images/pitch2.GIF")));
 
     view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -28,6 +38,7 @@ Pitch::Pitch(const QRectF& footballGroundRect,
 
     motionTimer_ = new QTimer(this);
     gameTimer_ = new QTimer(this);
+    replaySnapShotTimer_ = new QTimer(this);
 
     // create the pitch
     footballPitch_ = scene->addRect(30, 30, scene->width()-60, scene->height() -60,
@@ -54,6 +65,12 @@ Pitch::Pitch(const QRectF& footballGroundRect,
         }
     }
 
+    // simple text
+    QFont serifFont("Times", 12, QFont::Bold);
+    scoreText_ = scene->addSimpleText(QString("XXX"),serifFont);
+    scoreText_->setPos(view->mapToScene(view->rect().topLeft()));
+    scoreText_->setZValue(KReallyHighZValue);
+
     // create the goals
     bottomGoal = scene->addRect((scene->width() / 2)-30, scene->height()-30,60,25,
                    QPen(Qt::black),
@@ -78,6 +95,10 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     connect(motionTimer_, SIGNAL(timeout()), this, SLOT(updateDisplayTime()));
 
     connect(gameTimer_, SIGNAL(timeout()), this, SLOT(kickOff()));
+
+    connect(replaySnapShotTimer_, SIGNAL(timeout()), this, SLOT(makeReplaySnapshot()));
+    connect(replayTimeLine_, SIGNAL(frameChanged(int)), this, SLOT(replayFrame(int)));
+
 }
 
 Player* Pitch::selectNearestPlayer(Team* team)
@@ -179,6 +200,8 @@ void Pitch::kickOff(Game state)
 
         scene->addItem(ball_);
 
+        replaySnapShotTimer_->start(KReplayFrameRate);
+
         nextGameState_ = FirstHalfOver;
         break;
     case FirstHalfOver:
@@ -236,7 +259,7 @@ void Pitch::updateDisplayTime()
 {
     switch(nextGameState_) {
     case Finished:
-        scoreLabel_->setText(QString("GAME OVER!!!"));
+        scoreText_->setText(QString("GAME OVER!!!"));
         break;
     case NotStarted:
         break;
@@ -254,14 +277,16 @@ void Pitch::updateDisplayTime()
         str.append(awayTeam_->name());
         str.append(" ");
         str.append(QString::number(awayTeam_->goals_));
-        scoreLabel_->setText(str);
+        scoreText_->setText(str);
         break;
     }
 }
 
 void Pitch::hasBallCheck()
 {
-    view->centerOn(this->ball_->pos());
+    view->centerOn(ball_->pos());
+    scoreText_->setPos(view->mapToScene(view->rect().topLeft()));
+
     // which team has the ball?
     foreach (Player *p, players) {
         if ( p->hasBall_ ) {
@@ -287,6 +312,19 @@ void Pitch::newGame()
     connect(ball_, SIGNAL(goalScored(bool)), homeTeam_, SLOT(goalScored(bool)));
     createTeamPlayers(awayTeam_);
     connect(ball_, SIGNAL(goalScored(bool)), awayTeam_, SLOT(goalScored(bool)));
+
+    QGraphicsItemAnimation* anim = new QGraphicsItemAnimation(this);
+    anim->setItem(ball_);
+    anim->setTimeLine(replayTimeLine_);
+    animationItems.append(anim);
+
+    foreach (Player *p, players) {
+        QGraphicsItemAnimation* anim = new QGraphicsItemAnimation(this);
+        anim->setItem(p);
+        anim->setTimeLine(replayTimeLine_);
+        animationItems.append(anim);
+    }
+
     kickOff();
 }
 
@@ -452,4 +490,63 @@ void Pitch::goalScored(bool isNorthGoal)
     qDebug() << "GOAL !!!";
 
     kickOff(Pitch::GoalScored);
+}
+
+
+void Pitch::replay()
+{
+    qDebug() << "replay secondCounter_" << frameCounter_;
+    motionTimer_->stop();
+    gameTimer_->stop();
+
+    // dont make snapshots while replaying
+    replaySnapShotTimer_->stop();
+
+    scene->setBackgroundBrush(QBrush(Qt::gray));
+
+    // stop if previously started
+    replayTimeLine_->stop();
+
+    // only display last 5 seconds
+    int startFrame = frameCounter_ - 5*(1000/KReplayFrameRate);
+    qDebug() << "replay startFrame" << startFrame;
+ //   replayTimeLine_->setStartFrame(startFrame);
+    replayTimeLine_->start();
+}
+
+void Pitch::makeReplaySnapshot()
+{
+ //   qDebug() << "makeReplaySnapshot";
+    // for each graphics item on the scene,
+    // make an animation object
+    // set the timeline value for the animation objects
+    qreal f = frameCounter_ / (KGameLength/KReplayFrameRate);
+    animationItems[0]->setPosAt(f, ball_->pos());
+
+    int cnt = 1;
+    foreach (Player *p, players) {
+
+        f = frameCounter_ / (KGameLength/KReplayFrameRate);
+        animationItems[cnt++]->setPosAt(f, p->pos());
+        }
+    frameCounter_++;
+}
+
+void Pitch::replayFrame(int frame)
+{
+    view->centerOn(ball_->pos());
+    scoreText_->setPos(view->mapToScene(view->rect().topLeft()));
+
+    if (frame == frameCounter_) {
+        // all done, stop the time line now
+        replayTimeLine_->stop();
+    }
+    qDebug() << "replayFrame frame" << frame;
+    foreach (QGraphicsItemAnimation *anim, animationItems) {
+        qreal f = frame/ (KGameLength/40.00);
+        QPointF before = anim->item()->pos();
+
+        anim->item()->setPos(anim->posAt(f));
+    }
+    scene->update();
 }

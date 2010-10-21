@@ -28,30 +28,6 @@
         <file>images/red/playerWest.PNG</file>
         <file>images/red/playerWest1.PNG</file>
         <file>images/red/playerWest2.PNG</file>
-        <file>images/blue/blueEast.PNG</file>
-        <file>images/blue/blueEast1.PNG</file>
-        <file>images/blue/blueEast2.PNG</file>
-        <file>images/blue/blueNorth.PNG</file>
-        <file>images/blue/blueNorth1.PNG</file>
-        <file>images/blue/blueNorth2.PNG</file>
-        <file>images/blue/blueNorthEast.PNG</file>
-        <file>images/blue/blueNorthEast1.PNG</file>
-        <file>images/blue/blueNorthEast2.PNG</file>
-        <file>images/blue/blueNorthWest.PNG</file>
-        <file>images/blue/blueNorthWest1.PNG</file>
-        <file>images/blue/blueNorthWest2.PNG</file>
-        <file>images/blue/blueSouth.PNG</file>
-        <file>images/blue/blueSouth1.PNG</file>
-        <file>images/blue/blueSouth2.PNG</file>
-        <file>images/blue/blueSouthEast.PNG</file>
-        <file>images/blue/blueSouthEast1.PNG</file>
-        <file>images/blue/blueSouthEast2.PNG</file>
-        <file>images/blue/blueSouthWest.PNG</file>
-        <file>images/blue/blueSouthWest1.PNG</file>
-        <file>images/blue/blueSouthWest2.PNG</file>
-        <file>images/blue/blueWest.PNG</file>
-        <file>images/blue/blueWest1.PNG</file>
-        <file>images/blue/blueWest2.PNG</file>
         <file>images/pitch2.GIF</file>
         <file>images/red/tackleNorth.PNG</file>
         <file>images/red/tackleSouth.PNG</file>
@@ -61,5 +37,29 @@
         <file>images/red/tackleSouthEast.PNG</file>
         <file>images/red/tackleSouthWest.PNG</file>
         <file>images/red/tackleWest.PNG</file>
+        <file>images/blue/playerEast.PNG</file>
+        <file>images/blue/playerEast1.PNG</file>
+        <file>images/blue/playerEast2.PNG</file>
+        <file>images/blue/playerNorth.PNG</file>
+        <file>images/blue/playerNorth1.PNG</file>
+        <file>images/blue/playerNorth2.PNG</file>
+        <file>images/blue/playerNorthEast.PNG</file>
+        <file>images/blue/playerNorthEast1.PNG</file>
+        <file>images/blue/playerNorthEast2.PNG</file>
+        <file>images/blue/playerNorthWest.PNG</file>
+        <file>images/blue/playerNorthWest1.PNG</file>
+        <file>images/blue/playerNorthWest2.PNG</file>
+        <file>images/blue/playerSouth.PNG</file>
+        <file>images/blue/playerSouth1.PNG</file>
+        <file>images/blue/playerSouth2.PNG</file>
+        <file>images/blue/playerSouthEast.PNG</file>
+        <file>images/blue/playerSouthEast1.PNG</file>
+        <file>images/blue/playerSouthEast2.PNG</file>
+        <file>images/blue/playerSouthWest.PNG</file>
+        <file>images/blue/playerSouthWest1.PNG</file>
+        <file>images/blue/playerSouthWest2.PNG</file>
+        <file>images/blue/playerWest.PNG</file>
+        <file>images/blue/playerWest1.PNG</file>
+        <file>images/blue/playerWest2.PNG</file>
     </qresource>
 </RCC>

@@ -95,6 +95,7 @@ private:
     QMap<MWindow::Action,QStringList> images_;
     QMap<MWindow::Action,QPointF> moveDistance_;
     QTimer *outOfAction_;
+
 public:
     QRectF startPosition_;
     QRectF defencePosition_;
