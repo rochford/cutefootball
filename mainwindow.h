@@ -15,7 +15,6 @@ public:
     virtual ~MWindow();
 
     void createActions();
-    void createStatusBar();
 
     enum Action {
         West = 0,
@@ -32,6 +31,10 @@ public:
         Shoot,
         Pass,
         Tackle,
+
+        // replay last 10 seconds???
+        Replay,
+
         DoNothing };
 
 private slots:
@@ -62,8 +65,6 @@ private:
 
     QMenu* fileMenu;
     QMenu* helpMenu;
-
-    QLabel* scoreLabel;
 
     bool buttonPressed_;
     };

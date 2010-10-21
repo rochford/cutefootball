@@ -68,65 +68,59 @@ Player::Player(bool computerControlled,
     moveDistance_.insert(MWindow::West, QPointF(-speed_,0));
     moveDistance_.insert(MWindow::NorthWest, QPointF(-speed_,-speed_));
 
-    if (color == Qt::red) {
-        QStringList list;
-        list << ":/images/red/playerNorth.PNG" << ":/images/red/playerNorth1.PNG" << ":/images/red/playerNorth2.PNG";
-        images_.insert(MWindow::North, list);
-        list.clear();
-        list << ":/images/red/playerNorthEast.PNG" << ":/images/red/playerNorthEast1.PNG"<< ":/images/red/playerNorthEast2.PNG";
-        images_.insert(MWindow::NorthEast, list);
-        list.clear();
-        list << ":/images/red/playerEast.PNG" << ":/images/red/playerEast1.PNG"<< ":/images/red/playerEast2.PNG";
-        images_.insert(MWindow::East, list);
-        list.clear();
-        list << ":/images/red/playerSouthEast.PNG" << ":/images/red/playerSouthEast1.PNG"<< ":/images/red/playerSouthEast2.PNG";
-        images_.insert(MWindow::SouthEast, list);
-        list.clear();
-        list << ":/images/red/playerSouth.PNG" << ":/images/red/playerSouth1.PNG"<< ":/images/red/playerSouth2.PNG";
-        images_.insert(MWindow::South, list);
-        list.clear();
-        list << ":/images/red/playerSouthWest.PNG" << ":/images/red/playerSouthWest1.PNG"<< ":/images/red/playerSouthWest2.PNG";
-        images_.insert(MWindow::SouthWest, list);
-        list.clear();
-        list << ":/images/red/playerWest.PNG" << ":/images/red/playerWest1.PNG"<< ":/images/red/playerWest2.PNG";
-        images_.insert(MWindow::West, list);
-        list.clear();
-        list << ":/images/red/playerNorthWest.PNG" << ":/images/red/playerNorthWest1.PNG"<< ":/images/red/playerNorthWest2.PNG";
-        images_.insert(MWindow::NorthWest, list);
-    }
-    else if ( color == Qt::blue ) {
-        QStringList list;
-        list << ":/images/blue/blueNorth.PNG" << ":/images/blue/blueNorth1.PNG" << ":/images/blue/blueNorth2.PNG";
-        images_.insert(MWindow::North, list);
-        list.clear();
-        list << ":/images/blue/blueNorthEast.PNG" << ":/images/blue/blueNorthEast1.PNG"<< ":/images/blue/blueNorthEast2.PNG";
-        images_.insert(MWindow::NorthEast, list);
-        list.clear();
-        list << ":/images/blue/blueEast.PNG" << ":/images/blue/blueEast1.PNG"<< ":/images/blue/blueEast2.PNG";
-        images_.insert(MWindow::East, list);
-        list.clear();
-        list << ":/images/blue/blueSouthEast.PNG" << ":/images/blue/blueSouthEast1.PNG"<< ":/images/blue/blueSouthEast2.PNG";
-        images_.insert(MWindow::SouthEast, list);
-        list.clear();
-        list << ":/images/blue/blueSouth.PNG" << ":/images/blue/blueSouth1.PNG"<< ":/images/blue/blueSouth2.PNG";
-        images_.insert(MWindow::South, list);
-        list.clear();
-        list << ":/images/blue/blueSouthWest.PNG" << ":/images/blue/blueSouthWest1.PNG"<< ":/images/blue/blueSouthWest2.PNG";
-        images_.insert(MWindow::SouthWest, list);
-        list.clear();
-        list << ":/images/blue/blueWest.PNG" << ":/images/blue/blueWest1.PNG"<< ":/images/blue/blueWest2.PNG";
-        images_.insert(MWindow::West, list);
-        list.clear();
-        list << ":/images/blue/blueNorthWest.PNG" << ":/images/blue/blueNorthWest1.PNG"<< ":/images/blue/blueNorthWest2.PNG";
-        images_.insert(MWindow::NorthWest, list);
-    }
+#define RED ""
+    QString s(":/images/");
+    if (team == pitch_->homeTeam_)
+        s.append("red/");
+    else
+        s.append("blue/");
+
+    QStringList list;
+    QString n1(s), n2(s), n3(s);
+    list <<   n1.append("playerNorth.PNG") << n2.append("playerNorth1.PNG") << n3.append("playerNorth2.PNG");
+    images_.insert(MWindow::North, list);
+    list.clear();
+
+    n1 = s; n2 = s; n3 = s;
+    list << n1.append("playerNorthEast.PNG") << n2.append("playerNorthEast1.PNG")<< n3.append("playerNorthEast2.PNG");
+    images_.insert(MWindow::NorthEast, list);
+    list.clear();
+
+    n1 = s; n2 = s; n3 = s;
+    list << n1.append("playerEast.PNG") << n2.append("playerEast1.PNG")<< n3.append("playerEast2.PNG");
+    images_.insert(MWindow::East, list);
+    list.clear();
+
+    n1 = s; n2 = s; n3 = s;
+    list << n1.append("playerSouthEast.PNG") << n2.append("playerSouthEast1.PNG")<< n3.append("playerSouthEast2.PNG");
+    images_.insert(MWindow::SouthEast, list);
+    list.clear();
+
+    n1 = s; n2 = s; n3 = s;
+    list << n1.append("playerSouth.PNG") << n2.append("playerSouth1.PNG")<< n3.append("playerSouth2.PNG");
+    images_.insert(MWindow::South, list);
+    list.clear();
+
+    n1 = s; n2 = s; n3 = s;
+    list << n1.append("playerSouthWest.PNG") << n2.append("playerSouthWest1.PNG")<< n3.append("playerSouthWest2.PNG");
+    images_.insert(MWindow::SouthWest, list);
+    list.clear();
+
+    n1 = s; n2 = s; n3 = s;
+    list << n1.append("playerWest.PNG") << n2.append("playerWest1.PNG")<< n3.append("playerWest2.PNG");
+    images_.insert(MWindow::West, list);
+    list.clear();
+
+    n1 = s; n2 = s; n3 = s;
+    list << n1.append("playerNorthWest.PNG") << n2.append("playerNorthWest1.PNG")<< n3.append("playerNorthWest2.PNG");
+    images_.insert(MWindow::NorthWest, list);
 
     connect(pitch_->getBall(), SIGNAL(goalScored(bool)),this,SLOT(goalScored(bool)));
 }
 
 QRectF Player::boundingRect() const
 {
-    return QRectF(0, 0, 25, 25);
+    return QRectF(-18, -18, 18, 18);
 }
 
 void Player::paint(QPainter *painter,
@@ -137,11 +131,11 @@ void Player::paint(QPainter *painter,
     if ( humanControlled_ ) {
         QBrush brush(Qt::white, Qt::SolidPattern);
         painter->setBrush(brush);
-        painter->drawEllipse(QPointF(0,0), 12, 12);
+        painter->drawEllipse(QPointF(0,0), 10, 10);
     }
 
     QSize pixmapSize = pixmap().size();
-    pixmapSize.scale(QSizeF(20,20).toSize(), Qt::KeepAspectRatio);
+    pixmapSize.scale(QSizeF(36,36).toSize(), Qt::KeepAspectRatio);
 
     // Draw QGraphicsPixmapItem face
     painter->drawPixmap(boundingRect().toRect(), pixmap());
@@ -156,7 +150,7 @@ void Player::goalScored(bool isLeftGoal)
 QPainterPath Player::shape() const
 {
     QPainterPath path;
-    path.addRect(0, 0, 22, 22);
+    path.addRect(-18, -18, 18, 18);
     return path;
 }
 
@@ -201,7 +195,7 @@ bool Player::withinShootingDistance() const
              && pitch_->topPenaltyArea->contains(pitch_->getBall()->pos()))
         return true;
     else {
-        qDebug() << "withinShootingDistance return false";
+//        qDebug() << "withinShootingDistance return false";
         return false;
     }
 }

@@ -9,12 +9,10 @@ MWindow::MWindow(QWidget *parent)
     buttonPressed_(false)
 {
     QRectF footballGround(0,0,400,600);
-    scoreLabel = new QLabel(QString("XXX"));
-    pitch = new Pitch(footballGround, scoreLabel);
+    pitch = new Pitch(footballGround);
 
     createActions();
     createKeyboardActions();
-    createStatusBar();
 
     connect(keyEventTimer, SIGNAL(timeout()), this, SLOT(repeatKeyEvent()));
 
@@ -36,11 +34,6 @@ void MWindow::continueGame()
 {
     pauseGameAction->setEnabled(true);
     continueGameAction->setEnabled(false);
-}
-
-void MWindow::createStatusBar()
-{
-    statusBar()->addWidget(scoreLabel);
 }
 
 void MWindow::createActions()
@@ -88,6 +81,8 @@ void MWindow::createKeyboardActions()
     actions.insert( Qt::Key_A, West );
     actions.insert( Qt::Key_Q, NorthWest );
     actions.insert( Qt::Key_S, Button );
+
+    actions.insert( Qt::Key_R, Replay );
 }
 
 MWindow::~MWindow()
@@ -129,6 +124,9 @@ void MWindow::keyPressEvent( QKeyEvent *event )
         lastAction = a;
         pitch->action(a);
         keyEventTimer->start(KGameRefreshRate);
+        break;
+    case Replay:
+        pitch->replay();
         break;
     default:
         break;
