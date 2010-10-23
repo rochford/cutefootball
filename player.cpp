@@ -134,9 +134,9 @@ void Player::paint(QPainter *painter,
 {
     // the player that is focused get red circle around them
     if ( humanControlled_ && !pitch_->isReplay()) {
-        QBrush brush(Qt::white, Qt::SolidPattern);
+        QBrush brush(Qt::white, Qt::Dense3Pattern);
         painter->setBrush(brush);
-        painter->drawEllipse(QPointF(0,0), 10*KScaleFactor, 10*KScaleFactor);
+        painter->drawEllipse(QPointF(0,0), 8*KScaleFactor, 8*KScaleFactor);
     }
 
     QSize pixmapSize = pixmap().size();

@@ -18,6 +18,7 @@ MWindow::MWindow(QWidget *parent)
 
     setCentralWidget(pitch->view);
     pitch->view->show();
+    pitch->newGame();
 }
 
 void MWindow::startedGame()

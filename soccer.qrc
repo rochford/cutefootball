@@ -1,9 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>images/ball.png</file>
-        <file>images/ball1.png</file>
-        <file>images/ball2.png</file>
-        <file>images/ball3.png</file>
         <file>images/red/playerEast.PNG</file>
         <file>images/red/playerEast1.PNG</file>
         <file>images/red/playerEast2.PNG</file>
@@ -62,5 +58,9 @@
         <file>images/blue/playerWest1.PNG</file>
         <file>images/blue/playerWest2.PNG</file>
         <file>images/ref.png</file>
+        <file>images/ball1.png</file>
+        <file>images/ball2.png</file>
+        <file>images/ball3.png</file>
+        <file>images/ball.png</file>
     </qresource>
 </RCC>
