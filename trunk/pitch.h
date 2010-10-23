@@ -28,7 +28,7 @@ const int KRow = 8;
 const int KPlayerDefaultSpeed = 2;
 
 // scale factor for players & ball
-const qreal KScaleFactor = 1.3;
+const qreal KScaleFactor = 1.6;
 
 class Pitch : public QObject
 {
@@ -77,6 +77,8 @@ public slots:
     void selectNearestPlayer();
     void updateDisplayTime();
 
+    void decrementGameTime();
+
     void goalScored(bool isLeftGoal);
 
     void makeReplaySnapshot();
@@ -100,12 +102,15 @@ private:
     Ball *ball_;
     Referee *referee_;
     QTimer *motionTimer_;
+    // Issues timeout every second.
+    // used to decrement the amount of game time left
     QTimer *gameTimer_;
     QTimer *replaySnapShotTimer_;
     Game nextGameState_;
 
-    // timestamp when start a new game
-    QTime startTimeStamp_;
+    // amounts of MS left in this half
+    int remainingTimeInHalfMs_;
+
     Player *lastNearestPlayer; // NOT OWNED
     int remainingGameTime_;
 

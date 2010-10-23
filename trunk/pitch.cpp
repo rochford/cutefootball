@@ -10,10 +10,15 @@
 #include "team.h"
 #include "referee.h"
 
-
-
 const int KReplayFrameRate = 40.00; // ms
 const int KReallyHighZValue = 10;
+
+const QPen KWhitePaintPen(QBrush(Qt::white),3);
+#ifdef Q_OS_SYMBIAN
+const QFont KFont("Times", 9, QFont::Bold);
+#else
+const QFont KFont("Times", 12, QFont::Bold);
+#endif // Q_OS_SYMBIAN
 
 Pitch::Pitch(const QRectF& footballGroundRect)
   : QObject(),
@@ -26,7 +31,8 @@ Pitch::Pitch(const QRectF& footballGroundRect)
     bottomGoal(NULL),
     topGoal(NULL),
     replayTimeLine_(NULL),
-    frameCounter_(0.0)
+    frameCounter_(0.0),
+    remainingTimeInHalfMs_(KGameLength)
 {
     // replay will show 1 frame per second, for each second of the game
     replayTimeLine_ = new QTimeLine(KGameLength, this);
@@ -41,12 +47,14 @@ Pitch::Pitch(const QRectF& footballGroundRect)
     view->setAutoFillBackground(false);
 
     motionTimer_ = new QTimer(this);
+    motionTimer_->setInterval(KGameRefreshRate);
     gameTimer_ = new QTimer(this);
+    gameTimer_->setInterval(1000);
     replaySnapShotTimer_ = new QTimer(this);
 
     // create the pitch
     footballPitch_ = scene->addRect(30, 30, scene->width()-60, scene->height() -60,
-                                    QPen(Qt::white),
+                                    KWhitePaintPen,
                                     QBrush(Qt::white,Qt::NoBrush) );
 
     // divide the pitch into areas
@@ -70,8 +78,7 @@ Pitch::Pitch(const QRectF& footballGroundRect)
     }
 
     // simple text
-    QFont serifFont("Times", 12, QFont::Bold);
-    scoreText_ = scene->addSimpleText(QString("XXX"),serifFont);
+    scoreText_ = scene->addSimpleText(QString("XXX"),KFont);
     scoreText_->setPos(view->mapToScene(view->rect().topLeft()));
     scoreText_->setZValue(KReallyHighZValue);
 
@@ -86,23 +93,22 @@ Pitch::Pitch(const QRectF& footballGroundRect)
     // penalty areas
     topPenaltyArea = scene->addRect((scene->width() / 2)-70, 30,
                                     140, 100,
-                                    QPen(Qt::white),
+                                    KWhitePaintPen,
                                     QBrush(Qt::white,Qt::NoBrush) );
     bottomPenaltyArea = scene->addRect((scene->width() / 2)-70, scene->height()-130,
                                        140, 100,
-                                    QPen(Qt::white),
+                                    KWhitePaintPen,
                                     QBrush(Qt::white,Qt::NoBrush) );
     connect(motionTimer_, SIGNAL(timeout()), scene, SLOT(advance()));
     connect(motionTimer_, SIGNAL(timeout()), scene, SLOT(update()));
     connect(motionTimer_, SIGNAL(timeout()), this, SLOT(hasBallCheck()));
     connect(motionTimer_, SIGNAL(timeout()), this, SLOT(selectNearestPlayer()));
-    connect(motionTimer_, SIGNAL(timeout()), this, SLOT(updateDisplayTime()));
+    connect(gameTimer_, SIGNAL(timeout()), this, SLOT(updateDisplayTime()));
 
-    connect(gameTimer_, SIGNAL(timeout()), this, SLOT(kickOff()));
+    connect(gameTimer_, SIGNAL(timeout()), this, SLOT(decrementGameTime()));
 
     connect(replaySnapShotTimer_, SIGNAL(timeout()), this, SLOT(makeReplaySnapshot()));
     connect(replayTimeLine_, SIGNAL(frameChanged(int)), this, SLOT(replayFrame(int)));
-
 }
 
 Player* Pitch::selectNearestPlayer(Team* team)
@@ -177,10 +183,7 @@ void Pitch::kickOff(Game state)
     motionTimer_->stop();
     gameTimer_->stop();
 
-    QTime now = QTime::currentTime();
-    remainingGameTime_ = (KGameLength/1000) - startTimeStamp_.secsTo(now);
-
-    qDebug() << "kickOff remaining" << remainingGameTime_;
+    qDebug() << "kickOff remaining" << remainingTimeInHalfMs_ / 1000;
 
     bool needRestartTimers(false);
 
@@ -225,6 +228,7 @@ void Pitch::kickOff(Game state)
         ball_->setStartingPosition();
 
         needRestartTimers = true;
+        remainingTimeInHalfMs_ = KGameLength;
 
         nextGameState_ = SecondHalfOver;
         break;
@@ -251,9 +255,16 @@ void Pitch::kickOff(Game state)
     }
 
     if (needRestartTimers) {
-        gameTimer_->start(KGameLength);
-        motionTimer_->start(KGameRefreshRate);
+        gameTimer_->start();
+        motionTimer_->start();
     }
+}
+
+void Pitch::decrementGameTime()
+{
+    remainingTimeInHalfMs_ = remainingTimeInHalfMs_ - 1000;
+    if ( !remainingTimeInHalfMs_ )
+        kickOff(nextGameState_);
 }
 
 void Pitch::kickOff()
@@ -272,8 +283,10 @@ void Pitch::updateDisplayTime()
     case GoalScored:
     case FirstHalfOver:
     case SecondHalfOver:
-        QTime now = QTime::currentTime();
-        QString str =  QString::number(startTimeStamp_.secsTo(now));
+        QTime tmp(0,0,0,0);
+        tmp = tmp.addMSecs(remainingTimeInHalfMs_);
+
+        QString str(tmp.toString(QString("mm:ss")));
         str.append(" ");
         str.append(homeTeam_->name());
         str.append(" ");
@@ -305,7 +318,7 @@ void Pitch::hasBallCheck()
 
 void Pitch::newGame()
 {
-    startTimeStamp_ = QTime::currentTime();
+    remainingTimeInHalfMs_ = KGameLength;
 
     ball_ = new Ball(this);
 
@@ -333,16 +346,13 @@ void Pitch::newGame()
         animationItems.append(anim);
     }
 
+    updateDisplayTime();
     kickOff();
 }
 
 void Pitch::pausedGame()
 {
-    // figure out how long the game has left
-    QTime now = QTime::currentTime();
-    remainingGameTime_ = (KGameLength/1000) - startTimeStamp_.secsTo(now);
-
-    qDebug() << "pausedGame remaining" << remainingGameTime_;
+    qDebug() << "pausedGame remaining" << remainingTimeInHalfMs_/1000;
 
     if (gameTimer_->isActive())
         gameTimer_->stop();
@@ -507,12 +517,8 @@ void Pitch::replayStart()
     motionTimer_->stop();
     gameTimer_->stop();
 
-    scoreText_->setText(QString("REPLAY"));
-
     // dont make snapshots while replaying
     replaySnapShotTimer_->stop();
-
-    scene->setBackgroundBrush(QBrush(Qt::gray));
 
     // stop if previously started
     replayTimeLine_->stop();
@@ -521,7 +527,9 @@ void Pitch::replayStart()
     int startFrame = frameCounter_ - 5*(1000/KReplayFrameRate);
     qDebug() << "replay startFrame" << startFrame;
     // replayTimeLine_->setStartFrame(startFrame);
-    // replayTimeLine_->setEndFrame(frameCounter_);
+    //replayTimeLine_->setEndFrame(frameCounter_);
+    replayTimeLine_->setFrameRange(startFrame, frameCounter_);
+    replayTimeLine_->setDuration(5*1000);
     replayTimeLine_->start();
 }
 
@@ -551,9 +559,8 @@ void Pitch::replayFrame(int frame)
     if (frame == frameCounter_) {
         // all done, stop the time line now
         replayTimeLine_->stop();
-        scene->setBackgroundBrush(QPixmap(QString(":/images/pitch2.GIF")));
-        motionTimer_->start(remainingGameTime_);
-        gameTimer_->start(remainingGameTime_);
+        motionTimer_->start();
+        gameTimer_->start();
     }
     qDebug() << "replayFrame frame" << frame;
     foreach (QGraphicsItemAnimation *anim, animationItems) {
