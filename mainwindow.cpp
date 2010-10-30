@@ -5,11 +5,14 @@
 
 MWindow::MWindow(QWidget *parent)
     : QMainWindow(parent),
-    keyEventTimer(new QTimer),
+    keyEventTimer(NULL),
     buttonPressed_(false)
 {
     QRectF footballGround(0,0,400,600);
     pitch = new Pitch(footballGround);
+
+    keyEventTimer = new QTimer(this);
+    keyEventTimer->setInterval(KGameRefreshRate);
 
     createActions();
     createKeyboardActions();
@@ -94,7 +97,7 @@ MWindow::~MWindow()
 void MWindow::repeatKeyEvent()
 {
     pitch->action(lastAction);
-    keyEventTimer->start(KGameRefreshRate);
+    keyEventTimer->start();
 }
 
 void MWindow::keyPressEvent( QKeyEvent *event )
@@ -104,36 +107,42 @@ void MWindow::keyPressEvent( QKeyEvent *event )
         return;
     }
 
-    qDebug() << "keyPressEvent start";
+  //  qDebug() << "keyPressEvent start";
 
     Action a = actions[ event->key() ];
 
-    switch ( a )
-    {
-    case Button:
-        pitch->action(a);
-        break;
-    case North:
-    case NorthEast:
-    case East:
-    case SouthEast:
-    case South:
-    case SouthWest:
-    case West:
-    case NorthWest:
-        // start a timer
-        lastAction = a;
-        pitch->action(a);
-        keyEventTimer->start(KGameRefreshRate);
-        break;
-    case Replay:
-        pitch->replayStart();
-        break;
-    default:
-        break;
+    if ( pitch->isReplay() )
+        // Not allowed to stop a replay!!!
+        // pitch->replayStop();
+        ;
+    else {
+        switch ( a )
+        {
+        case Button:
+            pitch->action(a);
+            break;
+        case North:
+        case NorthEast:
+        case East:
+        case SouthEast:
+        case South:
+        case SouthWest:
+        case West:
+        case NorthWest:
+            // start a timer
+            lastAction = a;
+            pitch->action(a);
+            keyEventTimer->start();
+            break;
+        case Replay:
+            pitch->replayStart();
+            break;
+        default:
+            break;
+        }
     }
     event->accept();
-    qDebug() << "keyPressEvent end";
+  //  qDebug() << "keyPressEvent end";
 }
 
 void MWindow::keyReleaseEvent( QKeyEvent *event )

@@ -10,6 +10,9 @@
 #include "team.h"
 #include "pitch.h"
 
+MWindow::Action calculateAction(QPointF source,
+                                QPointF destination);
+
 class Player : public QObject,
                public QGraphicsPixmapItem
 {
@@ -31,10 +34,10 @@ public:
            Team* team,
            Player::Role role);
     enum { Type = UserType + 2 };
-    int type() const
+    virtual int type() const
         { return Type;}
 
-    void advance(int phase);
+    virtual void advance(int phase);
     int speed() { return speed_; }
     bool ballCollisionCheck();
 
@@ -64,7 +67,7 @@ protected:
     void paint(QPainter *painter,
                           const QStyleOptionGraphicsItem *option,
                           QWidget *widget);
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+    virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 private:
     void humanAdvance(int phase);
     void computerAdvance(int phase);
@@ -72,10 +75,10 @@ private:
     void computerAdvanceWithoutBall();
 
     void automove();
-    bool canPass() const;
 
     void createMoves();
-    void createPixmaps();
+public:
+    virtual void createPixmaps();
 
 public:
     bool hasBall_;
@@ -83,27 +86,28 @@ public:
 
     Role role_;
 private:
-    Pitch *pitch_;
-
     bool humanControlled_;
     bool computerControlled;
-    QColor color;
     int speed_;
     // the previous action of this player
     MWindow::Action lastAction_;
 
-    int step;
+
 
     bool buttonDown_;
-    QMap<MWindow::Action,QStringList> images_;
-    QMap<MWindow::Action,QPointF> moveDistance_;
+
+
     QTimer *outOfAction_;
 
 public:
     QRectF startPosition_;
     QRectF defencePosition_;
     QRectF attackPosition_;
-
+protected:
+    QMap<MWindow::Action,QStringList> images_;
+    Pitch *pitch_;
+    QMap<MWindow::Action,QPointF> moveDistance_;
+    int step_;
 };
 
 #endif // PLAYER_H

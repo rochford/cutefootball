@@ -32,7 +32,7 @@ const qreal KScaleFactor = 1.6;
 
 class Pitch : public QObject
 {
-    Q_OBJECT;
+    Q_OBJECT
 public:
     enum SetPiece {
         GoalKick,
@@ -64,6 +64,7 @@ public:
     void setPiece(Team::Direction, SetPiece s);
 
     void replayStart();
+    void replayStop();
     bool isReplay() const { return replayTimeLine_->state() == QTimeLine::Running; }
 
 
