@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "team.h"
 #include "referee.h"
+#include "goalkeeper.h"
 
 const int KReplayFrameRate = 40.00; // ms
 const int KReallyHighZValue = 10;
@@ -120,6 +121,10 @@ Player* Pitch::selectNearestPlayer(Team* team)
     foreach (Player *p, players_) {
         if ( p->team_== team ) {
 
+            // dont select the goal keeper
+            if (p->role_ == Player::GoalKeeper)
+                continue;
+
             if (!nearestPlayer)
                 nearestPlayer = p;
 
@@ -127,11 +132,11 @@ Player* Pitch::selectNearestPlayer(Team* team)
                 nearestPlayer = p;
                 break;
             }
-            const int dx = p->pos().x() - ball->pos().x();
-            const int dy = p->pos().y() - ball->pos().y();
 
             p->setHumanControlled(false);
 
+            const int dx = p->pos().x() - ball->pos().x();
+            const int dy = p->pos().y() - ball->pos().y();
             if ( (qAbs(dx*dx)+qAbs(dy*dy)) < nearest) {
                 nearestPlayer = p;
                 nearest = qAbs(qAbs(dx*dx)+qAbs(dy*dy));
@@ -391,11 +396,20 @@ void Pitch::createTeamPlayers(Team *team)
         isHomeTeam = true;
 
     for (int i = Player::GoalKeeper; i < Player::LastDummy; i++ ) {
-        Player *pl = new Player(
-                !isHomeTeam,
-                this,
-                team,
-                (Player::Role)i);
+         Player *pl(NULL);
+        if ( i ==  Player::GoalKeeper) {
+           pl = new GoalKeeper(
+                    this,
+                    team);
+
+        } else {
+            pl = new Player(
+                    !isHomeTeam,
+                    this,
+                    team,
+                    (Player::Role)i);
+        }
+        pl->createPixmaps();
         players_.append(pl);
         scene->addItem(pl);
     }
@@ -478,7 +492,7 @@ void Pitch::setPlayerAttackPositions(Team *team)
 
     QMap<int,QRectF> attackPositions;
     attackPositions.insert(Player::GoalKeeper,
-                         pitchArea[nToS ? 0 : 6][1]);
+                         pitchArea[nToS ? 0 : 7][1]);
     attackPositions.insert(Player::LeftDefence,
                          pitchArea[nToS ? 2 : 6][0]);
     attackPositions.insert(Player::RightDefence,
@@ -505,9 +519,10 @@ void Pitch::setPlayerAttackPositions(Team *team)
 
 void Pitch::goalScored(bool isNorthGoal)
 {
-    qDebug() << "GOAL !!!";
+    qDebug() << "Pitch::goalScored start";
 
     kickOff(Pitch::GoalScored);
+    qDebug() << "Pitch::goalScored end";
 }
 
 
@@ -533,6 +548,16 @@ void Pitch::replayStart()
     replayTimeLine_->start();
 }
 
+void Pitch::replayStop()
+{
+    qDebug() << "replayStop";
+    // all done, stop the time line now
+    replayTimeLine_->stop();
+    motionTimer_->start();
+    gameTimer_->start();
+    replaySnapShotTimer_->start();
+}
+
 void Pitch::makeReplaySnapshot()
 {
  //   qDebug() << "makeReplaySnapshot";
@@ -556,12 +581,9 @@ void Pitch::replayFrame(int frame)
     view->centerOn(ball_->pos());
     scoreText_->setPos(view->mapToScene(view->rect().topLeft()));
 
-    if (frame == frameCounter_) {
-        // all done, stop the time line now
-        replayTimeLine_->stop();
-        motionTimer_->start();
-        gameTimer_->start();
-    }
+    if (frame == frameCounter_)
+        replayStop();
+
     qDebug() << "replayFrame frame" << frame;
     foreach (QGraphicsItemAnimation *anim, animationItems) {
         qreal f = frame/ (KGameLength/40.00);

@@ -32,8 +32,12 @@ public:
         Pass,
         Tackle,
 
-        // replay last 10 seconds???
+        // replay last n seconds
         Replay,
+
+
+        YellowCard,
+        RedCard,
 
         DoNothing };
 

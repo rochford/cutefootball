@@ -4,70 +4,47 @@
 #include "ball.h"
 
 namespace {
-    Referee::RefereeAction calculateAction(QPointF source,
+    MWindow::Action calculateAction(QPointF source,
                                     QPointF destination)
     {
         const int dx = source.x() - destination.x();
         const int dy = source.y() - destination.y();
         if ( dx > 0 && dy == 0 )
-            return Referee::West;
+            return MWindow::West;
         else if ( dx >= 0 && dy < 0)
-            return Referee::SouthWest;
+            return MWindow::SouthWest;
         else if ( dx > 0 && dy > 0)
-            return Referee::NorthWest;
+            return MWindow::NorthWest;
         else if ( dx <= 0 && dy == 0)
-            return Referee::East;
+            return MWindow::East;
         else if ( dx < 0 && dy > 0)
-            return Referee::NorthEast;
+            return MWindow::NorthEast;
         else if ( dx < 0 && dy < 0)
-            return Referee::SouthEast;
+            return MWindow::SouthEast;
         else if ( dx == 0 && dy >= 0 )
-            return Referee::North;
+            return MWindow::North;
         else if ( dx == 0 && dy <= 0 )
-            return Referee::South;
+            return MWindow::South;
     }
 }
 
-Referee::Referee(Pitch* pitch, QObject *parent) :
-    QGraphicsPixmapItem(NULL),
-    pitch_(pitch),
-    speed_(KPlayerDefaultSpeed),
-    step_(0)
+Referee::Referee(Pitch* pitch, QObject *parent)
+    : Player(true,pitch,NULL,Player::LastDummy)
+
 {
     setPixmap(QPixmap(QString(":/images/ref.png")));
-    moveDistance_.insert(North, QPointF(0,-speed_));
-    moveDistance_.insert(NorthEast, QPointF(speed_,-speed_));
-    moveDistance_.insert(East, QPointF(speed_,0));
-    moveDistance_.insert(SouthEast, QPointF(speed_,speed_));
-    moveDistance_.insert(South, QPointF(0,speed_));
-    moveDistance_.insert(SouthWest, QPointF(-speed_,speed_));
-    moveDistance_.insert(West, QPointF(-speed_,0));
-    moveDistance_.insert(NorthWest, QPointF(-speed_,-speed_));
 
     QPointF start(pitch_->footballPitch_->rect().center().x() + 25, pitch_->footballPitch_->rect().center().y() + 50);
     setPos(start);
 }
 
-QRectF Referee::boundingRect() const
-{
-    return QRectF(-18*KScaleFactor, -18*KScaleFactor,
-                  18*KScaleFactor, 18*KScaleFactor);
-}
-
-QPainterPath Referee::shape() const
-{
-    QPainterPath path;
-    path.addRect(-18*KScaleFactor, -18*KScaleFactor,
-                 18*KScaleFactor, 18*KScaleFactor);
-    return path;
-}
 
 void Referee::advance(int phase)
 {
     if (!phase)
         return;
 
-    RefereeAction action = calculateAction(pos(), pitch_->getBall()->pos());
+    MWindow::Action action = calculateAction(pos(), pitch_->getBall()->pos());
     step_++;
 
     // if within a few pixels then dont move towards ball anymore...
@@ -78,29 +55,29 @@ void Referee::advance(int phase)
     if (dx < 15 || dy < 25) {
         switch(action)
         {
-        case North:
-            action = South;
+        case MWindow::North:
+            action = MWindow::South;
             break;
-        case NorthEast:
-            action = SouthWest;
+        case MWindow::NorthEast:
+            action = MWindow::SouthWest;
             break;
-        case East:
-            action = West;
+        case MWindow::East:
+            action = MWindow::West;
             break;
-        case SouthEast:
-            action = NorthWest;
+        case MWindow::SouthEast:
+            action = MWindow::NorthWest;
             break;
-        case South:
-            action = North;
+        case MWindow::South:
+            action = MWindow::North;
             break;
-        case SouthWest:
-            action = NorthEast;
+        case MWindow::SouthWest:
+            action = MWindow::NorthEast;
             break;
-        case West:
-            action = East;
+        case MWindow::West:
+            action = MWindow::East;
             break;
-        case NorthWest:
-            action = SouthEast;
+        case MWindow::NorthWest:
+            action = MWindow::SouthEast;
             break;
         }
     }
@@ -108,27 +85,32 @@ void Referee::advance(int phase)
     // make the move
     switch(action)
     {
-    case North:
-    case NorthEast:
-    case East:
-    case SouthEast:
-    case South:
-    case SouthWest:
-    case West:
-    case NorthWest:
+    case MWindow::North:
+    case MWindow::NorthEast:
+    case MWindow::East:
+    case MWindow::SouthEast:
+    case MWindow::South:
+    case MWindow::SouthWest:
+    case MWindow::West:
+    case MWindow::NorthWest:
    //     setPixmap(QPixmap(images_[action].at(step % 3)));
         moveBy(moveDistance_[action].x(), moveDistance_[action].y());
         break;
     }
 }
 
-void Referee::paint(QPainter *painter,
-                    const QStyleOptionGraphicsItem *option,
-                    QWidget *widget)
+void Referee::createPixmaps()
 {
-    QSize pixmapSize = pixmap().size();
-    pixmapSize.scale(QSizeF(36*KScaleFactor,36*KScaleFactor).toSize(), Qt::KeepAspectRatio);
+    QString ref(":/images/ref.png");
 
-    // Draw QGraphicsPixmapItem face
-    painter->drawPixmap(boundingRect().toRect(), pixmap());
+    QStringList list;
+    list << ref << ref << ref;
+    images_.insert(MWindow::North, list);
+    images_.insert(MWindow::NorthEast, list);
+    images_.insert(MWindow::East, list);
+    images_.insert(MWindow::SouthEast, list);
+    images_.insert(MWindow::South, list);
+    images_.insert(MWindow::SouthWest, list);
+    images_.insert(MWindow::West, list);
+    images_.insert(MWindow::NorthWest, list);
 }

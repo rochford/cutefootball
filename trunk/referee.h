@@ -2,54 +2,23 @@
 #define REFEREE_H
 
 #include <QtGui>
-#include <QGraphicsPixmapItem>
-#include <QStyleOptionGraphicsItem>
-#include <QPainter>
+
+#include "Player.h"
 
 class Pitch;
 
-class Referee : public QGraphicsPixmapItem
+class Referee : public Player
 {
 public:
     explicit Referee(Pitch* pitch, QObject *parent = 0);
 
-    enum { Type = UserType + 3 };
+    enum { Type = UserType + 4 };
     int type() const
         { return Type;}
 
     void advance(int phase);
-
-    enum RefereeAction {
-        North,
-        NorthEast,
-        East,
-        SouthEast,
-        South,
-        SouthWest,
-        West,
-        NorthWest,
-
-        YellowCard,
-        RedCard,
-
-        DoNothing };
-
-protected:
-    QRectF boundingRect() const;
-    QPainterPath shape() const;
-    void paint(QPainter *painter,
-               const QStyleOptionGraphicsItem *option,
-               QWidget *widget);
-signals:
-
-public slots:
-
-private:
-    Pitch *pitch_;
-    int speed_;
-    int step_;
-
-    QMap<RefereeAction,QPointF> moveDistance_;
+public:
+    virtual void createPixmaps();
 };
 
 #endif // REFEREE_H

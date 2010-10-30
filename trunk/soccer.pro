@@ -16,14 +16,16 @@ SOURCES += main.cpp\
     player.cpp \
     ball.cpp \
     team.cpp \
-    referee.cpp
+    referee.cpp \
+    goalkeeper.cpp
 
 HEADERS  += mainwindow.h \
     pitch.h \
     Player.h \
     ball.h \
     team.h \
-    referee.h
+    referee.h \
+    goalkeeper.h
 
 RESOURCES += \
         soccer.qrc

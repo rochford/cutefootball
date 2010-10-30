@@ -17,6 +17,7 @@ Ball::Ball(Pitch* pitch)
 {
     setPos(start_.x(), start_.y());
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
+    setZValue(8);
 
     animation_ = new QGraphicsItemAnimation(this);
     animationTimer_ = new QTimeLine(1000, this);
@@ -133,7 +134,10 @@ void Ball::moveBall(MWindow::Action action, QPointF destination)
 
 void Ball::updateBall(int frame)
 {
-    setPos(animation_->posAt(frame/20.0));
+    // animation may no longer be running due to a goal
+    if ( animationTimer_->state() == QTimeLine::Running ) {
+        setPos(animation_->posAt(frame/20.0));
+    }
 }
 
 QVariant Ball::itemChange(GraphicsItemChange change, const QVariant &value)

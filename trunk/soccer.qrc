@@ -62,5 +62,6 @@
         <file>images/ball2.png</file>
         <file>images/ball3.png</file>
         <file>images/ball.png</file>
+        <file>images/keeperNorth.PNG</file>
     </qresource>
 </RCC>
