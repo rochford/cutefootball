@@ -18,9 +18,6 @@ public:
     int type() const
         { return Type;}
 
-protected:
-    virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
-
 public:
     void createPixmaps();
     void advance(int phase);

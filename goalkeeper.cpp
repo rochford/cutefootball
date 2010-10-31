@@ -9,8 +9,6 @@ GoalKeeper::GoalKeeper(Pitch *pitch,
     : Player(true,pitch,team,Player::GoalKeeper)
 {
     setPixmap(QPixmap(QString(":/images/keeperNorth.PNG")));
-
-    setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
 }
 
 void GoalKeeper::createPixmaps()
@@ -29,17 +27,6 @@ void GoalKeeper::createPixmaps()
     images_.insert(MWindow::NorthWest, list);
 }
 
-QVariant GoalKeeper::itemChange(GraphicsItemChange change, const QVariant &value)
- {
-     if (change == ItemPositionChange && scene()) {
-         // value is the new position.
-         QPointF newPos = value.toPointF();
-            // TODO penalty scecnarios
-            // offside scenarios
-         }
-     return QGraphicsItem::itemChange(change, value);
- }
-
 void GoalKeeper::advance(int phase)
 {
     if (!phase)
@@ -55,9 +42,9 @@ void GoalKeeper::gkAdvanceWithoutBall()
     if (!team_->teamHasBall_) {
         // if the ball enters the penalty area then go for it.
 
-        if ( (team_->getDirection() == Team::NorthToSouth
+        if ( (team_->getDirection() == Team::SouthToNorth
                 && pitch_->bottomPenaltyArea->contains(pitch_->getBall()->pos()) )
-            || (team_->getDirection() == Team::SouthToNorth
+            || (team_->getDirection() == Team::NorthToSouth
                 && pitch_->topPenaltyArea->contains(pitch_->getBall()->pos())) ) {
             MWindow::Action action;
             int dx = abs(pos().x() - pitch_->getBall()->pos().x());

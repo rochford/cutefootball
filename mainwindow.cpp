@@ -2,6 +2,8 @@
 
 #include "mainwindow.h"
 #include "pitch.h"
+#include "replay.h"
+
 
 MWindow::MWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -111,7 +113,7 @@ void MWindow::keyPressEvent( QKeyEvent *event )
 
     Action a = actions[ event->key() ];
 
-    if ( pitch->isReplay() )
+    if ( pitch->replay_->isReplay() )
         // Not allowed to stop a replay!!!
         // pitch->replayStop();
         ;

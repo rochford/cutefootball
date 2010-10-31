@@ -18,6 +18,7 @@ class Ball;
 class Player;
 class Team;
 class Referee;
+class Replay;
 
 const int KGameRefreshRate = 1000 / 24; // ms
 const int KGameLength = 80*1000; // 80 seconds
@@ -61,12 +62,10 @@ public:
     void setPlayerStartPositions(Team *team);
     void setPlayerDefendPositions(Team *team);
     void setPlayerAttackPositions(Team *team);
-    void setPiece(Team::Direction, SetPiece s);
+    void setPiece(Team* t, SetPiece s);
 
     void replayStart();
     void replayStop();
-    bool isReplay() const { return replayTimeLine_->state() == QTimeLine::Running; }
-
 
 public slots:
     void newGame();
@@ -81,9 +80,6 @@ public slots:
     void decrementGameTime();
 
     void goalScored(bool isLeftGoal);
-
-    void makeReplaySnapshot();
-    void replayFrame(int frame);
 
 signals:
    void focusedPlayerChanged();
@@ -106,7 +102,6 @@ private:
     // Issues timeout every second.
     // used to decrement the amount of game time left
     QTimer *gameTimer_;
-    QTimer *replaySnapShotTimer_;
     Game nextGameState_;
 
     // amounts of MS left in this half
@@ -115,9 +110,6 @@ private:
     Player *lastNearestPlayer; // NOT OWNED
     int remainingGameTime_;
 
-    QTimeLine* replayTimeLine_;
-    qreal frameCounter_;
-    QList<QGraphicsItemAnimation*> animationItems;
 public:
     QGraphicsRectItem *bottomGoal;
     QGraphicsRectItem *topGoal;
@@ -125,6 +117,9 @@ public:
     QGraphicsRectItem *topPenaltyArea;
     QGraphicsSimpleTextItem *scoreText_;
     QRectF pitchArea[KRow][KColumn];
+
+    Replay* replay_;
+//    QList<QGraphicsItemAnimation*> animationItems;
 };
 
 #endif // PITCH_H

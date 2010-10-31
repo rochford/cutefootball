@@ -1,35 +1,35 @@
 #include "Player.h"
 #include "pitch.h"
 #include "ball.h"
+#include "replay.h"
 
 #include <QtGui>
 #include <QDebug>
 #include <QGraphicsItem>
 
 
-    MWindow::Action calculateAction(QPointF source,
-                                    QPointF destination)
-    {
-        const int dx = source.x() - destination.x();
-        const int dy = source.y() - destination.y();
-        if ( dx > 0 && dy == 0 )
-            return MWindow::West;
-        else if ( dx >= 0 && dy < 0)
-            return MWindow::SouthWest;
-        else if ( dx > 0 && dy > 0)
-            return MWindow::NorthWest;
-        else if ( dx <= 0 && dy == 0)
-            return MWindow::East;
-        else if ( dx < 0 && dy > 0)
-            return MWindow::NorthEast;
-        else if ( dx < 0 && dy < 0)
-            return MWindow::SouthEast;
-        else if ( dx == 0 && dy >= 0 )
-            return MWindow::North;
-        else if ( dx == 0 && dy <= 0 )
-            return MWindow::South;
-    }
-
+MWindow::Action calculateAction(QPointF source,
+                                QPointF destination)
+{
+    const int dx = source.x() - destination.x();
+    const int dy = source.y() - destination.y();
+    if ( dx > 0 && dy == 0 )
+        return MWindow::West;
+    else if ( dx >= 0 && dy < 0)
+        return MWindow::SouthWest;
+    else if ( dx > 0 && dy > 0)
+        return MWindow::NorthWest;
+    else if ( dx <= 0 && dy == 0)
+        return MWindow::East;
+    else if ( dx < 0 && dy > 0)
+        return MWindow::NorthEast;
+    else if ( dx < 0 && dy < 0)
+        return MWindow::SouthEast;
+    else if ( dx == 0 && dy >= 0 )
+        return MWindow::North;
+    else if ( dx == 0 && dy <= 0 )
+        return MWindow::South;
+}
 
 void Player::createMoves()
 {
@@ -43,6 +43,20 @@ void Player::createMoves()
     moveDistance_.insert(MWindow::NorthWest, QPointF(-speed_,-speed_));
 }
 
+void Player::pixmapInsert(MWindow::Action a, QString s1, QString s2, QString s3)
+{
+    QString s(":/images/");
+    if (team_ == pitch_->homeTeam_)
+        s.append("red/");
+    else
+        s.append("blue/");
+
+    QString n1(s), n2(s), n3(s);
+    QStringList list;
+    list <<   n1.append(s1) << n2.append(s2) << n3.append(s3);
+    images_.insert(a, list);
+}
+
 void Player::createPixmaps()
 {
     QString s(":/images/");
@@ -51,45 +65,58 @@ void Player::createPixmaps()
     else
         s.append("blue/");
 
+    pixmapInsert(MWindow::North, "playerNorth.PNG", "playerNorth1.PNG", "playerNorth2.PNG");
+    pixmapInsert(MWindow::NorthEast, "playerNorthEast.PNG", "playerNorthEast1.PNG", "playerNorthEast2.PNG");
+    pixmapInsert(MWindow::East, "playerEast.PNG", "playerEast1.PNG", "playerEast2.PNG");
+    pixmapInsert(MWindow::SouthEast, "playerSouthEast.PNG", "playerSouthEast1.PNG", "playerSouthEast2.PNG");
+    pixmapInsert(MWindow::South, "playerSouth.PNG", "playerSouth1.PNG", "playerSouth2.PNG");
+    pixmapInsert(MWindow::SouthWest, "playerSouthWest.PNG", "playerSouthWest1.PNG", "playerSouthWest2.PNG");
+    pixmapInsert(MWindow::West, "playerWest.PNG", "playerWest1.PNG", "playerWest2.PNG");
+    pixmapInsert(MWindow::NorthWest, "playerNorthWest.PNG", "playerNorthWest1.PNG", "playerNorthWest2.PNG");
+
+    pixmapInsert(MWindow::ThrownIn, "playerNorthWest.PNG", "playerNorthWest1.PNG", "playerNorthWest2.PNG"); // TODO XXX TIM
+
     QStringList list;
     QString n1(s), n2(s), n3(s);
-    list <<   n1.append("playerNorth.PNG") << n2.append("playerNorth1.PNG") << n3.append("playerNorth2.PNG");
-    images_.insert(MWindow::North, list);
+
+    n1 = s; n2 = s; n3 = s;
+    list << QString(":/images/red/tackleNorth.PNG");
+    images_.insert(MWindow::TackleNorth, list);
     list.clear();
 
     n1 = s; n2 = s; n3 = s;
-    list << n1.append("playerNorthEast.PNG") << n2.append("playerNorthEast1.PNG")<< n3.append("playerNorthEast2.PNG");
-    images_.insert(MWindow::NorthEast, list);
+    list << QString(":/images/red/tackleNorthEast.PNG");
+    images_.insert(MWindow::TackleNorthEast, list);
     list.clear();
 
     n1 = s; n2 = s; n3 = s;
-    list << n1.append("playerEast.PNG") << n2.append("playerEast1.PNG")<< n3.append("playerEast2.PNG");
-    images_.insert(MWindow::East, list);
+    list << QString(":/images/red/tackleEast.PNG");
+    images_.insert(MWindow::TackleEast, list);
     list.clear();
 
     n1 = s; n2 = s; n3 = s;
-    list << n1.append("playerSouthEast.PNG") << n2.append("playerSouthEast1.PNG")<< n3.append("playerSouthEast2.PNG");
-    images_.insert(MWindow::SouthEast, list);
+    list << QString(":/images/red/tackleSouthEast.PNG");
+    images_.insert(MWindow::TackleSouthEast, list);
     list.clear();
 
     n1 = s; n2 = s; n3 = s;
-    list << n1.append("playerSouth.PNG") << n2.append("playerSouth1.PNG")<< n3.append("playerSouth2.PNG");
-    images_.insert(MWindow::South, list);
+    list << QString(":/images/red/tackleSouth.PNG");
+    images_.insert(MWindow::TackleSouth, list);
     list.clear();
 
     n1 = s; n2 = s; n3 = s;
-    list << n1.append("playerSouthWest.PNG") << n2.append("playerSouthWest1.PNG")<< n3.append("playerSouthWest2.PNG");
-    images_.insert(MWindow::SouthWest, list);
+    list << QString(":/images/red/tackleSouthWest.PNG");
+    images_.insert(MWindow::TackleSouthWest, list);
     list.clear();
 
     n1 = s; n2 = s; n3 = s;
-    list << n1.append("playerWest.PNG") << n2.append("playerWest1.PNG")<< n3.append("playerWest2.PNG");
-    images_.insert(MWindow::West, list);
+    list << QString(":/images/red/tackleWest.PNG");
+    images_.insert(MWindow::TackleWest, list);
     list.clear();
 
     n1 = s; n2 = s; n3 = s;
-    list << n1.append("playerNorthWest.PNG") << n2.append("playerNorthWest1.PNG")<< n3.append("playerNorthWest2.PNG");
-    images_.insert(MWindow::NorthWest, list);
+    list << QString(":/images/red/tackleNorthWest.PNG");
+    images_.insert(MWindow::TackleNorthWest, list);
 }
 
 Player::Player(bool computerControlled,
@@ -109,8 +136,6 @@ Player::Player(bool computerControlled,
     step_(0),
     outOfAction_(NULL)
 {
-    setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
-
     outOfAction_ = new QTimer(this);
     outOfAction_->setSingleShot(true);
 
@@ -130,7 +155,7 @@ void Player::paint(QPainter *painter,
                    QWidget *widget)
 {
     // the player that is focused get red circle around them
-    if ( humanControlled_ && !pitch_->isReplay()) {
+    if ( humanControlled_ && !pitch_->replay_->isReplay()) {
         QBrush brush(Qt::white, Qt::Dense3Pattern);
         painter->setBrush(brush);
         painter->drawEllipse(QPointF(0,0), 8*KScaleFactor, 8*KScaleFactor);
@@ -161,7 +186,7 @@ QPainterPath Player::shape() const
 void Player::movePlayer(MWindow::Action action)
 {
     // if the ball is not owned then take ownership
-    if ( ballCollisionCheck() && pitch_->getBall()->controlledBy() == NULL ) {
+    if ( ballCollisionCheck() && !pitch_->getBall()->controlledBy() ) {
         hasBall_ = true;
         pitch_->getBall()->setControlledBy(this);
     }
@@ -206,6 +231,17 @@ bool Player::withinShootingDistance() const
 
 void Player::specialAction(MWindow::Action action)
 {
+    switch ( action ) {
+    case MWindow::ThrownIn:
+        {
+            setPixmap(QPixmap(images_[action].at(0)));
+            outOfAction_->start(1500);
+        }
+        return;
+    default:
+        break;
+    }
+
     qDebug() << "specialAction start";
     // if not have ball then must be tackle
     // if have ball then either shot or pass
@@ -243,38 +279,32 @@ void Player::specialAction(MWindow::Action action)
 
         switch(lastAction_) {
         case MWindow::North:
-            setPixmap(QPixmap(QString(":/images/red/tackleNorth.PNG")));
-            moveBy(moveDistance_[lastAction_].x(), moveDistance_[lastAction_].y());
+            action = MWindow::TackleNorth;
             break;
         case MWindow::NorthEast:
-            setPixmap(QPixmap(QString(":/images/red/tackleNorthEast.PNG")));
-            moveBy(moveDistance_[lastAction_].x(), moveDistance_[lastAction_].y());
+            action = MWindow::TackleNorthEast;
             break;
         case MWindow::East:
-            setPixmap(QPixmap(QString(":/images/red/tackleEast.PNG")));
-            moveBy(moveDistance_[lastAction_].x(), moveDistance_[lastAction_].y());
+            action = MWindow::TackleEast;
             break;
         case MWindow::SouthEast:
-            setPixmap(QPixmap(QString(":/images/red/tackleSouthEast.PNG")));
-            moveBy(moveDistance_[lastAction_].x(), moveDistance_[lastAction_].y());
+            action = MWindow::TackleSouthEast;
             break;
         case MWindow::South:
-            setPixmap(QPixmap(QString(":/images/red/tackleSouth.PNG")));
-            moveBy(moveDistance_[lastAction_].x(), moveDistance_[lastAction_].y());
+            action = MWindow::TackleSouth;
             break;
         case MWindow::SouthWest:
-            setPixmap(QPixmap(QString(":/images/red/tackleSouthWest.PNG")));
-            moveBy(moveDistance_[lastAction_].x(), moveDistance_[lastAction_].y());
+            action = MWindow::TackleSouthWest;
             break;
         case MWindow::West:
-            setPixmap(QPixmap(QString(":/images/red/tackleWest.PNG")));
-            moveBy(moveDistance_[lastAction_].x(), moveDistance_[lastAction_].y());
+            action = MWindow::TackleWest;
             break;
         case MWindow::NorthWest:
-            setPixmap(QPixmap(QString(":/images/red/tackleNorthWest.PNG")));
-            moveBy(moveDistance_[lastAction_].x(), moveDistance_[lastAction_].y());
+            action = MWindow::TackleNorthWest;
             break;
         }
+        setPixmap(QPixmap(images_[action].at(0)));
+        moveBy(moveDistance_[lastAction_].x(), moveDistance_[lastAction_].y());
         //outOfAction_->stop();
         //outOfAction_->start(500);
 
@@ -303,18 +333,16 @@ void Player::isTackled(bool defeated)
 
 void Player::move(MWindow::Action action)
 {
-    //qDebug() << "move start";
-
     if (action == MWindow::Button
         || action == MWindow::Shoot
         || action == MWindow::Tackle
-        || action == MWindow::Pass ) {
+        || action == MWindow::Pass
+        || action == MWindow::ThrownIn ) {
         qDebug() << "move specialAction";
         specialAction(action);
     }
     else
         movePlayer(action);
-    //qDebug() << "move end";
 }
 
 // same team
@@ -427,6 +455,14 @@ void Player::computerAdvanceWithoutBall()
 void Player::computerAdvanceWithBall()
 {
     setZValue(6);
+
+    // if the last action was thrownIn, then just pass the ball...
+    if ( lastAction_ == MWindow::ThrownIn ) {
+        pitch_->getBall()->setVisible( true );
+        move(MWindow::Pass);
+        return;
+    }
+
     //qDebug() << "computerAdvanceWithBall start";
     QPointF destination;
     if (team_->getDirection() == Team::SouthToNorth )
@@ -437,19 +473,10 @@ void Player::computerAdvanceWithBall()
     MWindow::Action act = calculateAction(pos(), destination);
 
     switch(role_) {
-        // goal keepers kick the ball
     case Player::GoalKeeper:
-        move(MWindow::Pass);
+        // should not happen
         break;
-    // defenders run with it until man marked
-    case Player::LeftDefence:
-    case Player::RightDefence:
-    case Player::LeftMidfield:
-    case Player::CentralMidfield:
-    case Player::RightMidfield:
-    case Player::LeftAttack:
-    case Player::RightAttack:
-    case Player::CentralAttack:
+    default:
         if (withinShootingDistance()) {
             move(MWindow::Shoot);
             hasBall_ = false;
@@ -493,13 +520,3 @@ void Player::advance(int phase)
         humanAdvance(phase);
 }
 
-QVariant Player::itemChange(GraphicsItemChange change, const QVariant &value)
- {
-     if (change == ItemPositionChange && scene()) {
-         // value is the new position.
-         QPointF newPos = value.toPointF();
-            // TODO penalty scecnarios
-            // offside scenarios
-         }
-     return QGraphicsItem::itemChange(change, value);
- }

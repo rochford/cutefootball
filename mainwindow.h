@@ -5,6 +5,7 @@
 #include <qmap.h>
 
 class Pitch;
+class Replay;
 
 class MWindow : public QMainWindow
 {
@@ -32,9 +33,19 @@ public:
         Pass,
         Tackle,
 
+        TackleWest,
+        TackleNorthWest,
+        TackleNorthEast,
+        TackleSouthEast,
+        TackleSouthWest,
+        TackleEast,
+        TackleNorth,
+        TackleSouth,
+
+        ThrownIn,
+
         // replay last n seconds
         Replay,
-
 
         YellowCard,
         RedCard,

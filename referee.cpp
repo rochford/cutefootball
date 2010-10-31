@@ -3,31 +3,6 @@
 #include "pitch.h"
 #include "ball.h"
 
-namespace {
-    MWindow::Action calculateAction(QPointF source,
-                                    QPointF destination)
-    {
-        const int dx = source.x() - destination.x();
-        const int dy = source.y() - destination.y();
-        if ( dx > 0 && dy == 0 )
-            return MWindow::West;
-        else if ( dx >= 0 && dy < 0)
-            return MWindow::SouthWest;
-        else if ( dx > 0 && dy > 0)
-            return MWindow::NorthWest;
-        else if ( dx <= 0 && dy == 0)
-            return MWindow::East;
-        else if ( dx < 0 && dy > 0)
-            return MWindow::NorthEast;
-        else if ( dx < 0 && dy < 0)
-            return MWindow::SouthEast;
-        else if ( dx == 0 && dy >= 0 )
-            return MWindow::North;
-        else if ( dx == 0 && dy <= 0 )
-            return MWindow::South;
-    }
-}
-
 Referee::Referee(Pitch* pitch, QObject *parent)
     : Player(true,pitch,NULL,Player::LastDummy)
 
