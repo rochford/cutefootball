@@ -20,7 +20,6 @@ void Referee::advance(int phase)
         return;
 
     MWindow::Action action = calculateAction(pos(), pitch_->getBall()->pos());
-    step_++;
 
     // if within a few pixels then dont move towards ball anymore...
     int dx = abs(pos().x() - pitch_->getBall()->pos().x());

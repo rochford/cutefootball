@@ -107,7 +107,7 @@ private:
     // amounts of MS left in this half
     int remainingTimeInHalfMs_;
 
-    Player *lastNearestPlayer; // NOT OWNED
+    Player *lastNearestPlayer_; // NOT OWNED
     int remainingGameTime_;
 
 public:
@@ -119,7 +119,6 @@ public:
     QRectF pitchArea[KRow][KColumn];
 
     Replay* replay_;
-//    QList<QGraphicsItemAnimation*> animationItems;
 };
 
 #endif // PITCH_H
