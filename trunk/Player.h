@@ -67,7 +67,7 @@ protected:
     void paint(QPainter *painter,
                           const QStyleOptionGraphicsItem *option,
                           QWidget *widget);
-    virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+
 private:
     void humanAdvance(int phase);
     void computerAdvance(int phase);
@@ -77,6 +77,8 @@ private:
     void automove();
 
     void createMoves();
+    void pixmapInsert(MWindow::Action a, QString s1, QString s2, QString s3);
+
 public:
     virtual void createPixmaps();
 

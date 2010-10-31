@@ -17,7 +17,8 @@ SOURCES += main.cpp\
     ball.cpp \
     team.cpp \
     referee.cpp \
-    goalkeeper.cpp
+    goalkeeper.cpp \
+    replay.cpp
 
 HEADERS  += mainwindow.h \
     pitch.h \
@@ -25,7 +26,8 @@ HEADERS  += mainwindow.h \
     ball.h \
     team.h \
     referee.h \
-    goalkeeper.h
+    goalkeeper.h \
+    replay.h
 
 RESOURCES += \
         soccer.qrc

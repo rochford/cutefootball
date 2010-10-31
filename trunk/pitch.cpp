@@ -10,8 +10,9 @@
 #include "team.h"
 #include "referee.h"
 #include "goalkeeper.h"
+#include "replay.h"
 
-const int KReplayFrameRate = 40.00; // ms
+
 const int KReallyHighZValue = 10;
 
 const QPen KWhitePaintPen(QBrush(Qt::white),3);
@@ -31,15 +32,10 @@ Pitch::Pitch(const QRectF& footballGroundRect)
     lastNearestPlayer(NULL),
     bottomGoal(NULL),
     topGoal(NULL),
-    replayTimeLine_(NULL),
-    frameCounter_(0.0),
+//    frameCounter_(0.0),
     remainingTimeInHalfMs_(KGameLength)
 {
-    // replay will show 1 frame per second, for each second of the game
-    replayTimeLine_ = new QTimeLine(KGameLength, this);
-    replayTimeLine_->setFrameRange(0, KGameLength/KReplayFrameRate);
-    replayTimeLine_->setUpdateInterval(KReplayFrameRate);
-    replayTimeLine_->setCurveShape(QTimeLine::LinearCurve);
+    replay_ = new Replay(this, this);
 
     scene->setBackgroundBrush(QPixmap(QString(":/images/pitch2.GIF")));
 
@@ -51,7 +47,6 @@ Pitch::Pitch(const QRectF& footballGroundRect)
     motionTimer_->setInterval(KGameRefreshRate);
     gameTimer_ = new QTimer(this);
     gameTimer_->setInterval(1000);
-    replaySnapShotTimer_ = new QTimer(this);
 
     // create the pitch
     footballPitch_ = scene->addRect(30, 30, scene->width()-60, scene->height() -60,
@@ -104,12 +99,9 @@ Pitch::Pitch(const QRectF& footballGroundRect)
     connect(motionTimer_, SIGNAL(timeout()), scene, SLOT(update()));
     connect(motionTimer_, SIGNAL(timeout()), this, SLOT(hasBallCheck()));
     connect(motionTimer_, SIGNAL(timeout()), this, SLOT(selectNearestPlayer()));
+
     connect(gameTimer_, SIGNAL(timeout()), this, SLOT(updateDisplayTime()));
-
     connect(gameTimer_, SIGNAL(timeout()), this, SLOT(decrementGameTime()));
-
-    connect(replaySnapShotTimer_, SIGNAL(timeout()), this, SLOT(makeReplaySnapshot()));
-    connect(replayTimeLine_, SIGNAL(frameChanged(int)), this, SLOT(replayFrame(int)));
 }
 
 Player* Pitch::selectNearestPlayer(Team* team)
@@ -146,8 +138,36 @@ Player* Pitch::selectNearestPlayer(Team* team)
     return nearestPlayer;
 }
 
-void Pitch::setPiece(Team::Direction, SetPiece s)
+void Pitch::setPiece(Team* t, SetPiece s)
 {
+    switch( s ) {
+    case Pitch::ThrowIn:
+        {
+            if ( t == awayTeam_ ) {
+                awayTeam_->setHasBall( true );
+                homeTeam_->setHasBall( false );
+            } else {
+                awayTeam_->setHasBall( false );
+                homeTeam_->setHasBall( true );
+            }
+
+            // find the nearest player to the ball and move them to the throw in position
+            QPointF ballPos = getBall()->pos();
+            Player* throwInTaker = selectNearestPlayer(t);
+            if ( throwInTaker ) {
+                // change the player graphic to be throw in graphic
+                throwInTaker->setPos( ballPos );
+                throwInTaker->hasBall_ = true;
+                ball_->setControlledBy( throwInTaker );
+                throwInTaker->move( MWindow::ThrownIn );
+                // hide the ball
+               // ball_->setVisible( false );
+            }
+        }
+        break;
+    default:
+        break;
+    }
 }
 
 void Pitch::selectNearestPlayer()
@@ -213,7 +233,7 @@ void Pitch::kickOff(Game state)
         scene->addItem(ball_);
         scene->addItem(referee_);
 
-        replaySnapShotTimer_->start(KReplayFrameRate);
+        replay_->replaySnapShotTimer_->start();
 
         nextGameState_ = FirstHalfOver;
         break;
@@ -339,17 +359,7 @@ void Pitch::newGame()
 
     referee_ = new Referee(this);
 
-    QGraphicsItemAnimation* anim = new QGraphicsItemAnimation(this);
-    anim->setItem(ball_);
-    anim->setTimeLine(replayTimeLine_);
-    animationItems.append(anim);
-
-    foreach (Player *p, players_) {
-        QGraphicsItemAnimation* anim = new QGraphicsItemAnimation(this);
-        anim->setItem(p);
-        anim->setTimeLine(replayTimeLine_);
-        animationItems.append(anim);
-    }
+    replay_->createAnimationItems();
 
     updateDisplayTime();
     kickOff();
@@ -519,77 +529,24 @@ void Pitch::setPlayerAttackPositions(Team *team)
 
 void Pitch::goalScored(bool isNorthGoal)
 {
-    qDebug() << "Pitch::goalScored start";
-
     kickOff(Pitch::GoalScored);
-    qDebug() << "Pitch::goalScored end";
 }
 
 
 void Pitch::replayStart()
 {
-    qDebug() << "replay secondCounter_" << frameCounter_;
     motionTimer_->stop();
     gameTimer_->stop();
 
-    // dont make snapshots while replaying
-    replaySnapShotTimer_->stop();
-
-    // stop if previously started
-    replayTimeLine_->stop();
-
-    // only display last 5 seconds
-    int startFrame = frameCounter_ - 5*(1000/KReplayFrameRate);
-    qDebug() << "replay startFrame" << startFrame;
-    // replayTimeLine_->setStartFrame(startFrame);
-    //replayTimeLine_->setEndFrame(frameCounter_);
-    replayTimeLine_->setFrameRange(startFrame, frameCounter_);
-    replayTimeLine_->setDuration(5*1000);
-    replayTimeLine_->start();
+    replay_->replayStart();
 }
 
 void Pitch::replayStop()
 {
     qDebug() << "replayStop";
     // all done, stop the time line now
-    replayTimeLine_->stop();
+
     motionTimer_->start();
     gameTimer_->start();
-    replaySnapShotTimer_->start();
 }
 
-void Pitch::makeReplaySnapshot()
-{
- //   qDebug() << "makeReplaySnapshot";
-    // for each graphics item on the scene,
-    // make an animation object
-    // set the timeline value for the animation objects
-    qreal f = frameCounter_ / (KGameLength/KReplayFrameRate);
-    animationItems[0]->setPosAt(f, ball_->pos());
-
-    int cnt = 1;
-    foreach (Player *p, players_) {
-
-        f = frameCounter_ / (KGameLength/KReplayFrameRate);
-        animationItems[cnt++]->setPosAt(f, p->pos());
-        }
-    frameCounter_++;
-}
-
-void Pitch::replayFrame(int frame)
-{
-    view->centerOn(ball_->pos());
-    scoreText_->setPos(view->mapToScene(view->rect().topLeft()));
-
-    if (frame == frameCounter_)
-        replayStop();
-
-    qDebug() << "replayFrame frame" << frame;
-    foreach (QGraphicsItemAnimation *anim, animationItems) {
-        qreal f = frame/ (KGameLength/40.00);
-        QPointF before = anim->item()->pos();
-
-        anim->item()->setPos(anim->posAt(f));
-    }
-    scene->update();
-}

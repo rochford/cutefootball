@@ -165,21 +165,16 @@ QVariant Ball::itemChange(GraphicsItemChange change, const QVariant &value)
 
              // goal kick or corner?
              bool homeTeamTouchedLast = pitch_->homeTeam_->teamHasBall_;
-             Team::Direction dir;
-             if (homeTeamTouchedLast)
-                 dir = pitch_->awayTeam_->getDirection();
-             else
-                 dir = pitch_->homeTeam_->getDirection();
 
              // throw in?
              if (rect.right() < newPos.x()) {
-                 pitch_->setPiece(dir, Pitch::ThrowIn);
+                 pitch_->setPiece(homeTeamTouchedLast ? pitch_->awayTeam_ : pitch_->homeTeam_, Pitch::ThrowIn);
                  newPos.setX(pitch_->footballPitch_->rect().right());
                  return newPos;
              }
              if (rect.x() > newPos.x()) {
-                 pitch_->setPiece(dir, Pitch::ThrowIn);
-                 newPos.setX(pitch_->footballPitch_->rect().x());
+                 pitch_->setPiece(homeTeamTouchedLast ? pitch_->awayTeam_ : pitch_->homeTeam_, Pitch::ThrowIn);
+                 newPos.setX(pitch_->footballPitch_->rect().left());
                  return newPos;
              }
          }
