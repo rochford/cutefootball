@@ -63,5 +63,13 @@
         <file>images/ball3.png</file>
         <file>images/ball.png</file>
         <file>images/keeperNorth.PNG</file>
+        <file>images/blue/tackleEast.PNG</file>
+        <file>images/blue/tackleNorth.PNG</file>
+        <file>images/blue/tackleNorthEast.PNG</file>
+        <file>images/blue/tackleNorthWest.PNG</file>
+        <file>images/blue/tackleSouth.PNG</file>
+        <file>images/blue/tackleSouthEast.PNG</file>
+        <file>images/blue/tackleSouthWest.PNG</file>
+        <file>images/blue/tackleWest.PNG</file>
     </qresource>
 </RCC>

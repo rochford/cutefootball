@@ -13,21 +13,21 @@ MWindow::Action calculateAction(QPointF source,
 {
     const int dx = source.x() - destination.x();
     const int dy = source.y() - destination.y();
-    if ( dx > 0 && dy == 0 )
+    if (dx > 0 && dy == 0)
         return MWindow::West;
-    else if ( dx >= 0 && dy < 0)
+    else if (dx >= 0 && dy < 0)
         return MWindow::SouthWest;
-    else if ( dx > 0 && dy > 0)
+    else if (dx > 0 && dy > 0)
         return MWindow::NorthWest;
-    else if ( dx <= 0 && dy == 0)
+    else if (dx <= 0 && dy == 0)
         return MWindow::East;
-    else if ( dx < 0 && dy > 0)
+    else if (dx < 0 && dy > 0)
         return MWindow::NorthEast;
-    else if ( dx < 0 && dy < 0)
+    else if (dx < 0 && dy < 0)
         return MWindow::SouthEast;
-    else if ( dx == 0 && dy >= 0 )
+    else if (dx == 0 && dy >= 0)
         return MWindow::North;
-    else if ( dx == 0 && dy <= 0 )
+    else if (dx == 0 && dy <= 0)
         return MWindow::South;
 }
 
@@ -76,47 +76,14 @@ void Player::createPixmaps()
 
     pixmapInsert(MWindow::ThrownIn, "playerNorthWest.PNG", "playerNorthWest1.PNG", "playerNorthWest2.PNG"); // TODO XXX TIM
 
-    QStringList list;
-    QString n1(s), n2(s), n3(s);
-
-    n1 = s; n2 = s; n3 = s;
-    list << QString(":/images/red/tackleNorth.PNG");
-    images_.insert(MWindow::TackleNorth, list);
-    list.clear();
-
-    n1 = s; n2 = s; n3 = s;
-    list << QString(":/images/red/tackleNorthEast.PNG");
-    images_.insert(MWindow::TackleNorthEast, list);
-    list.clear();
-
-    n1 = s; n2 = s; n3 = s;
-    list << QString(":/images/red/tackleEast.PNG");
-    images_.insert(MWindow::TackleEast, list);
-    list.clear();
-
-    n1 = s; n2 = s; n3 = s;
-    list << QString(":/images/red/tackleSouthEast.PNG");
-    images_.insert(MWindow::TackleSouthEast, list);
-    list.clear();
-
-    n1 = s; n2 = s; n3 = s;
-    list << QString(":/images/red/tackleSouth.PNG");
-    images_.insert(MWindow::TackleSouth, list);
-    list.clear();
-
-    n1 = s; n2 = s; n3 = s;
-    list << QString(":/images/red/tackleSouthWest.PNG");
-    images_.insert(MWindow::TackleSouthWest, list);
-    list.clear();
-
-    n1 = s; n2 = s; n3 = s;
-    list << QString(":/images/red/tackleWest.PNG");
-    images_.insert(MWindow::TackleWest, list);
-    list.clear();
-
-    n1 = s; n2 = s; n3 = s;
-    list << QString(":/images/red/tackleNorthWest.PNG");
-    images_.insert(MWindow::TackleNorthWest, list);
+    pixmapInsert(MWindow::TackleNorth, "tackleNorth.PNG", "tackleNorth.PNG", "tackleNorth.PNG"); // TODO XXX TIM
+    pixmapInsert(MWindow::TackleNorthEast, "tackleNorthEast.PNG", "tackleNorthEast.PNG", "tackleNorthEast.PNG"); // TODO XXX TIM
+    pixmapInsert(MWindow::TackleEast, "tackleEast.PNG", "tackleEast.PNG", "tackleEast.PNG"); // TODO XXX TIM
+    pixmapInsert(MWindow::TackleSouthEast, "tackleSouthEast.PNG", "tackleSouthEast.PNG", "tackleSouthEast.PNG"); // TODO XXX TIM
+    pixmapInsert(MWindow::TackleSouth, "tackleSouth.PNG", "tackleSouth.PNG", "tackleSouth.PNG"); // TODO XXX TIM
+    pixmapInsert(MWindow::TackleSouthWest, "tackleSouthWest.PNG", "tackleSouthWest.PNG", "tackleSouthWest.PNG"); // TODO XXX TIM
+    pixmapInsert(MWindow::TackleWest, "tackleWest.PNG", "tackleWest.PNG", "tackleWest.PNG"); // TODO XXX TIM
+    pixmapInsert(MWindow::TackleNorthWest, "tackleNorthWest.PNG", "tackleNorthWest.PNG", "tackleNorthWest.PNG"); // TODO XXX TIM
 }
 
 Player::Player(bool computerControlled,
@@ -155,7 +122,7 @@ void Player::paint(QPainter *painter,
                    QWidget *widget)
 {
     // the player that is focused get red circle around them
-    if ( humanControlled_ && !pitch_->replay_->isReplay()) {
+    if (humanControlled_ && !pitch_->replay_->isReplay()) {
         QBrush brush(Qt::white, Qt::Dense3Pattern);
         painter->setBrush(brush);
         painter->drawEllipse(QPointF(0,0), 8*KScaleFactor, 8*KScaleFactor);
@@ -170,9 +137,7 @@ void Player::paint(QPainter *painter,
 
 void Player::goalScored(bool isLeftGoal)
 {
-    qDebug() << "Player::goalScored start";
- //   setPixmap(QPixmap(images_[MWindow::North].at(step_ % 3)));
-    qDebug() << "Player::goalScored end";
+    // TODO
 }
 
 QPainterPath Player::shape() const
@@ -186,14 +151,13 @@ QPainterPath Player::shape() const
 void Player::movePlayer(MWindow::Action action)
 {
     // if the ball is not owned then take ownership
-    if ( ballCollisionCheck() && !pitch_->getBall()->controlledBy() ) {
+    if (ballCollisionCheck() && !pitch_->getBall()->controlledBy()) {
         hasBall_ = true;
         pitch_->getBall()->setControlledBy(this);
-    }
-    else if ( !ballCollisionCheck())
+    } else if (!ballCollisionCheck())
         hasBall_ = false;
 
-    if ( hasBall_ )
+    if (hasBall_)
         pitch_->getBall()->moveBall(action, speed_);
 
     step_++;
@@ -212,6 +176,8 @@ void Player::movePlayer(MWindow::Action action)
         moveBy(moveDistance_[action].x(), moveDistance_[action].y());
         lastAction_ = action;
         break;
+    default:
+        break;
     }
 }
 
@@ -224,31 +190,28 @@ bool Player::withinShootingDistance() const
              && pitch_->topPenaltyArea->contains(pitch_->getBall()->pos()))
         return true;
     else {
-//        qDebug() << "withinShootingDistance return false";
         return false;
     }
 }
 
 void Player::specialAction(MWindow::Action action)
 {
-    switch ( action ) {
+    switch (action) {
     case MWindow::ThrownIn:
         {
             setPixmap(QPixmap(images_[action].at(0)));
             outOfAction_->start(1500);
+            lastAction_ = action;
         }
         return;
     default:
         break;
     }
 
-    qDebug() << "specialAction start";
     // if not have ball then must be tackle
     // if have ball then either shot or pass
-    if ( hasBall_ ) {
-        qDebug() << "specialAction has ball";
-        if ( withinShootingDistance() ) {
-            qDebug() << "specialAction within shooting distance";
+    if (hasBall_) {
+        if (withinShootingDistance()) {
             QPointF goal;
             // prefer the player closest to the opposition goal
             if (team_->getDirection() == Team::NorthToSouth)
@@ -258,23 +221,15 @@ void Player::specialAction(MWindow::Action action)
              pitch_->getBall()->moveBall(MWindow::Shoot, goal);
              hasBall_ = false;
              pitch_->getBall()->setControlledBy(NULL);
-        }
-        else
-        {
-            qDebug() << "specialAction pass Ball";
-
+        } else {
             Player *p = findAvailableTeamMate();
             if (p) {
-                qDebug() << "specialAction found team mate";
                 pitch_->getBall()->moveBall(MWindow::Pass, p->pos());
                 hasBall_ = false;
                 pitch_->getBall()->setControlledBy(NULL);
-                qDebug() << "specialAction found team mate end";
             }
         }
-    }
-    else {
-        qDebug() << "specialAction tackle";
+    } else {
         // perform tackle here...
 
         switch(lastAction_) {
@@ -302,23 +257,23 @@ void Player::specialAction(MWindow::Action action)
         case MWindow::NorthWest:
             action = MWindow::TackleNorthWest;
             break;
+        default:
+            break;
         }
         setPixmap(QPixmap(images_[action].at(0)));
         moveBy(moveDistance_[lastAction_].x(), moveDistance_[lastAction_].y());
-        //outOfAction_->stop();
-        //outOfAction_->start(500);
+        outOfAction_->stop();
+        outOfAction_->start(500);
 
         // if tackle causes contact with the ball then transfer the ownership
-        if ( ballCollisionCheck() ) {
+        if (ballCollisionCheck()) {
             Player *p = pitch_->getBall()->controlledBy();
-            qDebug() << "specialAction tackle";
             if (p)
                 p->isTackled(true);
             pitch_->getBall()->setControlledBy(this);
             hasBall_ = true;
         }
     }
-    qDebug() << "specialAction end";
 }
 
 void Player::isTackled(bool defeated)
@@ -337,10 +292,8 @@ void Player::move(MWindow::Action action)
         || action == MWindow::Shoot
         || action == MWindow::Tackle
         || action == MWindow::Pass
-        || action == MWindow::ThrownIn ) {
-        qDebug() << "move specialAction";
+        || action == MWindow::ThrownIn)
         specialAction(action);
-    }
     else
         movePlayer(action);
 }
@@ -355,10 +308,10 @@ Player* Player::findAvailableTeamMate() const
     Player *bestPlayer = NULL;
     int nearest = 0xffff;
     foreach (Player *p, pitch_->players_) {
-        if ( p->team_!= team_)
+        if (p->team_!= team_)
             continue;
         // not self
-        if ( p == this )
+        if (p == this)
             continue;        
         // continue if they are man marked
 //        if ( p->isManMarked() )
@@ -374,7 +327,7 @@ Player* Player::findAvailableTeamMate() const
         const int dx = p->pos().x() - goal.x();
         const int dy = p->pos().y() - goal.y();
 
-        if ( (qAbs(dx*dx)+qAbs(dy*dy)) < nearest) {
+        if ((qAbs(dx*dx)+qAbs(dy*dy)) < nearest) {
             bestPlayer = p;
             nearest = qAbs(qAbs(dx*dx)+qAbs(dy*dy));
         }
@@ -422,7 +375,7 @@ void Player::computerAdvance(int phase)
 {
     if (outOfAction_->isActive())
         return;
-    if ( hasBall_ )
+    if (hasBall_)
          computerAdvanceWithBall();
     else
         computerAdvanceWithoutBall();
@@ -432,7 +385,6 @@ void Player::computerAdvanceWithoutBall()
 {
     setZValue(5);
     if (!team_->teamHasBall_) {
-        // qDebug() << "computerAdvanceWithoutBall";
         Player *nearestPlayer = pitch_->selectNearestPlayer(pitch_->awayTeam_);
         if (nearestPlayer == this) {
             // if close to the ball then tackle
@@ -457,13 +409,12 @@ void Player::computerAdvanceWithBall()
     setZValue(6);
 
     // if the last action was thrownIn, then just pass the ball...
-    if ( lastAction_ == MWindow::ThrownIn ) {
-        pitch_->getBall()->setVisible( true );
+    if (lastAction_ == MWindow::ThrownIn) {
+        pitch_->getBall()->setVisible(true);
         move(MWindow::Pass);
         return;
     }
 
-    //qDebug() << "computerAdvanceWithBall start";
     QPointF destination;
     if (team_->getDirection() == Team::SouthToNorth )
         destination = QPointF(pitch_->topGoal->rect().center().x(), pitch_->topGoal->rect().top());
@@ -491,7 +442,7 @@ void Player::computerAdvanceWithBall()
 void Player::automove()
 {
     // automove not applicable to human players or ball holders
-    if ( humanControlled_ || hasBall_ )
+    if (humanControlled_ || hasBall_)
         return;
 
     QPointF desiredPosition(0,0);

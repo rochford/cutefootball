@@ -12,7 +12,6 @@
 #include "goalkeeper.h"
 #include "replay.h"
 
-
 const int KReallyHighZValue = 10;
 
 const QPen KWhitePaintPen(QBrush(Qt::white),3);
@@ -29,10 +28,9 @@ Pitch::Pitch(const QRectF& footballGroundRect)
     motionTimer_(NULL),
     gameTimer_(NULL),
     nextGameState_(NotStarted),
-    lastNearestPlayer(NULL),
+    lastNearestPlayer_(NULL),
     bottomGoal(NULL),
     topGoal(NULL),
-//    frameCounter_(0.0),
     remainingTimeInHalfMs_(KGameLength)
 {
     replay_ = new Replay(this, this);
@@ -108,10 +106,9 @@ Player* Pitch::selectNearestPlayer(Team* team)
 {
     qreal nearest = 0xffff;
     Player *nearestPlayer(NULL);
-    Ball *ball = getBall();
     // nobody has ball, select the closest hometeam
     foreach (Player *p, players_) {
-        if ( p->team_== team ) {
+        if (p->team_== team) {
 
             // dont select the goal keeper
             if (p->role_ == Player::GoalKeeper)
@@ -120,15 +117,15 @@ Player* Pitch::selectNearestPlayer(Team* team)
             if (!nearestPlayer)
                 nearestPlayer = p;
 
-            if ( p->hasBall_ ) {
+            if (p->hasBall_) {
                 nearestPlayer = p;
                 break;
             }
 
             p->setHumanControlled(false);
 
-            const int dx = p->pos().x() - ball->pos().x();
-            const int dy = p->pos().y() - ball->pos().y();
+            const int dx = p->pos().x() - ball_->pos().x();
+            const int dy = p->pos().y() - ball_->pos().y();
             if ( (qAbs(dx*dx)+qAbs(dy*dy)) < nearest) {
                 nearestPlayer = p;
                 nearest = qAbs(qAbs(dx*dx)+qAbs(dy*dy));
@@ -140,28 +137,28 @@ Player* Pitch::selectNearestPlayer(Team* team)
 
 void Pitch::setPiece(Team* t, SetPiece s)
 {
-    switch( s ) {
+    qDebug() << "setPiece start";
+    switch(s) {
     case Pitch::ThrowIn:
         {
-            if ( t == awayTeam_ ) {
-                awayTeam_->setHasBall( true );
-                homeTeam_->setHasBall( false );
+            if (t == awayTeam_) {
+                awayTeam_->setHasBall(true);
+                homeTeam_->setHasBall(false);
             } else {
-                awayTeam_->setHasBall( false );
-                homeTeam_->setHasBall( true );
+                awayTeam_->setHasBall(false);
+                homeTeam_->setHasBall(true);
             }
 
             // find the nearest player to the ball and move them to the throw in position
-            QPointF ballPos = getBall()->pos();
             Player* throwInTaker = selectNearestPlayer(t);
-            if ( throwInTaker ) {
+            if (throwInTaker) {
                 // change the player graphic to be throw in graphic
-                throwInTaker->setPos( ballPos );
+                throwInTaker->setPos(ball_->pos());
                 throwInTaker->hasBall_ = true;
-                ball_->setControlledBy( throwInTaker );
-                throwInTaker->move( MWindow::ThrownIn );
+                ball_->setControlledBy(throwInTaker);
+                throwInTaker->move(MWindow::ThrownIn);
                 // hide the ball
-               // ball_->setVisible( false );
+               ball_->setVisible(false);
             }
         }
         break;
@@ -176,20 +173,20 @@ void Pitch::selectNearestPlayer()
     if (p) {
         scene->setFocusItem(p);
         p->setHumanControlled(true);
-        if ( lastNearestPlayer != p ) {
-            this->lastNearestPlayer = p;
+        if (lastNearestPlayer_ != p) {
+            lastNearestPlayer_ = p;
             emit focusedPlayerChanged();
         }
     }
-    else if (lastNearestPlayer) {
-        scene->setFocusItem(lastNearestPlayer);
-        lastNearestPlayer->setHumanControlled(true);
+    else if (lastNearestPlayer_) {
+        scene->setFocusItem(lastNearestPlayer_);
+        lastNearestPlayer_->setHumanControlled(true);
     }
 }
 
 Pitch::~Pitch()
 {
-    lastNearestPlayer = NULL;
+    lastNearestPlayer_ = NULL;
     delete ball_;
     delete awayTeam_;
     delete homeTeam_;
@@ -197,7 +194,7 @@ Pitch::~Pitch()
 
 void Pitch::removePlayers()
 {
-    foreach( Player *p, players_)
+    foreach(Player *p, players_)
         scene->removeItem(p);
 
     players_.clear();
@@ -207,8 +204,6 @@ void Pitch::kickOff(Game state)
 {
     motionTimer_->stop();
     gameTimer_->stop();
-
-    qDebug() << "kickOff remaining" << remainingTimeInHalfMs_ / 1000;
 
     bool needRestartTimers(false);
 
@@ -333,7 +328,7 @@ void Pitch::hasBallCheck()
 
     // which team has the ball?
     foreach (Player *p, players_) {
-        if ( p->hasBall_ ) {
+        if (p->hasBall_) {
             homeTeam_->setHasBall(p->team_== this->homeTeam_);
             awayTeam_->setHasBall(p->team_== this->awayTeam_);
             break; // can break as now known
@@ -391,7 +386,7 @@ void Pitch::action(MWindow::Action action)
 
     // action is only applicabled to the human controlled player
     foreach (Player *p, players_) {
-        if ( p->humanControlled() && ( p->team_== homeTeam_ ) ) {
+        if (p->humanControlled() && (p->team_== homeTeam_)) {
             p->move(action);
             return;
         }
@@ -407,7 +402,7 @@ void Pitch::createTeamPlayers(Team *team)
 
     for (int i = Player::GoalKeeper; i < Player::LastDummy; i++ ) {
          Player *pl(NULL);
-        if ( i ==  Player::GoalKeeper) {
+        if (i == Player::GoalKeeper) {
            pl = new GoalKeeper(
                     this,
                     team);
@@ -428,7 +423,7 @@ void Pitch::createTeamPlayers(Team *team)
 void Pitch::setPlayerStartPositions(Team *team)
 {
     bool nToS(false);
-    if ( team->getDirection() == Team::NorthToSouth )
+    if (team->getDirection() == Team::NorthToSouth)
         nToS = true;
 
     QMap<int,QRectF> startPositions;
@@ -464,7 +459,7 @@ void Pitch::setPlayerStartPositions(Team *team)
 void Pitch::setPlayerDefendPositions(Team *team)
 {
     bool nToS(false);
-    if ( team->getDirection() == Team::NorthToSouth )
+    if (team->getDirection() == Team::NorthToSouth)
         nToS = true;
 
     QMap<int,QRectF> defendPositions;
@@ -497,7 +492,7 @@ void Pitch::setPlayerDefendPositions(Team *team)
 void Pitch::setPlayerAttackPositions(Team *team)
 {
     bool nToS(false);
-    if ( team->getDirection() == Team::NorthToSouth )
+    if (team->getDirection() == Team::NorthToSouth)
         nToS = true;
 
     QMap<int,QRectF> attackPositions;
@@ -543,9 +538,6 @@ void Pitch::replayStart()
 
 void Pitch::replayStop()
 {
-    qDebug() << "replayStop";
-    // all done, stop the time line now
-
     motionTimer_->start();
     gameTimer_->start();
 }
