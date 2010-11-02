@@ -11,15 +11,9 @@
 #include "referee.h"
 #include "goalkeeper.h"
 #include "replay.h"
-
-const int KReallyHighZValue = 10;
+#include "screengraphics.h"
 
 const QPen KWhitePaintPen(QBrush(Qt::white),3);
-#ifdef Q_OS_SYMBIAN
-const QFont KFont("Times", 9, QFont::Bold);
-#else
-const QFont KFont("Times", 12, QFont::Bold);
-#endif // Q_OS_SYMBIAN
 
 Pitch::Pitch(const QRectF& footballGroundRect)
   : QObject(),
@@ -31,7 +25,8 @@ Pitch::Pitch(const QRectF& footballGroundRect)
     lastNearestPlayer_(NULL),
     bottomGoal(NULL),
     topGoal(NULL),
-    remainingTimeInHalfMs_(KGameLength)
+    remainingTimeInHalfMs_(KGameLength),
+    scoreText_(NULL)
 {
     replay_ = new Replay(this, this);
 
@@ -72,9 +67,7 @@ Pitch::Pitch(const QRectF& footballGroundRect)
     }
 
     // simple text
-    scoreText_ = scene->addSimpleText(QString("XXX"),KFont);
-    scoreText_->setPos(view->mapToScene(view->rect().topLeft()));
-    scoreText_->setZValue(KReallyHighZValue);
+    scoreText_ = new ScreenGraphics(this);
 
     // create the goals
     bottomGoal = scene->addRect((scene->width() / 2)-30, scene->height()-30,60,25,
@@ -137,7 +130,6 @@ Player* Pitch::selectNearestPlayer(Team* team)
 
 void Pitch::setPiece(Team* t, SetPiece s)
 {
-    qDebug() << "setPiece start";
     switch(s) {
     case Pitch::ThrowIn:
         {
@@ -324,7 +316,7 @@ void Pitch::updateDisplayTime()
 void Pitch::hasBallCheck()
 {
     view->centerOn(ball_->pos());
-    scoreText_->setPos(view->mapToScene(view->rect().topLeft()));
+    scoreText_->updatePosition();
 
     // which team has the ball?
     foreach (Player *p, players_) {
@@ -533,11 +525,15 @@ void Pitch::replayStart()
     motionTimer_->stop();
     gameTimer_->stop();
 
+    scoreText_->setMode(ScreenGraphics::ReplayMode);
+    scoreText_->setText("REPLAY");
+
     replay_->replayStart();
 }
 
 void Pitch::replayStop()
 {
+    scoreText_->setMode(ScreenGraphics::NormalMode);
     motionTimer_->start();
     gameTimer_->start();
 }
