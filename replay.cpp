@@ -6,6 +6,7 @@
 #include "pitch.h"
 #include "ball.h"
 #include "Player.h"
+#include "screengraphics.h"
 
 const int KReplayFrameRate = 40.00; // ms
 
@@ -47,7 +48,6 @@ void Replay::replayStart()
 
 void Replay::replayStop()
 {
-    qDebug() << "replayStop";
     // all done, stop the time line now
     replayTimeLine_->stop();
 
@@ -57,7 +57,6 @@ void Replay::replayStop()
 
 void Replay::makeReplaySnapshot()
 {
- //   qDebug() << "makeReplaySnapshot";
     // for each graphics item on the scene,
     // make an animation object
     // set the timeline value for the animation objects
@@ -76,7 +75,7 @@ void Replay::makeReplaySnapshot()
 void Replay::replayFrame(int frame)
 {
     pitch_->view->centerOn(pitch_->getBall()->pos());
-    pitch_->scoreText_->setPos(pitch_->view->mapToScene(pitch_->view->rect().topLeft()));
+    pitch_->scoreText_->updatePosition();
 
     if (frame == frameCounter_)
         replayStop();

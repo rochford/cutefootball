@@ -19,6 +19,7 @@ class Player;
 class Team;
 class Referee;
 class Replay;
+class ScreenGraphics;
 
 const int KGameRefreshRate = 1000 / 24; // ms
 const int KGameLength = 80*1000; // 80 seconds
@@ -115,7 +116,7 @@ public:
     QGraphicsRectItem *topGoal;
     QGraphicsRectItem *bottomPenaltyArea;
     QGraphicsRectItem *topPenaltyArea;
-    QGraphicsSimpleTextItem *scoreText_;
+    ScreenGraphics *scoreText_;
     QRectF pitchArea[KRow][KColumn];
 
     Replay* replay_;
