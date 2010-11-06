@@ -34,7 +34,8 @@ public:
     void setControlledBy(Player* p) { controlledBy_ = p; }
 
 signals:
-    void goalScored(bool leftGoal);
+    void goalScored(bool topGoal);
+    void shot(QPointF destination);
 
 public slots:
     void updateBall(int frame);

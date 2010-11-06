@@ -106,7 +106,7 @@ void Ball::moveBall(MWindow::Action action, int speed)
     case MWindow::NorthWest:
         moveBy(moveDistance_[action].x(), moveDistance_[action].y());
         break;
-    case MWindow::Shoot:
+    case MWindow::Shot:
         // TODO shootBall(speed);
         break;
     }
@@ -122,7 +122,7 @@ void Ball::moveBall(MWindow::Action action, QPointF destination)
     const int stepX = (destination.x() - tmp.x()) / 20;
     const int stepY = (destination.y() - tmp.y()) / 20;
 
-    for (int i = 0; i < 20.0; ++i) {
+    for (int i = 0; i <= 20; ++i) {
         animation_->setPosAt(i / 20.0, QPointF(tmp.x() + stepX,
                                                tmp.y() + stepY));
         tmp.setX(tmp.x() + stepX);
@@ -130,6 +130,9 @@ void Ball::moveBall(MWindow::Action action, QPointF destination)
     }
     animationTimer_->stop();
     animationTimer_->start();
+
+    if (action == MWindow::Shot)
+        emit shot(destination);
 }
 
 void Ball::updateBall(int frame)

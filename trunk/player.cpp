@@ -84,6 +84,8 @@ void Player::createPixmaps()
     pixmapInsert(MWindow::TackleSouthWest, "tackleSouthWest.PNG", "tackleSouthWest.PNG", "tackleSouthWest.PNG"); // TODO XXX TIM
     pixmapInsert(MWindow::TackleWest, "tackleWest.PNG", "tackleWest.PNG", "tackleWest.PNG"); // TODO XXX TIM
     pixmapInsert(MWindow::TackleNorthWest, "tackleNorthWest.PNG", "tackleNorthWest.PNG", "tackleNorthWest.PNG"); // TODO XXX TIM
+
+    pixmapInsert(MWindow::GoalCelebration, "playerNorth.PNG", "playerNorth1.PNG", "playerNorth2.PNG"); // TODO XXX TIM
 }
 
 Player::Player(bool computerControlled,
@@ -98,7 +100,6 @@ Player::Player(bool computerControlled,
     pitch_(pitch),
     humanControlled_(false),
     computerControlled(computerControlled),
-    buttonDown_(false),
     speed_(computerControlled ? KPlayerDefaultSpeed - 1 : KPlayerDefaultSpeed),
     step_(0),
     outOfAction_(NULL)
@@ -108,7 +109,9 @@ Player::Player(bool computerControlled,
 
     createMoves();
 
-    connect(pitch_->getBall(), SIGNAL(goalScored(bool)),this,SLOT(goalScored(bool)));
+    // referees dont celebrate goals
+    if (role != Player::LastDummy)
+        connect(pitch_->getBall(), SIGNAL(goalScored(bool)),this,SLOT(goalScored(bool)));
 }
 
 QRectF Player::boundingRect() const
@@ -135,9 +138,16 @@ void Player::paint(QPainter *painter,
     painter->drawPixmap(boundingRect().toRect(), pixmap());
 }
 
-void Player::goalScored(bool isLeftGoal)
+void Player::goalScored(bool isTopGoal)
 {
-    // TODO
+
+
+    if (isTopGoal && (team_->getDirection() == Team::SouthToNorth))
+        // celebrate goal
+        ;
+    else if (!isTopGoal && (team_->getDirection() == Team::NorthToSouth))
+        // celebrate goal
+        ;
 }
 
 QPainterPath Player::shape() const
@@ -204,6 +214,9 @@ void Player::specialAction(MWindow::Action action)
             lastAction_ = action;
         }
         return;
+    case MWindow::GoalCelebration:
+        setPixmap(QPixmap(images_[action].at(0)));
+        return;
     default:
         break;
     }
@@ -211,14 +224,16 @@ void Player::specialAction(MWindow::Action action)
     // if not have ball then must be tackle
     // if have ball then either shot or pass
     if (hasBall_) {
-        if (withinShootingDistance()) {
+        if (action == MWindow::ButtonLongPress
+            || action == MWindow::Shot
+            || withinShootingDistance()) {
             QPointF goal;
             // prefer the player closest to the opposition goal
             if (team_->getDirection() == Team::NorthToSouth)
                 goal = pitch_->bottomGoal->rect().center();
             else
                 goal = pitch_->topGoal->rect().center();
-             pitch_->getBall()->moveBall(MWindow::Shoot, goal);
+             pitch_->getBall()->moveBall(MWindow::Shot, goal);
              hasBall_ = false;
              pitch_->getBall()->setControlledBy(NULL);
         } else {
@@ -288,11 +303,13 @@ void Player::isTackled(bool defeated)
 
 void Player::move(MWindow::Action action)
 {
-    if (action == MWindow::Button
-        || action == MWindow::Shoot
+    if (action == MWindow::ButtonShortPress
+        || action == MWindow::ButtonLongPress
+        || action == MWindow::Shot
         || action == MWindow::Tackle
         || action == MWindow::Pass
-        || action == MWindow::ThrownIn)
+        || action == MWindow::ThrownIn
+        || action == MWindow::GoalCelebration)
         specialAction(action);
     else
         movePlayer(action);
@@ -373,8 +390,6 @@ bool Player::isManMarked() const
 
 void Player::computerAdvance(int phase)
 {
-    if (outOfAction_->isActive())
-        return;
     if (hasBall_)
          computerAdvanceWithBall();
     else
@@ -429,7 +444,7 @@ void Player::computerAdvanceWithBall()
         break;
     default:
         if (withinShootingDistance()) {
-            move(MWindow::Shoot);
+            move(MWindow::Shot);
             hasBall_ = false;
             pitch_->getBall()->setControlledBy(NULL);
         }
@@ -464,7 +479,8 @@ void Player::advance(int phase)
 {
     if (!phase)
         return;
-
+    if (outOfAction_->isActive())
+        return;
     if (team_ == pitch_->awayTeam_)
         computerAdvance(phase);
     else
