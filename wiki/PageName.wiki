@@ -1,15 +1,13 @@
-#summary One-sentence summary of this page.
+#summary Football game.
 
 = Introduction =
 
-Add your content here.
-
-
-[http://code.google.com/p/cutefootball/source/browse/wiki/screenshot1.png]
+http://cutefootball.googlecode.com/files/screenshot1.png
 
 = Details =
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+Aim is to create a football game written in Qt.
+
+Initially one team controlled by the player. 
+
+Replay mode for seeing goals scored.
