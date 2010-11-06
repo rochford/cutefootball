@@ -64,8 +64,9 @@ void ScreenGraphics::setMode(ScreenGraphicsMode mode)
 {
     if (mode == ScreenGraphics::ReplayMode )
         m_timer->start();
-    else
+    else {
         m_timer->stop();
-
+        m_scoreText->setFont(KSmallFont);
+    }
     m_mode = mode;
 }

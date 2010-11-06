@@ -4,7 +4,7 @@
 #include "ball.h"
 
 Referee::Referee(Pitch* pitch, QObject *parent)
-    : Player(true,pitch,NULL,Player::LastDummy)
+    : Player("xxx",true,pitch,NULL,Player::LastDummy)
 
 {
     setPixmap(QPixmap(QString(":/images/ref.png")));

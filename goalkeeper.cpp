@@ -5,9 +5,10 @@
 #include "ball.h"
 #include <QDebug>
 
-GoalKeeper::GoalKeeper(Pitch *pitch,
+GoalKeeper::GoalKeeper(QString name,
+                       Pitch *pitch,
                        Team* team)
-    : Player(true,pitch,team,Player::GoalKeeper)
+    : Player(name,true,pitch,team,Player::GoalKeeper)
 {
     setPixmap(QPixmap(QString(":/images/keeperNorth.PNG")));
     connect(pitch_->getBall(), SIGNAL(shot(QPointF)), this, SLOT(shotAttempted(QPointF)));

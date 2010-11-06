@@ -12,7 +12,8 @@ class GoalKeeper : public Player
 {
     Q_OBJECT
 public:
-    explicit GoalKeeper(Pitch* pitch,
+    explicit GoalKeeper(QString name,
+                        Pitch* pitch,
                         Team* team);
 
     enum { Type = UserType + 3 };

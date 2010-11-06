@@ -6,6 +6,8 @@
 #include <QtGui>
 #include <QDebug>
 #include <QGraphicsItem>
+#include <QToolTip>
+
 
 
 MWindow::Action calculateAction(QPointF source,
@@ -86,14 +88,19 @@ void Player::createPixmaps()
     pixmapInsert(MWindow::TackleNorthWest, "tackleNorthWest.PNG", "tackleNorthWest.PNG", "tackleNorthWest.PNG"); // TODO XXX TIM
 
     pixmapInsert(MWindow::GoalCelebration, "playerNorth.PNG", "playerNorth1.PNG", "playerNorth2.PNG"); // TODO XXX TIM
+
+    // set default pixmap
+    setPixmap(images_[MWindow::North].at(0));
 }
 
-Player::Player(bool computerControlled,
+Player::Player(QString name,
+               bool computerControlled,
                Pitch *pitch,
                Team* team,
                Role role)
     : QObject(),
     QGraphicsPixmapItem(NULL,NULL),
+    name_(name),
     hasBall_(false),
     team_(team),
     role_(role),
@@ -104,6 +111,7 @@ Player::Player(bool computerControlled,
     step_(0),
     outOfAction_(NULL)
 {
+    setToolTip(name_);
     outOfAction_ = new QTimer(this);
     outOfAction_->setSingleShot(true);
 
@@ -111,7 +119,7 @@ Player::Player(bool computerControlled,
 
     // referees dont celebrate goals
     if (role != Player::LastDummy)
-        connect(pitch_->getBall(), SIGNAL(goalScored(bool)),this,SLOT(goalScored(bool)));
+        connect(pitch_->getBall(), SIGNAL(goalScored(bool)), this, SLOT(goalScored(bool)));
 }
 
 QRectF Player::boundingRect() const
@@ -131,6 +139,9 @@ void Player::paint(QPainter *painter,
         painter->drawEllipse(QPointF(0,0), 8*KScaleFactor, 8*KScaleFactor);
     }
 
+    if ( ( hasBall_ || humanControlled_ ) && !pitch_->replay_->isReplay() )
+        painter->drawText(QPointF(12,12), toolTip());
+
     QSize pixmapSize = pixmap().size();
     pixmapSize.scale(QSizeF(36*KScaleFactor,36*KScaleFactor).toSize(), Qt::KeepAspectRatio);
 
@@ -140,8 +151,6 @@ void Player::paint(QPainter *painter,
 
 void Player::goalScored(bool isTopGoal)
 {
-
-
     if (isTopGoal && (team_->getDirection() == Team::SouthToNorth))
         // celebrate goal
         ;
