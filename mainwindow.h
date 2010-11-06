@@ -28,8 +28,10 @@ public:
         South,
 
         Button,
+        ButtonShortPress,
+        ButtonLongPress,
 
-        Shoot,
+        Shot,
         Pass,
         Tackle,
 
@@ -43,6 +45,8 @@ public:
         TackleSouth,
 
         ThrownIn,
+
+        GoalCelebration,
 
         // replay last n seconds
         Replay,
@@ -82,6 +86,7 @@ private:
     QMenu* helpMenu;
 
     bool buttonPressed_;
+    QTime elapsedTime_;
     };
 
 #endif // MAINWINDOW_H

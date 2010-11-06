@@ -46,6 +46,7 @@ public:
 
     enum Game {
         NotStarted,
+        PlayersTakePositions,
         FirstHalfOver,
         SecondHalfOver,
         Finished,
@@ -96,6 +97,14 @@ public:
     QGraphicsRectItem *footballPitch_;
     Team *homeTeam_;
     Team *awayTeam_;
+    QGraphicsRectItem *bottomGoal;
+    QGraphicsRectItem *topGoal;
+    QGraphicsRectItem *bottomPenaltyArea;
+    QGraphicsRectItem *topPenaltyArea;
+    ScreenGraphics *scoreText_;
+    QRectF pitchArea[KRow][KColumn];
+
+    Replay* replay_;
 private:
     Ball *ball_;
     Referee *referee_;
@@ -111,15 +120,8 @@ private:
     Player *lastNearestPlayer_; // NOT OWNED
     int remainingGameTime_;
 
-public:
-    QGraphicsRectItem *bottomGoal;
-    QGraphicsRectItem *topGoal;
-    QGraphicsRectItem *bottomPenaltyArea;
-    QGraphicsRectItem *topPenaltyArea;
-    ScreenGraphics *scoreText_;
-    QRectF pitchArea[KRow][KColumn];
+    QTimeLine *movePlayersStartPosTimeLine;
 
-    Replay* replay_;
 };
 
 #endif // PITCH_H

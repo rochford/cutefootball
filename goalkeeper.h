@@ -10,6 +10,7 @@ class Team;
 
 class GoalKeeper : public Player
 {
+    Q_OBJECT
 public:
     explicit GoalKeeper(Pitch* pitch,
                         Team* team);
@@ -17,6 +18,9 @@ public:
     enum { Type = UserType + 3 };
     int type() const
         { return Type;}
+
+public slots:
+    void shotAttempted(QPointF dest);
 
 public:
     void createPixmaps();

@@ -203,26 +203,28 @@ void Pitch::kickOff(Game state)
     case Paused:
         break;
     case NotStarted:
-        homeTeam_->setHasBall(true);
         homeTeam_->setDirection(Team::NorthToSouth);
         setPlayerStartPositions(homeTeam_);
         setPlayerAttackPositions(homeTeam_);
         setPlayerDefendPositions(homeTeam_);
 
-        awayTeam_->setHasBall(false);
         awayTeam_->setDirection(Team::SouthToNorth);
         setPlayerStartPositions(awayTeam_);
         setPlayerAttackPositions(awayTeam_);
         setPlayerDefendPositions(awayTeam_);
 
+        nextGameState_ = PlayersTakePositions;
+//        break;
+//    case PlayersTakePositions:
         needRestartTimers = true;
+        homeTeam_->setHasBall(true);
+        awayTeam_->setHasBall(false);
 
         scene->addItem(ball_);
         scene->addItem(referee_);
 
-        replay_->replaySnapShotTimer_->start();
-
         nextGameState_ = FirstHalfOver;
+        replay_->replaySnapShotTimer_->start();
         break;
     case FirstHalfOver:
         homeTeam_->setHasBall(false);

@@ -4,6 +4,7 @@
 #include "pitch.h"
 #include "replay.h"
 
+const int KLongPressValue = 750; // Ms
 
 MWindow::MWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -23,7 +24,6 @@ MWindow::MWindow(QWidget *parent)
 
     setCentralWidget(pitch->view);
     pitch->view->show();
-    pitch->newGame();
 }
 
 void MWindow::startedGame()
@@ -86,6 +86,7 @@ void MWindow::createKeyboardActions()
     actions.insert( Qt::Key_Z, SouthWest );
     actions.insert( Qt::Key_A, West );
     actions.insert( Qt::Key_Q, NorthWest );
+
     actions.insert( Qt::Key_S, Button );
 
     actions.insert( Qt::Key_R, Replay );
@@ -109,8 +110,6 @@ void MWindow::keyPressEvent( QKeyEvent *event )
         return;
     }
 
-  //  qDebug() << "keyPressEvent start";
-
     Action a = actions[ event->key() ];
 
     if ( pitch->replay_->isReplay() )
@@ -121,7 +120,9 @@ void MWindow::keyPressEvent( QKeyEvent *event )
         switch ( a )
         {
         case Button:
-            pitch->action(a);
+            {
+            elapsedTime_.restart();
+            }
             break;
         case North:
         case NorthEast:
@@ -144,7 +145,6 @@ void MWindow::keyPressEvent( QKeyEvent *event )
         }
     }
     event->accept();
-  //  qDebug() << "keyPressEvent end";
 }
 
 void MWindow::keyReleaseEvent( QKeyEvent *event )
@@ -153,11 +153,21 @@ void MWindow::keyReleaseEvent( QKeyEvent *event )
         event->ignore();
         return;
     }
-
     Action a = actions[ event->key() ];
 
-    if ( a != Button )
+    if ( a != Button ) {
         stopKeyEvent();
+    } else {
+        int elapsed = elapsedTime_.elapsed();
+        if ( elapsed > 1200) {
+            qDebug() << "keyReleaseEvent long press " << elapsedTime_.elapsed();
+            pitch->action(ButtonLongPress);
+        } else {
+            qDebug() << "keyReleaseEvent short press " << elapsedTime_.elapsed();
+            pitch->action(ButtonShortPress);
+        }
+    }
 
     event->accept();
+
 }

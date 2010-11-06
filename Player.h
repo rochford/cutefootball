@@ -34,10 +34,13 @@ public:
            Team* team,
            Player::Role role);
     enum { Type = UserType + 2 };
+
     virtual int type() const
         { return Type;}
 
     virtual void advance(int phase);
+    virtual void createPixmaps();
+
     int speed() { return speed_; }
     bool ballCollisionCheck();
 
@@ -48,7 +51,6 @@ public:
     void setHumanControlled(bool human)
     {
         humanControlled_ = human;
-        buttonDown_ = false;
     }
     bool humanControlled() { return humanControlled_; }
     void movePlayer(MWindow::Action action);
@@ -59,7 +61,7 @@ public:
     bool withinShootingDistance() const;
 
 public slots:
-    void goalScored(bool isLeftGoal);
+    void goalScored(bool isTopGoal);
 
 protected:
     QRectF boundingRect() const;
@@ -80,9 +82,6 @@ private:
     void pixmapInsert(MWindow::Action a, QString s1, QString s2, QString s3);
 
 public:
-    virtual void createPixmaps();
-
-public:
     bool hasBall_;
     Team* team_;
 
@@ -94,13 +93,6 @@ private:
     // the previous action of this player
     MWindow::Action lastAction_;
 
-
-
-    bool buttonDown_;
-
-
-    QTimer *outOfAction_;
-
 public:
     QRectF startPosition_;
     QRectF defencePosition_;
@@ -110,6 +102,7 @@ protected:
     Pitch *pitch_;
     QMap<MWindow::Action,QPointF> moveDistance_;
     int step_;
+    QTimer *outOfAction_;
 };
 
 #endif // PLAYER_H
