@@ -10,7 +10,6 @@
         <file>images/red/playerNorthEast1.PNG</file>
         <file>images/red/playerNorthEast2.PNG</file>
         <file>images/red/playerNorthWest.PNG</file>
-        <file>images/red/playerNorthWest1.PNG</file>
         <file>images/red/playerNorthWest2.PNG</file>
         <file>images/red/playerSouth.PNG</file>
         <file>images/red/playerSouth1.PNG</file>
@@ -24,7 +23,6 @@
         <file>images/red/playerWest.PNG</file>
         <file>images/red/playerWest1.PNG</file>
         <file>images/red/playerWest2.PNG</file>
-        <file>images/pitch2.GIF</file>
         <file>images/red/tackleNorth.PNG</file>
         <file>images/red/tackleSouth.PNG</file>
         <file>images/red/tackleEast.PNG</file>
@@ -71,5 +69,7 @@
         <file>images/blue/tackleSouthEast.PNG</file>
         <file>images/blue/tackleSouthWest.PNG</file>
         <file>images/blue/tackleWest.PNG</file>
+        <file>images/pitch2.GIF</file>
+        <file>images/red/playerNorthWest1.PNG</file>
     </qresource>
 </RCC>

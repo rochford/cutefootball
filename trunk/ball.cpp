@@ -21,7 +21,7 @@ Ball::Ball(Pitch* pitch)
 
     animation_ = new QGraphicsItemAnimation(this);
     animationTimer_ = new QTimeLine(1000, this);
-    animationTimer_->setFrameRange(0, 20);
+    animationTimer_->setFrameRange(0, 40);
 
     animation_->setItem(this);
     animation_->setTimeLine(animationTimer_);
@@ -119,11 +119,11 @@ void Ball::moveBall(MWindow::Action action, QPointF destination)
     // calculate the difference between present and destination
     QPointF tmp = pos();
 
-    const int stepX = (destination.x() - tmp.x()) / 20;
-    const int stepY = (destination.y() - tmp.y()) / 20;
+    const qreal stepX = (destination.x() - tmp.x()) / 40.0;
+    const qreal stepY = (destination.y() - tmp.y()) / 40.0;
 
-    for (int i = 0; i <= 20; ++i) {
-        animation_->setPosAt(i / 20.0, QPointF(tmp.x() + stepX,
+    for (int i = 0; i <= 40; ++i) {
+        animation_->setPosAt(i / 40.0, QPointF(tmp.x() + stepX,
                                                tmp.y() + stepY));
         tmp.setX(tmp.x() + stepX);
         tmp.setY(tmp.y() + stepY);
@@ -139,7 +139,7 @@ void Ball::updateBall(int frame)
 {
     // animation may no longer be running due to a goal
     if ( animationTimer_->state() == QTimeLine::Running ) {
-        setPos(animation_->posAt(frame/20.0));
+        setPos(animation_->posAt(frame/40.0));
     }
 }
 

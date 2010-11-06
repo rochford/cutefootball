@@ -2,6 +2,10 @@
 #include <QtGlobal>
 #include <QDebug>
 
+#include <QGraphicsLineItem>
+#include <QGraphicsEllipseItem>
+
+
 #include <QGraphicsItemAnimation>
 
 #include "pitch.h"
@@ -14,6 +18,7 @@
 #include "screengraphics.h"
 
 const QPen KWhitePaintPen(QBrush(Qt::white),3);
+const int KOneSecondMs(1000);
 
 Pitch::Pitch(const QRectF& footballGroundRect)
   : QObject(),
@@ -26,9 +31,15 @@ Pitch::Pitch(const QRectF& footballGroundRect)
     bottomGoal(NULL),
     topGoal(NULL),
     remainingTimeInHalfMs_(KGameLength),
-    scoreText_(NULL)
+    scoreText_(NULL),
+    centerLine_(NULL),
+    centerCircle_(NULL)
 {
     replay_ = new Replay(this, this);
+
+    timeLine_ = new QTimeLine(KOneSecondMs*6, this);
+    timeLine_->setCurveShape(QTimeLine::LinearCurve);
+    timeLine_->setFrameRange(0, 100);
 
     scene->setBackgroundBrush(QPixmap(QString(":/images/pitch2.GIF")));
 
@@ -39,53 +50,12 @@ Pitch::Pitch(const QRectF& footballGroundRect)
     motionTimer_ = new QTimer(this);
     motionTimer_->setInterval(KGameRefreshRate);
     gameTimer_ = new QTimer(this);
-    gameTimer_->setInterval(1000);
+    gameTimer_->setInterval(KOneSecondMs);
 
-    // create the pitch
-    footballPitch_ = scene->addRect(30, 30, scene->width()-60, scene->height() -60,
-                                    KWhitePaintPen,
-                                    QBrush(Qt::white,Qt::NoBrush) );
+    layoutPitch();
 
-    // divide the pitch into areas
-    // makes it easier for computer based movement
-    QPointF tlTopHalf = footballPitch_->rect().topLeft();
-    QPointF brBottomHalf = footballPitch_->rect().bottomRight();
-    QPointF brTopHalf = brBottomHalf - QPointF(footballPitch_->rect().height()/2,0);
-    QPointF tlBottomHalf = tlTopHalf + QPointF(footballPitch_->rect().height()/2,0);
+    connect(timeLine_, SIGNAL(frameChanged(int)), this, SLOT(playFrame(int)));
 
-    const int w = footballPitch_->rect().width();
-    const int h = footballPitch_->rect().height();
-
-    for (int row = 0; row < KRow; row++) {
-        for (int col = 0; col < KColumn; col++) {
-            qreal tlx = (w / KColumn) * col;
-            qreal tly = (h / KRow ) * row;
-            QPointF tl(tlTopHalf + QPointF(tlx,tly));
-            QPointF br(tl + QPointF(w/KColumn,h/KRow));
-            pitchArea[row][col] = QRectF(tl, br);
-        }
-    }
-
-    // simple text
-    scoreText_ = new ScreenGraphics(this);
-
-    // create the goals
-    bottomGoal = scene->addRect((scene->width() / 2)-30, scene->height()-30,60,25,
-                   QPen(Qt::black),
-                   QBrush(Qt::black,Qt::CrossPattern) );
-    topGoal = scene->addRect((scene->width() / 2)-30,5,60,25,
-                   QPen(Qt::black),
-                   QBrush(Qt::black,Qt::CrossPattern) );
-
-    // penalty areas
-    topPenaltyArea = scene->addRect((scene->width() / 2)-70, 30,
-                                    140, 100,
-                                    KWhitePaintPen,
-                                    QBrush(Qt::white,Qt::NoBrush) );
-    bottomPenaltyArea = scene->addRect((scene->width() / 2)-70, scene->height()-130,
-                                       140, 100,
-                                    KWhitePaintPen,
-                                    QBrush(Qt::white,Qt::NoBrush) );
     connect(motionTimer_, SIGNAL(timeout()), scene, SLOT(advance()));
     connect(motionTimer_, SIGNAL(timeout()), scene, SLOT(update()));
     connect(motionTimer_, SIGNAL(timeout()), this, SLOT(hasBallCheck()));
@@ -192,6 +162,62 @@ void Pitch::removePlayers()
     players_.clear();
 }
 
+void Pitch::layoutPitch()
+{
+    // create the pitch
+    footballPitch_ = scene->addRect(30, 30, scene->width()-60, scene->height() -60,
+                                    KWhitePaintPen,
+                                    QBrush(Qt::white,Qt::NoBrush) );
+
+    // divide the pitch into areas
+    // makes it easier for computer based movement
+    QPointF tlTopHalf = footballPitch_->rect().topLeft();
+    QPointF brBottomHalf = footballPitch_->rect().bottomRight();
+    QPointF brTopHalf = brBottomHalf - QPointF(footballPitch_->rect().height()/2,0);
+    QPointF tlBottomHalf = tlTopHalf + QPointF(footballPitch_->rect().height()/2,0);
+
+    const qreal w = footballPitch_->rect().width();
+    const qreal h = footballPitch_->rect().height();
+
+    for (int row = 0; row < KRow; row++) {
+        for (int col = 0; col < KColumn; col++) {
+            qreal tlx = (w / KColumn) * col;
+            qreal tly = (h / KRow ) * row;
+            QPointF tl(tlTopHalf + QPointF(tlx,tly));
+            QPointF br(tl + QPointF(w/KColumn,h/KRow));
+            pitchArea[row][col] = QRectF(tl, br);
+        }
+    }
+
+    // half way line
+    centerLine_ = scene->addLine(scene->sceneRect().left(),scene->sceneRect().height()/2.0,
+                         scene->sceneRect().right(),scene->sceneRect().height()/2.0, KWhitePaintPen);
+
+    // center circle
+    centerCircle_ = scene->addEllipse((scene->sceneRect().width()/2.0) -60,(scene->sceneRect().height()/2.0)-60,
+                      120.0, 120.0, KWhitePaintPen);
+    // simple text
+    scoreText_ = new ScreenGraphics(this);
+
+    // create the goals
+    bottomGoal = scene->addRect((scene->width() / 2)-30, scene->height()-30,60,25,
+                   QPen(Qt::black),
+                   QBrush(Qt::black,Qt::CrossPattern) );
+    topGoal = scene->addRect((scene->width() / 2)-30,5,60,25,
+                   QPen(Qt::black),
+                   QBrush(Qt::black,Qt::CrossPattern) );
+
+    // penalty areas
+    topPenaltyArea = scene->addRect((scene->width() / 2)-70, 30,
+                                    140, 100,
+                                    KWhitePaintPen,
+                                    QBrush(Qt::white,Qt::NoBrush) );
+    bottomPenaltyArea = scene->addRect((scene->width() / 2)-70, scene->height()-130,
+                                       140, 100,
+                                    KWhitePaintPen,
+                                    QBrush(Qt::white,Qt::NoBrush) );
+}
+
 void Pitch::kickOff(Game state)
 {
     motionTimer_->stop();
@@ -214,8 +240,12 @@ void Pitch::kickOff(Game state)
         setPlayerDefendPositions(awayTeam_);
 
         nextGameState_ = PlayersTakePositions;
-//        break;
-//    case PlayersTakePositions:
+
+        createPlayerAnimationItems(timeLine_, nextGameState_);
+        timeLine_->start();
+        break;
+
+    case PlayersTakePositions:
         needRestartTimers = true;
         homeTeam_->setHasBall(true);
         awayTeam_->setHasBall(false);
@@ -227,6 +257,15 @@ void Pitch::kickOff(Game state)
         replay_->replaySnapShotTimer_->start();
         break;
     case FirstHalfOver:
+
+        createPlayerAnimationItems(timeLine_, nextGameState_);
+        timeLine_->start();
+        ball_->setVisible(false);
+
+        nextGameState_ = HalfTimeBreakOver;
+        break;
+     case HalfTimeBreakOver:
+
         homeTeam_->setHasBall(false);
         awayTeam_->setHasBall(true);
 
@@ -239,6 +278,12 @@ void Pitch::kickOff(Game state)
         setPlayerAttackPositions(homeTeam_);
         setPlayerDefendPositions(homeTeam_);
 
+        foreach (Player *p, players_) {
+                p->hasBall_ = false;
+                p->setPos(p->startPosition_.center());
+            }
+
+        ball_->setVisible(true);
         ball_->setStartingPosition();
 
         needRestartTimers = true;
@@ -246,14 +291,18 @@ void Pitch::kickOff(Game state)
 
         nextGameState_ = SecondHalfOver;
         break;
+
     case SecondHalfOver:
         nextGameState_ = Finished;
         break;
     case GoalScored:
 
-        setPlayerStartPositions(homeTeam_);
+        foreach (Player *p, players_) {
+                p->hasBall_ = false;
+                p->setPos(p->startPosition_.center());
+            }
+
         homeTeam_->setHasBall(true);
-        setPlayerStartPositions(awayTeam_);
         awayTeam_->setHasBall(false);
 
         needRestartTimers = true;
@@ -276,7 +325,7 @@ void Pitch::kickOff(Game state)
 
 void Pitch::decrementGameTime()
 {
-    remainingTimeInHalfMs_ = remainingTimeInHalfMs_ - 1000;
+    remainingTimeInHalfMs_ = remainingTimeInHalfMs_ - KOneSecondMs;
     if ( !remainingTimeInHalfMs_ )
         kickOff(nextGameState_);
 }
@@ -356,7 +405,7 @@ void Pitch::newGame()
 
 void Pitch::pausedGame()
 {
-    qDebug() << "pausedGame remaining" << remainingTimeInHalfMs_/1000;
+    qDebug() << "pausedGame remaining" << remainingTimeInHalfMs_/KOneSecondMs;
 
     if (gameTimer_->isActive())
         gameTimer_->stop();
@@ -389,6 +438,9 @@ void Pitch::action(MWindow::Action action)
 
 void Pitch::createTeamPlayers(Team *team)
 {
+    QStringList names;
+    names << "adam" << "bob" << "charlie" << "dave" << "ed" << "frank" << "george" << "harry" << "ian"
+            << "jack" << "kai" << "luke" << "matt" << "nigel" << "oscar" << "pete"<< "roger" << "steve" << "tom" << "walt";
     bool isHomeTeam(false);
 
     if (team->name() == QString("HOME"))
@@ -398,11 +450,13 @@ void Pitch::createTeamPlayers(Team *team)
          Player *pl(NULL);
         if (i == Player::GoalKeeper) {
            pl = new GoalKeeper(
+                    names.at(i),
                     this,
                     team);
 
         } else {
             pl = new Player(
+                    names.at(i),
                     !isHomeTeam,
                     this,
                     team,
@@ -422,30 +476,33 @@ void Pitch::setPlayerStartPositions(Team *team)
 
     QMap<int,QRectF> startPositions;
     startPositions.insert(Player::GoalKeeper,
-                         pitchArea[nToS ? 0 : 7][1]);
+                         pitchArea[nToS ? 0 : 7][2]);
     startPositions.insert(Player::LeftDefence,
                          pitchArea[nToS ? 1 : 6][0]);
+    startPositions.insert(Player::LeftCentralDefence,
+                         pitchArea[nToS ? 1 : 6][1]);
+    startPositions.insert(Player::RightCentralDefence,
+                         pitchArea[nToS ? 1 : 6][3]);
     startPositions.insert(Player::RightDefence,
-                         pitchArea[nToS ? 1 : 6][2]);
+                         pitchArea[nToS ? 1 : 6][4]);
     startPositions.insert(Player::LeftMidfield,
                          pitchArea[nToS ? 2 : 5][0]);
     startPositions.insert(Player::CentralMidfield,
-                         pitchArea[nToS ? 2 : 5][1]);
-    startPositions.insert(Player::RightMidfield,
                          pitchArea[nToS ? 2 : 5][2]);
+    startPositions.insert(Player::RightMidfield,
+                         pitchArea[nToS ? 2 : 5][4]);
     startPositions.insert(Player::LeftAttack,
-                         pitchArea[nToS ? 3 : 4][1]);
-    startPositions.insert(Player::CentralAttack,
                          pitchArea[nToS ? 3 : 4][0]);
-    startPositions.insert(Player::RightAttack,
+    startPositions.insert(Player::CentralAttack,
                          pitchArea[nToS ? 3 : 4][2]);
+    startPositions.insert(Player::RightAttack,
+                         pitchArea[nToS ? 3 : 4][4]);
 
     // action is only applicabled to the human controlled player
     foreach (Player *p, players_) {
         if (p->team_ == team) {
             p->hasBall_ = false;
             p->startPosition_ = startPositions[p->role_];
-            p->setPos(p->startPosition_.center());
         }
     }
 }
@@ -458,23 +515,27 @@ void Pitch::setPlayerDefendPositions(Team *team)
 
     QMap<int,QRectF> defendPositions;
     defendPositions.insert(Player::GoalKeeper,
-                         pitchArea[nToS ? 0 : 7][1]);
+                         pitchArea[nToS ? 0 : 7][2]);
     defendPositions.insert(Player::LeftDefence,
                          pitchArea[nToS ? 1 : 6][0]);
+    defendPositions.insert(Player::LeftCentralDefence,
+                         pitchArea[nToS ? 1 : 6][1]);
+    defendPositions.insert(Player::RightCentralDefence,
+                         pitchArea[nToS ? 1 : 6][3]);
     defendPositions.insert(Player::RightDefence,
-                         pitchArea[nToS ? 1 : 6][2]);
+                         pitchArea[nToS ? 1 : 6][4]);
     defendPositions.insert(Player::LeftMidfield,
                          pitchArea[nToS ? 2 : 5][0]);
     defendPositions.insert(Player::CentralMidfield,
-                         pitchArea[nToS ? 1 : 6][1]);
+                         pitchArea[nToS ? 1 : 6][2]);
     defendPositions.insert(Player::RightMidfield,
-                         pitchArea[nToS ? 2 : 5][2]);
+                         pitchArea[nToS ? 2 : 5][4]);
     defendPositions.insert(Player::LeftAttack,
                          pitchArea[nToS ? 3 : 4][0]);
     defendPositions.insert(Player::CentralAttack,
-                         pitchArea[nToS ? 3 : 4][1]);
-    defendPositions.insert(Player::RightAttack,
                          pitchArea[nToS ? 3 : 4][2]);
+    defendPositions.insert(Player::RightAttack,
+                         pitchArea[nToS ? 3 : 4][4]);
 
     // action is only applicabled to the human controlled player
     foreach (Player *p, players_) {
@@ -491,23 +552,27 @@ void Pitch::setPlayerAttackPositions(Team *team)
 
     QMap<int,QRectF> attackPositions;
     attackPositions.insert(Player::GoalKeeper,
-                         pitchArea[nToS ? 0 : 7][1]);
+                         pitchArea[nToS ? 0 : 7][2]);
     attackPositions.insert(Player::LeftDefence,
                          pitchArea[nToS ? 2 : 6][0]);
+    attackPositions.insert(Player::LeftCentralDefence,
+                         pitchArea[nToS ? 2 : 6][1]);
+    attackPositions.insert(Player::RightCentralDefence,
+                         pitchArea[nToS ? 2 : 6][3]);
     attackPositions.insert(Player::RightDefence,
-                         pitchArea[nToS ? 2 : 6][2]);
+                         pitchArea[nToS ? 2 : 6][4]);
     attackPositions.insert(Player::LeftMidfield,
                          pitchArea[nToS ? 4 : 2][0]);
     attackPositions.insert(Player::CentralMidfield,
-                         pitchArea[nToS ? 5 : 3][1]);
+                         pitchArea[nToS ? 5 : 3][2]);
     attackPositions.insert(Player::RightMidfield,
-                         pitchArea[nToS ? 4 : 2][2]);
+                         pitchArea[nToS ? 4 : 2][4]);
     attackPositions.insert(Player::LeftAttack,
                          pitchArea[nToS ? 6 : 1][0]);
     attackPositions.insert(Player::CentralAttack,
-                         pitchArea[nToS ? 6 : 1][1]);
-    attackPositions.insert(Player::RightAttack,
                          pitchArea[nToS ? 6 : 1][2]);
+    attackPositions.insert(Player::RightAttack,
+                         pitchArea[nToS ? 6 : 1][4]);
 
     // action is only applicabled to the human controlled player
     foreach (Player *p, players_) {
@@ -520,7 +585,6 @@ void Pitch::goalScored(bool isNorthGoal)
 {
     kickOff(Pitch::GoalScored);
 }
-
 
 void Pitch::replayStart()
 {
@@ -540,3 +604,57 @@ void Pitch::replayStop()
     gameTimer_->start();
 }
 
+
+// animate from present player position to another point.
+void Pitch::createPlayerAnimationItems(QTimeLine *timeLine, Game g)
+{
+    playerAnimationItems.clear(); // TODO XXX TIM delete all
+
+    foreach (Player *p, players_) {
+        QGraphicsItemAnimation* anim = new QGraphicsItemAnimation(this);
+        anim->setItem(p);
+        anim->setTimeLine(timeLine);
+        playerAnimationItems.append(anim);
+
+        QPointF tmp;
+        qreal stepX;
+        qreal stepY;
+
+        switch(g)
+        {
+        case Pitch::PlayersTakePositions:
+            tmp = p->pos();
+            stepX = ( p->startPosition_.center().x() - tmp.x()) / 100.0;
+            stepY = ( p->startPosition_.center().y() - tmp.y()) / 100.0;
+            break;
+        case Pitch::FirstHalfOver:
+            tmp = p->pos();
+            stepX = ( 0 - tmp.x() ) / 100.0;
+            stepY = ( 0 - tmp.y() ) / 100.0;
+            break;
+        default:
+            break;
+        }
+
+        for (int i = 0; i < 100; ++i) {
+            anim->setPosAt(i / 100.0, QPointF(tmp.x() + stepX,
+                                              tmp.y() + stepY));
+            tmp.setX(tmp.x() + stepX);
+            tmp.setY(tmp.y() + stepY);
+        }
+    }
+}
+
+void Pitch::playFrame(int frame)
+{
+    qDebug() << "playFrame frame" << frame;
+    foreach (QGraphicsItemAnimation *anim, playerAnimationItems) {
+        qreal f = frame/ 100.00;
+
+        anim->item()->setPos(anim->posAt(f));
+    }
+    scene->update();
+
+    if (frame == timeLine_->endFrame())
+       kickOff(nextGameState_);
+}

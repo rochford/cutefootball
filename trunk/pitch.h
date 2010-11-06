@@ -14,6 +14,9 @@
 #include "mainwindow.h"
 #include "team.h" // Team::Direction
 
+class QGraphicsEllipseItem;
+class QGraphicsLineItem;
+
 class Ball;
 class Player;
 class Team;
@@ -23,7 +26,7 @@ class ScreenGraphics;
 
 const int KGameRefreshRate = 1000 / 24; // ms
 const int KGameLength = 80*1000; // 80 seconds
-const int KColumn = 3; // Left, Centre, Right
+const int KColumn = 5; // Left, l-Centre, centre, r-centre, Right
 // goalkepper-defence-midfield-attack,attack-midfield-defence-goalkepper
 const int KRow = 8;
 
@@ -45,10 +48,11 @@ public:
     };
 
     enum Game {
-        NotStarted,
-        PlayersTakePositions,
-        FirstHalfOver,
-        SecondHalfOver,
+        NotStarted, // nothing happened yet
+        PlayersTakePositions, // players walk to start pos
+        FirstHalfOver, // players back to dressing rooms
+        HalfTimeBreakOver, // players walk to start pos
+        SecondHalfOver, // players back to dressing rooms
         Finished,
         Paused, // whole system paused
         GoalScored // reason for another kickoff
@@ -82,6 +86,7 @@ public slots:
     void decrementGameTime();
 
     void goalScored(bool isLeftGoal);
+    void playFrame(int frame);
 
 signals:
    void focusedPlayerChanged();
@@ -89,6 +94,8 @@ signals:
 private:
     void createTeamPlayers(Team *team);
     void removePlayers();
+    void createPlayerAnimationItems(QTimeLine *timeLine, Game g);
+    void layoutPitch();
 
 public:
     QList<Player*> players_;
@@ -101,6 +108,8 @@ public:
     QGraphicsRectItem *topGoal;
     QGraphicsRectItem *bottomPenaltyArea;
     QGraphicsRectItem *topPenaltyArea;
+    QGraphicsLineItem *centerLine_;
+    QGraphicsEllipseItem *centerCircle_;
     ScreenGraphics *scoreText_;
     QRectF pitchArea[KRow][KColumn];
 
@@ -120,7 +129,8 @@ private:
     Player *lastNearestPlayer_; // NOT OWNED
     int remainingGameTime_;
 
-    QTimeLine *movePlayersStartPosTimeLine;
+    QTimeLine *timeLine_;
+    QList<QGraphicsItemAnimation*> playerAnimationItems;
 
 };
 

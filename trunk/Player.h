@@ -6,7 +6,6 @@
 #include <QStyleOptionGraphicsItem>
 #include <QPainter>
 
-
 #include "team.h"
 #include "pitch.h"
 
@@ -20,6 +19,8 @@ class Player : public QObject,
 public:
     enum Role {GoalKeeper = 1,
                LeftDefence,
+               LeftCentralDefence,
+               RightCentralDefence,
                RightDefence,
                LeftMidfield,
                CentralMidfield,
@@ -29,7 +30,8 @@ public:
                RightAttack,
                LastDummy };
 
-    Player(bool computerControlled,
+    Player(QString name,
+           bool computerControlled,
            Pitch* pitch,
            Team* team,
            Player::Role role);
@@ -87,6 +89,7 @@ public:
 
     Role role_;
 private:
+    QString name_;
     bool humanControlled_;
     bool computerControlled;
     int speed_;
