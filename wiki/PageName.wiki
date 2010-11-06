@@ -5,7 +5,7 @@
 Add your content here.
 
 
-http://code.google.com/p/cutefootball/source/browse/wiki/screenshot1.png
+[http://code.google.com/p/cutefootball/source/browse/wiki/screenshot1.png]
 
 = Details =
 
