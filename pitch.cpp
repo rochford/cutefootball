@@ -5,7 +5,6 @@
 #include <QGraphicsLineItem>
 #include <QGraphicsEllipseItem>
 
-
 #include <QGraphicsItemAnimation>
 
 #include "pitch.h"
@@ -16,6 +15,7 @@
 #include "goalkeeper.h"
 #include "replay.h"
 #include "screengraphics.h"
+#include "game.h"
 
 const QPen KWhitePaintPen(QBrush(Qt::white),3);
 const int KOneSecondMs(1000);
@@ -26,7 +26,6 @@ Pitch::Pitch(const QRectF& footballGroundRect)
     view(new QGraphicsView(scene)),
     motionTimer_(NULL),
     gameTimer_(NULL),
-    nextGameState_(NotStarted),
     lastNearestPlayer_(NULL),
     bottomGoal(NULL),
     topGoal(NULL),
@@ -35,11 +34,25 @@ Pitch::Pitch(const QRectF& footballGroundRect)
     centerLine_(NULL),
     centerCircle_(NULL)
 {
-    replay_ = new Replay(this, this);
+    motionTimer_ = new QTimer(this);
+    motionTimer_->setInterval(KGameRefreshRate);
+    gameTimer_ = new QTimer(this);
+    gameTimer_->setInterval(KOneSecondMs);
 
-    timeLine_ = new QTimeLine(KOneSecondMs*6, this);
-    timeLine_->setCurveShape(QTimeLine::LinearCurve);
-    timeLine_->setFrameRange(0, 100);
+    game = new QStateMachine(this);
+    firstHalfState = new Game(this, "first half", true);
+    secondHalfState = new Game(this, "second half", false);
+    allDone = new QFinalState();
+
+    game->addState(firstHalfState);
+    game->addState(secondHalfState);
+    game->addState(allDone);
+    game->setInitialState(firstHalfState);
+
+    firstHalfState->addTransition(firstHalfState, SIGNAL(finished()),secondHalfState);
+    secondHalfState->addTransition(secondHalfState, SIGNAL(finished()),allDone);
+
+    replay_ = new Replay(this, this);
 
     scene->setBackgroundBrush(QPixmap(QString(":/images/pitch2.GIF")));
 
@@ -47,21 +60,14 @@ Pitch::Pitch(const QRectF& footballGroundRect)
     view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view->setAutoFillBackground(false);
 
-    motionTimer_ = new QTimer(this);
-    motionTimer_->setInterval(KGameRefreshRate);
-    gameTimer_ = new QTimer(this);
-    gameTimer_->setInterval(KOneSecondMs);
-
     layoutPitch();
-
-    connect(timeLine_, SIGNAL(frameChanged(int)), this, SLOT(playFrame(int)));
 
     connect(motionTimer_, SIGNAL(timeout()), scene, SLOT(advance()));
     connect(motionTimer_, SIGNAL(timeout()), scene, SLOT(update()));
     connect(motionTimer_, SIGNAL(timeout()), this, SLOT(hasBallCheck()));
     connect(motionTimer_, SIGNAL(timeout()), this, SLOT(selectNearestPlayer()));
 
-    connect(gameTimer_, SIGNAL(timeout()), this, SLOT(updateDisplayTime()));
+//    connect(gameTimer_, SIGNAL(timeout()), this, SLOT(updateDisplayTime()));
     connect(gameTimer_, SIGNAL(timeout()), this, SLOT(decrementGameTime()));
 }
 
@@ -218,134 +224,14 @@ void Pitch::layoutPitch()
                                     QBrush(Qt::white,Qt::NoBrush) );
 }
 
-void Pitch::kickOff(Game state)
-{
-    motionTimer_->stop();
-    gameTimer_->stop();
-
-    bool needRestartTimers(false);
-
-    switch (state) {
-    case Paused:
-        break;
-    case NotStarted:
-        homeTeam_->setDirection(Team::NorthToSouth);
-        setPlayerStartPositions(homeTeam_);
-        setPlayerAttackPositions(homeTeam_);
-        setPlayerDefendPositions(homeTeam_);
-
-        awayTeam_->setDirection(Team::SouthToNorth);
-        setPlayerStartPositions(awayTeam_);
-        setPlayerAttackPositions(awayTeam_);
-        setPlayerDefendPositions(awayTeam_);
-
-        nextGameState_ = PlayersTakePositions;
-
-        createPlayerAnimationItems(timeLine_, nextGameState_);
-        timeLine_->start();
-        break;
-
-    case PlayersTakePositions:
-        needRestartTimers = true;
-        homeTeam_->setHasBall(true);
-        awayTeam_->setHasBall(false);
-
-        scene->addItem(ball_);
-        scene->addItem(referee_);
-
-        nextGameState_ = FirstHalfOver;
-        replay_->replaySnapShotTimer_->start();
-        break;
-    case FirstHalfOver:
-
-        createPlayerAnimationItems(timeLine_, nextGameState_);
-        timeLine_->start();
-        ball_->setVisible(false);
-
-        nextGameState_ = HalfTimeBreakOver;
-        break;
-     case HalfTimeBreakOver:
-
-        homeTeam_->setHasBall(false);
-        awayTeam_->setHasBall(true);
-
-        awayTeam_->setDirection(Team::NorthToSouth);
-        setPlayerStartPositions(awayTeam_);
-        setPlayerAttackPositions(awayTeam_);
-        setPlayerDefendPositions(awayTeam_);
-        homeTeam_->setDirection(Team::SouthToNorth);
-        setPlayerStartPositions(homeTeam_);
-        setPlayerAttackPositions(homeTeam_);
-        setPlayerDefendPositions(homeTeam_);
-
-        foreach (Player *p, players_) {
-                p->hasBall_ = false;
-                p->setPos(p->startPosition_.center());
-            }
-
-        ball_->setVisible(true);
-        ball_->setStartingPosition();
-
-        needRestartTimers = true;
-        remainingTimeInHalfMs_ = KGameLength;
-
-        nextGameState_ = SecondHalfOver;
-        break;
-
-    case SecondHalfOver:
-        nextGameState_ = Finished;
-        break;
-    case GoalScored:
-
-        foreach (Player *p, players_) {
-                p->hasBall_ = false;
-                p->setPos(p->startPosition_.center());
-            }
-
-        homeTeam_->setHasBall(true);
-        awayTeam_->setHasBall(false);
-
-        needRestartTimers = true;
-        break;
-    case Finished:
-        scene->clearFocus();
-        // which team won?
-        scene->removeItem(ball_);
-        scene->removeItem(referee_);
-        removePlayers();
-        updateDisplayTime();
-        break;
-    }
-
-    if (needRestartTimers) {
-        gameTimer_->start();
-        motionTimer_->start();
-    }
-}
-
 void Pitch::decrementGameTime()
 {
     remainingTimeInHalfMs_ = remainingTimeInHalfMs_ - KOneSecondMs;
-    if ( !remainingTimeInHalfMs_ )
-        kickOff(nextGameState_);
-}
-
-void Pitch::kickOff()
-{
-    kickOff(nextGameState_);
 }
 
 void Pitch::updateDisplayTime()
 {
-    switch(nextGameState_) {
-    case Finished:
-        scoreText_->setText(QString("GAME OVER!!!"));
-        break;
-    case NotStarted:
-        break;
-    case GoalScored:
-    case FirstHalfOver:
-    case SecondHalfOver:
+    if ( game->isRunning() ) {
         QTime tmp(0,0,0,0);
         tmp = tmp.addMSecs(remainingTimeInHalfMs_);
 
@@ -360,7 +246,6 @@ void Pitch::updateDisplayTime()
         str.append(" ");
         str.append(QString::number(awayTeam_->goals_));
         scoreText_->setText(str);
-        break;
     }
 }
 
@@ -385,8 +270,6 @@ void Pitch::newGame()
 
     ball_ = new Ball(this);
 
-    connect(ball_, SIGNAL(goalScored(bool)), this, SLOT(goalScored(bool)));
-
     homeTeam_ = new Team(QString("HOME"), Qt::red);
     awayTeam_ = new Team(QString("AWAY"), Qt::blue);
 
@@ -400,7 +283,10 @@ void Pitch::newGame()
     replay_->createAnimationItems();
 
     updateDisplayTime();
-    kickOff();
+
+    game->start();
+    gameTimer_->start();
+    motionTimer_->start();
 }
 
 void Pitch::pausedGame()
@@ -423,10 +309,6 @@ void Pitch::continueGame()
 
 void Pitch::action(MWindow::Action action)
 {
-    // actions only processed if game is ongoing
-    if ( nextGameState_ == Finished )
-        return;
-
     // action is only applicabled to the human controlled player
     foreach (Player *p, players_) {
         if (p->humanControlled() && (p->team_== homeTeam_)) {
@@ -581,11 +463,6 @@ void Pitch::setPlayerAttackPositions(Team *team)
     }
 }
 
-void Pitch::goalScored(bool isNorthGoal)
-{
-    kickOff(Pitch::GoalScored);
-}
-
 void Pitch::replayStart()
 {
     motionTimer_->stop();
@@ -602,59 +479,4 @@ void Pitch::replayStop()
     scoreText_->setMode(ScreenGraphics::NormalMode);
     motionTimer_->start();
     gameTimer_->start();
-}
-
-
-// animate from present player position to another point.
-void Pitch::createPlayerAnimationItems(QTimeLine *timeLine, Game g)
-{
-    playerAnimationItems.clear(); // TODO XXX TIM delete all
-
-    foreach (Player *p, players_) {
-        QGraphicsItemAnimation* anim = new QGraphicsItemAnimation(this);
-        anim->setItem(p);
-        anim->setTimeLine(timeLine);
-        playerAnimationItems.append(anim);
-
-        QPointF tmp;
-        qreal stepX;
-        qreal stepY;
-
-        switch(g)
-        {
-        case Pitch::PlayersTakePositions:
-            tmp = p->pos();
-            stepX = ( p->startPosition_.center().x() - tmp.x()) / 100.0;
-            stepY = ( p->startPosition_.center().y() - tmp.y()) / 100.0;
-            break;
-        case Pitch::FirstHalfOver:
-            tmp = p->pos();
-            stepX = ( 0 - tmp.x() ) / 100.0;
-            stepY = ( 0 - tmp.y() ) / 100.0;
-            break;
-        default:
-            break;
-        }
-
-        for (int i = 0; i < 100; ++i) {
-            anim->setPosAt(i / 100.0, QPointF(tmp.x() + stepX,
-                                              tmp.y() + stepY));
-            tmp.setX(tmp.x() + stepX);
-            tmp.setY(tmp.y() + stepY);
-        }
-    }
-}
-
-void Pitch::playFrame(int frame)
-{
-    qDebug() << "playFrame frame" << frame;
-    foreach (QGraphicsItemAnimation *anim, playerAnimationItems) {
-        qreal f = frame/ 100.00;
-
-        anim->item()->setPos(anim->posAt(f));
-    }
-    scene->update();
-
-    if (frame == timeLine_->endFrame())
-       kickOff(nextGameState_);
 }

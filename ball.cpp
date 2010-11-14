@@ -1,4 +1,5 @@
 #include <QtGui>
+
 #include "ball.h"
 #include "team.h"
 
@@ -167,16 +168,16 @@ QVariant Ball::itemChange(GraphicsItemChange change, const QVariant &value)
              setControlledBy(NULL);
 
              // goal kick or corner?
-             bool homeTeamTouchedLast = pitch_->homeTeam_->teamHasBall_;
+             bool homeTeamTouchedLast = pitch_->homeTeam()->teamHasBall_;
 
              // throw in?
              if (rect.right() < newPos.x()) {
-                 pitch_->setPiece(homeTeamTouchedLast ? pitch_->awayTeam_ : pitch_->homeTeam_, Pitch::ThrowIn);
+                 pitch_->setPiece(homeTeamTouchedLast ? pitch_->awayTeam() : pitch_->homeTeam(), Pitch::ThrowIn);
                  newPos.setX(pitch_->footballPitch_->rect().right());
                  return newPos;
              }
              if (rect.x() > newPos.x()) {
-                 pitch_->setPiece(homeTeamTouchedLast ? pitch_->awayTeam_ : pitch_->homeTeam_, Pitch::ThrowIn);
+                 pitch_->setPiece(homeTeamTouchedLast ? pitch_->awayTeam() : pitch_->homeTeam(), Pitch::ThrowIn);
                  newPos.setX(pitch_->footballPitch_->rect().left());
                  return newPos;
              }

@@ -48,7 +48,7 @@ void Player::createMoves()
 void Player::pixmapInsert(MWindow::Action a, QString s1, QString s2, QString s3)
 {
     QString s(":/images/");
-    if (team_ == pitch_->homeTeam_)
+    if (team_ == pitch_->homeTeam())
         s.append("red/");
     else
         s.append("blue/");
@@ -62,7 +62,7 @@ void Player::pixmapInsert(MWindow::Action a, QString s1, QString s2, QString s3)
 void Player::createPixmaps()
 {
     QString s(":/images/");
-    if (team_ == pitch_->homeTeam_)
+    if (team_ == pitch_->homeTeam())
         s.append("red/");
     else
         s.append("blue/");
@@ -312,6 +312,8 @@ void Player::isTackled(bool defeated)
 
 void Player::move(MWindow::Action action)
 {
+    if (outOfAction_->isActive())
+        return;
     if (action == MWindow::ButtonShortPress
         || action == MWindow::ButtonLongPress
         || action == MWindow::Shot
@@ -409,7 +411,7 @@ void Player::computerAdvanceWithoutBall()
 {
     setZValue(5);
     if (!team_->teamHasBall_) {
-        Player *nearestPlayer = pitch_->selectNearestPlayer(pitch_->awayTeam_);
+        Player *nearestPlayer = pitch_->selectNearestPlayer(pitch_->awayTeam());
         if (nearestPlayer == this) {
             // if close to the ball then tackle
 
@@ -490,7 +492,7 @@ void Player::advance(int phase)
         return;
     if (outOfAction_->isActive())
         return;
-    if (team_ == pitch_->awayTeam_)
+    if (team_ == pitch_->awayTeam())
         computerAdvance(phase);
     else
         humanAdvance(phase);
