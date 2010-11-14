@@ -8,7 +8,7 @@
 
 #include <QGraphicsPixmapItem>
 #include <QGraphicsItemAnimation>
- #include <QTimeLine>
+#include <QTimeLine>
 
 #include "mainwindow.h"
 #include "pitch.h"
@@ -23,15 +23,15 @@ public:
     Ball(Pitch* pitch);
     ~Ball();
 
-    void setStartingPosition() { setPos(start_.x(),start_.y()); }
+    inline void setStartingPosition() { setPos(start_.x(),start_.y()); }
     void advance(int phase);
     void moveBall(MWindow::Action action, int speed);
     enum { Type = UserType + 1 };
     int type() const { return Type; }
 
     void moveBall(MWindow::Action action, QPointF destination);
-    Player* controlledBy() { return controlledBy_; }
-    void setControlledBy(Player* p) { controlledBy_ = p; }
+    inline Player* controlledBy() { return controlledBy_; }
+    inline void setControlledBy(Player* p) { controlledBy_ = p; }
 
 signals:
     void goalScored(bool topGoal);
