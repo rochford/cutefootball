@@ -9,6 +9,8 @@
 #include "team.h"
 #include "pitch.h"
 
+typedef QList<QPixmap> QPixmapList;
+
 MWindow::Action calculateAction(QPointF source,
                                 QPointF destination);
 
@@ -42,6 +44,7 @@ public:
 
     virtual void advance(int phase);
     virtual void createPixmaps();
+    virtual void createMoves();
 
     int speed() { return speed_; }
     bool ballCollisionCheck();
@@ -80,7 +83,6 @@ private:
 
     void automove();
 
-    void createMoves();
     void pixmapInsert(MWindow::Action a, QString s1, QString s2, QString s3);
 
 public:
@@ -92,7 +94,6 @@ private:
     QString name_;
     bool humanControlled_;
     bool computerControlled;
-    int speed_;
     // the previous action of this player
     MWindow::Action lastAction_;
 
@@ -101,11 +102,14 @@ public:
     QRectF defencePosition_;
     QRectF attackPosition_;
 protected:
-    QMap<MWindow::Action,QStringList> images_;
+
+ //   QMap<MWindow::Action,QStringList> images_;
+    QMap<MWindow::Action,QPixmapList> images_;
     Pitch *pitch_;
     QMap<MWindow::Action,QPointF> moveDistance_;
     int step_;
     QTimer *outOfAction_;
+    int speed_;
 };
 
 #endif // PLAYER_H

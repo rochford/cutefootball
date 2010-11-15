@@ -20,24 +20,21 @@
 const QPen KWhitePaintPen(QBrush(Qt::white),3);
 const int KOneSecondMs(1000);
 
+
 Pitch::Pitch(const QRectF& footballGroundRect)
   : QObject(),
     scene(new QGraphicsScene(footballGroundRect)),
     view(new QGraphicsView(scene)),
     motionTimer_(NULL),
-    gameTimer_(NULL),
     lastNearestPlayer_(NULL),
     bottomGoal(NULL),
     topGoal(NULL),
-    remainingTimeInHalfMs_(KGameLength),
     scoreText_(NULL),
     centerLine_(NULL),
     centerCircle_(NULL)
 {
     motionTimer_ = new QTimer(this);
     motionTimer_->setInterval(KGameRefreshRate);
-    gameTimer_ = new QTimer(this);
-    gameTimer_->setInterval(KOneSecondMs);
 
     game = new QStateMachine(this);
     firstHalfState = new Game(this, "first half", true);
@@ -66,9 +63,6 @@ Pitch::Pitch(const QRectF& footballGroundRect)
     connect(motionTimer_, SIGNAL(timeout()), scene, SLOT(update()));
     connect(motionTimer_, SIGNAL(timeout()), this, SLOT(hasBallCheck()));
     connect(motionTimer_, SIGNAL(timeout()), this, SLOT(selectNearestPlayer()));
-
-//    connect(gameTimer_, SIGNAL(timeout()), this, SLOT(updateDisplayTime()));
-    connect(gameTimer_, SIGNAL(timeout()), this, SLOT(decrementGameTime()));
 }
 
 Player* Pitch::selectNearestPlayer(Team* team)
@@ -171,19 +165,19 @@ void Pitch::removePlayers()
 void Pitch::layoutPitch()
 {
     // create the pitch
-    footballPitch_ = scene->addRect(30, 30, scene->width()-60, scene->height() -60,
+    m_footballPitch = scene->addRect(30, 30, scene->width()-60, scene->height() -60,
                                     KWhitePaintPen,
                                     QBrush(Qt::white,Qt::NoBrush) );
 
     // divide the pitch into areas
     // makes it easier for computer based movement
-    QPointF tlTopHalf = footballPitch_->rect().topLeft();
-    QPointF brBottomHalf = footballPitch_->rect().bottomRight();
-    QPointF brTopHalf = brBottomHalf - QPointF(footballPitch_->rect().height()/2,0);
-    QPointF tlBottomHalf = tlTopHalf + QPointF(footballPitch_->rect().height()/2,0);
+    QPointF tlTopHalf = m_footballPitch->rect().topLeft();
+    QPointF brBottomHalf = m_footballPitch->rect().bottomRight();
+    QPointF brTopHalf = brBottomHalf - QPointF(m_footballPitch->rect().height()/2,0);
+    QPointF tlBottomHalf = tlTopHalf + QPointF(m_footballPitch->rect().height()/2,0);
 
-    const qreal w = footballPitch_->rect().width();
-    const qreal h = footballPitch_->rect().height();
+    const qreal w = m_footballPitch->rect().width();
+    const qreal h = m_footballPitch->rect().height();
 
     for (int row = 0; row < KRow; row++) {
         for (int col = 0; col < KColumn; col++) {
@@ -224,16 +218,11 @@ void Pitch::layoutPitch()
                                     QBrush(Qt::white,Qt::NoBrush) );
 }
 
-void Pitch::decrementGameTime()
-{
-    remainingTimeInHalfMs_ = remainingTimeInHalfMs_ - KOneSecondMs;
-}
-
-void Pitch::updateDisplayTime()
+void Pitch::updateDisplayTime(int timeLeftMs)
 {
     if ( game->isRunning() ) {
         QTime tmp(0,0,0,0);
-        tmp = tmp.addMSecs(remainingTimeInHalfMs_);
+        tmp = tmp.addMSecs(timeLeftMs);
 
         QString str(tmp.toString(QString("mm:ss")));
         str.append(" ");
@@ -266,12 +255,10 @@ void Pitch::hasBallCheck()
 
 void Pitch::newGame()
 {
-    remainingTimeInHalfMs_ = KGameLength;
-
     ball_ = new Ball(this);
 
-    homeTeam_ = new Team(QString("HOME"), Qt::red);
-    awayTeam_ = new Team(QString("AWAY"), Qt::blue);
+    homeTeam_ = new Team(QString("HOME"), Qt::magenta);
+    awayTeam_ = new Team(QString("AWAY"), Qt::yellow);
 
     createTeamPlayers(homeTeam_);
     connect(ball_, SIGNAL(goalScored(bool)), homeTeam_, SLOT(goalScored(bool)));
@@ -282,27 +269,19 @@ void Pitch::newGame()
 
     replay_->createAnimationItems();
 
-    updateDisplayTime();
-
     game->start();
-    gameTimer_->start();
+
     motionTimer_->start();
 }
 
 void Pitch::pausedGame()
 {
-    qDebug() << "pausedGame remaining" << remainingTimeInHalfMs_/KOneSecondMs;
-
-    if (gameTimer_->isActive())
-        gameTimer_->stop();
     if (motionTimer_->isActive())
         motionTimer_->stop();
 }
 
 void Pitch::continueGame()
 {
-    if (!gameTimer_->isActive())
-        gameTimer_->start();
     if (!motionTimer_->isActive())
         motionTimer_->start();
 }
@@ -329,7 +308,7 @@ void Pitch::createTeamPlayers(Team *team)
         isHomeTeam = true;
 
     for (int i = Player::GoalKeeper; i < Player::LastDummy; i++ ) {
-         Player *pl(NULL);
+        Player *pl(NULL);
         if (i == Player::GoalKeeper) {
            pl = new GoalKeeper(
                     names.at(i),
@@ -345,6 +324,7 @@ void Pitch::createTeamPlayers(Team *team)
                     (Player::Role)i);
         }
         pl->createPixmaps();
+        pl->createMoves();
         players_.append(pl);
         scene->addItem(pl);
     }
@@ -466,7 +446,6 @@ void Pitch::setPlayerAttackPositions(Team *team)
 void Pitch::replayStart()
 {
     motionTimer_->stop();
-    gameTimer_->stop();
 
     scoreText_->setMode(ScreenGraphics::ReplayMode);
     scoreText_->setText("REPLAY");
@@ -478,5 +457,4 @@ void Pitch::replayStop()
 {
     scoreText_->setMode(ScreenGraphics::NormalMode);
     motionTimer_->start();
-    gameTimer_->start();
 }

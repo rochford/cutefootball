@@ -38,7 +38,6 @@ const int KPlayerDefaultSpeed = 2;
 // scale factor for players & ball
 const qreal KScaleFactor = 1.6;
 
-
 class Pitch : public QObject
 {
     Q_OBJECT
@@ -57,7 +56,7 @@ public:
     void action(MWindow::Action act);
 
     inline Ball* getBall() const { return ball_; }
-    inline Referee* referree() const { return referee_; }
+    inline Referee* referee() const { return referee_; }
 
     Player* selectNearestPlayer(Team* team);
 
@@ -71,6 +70,7 @@ public:
 
     inline Team* homeTeam() { return homeTeam_; }
     inline Team* awayTeam() { return awayTeam_; }
+    void updateDisplayTime(int timeLeftMs);
 
 public slots:
     void newGame();
@@ -79,8 +79,6 @@ public slots:
 
     void hasBallCheck();
     void selectNearestPlayer();
-    void updateDisplayTime();
-    void decrementGameTime();
 
 signals:
    void focusedPlayerChanged();
@@ -94,7 +92,7 @@ public:
     QList<Player*> players_;
     QGraphicsScene *scene;
     QGraphicsView *view;
-    QGraphicsRectItem *footballPitch_;
+    QGraphicsRectItem *m_footballPitch;
 
     QGraphicsRectItem *bottomGoal;
     QGraphicsRectItem *topGoal;
@@ -112,12 +110,6 @@ private:
     Ball *ball_;
     Referee *referee_;
     QTimer *motionTimer_;
-    // Issues timeout every second.
-    // used to decrement the amount of game time left
-    QTimer *gameTimer_;
-
-    // amounts of MS left in this half
-    int remainingTimeInHalfMs_;
 
     Player *lastNearestPlayer_; // NOT OWNED
     int remainingGameTime_;

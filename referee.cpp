@@ -9,7 +9,7 @@ Referee::Referee(Pitch* pitch, QObject *parent)
 {
     setPixmap(QPixmap(QString(":/images/ref.png")));
 
-    QPointF start(pitch_->footballPitch_->rect().center().x() + 25, pitch_->footballPitch_->rect().center().y() + 50);
+    QPointF start(pitch_->m_footballPitch->rect().center().x() + 25, pitch_->m_footballPitch->rect().center().y() + 50);
     setPos(start);
 }
 
@@ -77,8 +77,8 @@ void Referee::createPixmaps()
 {
     QString ref(":/images/ref.png");
 
-    QStringList list;
-    list << ref << ref << ref;
+    QPixmapList list;
+    list << QPixmap(ref) << QPixmap(ref) << QPixmap(ref);
     images_.insert(MWindow::North, list);
     images_.insert(MWindow::NorthEast, list);
     images_.insert(MWindow::East, list);

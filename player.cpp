@@ -10,6 +10,22 @@
 
 
 
+namespace {
+    void teamColorTransform(QPixmap &pixmap, QString pix, QRgb colorFrom, QRgb colorTo)
+    {
+        QImage img(pix);
+        QRect rect = img.rect();
+        for (int w = 0; w < img.width(); w++) {
+            for (int h = 0; h < img.height(); h++) {
+                QRgb rgb = img.pixel(w, h);
+                if ( qRed(rgb) > 250 && qBlue(rgb) == 0 && qGreen(rgb) == 0)
+                    img.setPixel(QPoint(w,h), colorTo);
+            }
+        }
+        pixmap = QPixmap::fromImage(img);
+    }
+}
+
 MWindow::Action calculateAction(QPointF source,
                                 QPointF destination)
 {
@@ -45,28 +61,25 @@ void Player::createMoves()
     moveDistance_.insert(MWindow::NorthWest, QPointF(-speed_,-speed_));
 }
 
+
 void Player::pixmapInsert(MWindow::Action a, QString s1, QString s2, QString s3)
 {
-    QString s(":/images/");
-    if (team_ == pitch_->homeTeam())
-        s.append("red/");
-    else
-        s.append("blue/");
+    QString s(":/images/red/");
 
     QString n1(s), n2(s), n3(s);
-    QStringList list;
-    list <<   n1.append(s1) << n2.append(s2) << n3.append(s3);
+    QPixmap p1, p2, p3;
+
+    teamColorTransform(p1, n1.append(s1), qRgb(255, 0, 0), team_->color.rgb());
+    teamColorTransform(p2, n2.append(s2), qRgb(255, 0, 0), team_->color.rgb());
+    teamColorTransform(p3, n3.append(s3), qRgb(255, 0, 0), team_->color.rgb());
+
+    QList<QPixmap> list;
+    list << p1 <<  p2 << p3;
     images_.insert(a, list);
 }
 
 void Player::createPixmaps()
 {
-    QString s(":/images/");
-    if (team_ == pitch_->homeTeam())
-        s.append("red/");
-    else
-        s.append("blue/");
-
     pixmapInsert(MWindow::North, "playerNorth.PNG", "playerNorth1.PNG", "playerNorth2.PNG");
     pixmapInsert(MWindow::NorthEast, "playerNorthEast.PNG", "playerNorthEast1.PNG", "playerNorthEast2.PNG");
     pixmapInsert(MWindow::East, "playerEast.PNG", "playerEast1.PNG", "playerEast2.PNG");
@@ -114,8 +127,6 @@ Player::Player(QString name,
     setToolTip(name_);
     outOfAction_ = new QTimer(this);
     outOfAction_->setSingleShot(true);
-
-    createMoves();
 
     // referees dont celebrate goals
     if (role != Player::LastDummy)
@@ -191,7 +202,7 @@ void Player::movePlayer(MWindow::Action action)
     case MWindow::SouthWest:
     case MWindow::West:
     case MWindow::NorthWest:
-        setPixmap(QPixmap(images_[action].at(step_ % 3)));
+        setPixmap(images_[action].at(step_ % 3));
         moveBy(moveDistance_[action].x(), moveDistance_[action].y());
         lastAction_ = action;
         break;
@@ -218,13 +229,23 @@ void Player::specialAction(MWindow::Action action)
     switch (action) {
     case MWindow::ThrownIn:
         {
-            setPixmap(QPixmap(images_[action].at(0)));
+            setPixmap(images_[action].at(0));
             outOfAction_->start(1500);
             lastAction_ = action;
         }
         return;
     case MWindow::GoalCelebration:
-        setPixmap(QPixmap(images_[action].at(0)));
+        setPixmap(images_[action].at(0));
+        return;
+    case MWindow::DiveLeft:
+    case MWindow::DiveRight:
+        setPixmap(images_[action].at(0));
+        moveBy(moveDistance_[action].x(), moveDistance_[action].y());
+        // if dive causes contact with the ball then transfer the ownership
+        if (ballCollisionCheck()) {
+            pitch_->getBall()->setControlledBy(this);
+            hasBall_ = true;
+        }
         return;
     default:
         break;
@@ -284,7 +305,7 @@ void Player::specialAction(MWindow::Action action)
         default:
             break;
         }
-        setPixmap(QPixmap(images_[action].at(0)));
+        setPixmap(images_[action].at(0));
         moveBy(moveDistance_[lastAction_].x(), moveDistance_[lastAction_].y());
         outOfAction_->stop();
         outOfAction_->start(500);
@@ -320,6 +341,8 @@ void Player::move(MWindow::Action action)
         || action == MWindow::Tackle
         || action == MWindow::Pass
         || action == MWindow::ThrownIn
+        || action == MWindow::DiveLeft
+        || action == MWindow::DiveRight
         || action == MWindow::GoalCelebration)
         specialAction(action);
     else

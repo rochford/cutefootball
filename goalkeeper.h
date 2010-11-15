@@ -26,9 +26,13 @@ public slots:
 public:
     void createPixmaps();
     void advance(int phase);
+    void createMoves();
+
 private:
     void gkAdvanceWithBall();
     void gkAdvanceWithoutBall();
+private:
+    QMap<MWindow::Action,QPointF> moveDistance_;
 };
 
 #endif // GOALKEEPER_H

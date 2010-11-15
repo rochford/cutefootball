@@ -2,12 +2,14 @@
 #include "pitch.h"
 #include "ball.h"
 #include "Player.h"
+#include "referee.h"
 #include "replay.h"
 
 const int KHalfLength = 60*1000; // seconds
 
 GoalScoredState::GoalScoredState(Game *g, Pitch *p)
-    : m_game(g), m_pitch(p)
+    : m_game(g),
+    m_pitch(p)
 {
     m_celebrate = new QState(this);
     m_returnToPosition = new QState(this);
@@ -37,7 +39,6 @@ void GoalScoredState::onEntry(QEvent *event)
     createPlayerAnimationItems(Celebrate);
     m_timeLineCelebrate->start();
 }
-
 
 // animate from present player position to another point.
 void GoalScoredState::createPlayerAnimationItems(GameState g)
@@ -98,7 +99,8 @@ Game::Game(Pitch* p,
      bool isFirstHalf)
     : QState(),
     m_pitch(p),
-    stateName_(stateName)
+    stateName_(stateName),
+    m_remainingTimeInHalfMs(KHalfLength)
 {
     m_timer = new QTimer(this);
     m_timer->setInterval(KHalfLength);
@@ -127,11 +129,19 @@ Game::Game(Pitch* p,
     end->addTransition(m_timeLineLeavePitch, SIGNAL(finished()), m_allDone);
 
     connect(m_timer,SIGNAL(timeout()), this, SLOT(startPlayersLeavePitchAnim()));
+
     connect(m_timeLineTakePositions, SIGNAL(finished()), this, SLOT(kickOff()));
     connect(m_timeLineTakePositions, SIGNAL(finished()), m_timer, SLOT(start()));
     connect(m_timeLineTakePositions, SIGNAL(frameChanged(int)), this, SLOT(playFrame(int)));
     connect(m_timeLineLeavePitch, SIGNAL(frameChanged(int)), this, SLOT(playFrame(int)));
-    connect(m_1second, SIGNAL(timeout()), m_pitch, SLOT(updateDisplayTime()));
+
+    connect(m_1second, SIGNAL(timeout()), this, SLOT(decrementGameTime()));
+}
+
+void Game::decrementGameTime()
+{
+    m_remainingTimeInHalfMs = m_remainingTimeInHalfMs - 1000;
+    m_pitch->updateDisplayTime(m_remainingTimeInHalfMs);
 }
 
 void Game::startPlayersLeavePitchAnim()
@@ -163,9 +173,8 @@ void Game::kickOff()
     playing->addTransition(m_pitch->getBall(), SIGNAL(goalScored(bool)), m_goalScoredState);
 #endif //
 
-// TODO    m_pitch->scene->addItem(referee_);
+    m_pitch->scene->addItem(m_pitch->referee());
 
-    // TODO
     m_1second->start();
     m_pitch->replay_->replaySnapShotTimer_->start();
 }

@@ -54,6 +54,10 @@ public:
         YellowCard,
         RedCard,
 
+        // goal keeper moves
+        DiveLeft,
+        DiveRight,
+
         DoNothing };
 
 private slots:
