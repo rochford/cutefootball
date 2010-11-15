@@ -31,44 +31,12 @@
         <file>images/red/tackleSouthEast.PNG</file>
         <file>images/red/tackleSouthWest.PNG</file>
         <file>images/red/tackleWest.PNG</file>
-        <file>images/blue/playerEast.PNG</file>
-        <file>images/blue/playerEast1.PNG</file>
-        <file>images/blue/playerEast2.PNG</file>
-        <file>images/blue/playerNorth.PNG</file>
-        <file>images/blue/playerNorth1.PNG</file>
-        <file>images/blue/playerNorth2.PNG</file>
-        <file>images/blue/playerNorthEast.PNG</file>
-        <file>images/blue/playerNorthEast1.PNG</file>
-        <file>images/blue/playerNorthEast2.PNG</file>
-        <file>images/blue/playerNorthWest.PNG</file>
-        <file>images/blue/playerNorthWest1.PNG</file>
-        <file>images/blue/playerNorthWest2.PNG</file>
-        <file>images/blue/playerSouth.PNG</file>
-        <file>images/blue/playerSouth1.PNG</file>
-        <file>images/blue/playerSouth2.PNG</file>
-        <file>images/blue/playerSouthEast.PNG</file>
-        <file>images/blue/playerSouthEast1.PNG</file>
-        <file>images/blue/playerSouthEast2.PNG</file>
-        <file>images/blue/playerSouthWest.PNG</file>
-        <file>images/blue/playerSouthWest1.PNG</file>
-        <file>images/blue/playerSouthWest2.PNG</file>
-        <file>images/blue/playerWest.PNG</file>
-        <file>images/blue/playerWest1.PNG</file>
-        <file>images/blue/playerWest2.PNG</file>
         <file>images/ref.png</file>
         <file>images/ball1.png</file>
         <file>images/ball2.png</file>
         <file>images/ball3.png</file>
         <file>images/ball.png</file>
         <file>images/keeperNorth.PNG</file>
-        <file>images/blue/tackleEast.PNG</file>
-        <file>images/blue/tackleNorth.PNG</file>
-        <file>images/blue/tackleNorthEast.PNG</file>
-        <file>images/blue/tackleNorthWest.PNG</file>
-        <file>images/blue/tackleSouth.PNG</file>
-        <file>images/blue/tackleSouthEast.PNG</file>
-        <file>images/blue/tackleSouthWest.PNG</file>
-        <file>images/blue/tackleWest.PNG</file>
         <file>images/pitch2.GIF</file>
         <file>images/red/playerNorthWest1.PNG</file>
     </qresource>

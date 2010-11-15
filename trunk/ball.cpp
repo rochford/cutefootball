@@ -151,7 +151,7 @@ QVariant Ball::itemChange(GraphicsItemChange change, const QVariant &value)
 
          // value is the new position.
          QPointF newPos = value.toPointF();
-         QRectF rect = pitch_->footballPitch_->rect();
+         QRectF rect = pitch_->m_footballPitch->rect();
 
          // has a goal been scored?
          if (pitch_->topGoal->contains(newPos)
@@ -173,12 +173,12 @@ QVariant Ball::itemChange(GraphicsItemChange change, const QVariant &value)
              // throw in?
              if (rect.right() < newPos.x()) {
                  pitch_->setPiece(homeTeamTouchedLast ? pitch_->awayTeam() : pitch_->homeTeam(), Pitch::ThrowIn);
-                 newPos.setX(pitch_->footballPitch_->rect().right());
+                 newPos.setX(pitch_->m_footballPitch->rect().right());
                  return newPos;
              }
              if (rect.x() > newPos.x()) {
                  pitch_->setPiece(homeTeamTouchedLast ? pitch_->awayTeam() : pitch_->homeTeam(), Pitch::ThrowIn);
-                 newPos.setX(pitch_->footballPitch_->rect().left());
+                 newPos.setX(pitch_->m_footballPitch->rect().left());
                  return newPos;
              }
          }

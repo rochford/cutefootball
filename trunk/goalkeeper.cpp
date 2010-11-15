@@ -18,8 +18,8 @@ void GoalKeeper::createPixmaps()
 {
     QString gkN(":/images/keeperNorth.PNG");
 
-    QStringList list;
-    list << gkN << gkN << gkN;
+    QPixmapList list;
+    list << QPixmap(gkN) << QPixmap(gkN) << QPixmap(gkN);
     images_.insert(MWindow::North, list);
     images_.insert(MWindow::NorthEast, list);
     images_.insert(MWindow::East, list);
@@ -39,6 +39,9 @@ void GoalKeeper::createPixmaps()
     images_.insert(MWindow::TackleNorthWest, list);
 
     images_.insert(MWindow::GoalCelebration, list); // TODO
+
+    images_.insert(MWindow::DiveLeft, list); // TODO
+    images_.insert(MWindow::DiveRight, list); // TODO
 }
 
 void GoalKeeper::advance(int phase)
@@ -89,5 +92,22 @@ void GoalKeeper::shotAttempted(QPointF dest)
     } else if (team_->getDirection() == Team::NorthToSouth
                && pitch_->bottomGoal->contains(dest) ) {
         qDebug() << "shotAttempted need to save it  ";
+        move(MWindow::DiveLeft);
+
     }
+}
+
+void GoalKeeper::createMoves()
+{
+    moveDistance_.insert(MWindow::North, QPointF(0,-speed_));
+    moveDistance_.insert(MWindow::NorthEast, QPointF(speed_,-speed_));
+    moveDistance_.insert(MWindow::East, QPointF(speed_,0));
+    moveDistance_.insert(MWindow::SouthEast, QPointF(speed_,speed_));
+    moveDistance_.insert(MWindow::South, QPointF(0,speed_));
+    moveDistance_.insert(MWindow::SouthWest, QPointF(-speed_,speed_));
+    moveDistance_.insert(MWindow::West, QPointF(-speed_,0));
+    moveDistance_.insert(MWindow::NorthWest, QPointF(-speed_,-speed_));
+
+    moveDistance_.insert(MWindow::DiveLeft, QPointF(5*speed_,0));
+    moveDistance_.insert(MWindow::DiveRight, QPointF(5*-speed_,0));
 }

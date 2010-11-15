@@ -62,10 +62,10 @@ public:
     };
 
 public slots:
-    void info() { qDebug() << stateName_ << "timer fired!!!"; }
     void playFrame(int frame);
     void startPlayersLeavePitchAnim();
     void kickOff();
+    void decrementGameTime();
 
 protected:
     void onEntry ( QEvent * event );
@@ -77,8 +77,11 @@ private:
 private:
     Pitch* m_pitch;
     QString stateName_;
+
     QTimer *m_timer;
     QTimer *m_1second;
+    // amounts of MS left in this half
+    int m_remainingTimeInHalfMs;
 
     QState *start;
     QState *playing;
