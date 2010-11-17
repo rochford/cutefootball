@@ -18,7 +18,7 @@ namespace {
         for (int w = 0; w < img.width(); w++) {
             for (int h = 0; h < img.height(); h++) {
                 QRgb rgb = img.pixel(w, h);
-                if ( qRed(rgb) > 250 && qBlue(rgb) == 0 && qGreen(rgb) == 0)
+                if ( qRed(rgb) > 245 && qBlue(rgb) < 10 && qGreen(rgb) < 10)
                     img.setPixel(QPoint(w,h), colorTo);
             }
         }

@@ -5,7 +5,6 @@
 #include <qmap.h>
 
 class Pitch;
-class Replay;
 
 class MWindow : public QMainWindow
 {
@@ -14,8 +13,6 @@ class MWindow : public QMainWindow
 public:
     MWindow(QWidget *parent = 0);
     virtual ~MWindow();
-
-    void createActions();
 
     enum Action {
         West = 0,
@@ -60,37 +57,34 @@ public:
 
         DoNothing };
 
-private slots:
-    void startedGame();
-    void pausedGame();
-    void continueGame();
-
-    void repeatKeyEvent();
-    void stopKeyEvent();
-
 protected:
     virtual void keyPressEvent( QKeyEvent *event );
     virtual void keyReleaseEvent( QKeyEvent *event );
 
 private:
     void createKeyboardActions();
+    void stopKeyEvent();
+    void createActions();
+
+private slots:
+    void repeatKeyEvent();
+    void about();
 
 private:
-    Pitch *pitch;
+    Pitch *m_pitch;
 
-    QMap<int,Action> actions;
-    QTimer *keyEventTimer;
-    Action lastAction;
+    QMap<int,Action> m_actions;
+    QTimer *m_keyEventTimer;
+    Action m_lastAction;
 
-    QAction* newGameAction;
-    QAction* pauseGameAction;
-    QAction* continueGameAction;
+    QAction* m_newGameAction;
+    QAction* m_settingsAction;
+    QAction* m_aboutAction;
 
-    QMenu* fileMenu;
-    QMenu* helpMenu;
+    QMenu* m_fileMenu;
+    QMenu* m_helpMenu;
 
-    bool buttonPressed_;
-    QTime elapsedTime_;
+    QTime m_elapsedTime;
     };
 
 #endif // MAINWINDOW_H

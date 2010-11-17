@@ -4,115 +4,95 @@
 #include "pitch.h"
 #include "replay.h"
 
-const int KLongPressValue = 750; // Ms
+const int KLongPressValue = 800; // Ms
 
 MWindow::MWindow(QWidget *parent)
     : QMainWindow(parent),
-    keyEventTimer(NULL),
-    buttonPressed_(false)
+    m_keyEventTimer(NULL)
 {
-    QRectF footballGround(0,0,400,600);
-    pitch = new Pitch(footballGround);
+    setWindowTitle(tr("Cute Football"));
 
-    keyEventTimer = new QTimer(this);
-    keyEventTimer->setInterval(KGameRefreshRate);
+    QRectF footballGround(0,0,400,600);
+    m_pitch = new Pitch(footballGround);
+
+    m_keyEventTimer = new QTimer(this);
+    m_keyEventTimer->setInterval(KGameRefreshRate);
 
     createActions();
     createKeyboardActions();
 
-    connect(keyEventTimer, SIGNAL(timeout()), this, SLOT(repeatKeyEvent()));
+    connect(m_keyEventTimer, SIGNAL(timeout()), this, SLOT(repeatKeyEvent()));
+    connect(m_newGameAction, SIGNAL(triggered()), m_pitch, SLOT(newGame()));
+    connect(m_aboutAction, SIGNAL(triggered()), this, SLOT(about()));
 
-    setCentralWidget(pitch->view);
-    pitch->view->show();
-}
-
-void MWindow::startedGame()
-{
-    pauseGameAction->setEnabled(true);
-    continueGameAction->setEnabled(false);
-}
-void MWindow::pausedGame()
-{
-    pauseGameAction->setEnabled(false);
-    continueGameAction->setEnabled(true);
-}
-void MWindow::continueGame()
-{
-    pauseGameAction->setEnabled(true);
-    continueGameAction->setEnabled(false);
+    setCentralWidget(m_pitch->view);
+    m_pitch->view->show();
 }
 
 void MWindow::createActions()
 {
-    newGameAction = new QAction(QString("New Game"), this);
-    addAction(newGameAction);
+    m_newGameAction = new QAction(QString(tr("New Game")), this);
+    addAction(m_newGameAction);
 
-    pauseGameAction = new QAction(QString("Pause Game"), this);
-    pauseGameAction->setEnabled(false);
-    addAction(pauseGameAction);
+    m_settingsAction = new QAction(QString(tr("Settings")), this);
+//    addAction(m_settingsAction);
 
-    continueGameAction = new QAction(QString("Continue Game"), this);
-    continueGameAction->setEnabled(false);
-    addAction(continueGameAction);
+    m_aboutAction = new QAction(QString(tr("About")), this);
+    addAction(m_aboutAction);
 
-    connect(newGameAction, SIGNAL(triggered()), pitch, SLOT(newGame()));
-    connect(newGameAction, SIGNAL(triggered()), this, SLOT(startedGame()));
-    connect(pauseGameAction, SIGNAL(triggered()), pitch, SLOT(pausedGame()));
-    connect(pauseGameAction, SIGNAL(triggered()), this, SLOT(pausedGame()));
-    connect(continueGameAction, SIGNAL(triggered()), pitch, SLOT(continueGame()));
-    connect(continueGameAction, SIGNAL(triggered()), this, SLOT(continueGame()));
+    m_fileMenu = menuBar()->addMenu(tr("&File"));
+    m_fileMenu->addAction(m_newGameAction);
+//    m_fileMenu->addAction(m_settingsAction);
 
-    fileMenu = menuBar()->addMenu(tr("&File"));
-    fileMenu->addAction(newGameAction);
-    fileMenu->addAction(pauseGameAction);
-    fileMenu->addAction(continueGameAction);
-
-    helpMenu = menuBar()->addMenu(tr("&Help"));
+    m_helpMenu = menuBar()->addMenu(tr("&Help"));
+    m_helpMenu->addAction(m_aboutAction);
 }
 
 void MWindow::stopKeyEvent()
 {
-    if (keyEventTimer->isActive())
-        keyEventTimer->stop();
+    if (m_keyEventTimer->isActive())
+        m_keyEventTimer->stop();
 }
 
 void MWindow::createKeyboardActions()
 {
-    actions.insert( Qt::Key_W, North );
-    actions.insert( Qt::Key_E, NorthEast );
-    actions.insert( Qt::Key_D, East );
-    actions.insert( Qt::Key_C, SouthEast );
-    actions.insert( Qt::Key_X, South );
-    actions.insert( Qt::Key_Z, SouthWest );
-    actions.insert( Qt::Key_A, West );
-    actions.insert( Qt::Key_Q, NorthWest );
+    m_actions.insert( Qt::Key_W, North );
+    m_actions.insert( Qt::Key_E, NorthEast );
+    m_actions.insert( Qt::Key_D, East );
+    m_actions.insert( Qt::Key_C, SouthEast );
+    m_actions.insert( Qt::Key_X, South );
+    m_actions.insert( Qt::Key_Z, SouthWest );
+    m_actions.insert( Qt::Key_A, West );
+    m_actions.insert( Qt::Key_Q, NorthWest );
 
-    actions.insert( Qt::Key_S, Button );
+    m_actions.insert( Qt::Key_S, Button );
 
-    actions.insert( Qt::Key_R, Replay );
+    m_actions.insert( Qt::Key_R, Replay );
 }
 
 MWindow::~MWindow()
 {
-    delete pitch;
+    delete m_pitch;
 }
 
 void MWindow::repeatKeyEvent()
 {
-    pitch->action(lastAction);
-    keyEventTimer->start();
+    qDebug() << "repeatKeyEvent";
+    m_pitch->action(m_lastAction);
+    m_keyEventTimer->start();
 }
 
 void MWindow::keyPressEvent( QKeyEvent *event )
 {
-    if ( event->isAutoRepeat() || !actions.contains( event->key() ) ) {
+    if ( event->isAutoRepeat() || !m_actions.contains( event->key() ) ) {
         event->ignore();
         return;
     }
 
-    Action a = actions[ event->key() ];
+    qDebug() << "keyPressEvent";
+    Action a = m_actions[ event->key() ];
 
-    if ( pitch->replay_->isReplay() )
+    if ( m_pitch->replay_->isReplay() )
         // Not allowed to stop a replay!!!
         // pitch->replayStop();
         ;
@@ -120,9 +100,7 @@ void MWindow::keyPressEvent( QKeyEvent *event )
         switch ( a )
         {
         case Button:
-            {
-            elapsedTime_.restart();
-            }
+            m_elapsedTime.restart();
             break;
         case North:
         case NorthEast:
@@ -133,12 +111,12 @@ void MWindow::keyPressEvent( QKeyEvent *event )
         case West:
         case NorthWest:
             // start a timer
-            lastAction = a;
-            pitch->action(a);
-            keyEventTimer->start();
+            m_lastAction = a;
+            m_pitch->action(a);
+            m_keyEventTimer->start();
             break;
         case Replay:
-            pitch->replayStart();
+            m_pitch->replayStart();
             break;
         default:
             break;
@@ -149,25 +127,28 @@ void MWindow::keyPressEvent( QKeyEvent *event )
 
 void MWindow::keyReleaseEvent( QKeyEvent *event )
 {
-    if ( event->isAutoRepeat() || !actions.contains( event->key() ) ) {
+    if ( event->isAutoRepeat() || !m_actions.contains( event->key() ) ) {
         event->ignore();
         return;
     }
-    Action a = actions[ event->key() ];
+    qDebug() << "keyReleaseEvent";
+    Action a = m_actions[ event->key() ];
 
     if ( a != Button ) {
         stopKeyEvent();
     } else {
-        int elapsed = elapsedTime_.elapsed();
-        if ( elapsed > 1200) {
-            qDebug() << "keyReleaseEvent long press " << elapsedTime_.elapsed();
-            pitch->action(ButtonLongPress);
-        } else {
-            qDebug() << "keyReleaseEvent short press " << elapsedTime_.elapsed();
-            pitch->action(ButtonShortPress);
-        }
+        int elapsed = m_elapsedTime.elapsed();
+        if ( elapsed > KLongPressValue )
+            m_pitch->action(ButtonLongPress);
+        else
+            m_pitch->action(ButtonShortPress);
     }
 
     event->accept();
+}
 
+void MWindow::about()
+{
+    QMessageBox::about(this, tr("About Cute Football"),
+                       tr("Cute Football is written by XXX"));
 }

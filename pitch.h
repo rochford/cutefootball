@@ -43,6 +43,7 @@ class Pitch : public QObject
     Q_OBJECT
 public:
     enum SetPiece {
+        KickOff,
         GoalKick,
         Corner,
         Penalty,
@@ -74,8 +75,6 @@ public:
 
 public slots:
     void newGame();
-    void pausedGame();
-    void continueGame();
 
     void hasBallCheck();
     void selectNearestPlayer();

@@ -18,8 +18,6 @@
 #include "game.h"
 
 const QPen KWhitePaintPen(QBrush(Qt::white),3);
-const int KOneSecondMs(1000);
-
 
 Pitch::Pitch(const QRectF& footballGroundRect)
   : QObject(),
@@ -190,30 +188,30 @@ void Pitch::layoutPitch()
     }
 
     // half way line
-    centerLine_ = scene->addLine(scene->sceneRect().left(),scene->sceneRect().height()/2.0,
-                         scene->sceneRect().right(),scene->sceneRect().height()/2.0, KWhitePaintPen);
+    centerLine_ = scene->addLine(scene->sceneRect().left()+30,scene->sceneRect().height()/2.0,
+                         scene->sceneRect().right()-30,scene->sceneRect().height()/2.0, KWhitePaintPen);
 
     // center circle
-    centerCircle_ = scene->addEllipse((scene->sceneRect().width()/2.0) -60,(scene->sceneRect().height()/2.0)-60,
-                      120.0, 120.0, KWhitePaintPen);
+    centerCircle_ = scene->addEllipse((scene->sceneRect().width()/2.0) -80,(scene->sceneRect().height()/2.0)-80,
+                      160.0, 160.0, KWhitePaintPen);
     // simple text
     scoreText_ = new ScreenGraphics(this);
 
     // create the goals
-    bottomGoal = scene->addRect((scene->width() / 2)-30, scene->height()-30,60,25,
+    bottomGoal = scene->addRect((scene->width() / 2)-60, scene->height()-30,120,25,
                    QPen(Qt::black),
                    QBrush(Qt::black,Qt::CrossPattern) );
-    topGoal = scene->addRect((scene->width() / 2)-30,5,60,25,
+    topGoal = scene->addRect((scene->width() / 2)-60,5,120,25,
                    QPen(Qt::black),
                    QBrush(Qt::black,Qt::CrossPattern) );
 
     // penalty areas
-    topPenaltyArea = scene->addRect((scene->width() / 2)-70, 30,
-                                    140, 100,
+    topPenaltyArea = scene->addRect((scene->width() / 2)-90, 30,
+                                    180, 100,
                                     KWhitePaintPen,
                                     QBrush(Qt::white,Qt::NoBrush) );
-    bottomPenaltyArea = scene->addRect((scene->width() / 2)-70, scene->height()-130,
-                                       140, 100,
+    bottomPenaltyArea = scene->addRect((scene->width() / 2)-90, scene->height()-130,
+                                       180, 100,
                                     KWhitePaintPen,
                                     QBrush(Qt::white,Qt::NoBrush) );
 }
@@ -274,18 +272,6 @@ void Pitch::newGame()
     motionTimer_->start();
 }
 
-void Pitch::pausedGame()
-{
-    if (motionTimer_->isActive())
-        motionTimer_->stop();
-}
-
-void Pitch::continueGame()
-{
-    if (!motionTimer_->isActive())
-        motionTimer_->start();
-}
-
 void Pitch::action(MWindow::Action action)
 {
     // action is only applicabled to the human controlled player
@@ -307,6 +293,7 @@ void Pitch::createTeamPlayers(Team *team)
     if (team->name() == QString("HOME"))
         isHomeTeam = true;
 
+    QPointF startPos(0,scene->sceneRect().height()/2);
     for (int i = Player::GoalKeeper; i < Player::LastDummy; i++ ) {
         Player *pl(NULL);
         if (i == Player::GoalKeeper) {
@@ -325,6 +312,7 @@ void Pitch::createTeamPlayers(Team *team)
         }
         pl->createPixmaps();
         pl->createMoves();
+        pl->setPos(startPos);
         players_.append(pl);
         scene->addItem(pl);
     }

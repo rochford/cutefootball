@@ -20,9 +20,6 @@ public:
     int type() const
         { return Type;}
 
-public slots:
-    void shotAttempted(QPointF dest);
-
 public:
     void createPixmaps();
     void advance(int phase);
@@ -31,8 +28,6 @@ public:
 private:
     void gkAdvanceWithBall();
     void gkAdvanceWithoutBall();
-private:
-    QMap<MWindow::Action,QPointF> moveDistance_;
 };
 
 #endif // GOALKEEPER_H

@@ -1,5 +1,12 @@
 <RCC>
     <qresource prefix="/">
+        <file>images/ref.png</file>
+        <file>images/ball1.png</file>
+        <file>images/ball2.png</file>
+        <file>images/ball3.png</file>
+        <file>images/ball.png</file>
+        <file>images/keeperNorth.PNG</file>
+        <file>images/pitch2.GIF</file>
         <file>images/red/playerEast.PNG</file>
         <file>images/red/playerEast1.PNG</file>
         <file>images/red/playerEast2.PNG</file>
@@ -10,6 +17,7 @@
         <file>images/red/playerNorthEast1.PNG</file>
         <file>images/red/playerNorthEast2.PNG</file>
         <file>images/red/playerNorthWest.PNG</file>
+        <file>images/red/playerNorthWest1.PNG</file>
         <file>images/red/playerNorthWest2.PNG</file>
         <file>images/red/playerSouth.PNG</file>
         <file>images/red/playerSouth1.PNG</file>
@@ -23,21 +31,13 @@
         <file>images/red/playerWest.PNG</file>
         <file>images/red/playerWest1.PNG</file>
         <file>images/red/playerWest2.PNG</file>
-        <file>images/red/tackleNorth.PNG</file>
-        <file>images/red/tackleSouth.PNG</file>
         <file>images/red/tackleEast.PNG</file>
+        <file>images/red/tackleNorth.PNG</file>
         <file>images/red/tackleNorthEast.PNG</file>
         <file>images/red/tackleNorthWest.PNG</file>
+        <file>images/red/tackleSouth.PNG</file>
         <file>images/red/tackleSouthEast.PNG</file>
         <file>images/red/tackleSouthWest.PNG</file>
         <file>images/red/tackleWest.PNG</file>
-        <file>images/ref.png</file>
-        <file>images/ball1.png</file>
-        <file>images/ball2.png</file>
-        <file>images/ball3.png</file>
-        <file>images/ball.png</file>
-        <file>images/keeperNorth.PNG</file>
-        <file>images/pitch2.GIF</file>
-        <file>images/red/playerNorthWest1.PNG</file>
     </qresource>
 </RCC>

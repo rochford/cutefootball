@@ -22,7 +22,7 @@ class GoalScoredState : public QState
     Q_OBJECT
 public:
     GoalScoredState(Game *g, Pitch *p);
-    ~GoalScoredState() {};
+    ~GoalScoredState() {}
 
     enum GameState {
         TakePositions,
@@ -53,7 +53,7 @@ class Game : public QState
     Q_OBJECT
 public:
     Game(Pitch *p, QString stateName, bool isFirstHalf);
-    ~Game() { qDebug() << stateName_ <<"dtor"; m_timer->stop(); }
+    ~Game() { qDebug() << m_stateName <<"dtor"; m_timer->stop(); }
 
     enum GameState {
         GoalScored, // reason for another kickoff
@@ -76,18 +76,18 @@ private:
 
 private:
     Pitch* m_pitch;
-    QString stateName_;
+    QString m_stateName;
 
     QTimer *m_timer;
     QTimer *m_1second;
     // amounts of MS left in this half
     int m_remainingTimeInHalfMs;
 
-    QState *start;
-    QState *playing;
-    QState *end;
+    QState *m_startState;
+    QState *m_playingState;
+    QState *m_halfEndState;
     GoalScoredState *m_goalScoredState;
-    QFinalState *m_allDone;
+    QFinalState *m_allDoneState;
 
     QTimeLine *m_timeLineTakePositions;
     QTimeLine *m_timeLineLeavePitch;

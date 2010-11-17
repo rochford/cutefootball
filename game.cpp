@@ -99,7 +99,7 @@ Game::Game(Pitch* p,
      bool isFirstHalf)
     : QState(),
     m_pitch(p),
-    stateName_(stateName),
+    m_stateName(stateName),
     m_remainingTimeInHalfMs(KHalfLength)
 {
     m_timer = new QTimer(this);
@@ -116,22 +116,22 @@ Game::Game(Pitch* p,
     m_timeLineLeavePitch->setCurveShape(QTimeLine::LinearCurve);
     m_timeLineLeavePitch->setFrameRange(0, 100);
 
-    start = new QState(this);
-    playing = new QState(this);
-    end = new QState(this);
+    m_startState = new QState(this);
+    m_playingState = new QState(this);
+    m_halfEndState = new QState(this);
     m_goalScoredState = new GoalScoredState(this, m_pitch);
-    m_allDone = new QFinalState(this);
-    setInitialState(start);
+    m_allDoneState = new QFinalState(this);
+    setInitialState(m_startState);
 
-    start->addTransition(m_timeLineTakePositions, SIGNAL(finished()), playing);
-    playing->addTransition(m_timer, SIGNAL(timeout()), end);
-    m_goalScoredState->addTransition(m_goalScoredState, SIGNAL(finished()), playing);
-    end->addTransition(m_timeLineLeavePitch, SIGNAL(finished()), m_allDone);
+    m_startState->addTransition(m_timeLineTakePositions, SIGNAL(finished()), m_playingState);
+    m_playingState->addTransition(m_timer, SIGNAL(timeout()), m_halfEndState);
+    m_goalScoredState->addTransition(m_goalScoredState, SIGNAL(finished()), m_playingState);
+    m_halfEndState->addTransition(m_timeLineLeavePitch, SIGNAL(finished()), m_allDoneState);
 
     connect(m_timer,SIGNAL(timeout()), this, SLOT(startPlayersLeavePitchAnim()));
 
     connect(m_timeLineTakePositions, SIGNAL(finished()), this, SLOT(kickOff()));
-    connect(m_timeLineTakePositions, SIGNAL(finished()), m_timer, SLOT(start()));
+    connect(m_timeLineTakePositions, SIGNAL(finished()), m_timer, SLOT(m_startState()));
     connect(m_timeLineTakePositions, SIGNAL(frameChanged(int)), this, SLOT(playFrame(int)));
     connect(m_timeLineLeavePitch, SIGNAL(frameChanged(int)), this, SLOT(playFrame(int)));
 
@@ -235,7 +235,7 @@ void Game::createPlayerAnimationItems(GameState g)
 
 void Game::onEntry(QEvent *event)
 {
-    qDebug() << stateName_ << "onEntry";
+    qDebug() << m_stateName << "onEntry";
     m_timer->start();
     m_pitch->homeTeam()->setDirection(Team::NorthToSouth);
     m_pitch->setPlayerStartPositions(m_pitch->homeTeam());
@@ -254,9 +254,9 @@ void Game::onEntry(QEvent *event)
 
 void Game::onExit(QEvent *event)
 {
-    qDebug() << stateName_ << "onExit";
+    qDebug() << m_stateName << "onExit";
     m_pitch->scene->removeItem(m_pitch->getBall());
 
-    this->m_1second->stop();
-    this->m_timer->stop();
+    m_1second->stop();
+    m_timer->stop();
 }
