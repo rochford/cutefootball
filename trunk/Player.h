@@ -90,6 +90,7 @@ public:
     Team* team_;
 
     Role role_;
+
 private:
     QString name_;
     bool humanControlled_;
@@ -101,9 +102,8 @@ public:
     QRectF startPosition_;
     QRectF defencePosition_;
     QRectF attackPosition_;
-protected:
 
- //   QMap<MWindow::Action,QStringList> images_;
+protected:
     QMap<MWindow::Action,QPixmapList> images_;
     Pitch *pitch_;
     QMap<MWindow::Action,QPointF> moveDistance_;

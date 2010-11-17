@@ -6,7 +6,7 @@
 #include <QString>
 
 class Team : public QObject {
-        Q_OBJECT;
+    Q_OBJECT;
 public:
     enum State { Attacking, Defending, None };
     // the attacking direction
@@ -18,8 +18,8 @@ public:
     void setHasBall(bool hasBall);
     void setState(State s) {  state_ = s;}
 
-    public slots:
-            void goalScored(bool isNorthGoal);
+public slots:
+    void goalScored(bool isNorthGoal);
 
 public:
     QString name_;
