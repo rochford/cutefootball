@@ -4,7 +4,6 @@
 #include "pitch.h"
 #include "replay.h"
 
-const int KLongPressValue = 800; // Ms
 
 MWindow::MWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -22,17 +21,32 @@ MWindow::MWindow(QWidget *parent)
     createKeyboardActions();
 
     connect(m_keyEventTimer, SIGNAL(timeout()), this, SLOT(repeatKeyEvent()));
+
     connect(m_newGameAction, SIGNAL(triggered()), m_pitch, SLOT(newGame()));
+
+    connect(m_replayAction, SIGNAL(triggered()), m_pitch, SLOT(replayStart()));
+
     connect(m_aboutAction, SIGNAL(triggered()), this, SLOT(about()));
 
-    setCentralWidget(m_pitch->view);
-    m_pitch->view->show();
+    connect(m_pitch, SIGNAL(gameInProgress(bool)), this, SLOT(isPlaying(bool)));
+
+    setCentralWidget(m_pitch->m_view);
+    m_pitch->m_view->show();
+}
+
+void MWindow::isPlaying(bool playing)
+{
+    m_gameMenu->setEnabled(playing);
+    m_replayAction->setEnabled(playing);
 }
 
 void MWindow::createActions()
 {
     m_newGameAction = new QAction(QString(tr("New Game")), this);
     addAction(m_newGameAction);
+
+    m_replayAction = new QAction(QString(tr("Replay")), this);
+    m_replayAction->setEnabled(false);
 
     m_settingsAction = new QAction(QString(tr("Settings")), this);
 //    addAction(m_settingsAction);
@@ -43,6 +57,10 @@ void MWindow::createActions()
     m_fileMenu = menuBar()->addMenu(tr("&File"));
     m_fileMenu->addAction(m_newGameAction);
 //    m_fileMenu->addAction(m_settingsAction);
+
+    m_gameMenu = menuBar()->addMenu(tr("&Game"));
+    m_gameMenu->addAction(m_replayAction);
+    m_gameMenu->setEnabled(false);
 
     m_helpMenu = menuBar()->addMenu(tr("&Help"));
     m_helpMenu->addAction(m_aboutAction);
@@ -92,7 +110,7 @@ void MWindow::keyPressEvent( QKeyEvent *event )
     qDebug() << "keyPressEvent";
     Action a = m_actions[ event->key() ];
 
-    if ( m_pitch->replay_->isReplay() )
+    if ( m_pitch->replay()->isReplay() )
         // Not allowed to stop a replay!!!
         // pitch->replayStop();
         ;

@@ -69,6 +69,7 @@ private:
 private slots:
     void repeatKeyEvent();
     void about();
+    void isPlaying(bool playing);
 
 private:
     Pitch *m_pitch;
@@ -78,10 +79,13 @@ private:
     Action m_lastAction;
 
     QAction* m_newGameAction;
+    QAction* m_replayAction;
     QAction* m_settingsAction;
     QAction* m_aboutAction;
 
+
     QMenu* m_fileMenu;
+    QMenu* m_gameMenu;
     QMenu* m_helpMenu;
 
     QTime m_elapsedTime;

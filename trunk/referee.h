@@ -18,7 +18,7 @@ public:
 
     void advance(int phase);
 public:
-    virtual void createPixmaps();
+    void createPixmaps();
 };
 
 #endif // REFEREE_H

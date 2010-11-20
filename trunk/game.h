@@ -53,7 +53,7 @@ class Game : public QState
     Q_OBJECT
 public:
     Game(Pitch *p, QString stateName, bool isFirstHalf);
-    ~Game() { qDebug() << m_stateName <<"dtor"; m_timer->stop(); }
+    ~Game() { m_timer->stop(); }
 
     enum GameState {
         GoalScored, // reason for another kickoff
@@ -77,6 +77,7 @@ private:
 private:
     Pitch* m_pitch;
     QString m_stateName;
+    bool m_isFirstHalf;
 
     QTimer *m_timer;
     QTimer *m_1second;

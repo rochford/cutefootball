@@ -9,7 +9,7 @@ Referee::Referee(Pitch* pitch, QObject *parent)
 {
     setPixmap(QPixmap(QString(":/images/ref.png")));
 
-    QPointF start(pitch_->m_footballPitch->rect().center().x() + 25, pitch_->m_footballPitch->rect().center().y() + 50);
+    QPointF start(m_pitch->m_footballPitch->rect().center().x() + 25, m_pitch->m_footballPitch->rect().center().y() + 50);
     setPos(start);
 }
 
@@ -19,11 +19,11 @@ void Referee::advance(int phase)
     if (!phase)
         return;
 
-    MWindow::Action action = calculateAction(pos(), pitch_->getBall()->pos());
+    MWindow::Action action = calculateAction(pos(), m_pitch->getBall()->pos());
 
     // if within a few pixels then dont move towards ball anymore...
-    int dx = abs(pos().x() - pitch_->getBall()->pos().x());
-    int dy = abs(pos().y() - pitch_->getBall()->pos().y());
+    int dx = abs(pos().x() - m_pitch->getBall()->pos().x());
+    int dy = abs(pos().y() - m_pitch->getBall()->pos().y());
 
     // if too close, then move away from ball (do reverse action)
     if (dx < 15 || dy < 25) {
@@ -67,8 +67,8 @@ void Referee::advance(int phase)
     case MWindow::SouthWest:
     case MWindow::West:
     case MWindow::NorthWest:
-   //     setPixmap(QPixmap(images_[action].at(step % 3)));
-        moveBy(moveDistance_[action].x(), moveDistance_[action].y());
+        setPixmap(QPixmap(m_images[action].at(m_step % 3)));
+        moveBy(m_moveDistance[action].x(), m_moveDistance[action].y());
         break;
     }
 }
@@ -79,12 +79,13 @@ void Referee::createPixmaps()
 
     QPixmapList list;
     list << QPixmap(ref) << QPixmap(ref) << QPixmap(ref);
-    images_.insert(MWindow::North, list);
-    images_.insert(MWindow::NorthEast, list);
-    images_.insert(MWindow::East, list);
-    images_.insert(MWindow::SouthEast, list);
-    images_.insert(MWindow::South, list);
-    images_.insert(MWindow::SouthWest, list);
-    images_.insert(MWindow::West, list);
-    images_.insert(MWindow::NorthWest, list);
+
+    m_images.insert(MWindow::North, list);
+    m_images.insert(MWindow::NorthEast, list);
+    m_images.insert(MWindow::East, list);
+    m_images.insert(MWindow::SouthEast, list);
+    m_images.insert(MWindow::South, list);
+    m_images.insert(MWindow::SouthWest, list);
+    m_images.insert(MWindow::West, list);
+    m_images.insert(MWindow::NorthWest, list);
 }

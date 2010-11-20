@@ -8,9 +8,9 @@
 Ball::Ball(Pitch* pitch)
     : QObject(),
     QGraphicsPixmapItem(QPixmap(QString(":/images/ball.png")),NULL),
-    pitch_(pitch),
+    m_pitch(pitch),
     destination_(QPointF(0,0)),
-    start_(pitch_->scene->sceneRect().center()),
+    start_(m_pitch->m_scene->sceneRect().center()),
     step_(0),
     animation_(NULL),
     animationTimer_(NULL),
@@ -115,7 +115,7 @@ void Ball::moveBall(MWindow::Action action, int speed)
     previousAction = action;
 }
 
-void Ball::moveBall(MWindow::Action action, QPointF destination)
+void Ball::kickBall(MWindow::Action action, QPointF destination)
 {
     // calculate the difference between present and destination
     QPointF tmp = pos();
@@ -151,13 +151,13 @@ QVariant Ball::itemChange(GraphicsItemChange change, const QVariant &value)
 
          // value is the new position.
          QPointF newPos = value.toPointF();
-         QRectF rect = pitch_->m_footballPitch->rect();
+         QRectF rect = m_pitch->m_footballPitch->rect();
 
          // has a goal been scored?
-         if (pitch_->topGoal->contains(newPos)
-             || pitch_->bottomGoal->contains(newPos)) {
+         if (m_pitch->m_topGoal->contains(newPos)
+             || m_pitch->m_bottomGoal->contains(newPos)) {
              animationTimer_->stop();
-             emit goalScored(pitch_->topGoal->contains(newPos));
+             emit goalScored(m_pitch->m_topGoal->contains(newPos));
              setControlledBy(NULL);
              return start_;
          }
@@ -168,17 +168,32 @@ QVariant Ball::itemChange(GraphicsItemChange change, const QVariant &value)
              setControlledBy(NULL);
 
              // goal kick or corner?
-             bool homeTeamTouchedLast = pitch_->homeTeam()->teamHasBall_;
+             bool homeTeamTouchedLast = m_pitch->homeTeam()->teamHasBall_;
 
              // throw in?
              if (rect.right() < newPos.x()) {
-                 pitch_->setPiece(homeTeamTouchedLast ? pitch_->awayTeam() : pitch_->homeTeam(), Pitch::ThrowIn);
-                 newPos.setX(pitch_->m_footballPitch->rect().right());
+                 m_pitch->setPiece(homeTeamTouchedLast ? m_pitch->awayTeam() : m_pitch->homeTeam(), Pitch::ThrowIn);
+                 newPos.setX(m_pitch->m_footballPitch->rect().right());
                  return newPos;
              }
              if (rect.x() > newPos.x()) {
-                 pitch_->setPiece(homeTeamTouchedLast ? pitch_->awayTeam() : pitch_->homeTeam(), Pitch::ThrowIn);
-                 newPos.setX(pitch_->m_footballPitch->rect().left());
+                 m_pitch->setPiece(homeTeamTouchedLast ? m_pitch->awayTeam() : m_pitch->homeTeam(), Pitch::ThrowIn);
+                 newPos.setX(m_pitch->m_footballPitch->rect().left());
+                 return newPos;
+             }
+
+             // goal kick?
+             if ( rect.top() > newPos.y()) {
+                 newPos.setX(m_pitch->m_topGoal->rect().x());
+                 newPos.setX(m_pitch->m_topGoal->rect().y() + 20);
+                 m_pitch->setPiece(homeTeamTouchedLast ? m_pitch->awayTeam() : m_pitch->homeTeam(), Pitch::GoalKick);
+                 return newPos;
+             }
+             if (rect.bottom() < newPos.y()) {
+                 newPos.setX(m_pitch->m_footballPitch->rect().left());
+                 newPos.setX(m_pitch->m_bottomGoal->rect().x());
+                 newPos.setX(m_pitch->m_bottomGoal->rect().y() - 20);
+                 m_pitch->setPiece(homeTeamTouchedLast ? m_pitch->awayTeam() : m_pitch->homeTeam(), Pitch::GoalKick);
                  return newPos;
              }
          }
