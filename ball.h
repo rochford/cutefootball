@@ -29,7 +29,7 @@ public:
     enum { Type = UserType + 1 };
     int type() const { return Type; }
 
-    void moveBall(MWindow::Action action, QPointF destination);
+    void kickBall(MWindow::Action action, QPointF destination);
     inline Player* controlledBy() { return controlledBy_; }
     inline void setControlledBy(Player* p) { controlledBy_ = p; }
 
@@ -49,7 +49,7 @@ protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
 private:
-    Pitch *pitch_; // NOT OWNED
+    Pitch *m_pitch; // NOT OWNED
     MWindow::Action previousAction;
     QPointF destination_;
     QPointF currentPosition_;

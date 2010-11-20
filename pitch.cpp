@@ -17,50 +17,49 @@
 #include "screengraphics.h"
 #include "game.h"
 
-const QPen KWhitePaintPen(QBrush(Qt::white),3);
-
 Pitch::Pitch(const QRectF& footballGroundRect)
   : QObject(),
-    scene(new QGraphicsScene(footballGroundRect)),
-    view(new QGraphicsView(scene)),
-    motionTimer_(NULL),
+    m_scene(new QGraphicsScene(footballGroundRect)),
+    m_view(new QGraphicsView(m_scene)),
+    m_motionTimer(NULL),
     lastNearestPlayer_(NULL),
-    bottomGoal(NULL),
-    topGoal(NULL),
-    scoreText_(NULL),
-    centerLine_(NULL),
-    centerCircle_(NULL)
+    m_bottomGoal(NULL),
+    m_topGoal(NULL),
+    m_scoreText(NULL),
+    m_centerLine(NULL),
+    m_centerCircle(NULL)
 {
-    motionTimer_ = new QTimer(this);
-    motionTimer_->setInterval(KGameRefreshRate);
+    m_motionTimer = new QTimer(this);
+    m_motionTimer->setInterval(KGameRefreshRate);
 
-    game = new QStateMachine(this);
-    firstHalfState = new Game(this, "first half", true);
-    secondHalfState = new Game(this, "second half", false);
-    allDone = new QFinalState();
+    m_game = new QStateMachine(this);
+    m_firstHalfState = new Game(this, "first half", true);
+    m_secondHalfState = new Game(this, "second half", false);
+    m_allDone = new QFinalState();
 
-    game->addState(firstHalfState);
-    game->addState(secondHalfState);
-    game->addState(allDone);
-    game->setInitialState(firstHalfState);
+    m_game->addState(m_firstHalfState);
+    m_game->addState(m_secondHalfState);
+    m_game->addState(m_allDone);
+    m_game->setInitialState(m_firstHalfState);
 
-    firstHalfState->addTransition(firstHalfState, SIGNAL(finished()),secondHalfState);
-    secondHalfState->addTransition(secondHalfState, SIGNAL(finished()),allDone);
+    m_firstHalfState->addTransition(m_firstHalfState, SIGNAL(finished()),m_secondHalfState);
+    m_secondHalfState->addTransition(m_secondHalfState, SIGNAL(finished()), m_allDone);
+    connect(m_secondHalfState, SIGNAL(finished()), this, SLOT(removePlayers()));
 
-    replay_ = new Replay(this, this);
+    m_replay = new Replay(this, this);
 
-    scene->setBackgroundBrush(QPixmap(QString(":/images/pitch2.GIF")));
+    m_scene->setBackgroundBrush(QPixmap(QString(":/images/pitch2.GIF")));
 
-    view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    view->setAutoFillBackground(false);
+    m_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_view->setAutoFillBackground(false);
 
     layoutPitch();
 
-    connect(motionTimer_, SIGNAL(timeout()), scene, SLOT(advance()));
-    connect(motionTimer_, SIGNAL(timeout()), scene, SLOT(update()));
-    connect(motionTimer_, SIGNAL(timeout()), this, SLOT(hasBallCheck()));
-    connect(motionTimer_, SIGNAL(timeout()), this, SLOT(selectNearestPlayer()));
+    connect(m_motionTimer, SIGNAL(timeout()), m_scene, SLOT(advance()));
+    connect(m_motionTimer, SIGNAL(timeout()), m_scene, SLOT(update()));
+    connect(m_motionTimer, SIGNAL(timeout()), this, SLOT(hasBallCheck()));
+    connect(m_motionTimer, SIGNAL(timeout()), this, SLOT(selectNearestPlayer()));
 }
 
 Player* Pitch::selectNearestPlayer(Team* team)
@@ -68,7 +67,7 @@ Player* Pitch::selectNearestPlayer(Team* team)
     qreal nearest = 0xffff;
     Player *nearestPlayer(NULL);
     // nobody has ball, select the closest hometeam
-    foreach (Player *p, players_) {
+    foreach (Player *p, m_players) {
         if (p->team_== team) {
 
             // dont select the goal keeper
@@ -85,8 +84,8 @@ Player* Pitch::selectNearestPlayer(Team* team)
 
             p->setHumanControlled(false);
 
-            const int dx = p->pos().x() - ball_->pos().x();
-            const int dy = p->pos().y() - ball_->pos().y();
+            const int dx = p->pos().x() - m_ball->pos().x();
+            const int dy = p->pos().y() - m_ball->pos().y();
             if ( (qAbs(dx*dx)+qAbs(dy*dy)) < nearest) {
                 nearestPlayer = p;
                 nearest = qAbs(qAbs(dx*dx)+qAbs(dy*dy));
@@ -96,29 +95,66 @@ Player* Pitch::selectNearestPlayer(Team* team)
     return nearestPlayer;
 }
 
+void Pitch::gameStarted()
+{
+    m_gameInProgress = true;
+    m_motionTimer->start();
+    emit gameInProgress(true);
+}
+
+void Pitch::gameStopped()
+{
+    m_gameInProgress = false;
+    m_motionTimer->stop();
+    emit gameInProgress(false);
+}
+
 void Pitch::setPiece(Team* t, SetPiece s)
 {
     switch(s) {
     case Pitch::ThrowIn:
         {
-            if (t == awayTeam_) {
-                awayTeam_->setHasBall(true);
-                homeTeam_->setHasBall(false);
+            if (t == m_awayTeam) {
+                m_awayTeam->setHasBall(true);
+                m_homeTeam->setHasBall(false);
             } else {
-                awayTeam_->setHasBall(false);
-                homeTeam_->setHasBall(true);
+                m_awayTeam->setHasBall(false);
+                m_homeTeam->setHasBall(true);
             }
 
             // find the nearest player to the ball and move them to the throw in position
             Player* throwInTaker = selectNearestPlayer(t);
             if (throwInTaker) {
                 // change the player graphic to be throw in graphic
-                throwInTaker->setPos(ball_->pos());
+                throwInTaker->setPos(m_ball->pos());
                 throwInTaker->hasBall_ = true;
-                ball_->setControlledBy(throwInTaker);
+                m_ball->setControlledBy(throwInTaker);
                 throwInTaker->move(MWindow::ThrownIn);
                 // hide the ball
-               ball_->setVisible(false);
+               m_ball->setVisible(false);
+            }
+        }
+        break;
+    case Pitch::GoalKick:
+        {
+            if (t == m_awayTeam) {
+                m_awayTeam->setHasBall(true);
+                m_homeTeam->setHasBall(false);
+            } else {
+                m_awayTeam->setHasBall(false);
+                m_homeTeam->setHasBall(true);
+            }
+
+            // find the nearest player to the ball
+            Player* goalKickTaker = selectNearestPlayer(t);
+            if (goalKickTaker) {
+                // change the player graphic to be throw in graphic
+                goalKickTaker->setPos(m_ball->pos());
+                goalKickTaker->hasBall_ = true;
+                m_ball->setControlledBy(goalKickTaker);
+                goalKickTaker->move(MWindow::Pass);
+                // hide the ball
+            //   m_ball->setVisible(false);
             }
         }
         break;
@@ -129,9 +165,9 @@ void Pitch::setPiece(Team* t, SetPiece s)
 
 void Pitch::selectNearestPlayer()
 {
-    Player *p = selectNearestPlayer(homeTeam_);
+    Player *p = selectNearestPlayer(m_homeTeam);
     if (p) {
-        scene->setFocusItem(p);
+        m_scene->setFocusItem(p);
         p->setHumanControlled(true);
         if (lastNearestPlayer_ != p) {
             lastNearestPlayer_ = p;
@@ -139,7 +175,7 @@ void Pitch::selectNearestPlayer()
         }
     }
     else if (lastNearestPlayer_) {
-        scene->setFocusItem(lastNearestPlayer_);
+        m_scene->setFocusItem(lastNearestPlayer_);
         lastNearestPlayer_->setHumanControlled(true);
     }
 }
@@ -147,23 +183,23 @@ void Pitch::selectNearestPlayer()
 Pitch::~Pitch()
 {
     lastNearestPlayer_ = NULL;
-    delete ball_;
-    delete awayTeam_;
-    delete homeTeam_;
+    delete m_ball;
+    delete m_awayTeam;
+    delete m_homeTeam;
 }
 
 void Pitch::removePlayers()
 {
-    foreach(Player *p, players_)
-        scene->removeItem(p);
+    foreach(Player *p, m_players)
+        m_scene->removeItem(p);
 
-    players_.clear();
+    m_players.clear();
 }
 
 void Pitch::layoutPitch()
 {
     // create the pitch
-    m_footballPitch = scene->addRect(30, 30, scene->width()-60, scene->height() -60,
+    m_footballPitch = m_scene->addRect(30, 30, m_scene->width()-60, m_scene->height() -60,
                                     KWhitePaintPen,
                                     QBrush(Qt::white,Qt::NoBrush) );
 
@@ -183,69 +219,71 @@ void Pitch::layoutPitch()
             qreal tly = (h / KRow ) * row;
             QPointF tl(tlTopHalf + QPointF(tlx,tly));
             QPointF br(tl + QPointF(w/KColumn,h/KRow));
-            pitchArea[row][col] = QRectF(tl, br);
+            m_pitchArea[row][col] = QRectF(tl, br);
         }
     }
 
     // half way line
-    centerLine_ = scene->addLine(scene->sceneRect().left()+30,scene->sceneRect().height()/2.0,
-                         scene->sceneRect().right()-30,scene->sceneRect().height()/2.0, KWhitePaintPen);
+    m_centerLine = m_scene->addLine(m_scene->sceneRect().left()+30,m_scene->sceneRect().height()/2.0,
+                         m_scene->sceneRect().right()-30,m_scene->sceneRect().height()/2.0, KWhitePaintPen);
 
     // center circle
-    centerCircle_ = scene->addEllipse((scene->sceneRect().width()/2.0) -80,(scene->sceneRect().height()/2.0)-80,
+    m_centerCircle = m_scene->addEllipse((m_scene->sceneRect().width()/2.0) -80,(m_scene->sceneRect().height()/2.0)-80,
                       160.0, 160.0, KWhitePaintPen);
     // simple text
-    scoreText_ = new ScreenGraphics(this);
+    m_scoreText = new ScreenGraphics(this);
 
     // create the goals
-    bottomGoal = scene->addRect((scene->width() / 2)-60, scene->height()-30,120,25,
+    m_bottomGoal = m_scene->addRect((m_scene->width() / 2)-60, m_scene->height()-30,120,25,
                    QPen(Qt::black),
                    QBrush(Qt::black,Qt::CrossPattern) );
-    topGoal = scene->addRect((scene->width() / 2)-60,5,120,25,
+    m_topGoal = m_scene->addRect((m_scene->width() / 2)-60,5,120,25,
                    QPen(Qt::black),
                    QBrush(Qt::black,Qt::CrossPattern) );
 
     // penalty areas
-    topPenaltyArea = scene->addRect((scene->width() / 2)-90, 30,
+    m_topPenaltyArea = m_scene->addRect((m_scene->width() / 2)-90, 30,
                                     180, 100,
                                     KWhitePaintPen,
                                     QBrush(Qt::white,Qt::NoBrush) );
-    bottomPenaltyArea = scene->addRect((scene->width() / 2)-90, scene->height()-130,
+    m_bottomPenaltyArea = m_scene->addRect((m_scene->width() / 2)-90, m_scene->height()-130,
                                        180, 100,
                                     KWhitePaintPen,
                                     QBrush(Qt::white,Qt::NoBrush) );
+
+    m_entrancePoint = QPointF(0, m_scene->sceneRect().height()/2);
 }
 
 void Pitch::updateDisplayTime(int timeLeftMs)
 {
-    if ( game->isRunning() ) {
+    if ( m_game->isRunning() ) {
         QTime tmp(0,0,0,0);
         tmp = tmp.addMSecs(timeLeftMs);
 
-        QString str(tmp.toString(QString("mm:ss")));
+        QString str(tmp.toString(QString(tr("mm:ss"))));
         str.append(" ");
-        str.append(homeTeam_->name());
+        str.append(m_homeTeam->name());
         str.append(" ");
-        str.append(QString::number(homeTeam_->goals_));
+        str.append(QString::number(m_homeTeam->goals_));
         str.append(" - ");
 
-        str.append(awayTeam_->name());
+        str.append(m_awayTeam->name());
         str.append(" ");
-        str.append(QString::number(awayTeam_->goals_));
-        scoreText_->setText(str);
+        str.append(QString::number(m_awayTeam->goals_));
+        m_scoreText->setText(str);
     }
 }
 
 void Pitch::hasBallCheck()
 {
-    view->centerOn(ball_->pos());
-    scoreText_->updatePosition();
+    m_view->centerOn(m_ball->pos());
+    m_scoreText->updatePosition();
 
     // which team has the ball?
-    foreach (Player *p, players_) {
+    foreach (Player *p, m_players) {
         if (p->hasBall_) {
-            homeTeam_->setHasBall(p->team_== this->homeTeam_);
-            awayTeam_->setHasBall(p->team_== this->awayTeam_);
+            m_homeTeam->setHasBall(p->team_== this->m_homeTeam);
+            m_awayTeam->setHasBall(p->team_== this->m_awayTeam);
             break; // can break as now known
         }
     }
@@ -253,30 +291,30 @@ void Pitch::hasBallCheck()
 
 void Pitch::newGame()
 {
-    ball_ = new Ball(this);
+    m_ball = new Ball(this);
 
-    homeTeam_ = new Team(QString("HOME"), Qt::magenta);
-    awayTeam_ = new Team(QString("AWAY"), Qt::yellow);
+    m_homeTeam = new Team(QString("HOME"), KHomeTeamColor);
+    m_awayTeam = new Team(QString("AWAY"), KAwayTeamColor);
 
-    createTeamPlayers(homeTeam_);
-    connect(ball_, SIGNAL(goalScored(bool)), homeTeam_, SLOT(goalScored(bool)));
-    createTeamPlayers(awayTeam_);
-    connect(ball_, SIGNAL(goalScored(bool)), awayTeam_, SLOT(goalScored(bool)));
+    createTeamPlayers(m_homeTeam);
+    connect(m_ball, SIGNAL(goalScored(bool)), m_homeTeam, SLOT(goalScored(bool)));
+    createTeamPlayers(m_awayTeam);
+    connect(m_ball, SIGNAL(goalScored(bool)), m_awayTeam, SLOT(goalScored(bool)));
+#ifdef REFEREE_USED
+    m_referee = new Referee(this);
+    m_referee->createPixmaps();
+    m_referee->createMoves();
+#endif // REFEREE_USED
+    m_replay->createAnimationItems();
 
-    referee_ = new Referee(this);
-
-    replay_->createAnimationItems();
-
-    game->start();
-
-    motionTimer_->start();
+    m_game->start();
 }
 
 void Pitch::action(MWindow::Action action)
 {
     // action is only applicabled to the human controlled player
-    foreach (Player *p, players_) {
-        if (p->humanControlled() && (p->team_== homeTeam_)) {
+    foreach (Player *p, m_players) {
+        if (p->humanControlled() && (p->team_== m_homeTeam)) {
             p->move(action);
             return;
         }
@@ -293,7 +331,7 @@ void Pitch::createTeamPlayers(Team *team)
     if (team->name() == QString("HOME"))
         isHomeTeam = true;
 
-    QPointF startPos(0,scene->sceneRect().height()/2);
+    QPointF startPos(0,m_scene->sceneRect().height()/2);
     for (int i = Player::GoalKeeper; i < Player::LastDummy; i++ ) {
         Player *pl(NULL);
         if (i == Player::GoalKeeper) {
@@ -313,8 +351,8 @@ void Pitch::createTeamPlayers(Team *team)
         pl->createPixmaps();
         pl->createMoves();
         pl->setPos(startPos);
-        players_.append(pl);
-        scene->addItem(pl);
+        m_players.append(pl);
+        m_scene->addItem(pl);
     }
 }
 
@@ -326,30 +364,30 @@ void Pitch::setPlayerStartPositions(Team *team)
 
     QMap<int,QRectF> startPositions;
     startPositions.insert(Player::GoalKeeper,
-                         pitchArea[nToS ? 0 : 7][2]);
+                         m_pitchArea[nToS ? 0 : 7][2]);
     startPositions.insert(Player::LeftDefence,
-                         pitchArea[nToS ? 1 : 6][0]);
+                         m_pitchArea[nToS ? 1 : 6][0]);
     startPositions.insert(Player::LeftCentralDefence,
-                         pitchArea[nToS ? 1 : 6][1]);
+                         m_pitchArea[nToS ? 1 : 6][1]);
     startPositions.insert(Player::RightCentralDefence,
-                         pitchArea[nToS ? 1 : 6][3]);
+                         m_pitchArea[nToS ? 1 : 6][3]);
     startPositions.insert(Player::RightDefence,
-                         pitchArea[nToS ? 1 : 6][4]);
+                         m_pitchArea[nToS ? 1 : 6][4]);
     startPositions.insert(Player::LeftMidfield,
-                         pitchArea[nToS ? 2 : 5][0]);
+                         m_pitchArea[nToS ? 2 : 5][0]);
     startPositions.insert(Player::CentralMidfield,
-                         pitchArea[nToS ? 2 : 5][2]);
+                         m_pitchArea[nToS ? 2 : 5][2]);
     startPositions.insert(Player::RightMidfield,
-                         pitchArea[nToS ? 2 : 5][4]);
+                         m_pitchArea[nToS ? 2 : 5][4]);
     startPositions.insert(Player::LeftAttack,
-                         pitchArea[nToS ? 3 : 4][0]);
+                         m_pitchArea[nToS ? 3 : 4][0]);
     startPositions.insert(Player::CentralAttack,
-                         pitchArea[nToS ? 3 : 4][2]);
+                         m_pitchArea[nToS ? 3 : 4][2]);
     startPositions.insert(Player::RightAttack,
-                         pitchArea[nToS ? 3 : 4][4]);
+                         m_pitchArea[nToS ? 3 : 4][4]);
 
     // action is only applicabled to the human controlled player
-    foreach (Player *p, players_) {
+    foreach (Player *p, m_players) {
         if (p->team_ == team) {
             p->hasBall_ = false;
             p->startPosition_ = startPositions[p->role_];
@@ -365,30 +403,30 @@ void Pitch::setPlayerDefendPositions(Team *team)
 
     QMap<int,QRectF> defendPositions;
     defendPositions.insert(Player::GoalKeeper,
-                         pitchArea[nToS ? 0 : 7][2]);
+                         m_pitchArea[nToS ? 0 : 7][2]);
     defendPositions.insert(Player::LeftDefence,
-                         pitchArea[nToS ? 1 : 6][0]);
+                         m_pitchArea[nToS ? 1 : 6][0]);
     defendPositions.insert(Player::LeftCentralDefence,
-                         pitchArea[nToS ? 1 : 6][1]);
+                         m_pitchArea[nToS ? 1 : 6][1]);
     defendPositions.insert(Player::RightCentralDefence,
-                         pitchArea[nToS ? 1 : 6][3]);
+                         m_pitchArea[nToS ? 1 : 6][3]);
     defendPositions.insert(Player::RightDefence,
-                         pitchArea[nToS ? 1 : 6][4]);
+                         m_pitchArea[nToS ? 1 : 6][4]);
     defendPositions.insert(Player::LeftMidfield,
-                         pitchArea[nToS ? 2 : 5][0]);
+                         m_pitchArea[nToS ? 2 : 5][0]);
     defendPositions.insert(Player::CentralMidfield,
-                         pitchArea[nToS ? 1 : 6][2]);
+                         m_pitchArea[nToS ? 1 : 6][2]);
     defendPositions.insert(Player::RightMidfield,
-                         pitchArea[nToS ? 2 : 5][4]);
+                         m_pitchArea[nToS ? 2 : 5][4]);
     defendPositions.insert(Player::LeftAttack,
-                         pitchArea[nToS ? 3 : 4][0]);
+                         m_pitchArea[nToS ? 3 : 4][0]);
     defendPositions.insert(Player::CentralAttack,
-                         pitchArea[nToS ? 3 : 4][2]);
+                         m_pitchArea[nToS ? 3 : 4][2]);
     defendPositions.insert(Player::RightAttack,
-                         pitchArea[nToS ? 3 : 4][4]);
+                         m_pitchArea[nToS ? 3 : 4][4]);
 
     // action is only applicabled to the human controlled player
-    foreach (Player *p, players_) {
+    foreach (Player *p, m_players) {
         if (p->team_ == team)
             p->defencePosition_ = defendPositions[p->role_];
     }
@@ -402,30 +440,30 @@ void Pitch::setPlayerAttackPositions(Team *team)
 
     QMap<int,QRectF> attackPositions;
     attackPositions.insert(Player::GoalKeeper,
-                         pitchArea[nToS ? 0 : 7][2]);
+                         m_pitchArea[nToS ? 0 : 7][2]);
     attackPositions.insert(Player::LeftDefence,
-                         pitchArea[nToS ? 2 : 6][0]);
+                         m_pitchArea[nToS ? 2 : 6][0]);
     attackPositions.insert(Player::LeftCentralDefence,
-                         pitchArea[nToS ? 2 : 6][1]);
+                         m_pitchArea[nToS ? 2 : 6][1]);
     attackPositions.insert(Player::RightCentralDefence,
-                         pitchArea[nToS ? 2 : 6][3]);
+                         m_pitchArea[nToS ? 2 : 6][3]);
     attackPositions.insert(Player::RightDefence,
-                         pitchArea[nToS ? 2 : 6][4]);
+                         m_pitchArea[nToS ? 2 : 6][4]);
     attackPositions.insert(Player::LeftMidfield,
-                         pitchArea[nToS ? 4 : 2][0]);
+                         m_pitchArea[nToS ? 4 : 2][0]);
     attackPositions.insert(Player::CentralMidfield,
-                         pitchArea[nToS ? 5 : 3][2]);
+                         m_pitchArea[nToS ? 5 : 3][2]);
     attackPositions.insert(Player::RightMidfield,
-                         pitchArea[nToS ? 4 : 2][4]);
+                         m_pitchArea[nToS ? 4 : 2][4]);
     attackPositions.insert(Player::LeftAttack,
-                         pitchArea[nToS ? 6 : 1][0]);
+                         m_pitchArea[nToS ? 6 : 1][0]);
     attackPositions.insert(Player::CentralAttack,
-                         pitchArea[nToS ? 6 : 1][2]);
+                         m_pitchArea[nToS ? 6 : 1][2]);
     attackPositions.insert(Player::RightAttack,
-                         pitchArea[nToS ? 6 : 1][4]);
+                         m_pitchArea[nToS ? 6 : 1][4]);
 
     // action is only applicabled to the human controlled player
-    foreach (Player *p, players_) {
+    foreach (Player *p, m_players) {
         if (p->team_ == team)
             p->attackPosition_ = attackPositions[p->role_];
     }
@@ -433,16 +471,16 @@ void Pitch::setPlayerAttackPositions(Team *team)
 
 void Pitch::replayStart()
 {
-    motionTimer_->stop();
+    m_motionTimer->stop();
 
-    scoreText_->setMode(ScreenGraphics::ReplayMode);
-    scoreText_->setText("REPLAY");
+    m_scoreText->setMode(ScreenGraphics::ReplayMode);
+    m_scoreText->setText(tr("REPLAY"));
 
-    replay_->replayStart();
+    m_replay->replayStart();
 }
 
 void Pitch::replayStop()
 {
-    scoreText_->setMode(ScreenGraphics::NormalMode);
-    motionTimer_->start();
+    m_scoreText->setMode(ScreenGraphics::NormalMode);
+    m_motionTimer->start();
 }

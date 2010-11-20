@@ -22,7 +22,7 @@ ScreenGraphics::ScreenGraphics(Pitch *p)
     m_mode(NormalMode),
     m_timer(NULL)
 {
-    m_scoreText = m_pitch->scene->addSimpleText(QString("XXX"),KSmallFont);
+    m_scoreText = m_pitch->m_scene->addSimpleText(QString("XXX"),KSmallFont);
     m_scoreText->setVisible(false);
     m_scoreText->setZValue(KReallyHighZValue);
 
@@ -41,8 +41,8 @@ ScreenGraphics::~ScreenGraphics()
 
 void ScreenGraphics::updatePosition()
 {
-    m_scoreText->setPos(m_pitch->view->mapToScene(
-            m_pitch->view->rect().topLeft()));
+    m_scoreText->setPos(m_pitch->m_view->mapToScene(
+            m_pitch->m_view->rect().topLeft()));
 }
 
 void ScreenGraphics::setText(QString s)
@@ -57,7 +57,7 @@ void ScreenGraphics::changeFont()
         m_scoreText->setFont(KLargeFont);
     else
         m_scoreText->setFont(KSmallFont);
-    m_pitch->scene->update();
+    m_pitch->m_scene->update();
 }
 
 void ScreenGraphics::setMode(ScreenGraphicsMode mode)

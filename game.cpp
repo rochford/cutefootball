@@ -4,8 +4,8 @@
 #include "Player.h"
 #include "referee.h"
 #include "replay.h"
+#include "screengraphics.h"
 
-const int KHalfLength = 60*1000; // seconds
 
 GoalScoredState::GoalScoredState(Game *g, Pitch *p)
     : m_game(g),
@@ -45,7 +45,7 @@ void GoalScoredState::createPlayerAnimationItems(GameState g)
 {
     m_playerAnimationItems.clear(); // TODO XXX TIM delete all
 
-    foreach (Player *p, m_pitch->players_) {
+    foreach (Player *p, m_pitch->m_players) {
         QGraphicsItemAnimation* anim = new QGraphicsItemAnimation(this);
         anim->setItem(p);
         m_playerAnimationItems.append(anim);
@@ -66,8 +66,8 @@ void GoalScoredState::createPlayerAnimationItems(GameState g)
         case Celebrate:
             anim->setTimeLine(m_timeLineCelebrate);
             tmp = p->pos();
-            stepX = ( 0 - tmp.x() ) / 100.0;
-            stepY = ( 0 - tmp.y() ) / 100.0;
+            stepX = ( m_pitch->pitchEntrancePoint().x() - tmp.x() ) / 100.0;
+            stepY = ( m_pitch->pitchEntrancePoint().y() - tmp.y() ) / 100.0;
             break;
 
         default:
@@ -91,7 +91,7 @@ void GoalScoredState::playFrame(int frame)
 
         anim->item()->setPos(anim->posAt(f));
     }
-    m_pitch->scene->update();
+    m_pitch->m_scene->update();
 }
 
 Game::Game(Pitch* p,
@@ -100,7 +100,8 @@ Game::Game(Pitch* p,
     : QState(),
     m_pitch(p),
     m_stateName(stateName),
-    m_remainingTimeInHalfMs(KHalfLength)
+    m_remainingTimeInHalfMs(KHalfLength),
+    m_isFirstHalf(isFirstHalf)
 {
     m_timer = new QTimer(this);
     m_timer->setInterval(KHalfLength);
@@ -131,11 +132,14 @@ Game::Game(Pitch* p,
     connect(m_timer,SIGNAL(timeout()), this, SLOT(startPlayersLeavePitchAnim()));
 
     connect(m_timeLineTakePositions, SIGNAL(finished()), this, SLOT(kickOff()));
-    connect(m_timeLineTakePositions, SIGNAL(finished()), m_timer, SLOT(m_startState()));
+//    connect(m_timeLineTakePositions, SIGNAL(finished()), m_timer, SLOT(m_startState()));
     connect(m_timeLineTakePositions, SIGNAL(frameChanged(int)), this, SLOT(playFrame(int)));
     connect(m_timeLineLeavePitch, SIGNAL(frameChanged(int)), this, SLOT(playFrame(int)));
 
     connect(m_1second, SIGNAL(timeout()), this, SLOT(decrementGameTime()));
+
+    connect(m_playingState, SIGNAL(entered()), m_pitch, SLOT(gameStarted()));
+    connect(m_playingState, SIGNAL(exited()), m_pitch, SLOT(gameStopped()));
 }
 
 void Game::decrementGameTime()
@@ -146,24 +150,22 @@ void Game::decrementGameTime()
 
 void Game::startPlayersLeavePitchAnim()
 {
-    qDebug() << "startPlayersLeavePitchAnim";
     createPlayerAnimationItems(HalfOver);
     m_timeLineLeavePitch->start();
     m_pitch->getBall()->setVisible(false);
     m_1second->stop();
-    m_pitch->replay_->replaySnapShotTimer_->stop();
+    m_pitch->replay()->replaySnapShotTimer_->stop();
 }
 
 void Game::kickOff()
 {
-    qDebug() << "kickOff";
-    foreach (Player *p, m_pitch->players_) {
+    foreach (Player *p, m_pitch->m_players) {
             p->hasBall_ = false;
             p->setPos(p->startPosition_.center());
         }
     m_pitch->homeTeam()->setHasBall(true);
     m_pitch->awayTeam()->setHasBall(false);
-    m_pitch->scene->addItem(m_pitch->getBall());
+    m_pitch->m_scene->addItem(m_pitch->getBall());
     m_pitch->getBall()->setStartingPosition();
 
     // playing state transition to goalScoreState is not working
@@ -173,21 +175,23 @@ void Game::kickOff()
     playing->addTransition(m_pitch->getBall(), SIGNAL(goalScored(bool)), m_goalScoredState);
 #endif //
 
+#ifdef REFEREE_USED
     m_pitch->scene->addItem(m_pitch->referee());
+#endif //
 
     m_1second->start();
-    m_pitch->replay_->replaySnapShotTimer_->start();
+    m_pitch->replay()->replaySnapShotTimer_->start();
 }
 
 void Game::playFrame(int frame)
 {
-    qDebug() << "playFrame frame" << frame;
-    foreach (QGraphicsItemAnimation *anim, m_playerAnimationItems) {
-        qreal f = frame/ 100.00;
-
+    m_pitch->m_scoreText->updatePosition();
+    m_pitch->m_view->centerOn(m_playerAnimationItems.at(0)->item());
+    qreal f = frame/ 100.00;
+    foreach (QGraphicsItemAnimation *anim, m_playerAnimationItems)
         anim->item()->setPos(anim->posAt(f));
-    }
-    m_pitch->scene->update();
+
+    m_pitch->m_scene->update();
 }
 
 // animate from present player position to another point.
@@ -195,7 +199,7 @@ void Game::createPlayerAnimationItems(GameState g)
 {
     m_playerAnimationItems.clear(); // TODO XXX TIM delete all
 
-    foreach (Player *p, m_pitch->players_) {
+    foreach (Player *p, m_pitch->m_players) {
         QGraphicsItemAnimation* anim = new QGraphicsItemAnimation(this);
         anim->setItem(p);
         m_playerAnimationItems.append(anim);
@@ -216,8 +220,8 @@ void Game::createPlayerAnimationItems(GameState g)
         case HalfOver:
             anim->setTimeLine(m_timeLineLeavePitch);
             tmp = p->pos();
-            stepX = ( 0 - tmp.x() ) / 100.0;
-            stepY = ( 0 - tmp.y() ) / 100.0;
+            stepX = ( m_pitch->pitchEntrancePoint().x() - tmp.x() ) / 100.0;
+            stepY = ( m_pitch->pitchEntrancePoint().y() - tmp.y() ) / 100.0;
             break;
 
         default:
@@ -236,17 +240,28 @@ void Game::createPlayerAnimationItems(GameState g)
 void Game::onEntry(QEvent *event)
 {
     qDebug() << m_stateName << "onEntry";
+    if (m_isFirstHalf) {
+        m_pitch->homeTeam()->setDirection(Team::NorthToSouth);
+        m_pitch->setPlayerStartPositions(m_pitch->homeTeam());
+        m_pitch->setPlayerAttackPositions(m_pitch->homeTeam());
+        m_pitch->setPlayerDefendPositions(m_pitch->homeTeam());
+
+        m_pitch->awayTeam()->setDirection(Team::SouthToNorth);
+        m_pitch->setPlayerStartPositions(m_pitch->awayTeam());
+        m_pitch->setPlayerAttackPositions(m_pitch->awayTeam());
+        m_pitch->setPlayerDefendPositions(m_pitch->awayTeam());
+    } else {
+        m_pitch->awayTeam()->setDirection(Team::NorthToSouth);
+        m_pitch->setPlayerStartPositions(m_pitch->awayTeam());
+        m_pitch->setPlayerAttackPositions(m_pitch->awayTeam());
+        m_pitch->setPlayerDefendPositions(m_pitch->awayTeam());
+
+        m_pitch->homeTeam()->setDirection(Team::SouthToNorth);
+        m_pitch->setPlayerStartPositions(m_pitch->homeTeam());
+        m_pitch->setPlayerAttackPositions(m_pitch->homeTeam());
+        m_pitch->setPlayerDefendPositions(m_pitch->homeTeam());
+    }
     m_timer->start();
-    m_pitch->homeTeam()->setDirection(Team::NorthToSouth);
-    m_pitch->setPlayerStartPositions(m_pitch->homeTeam());
-    m_pitch->setPlayerAttackPositions(m_pitch->homeTeam());
-    m_pitch->setPlayerDefendPositions(m_pitch->homeTeam());
-
-    m_pitch->awayTeam()->setDirection(Team::SouthToNorth);
-    m_pitch->setPlayerStartPositions(m_pitch->awayTeam());
-    m_pitch->setPlayerAttackPositions(m_pitch->awayTeam());
-    m_pitch->setPlayerDefendPositions(m_pitch->awayTeam());
-
     createPlayerAnimationItems(TakePositions);
     m_timeLineTakePositions->start();
     m_pitch->getBall()->setVisible(true);
@@ -255,7 +270,7 @@ void Game::onEntry(QEvent *event)
 void Game::onExit(QEvent *event)
 {
     qDebug() << m_stateName << "onExit";
-    m_pitch->scene->removeItem(m_pitch->getBall());
+    m_pitch->m_scene->removeItem(m_pitch->getBall());
 
     m_1second->stop();
     m_timer->stop();

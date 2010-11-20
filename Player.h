@@ -13,6 +13,7 @@ typedef QList<QPixmap> QPixmapList;
 
 MWindow::Action calculateAction(QPointF source,
                                 QPointF destination);
+void teamColorTransform(QPixmap &pixmap, QString pix, QRgb colorFrom, QRgb colorTo);
 
 class Player : public QObject,
                public QGraphicsPixmapItem
@@ -46,18 +47,18 @@ public:
     virtual void createPixmaps();
     virtual void createMoves();
 
-    int speed() { return speed_; }
+    inline int speed() const { return m_speed; }
     bool ballCollisionCheck();
 
     bool isManMarked() const;
 
     void move(MWindow::Action action);
 
-    void setHumanControlled(bool human)
+    inline void setHumanControlled(bool human)
     {
-        humanControlled_ = human;
+        m_humanControlled = human;
     }
-    bool humanControlled() { return humanControlled_; }
+    inline bool humanControlled() const { return m_humanControlled; }
     void movePlayer(MWindow::Action action);
     Player* findAvailableTeamMate() const;
     void specialAction(MWindow::Action action);
@@ -75,6 +76,12 @@ protected:
                           const QStyleOptionGraphicsItem *option,
                           QWidget *widget);
 
+    void pixmapInsert(MWindow::Action a,
+                      QString s1,
+                      QString s2,
+                      QString s3,
+                      QRgb teamColor);
+
 private:
     void humanAdvance(int phase);
     void computerAdvance(int phase);
@@ -83,8 +90,6 @@ private:
 
     void automove();
 
-    void pixmapInsert(MWindow::Action a, QString s1, QString s2, QString s3);
-
 public:
     bool hasBall_;
     Team* team_;
@@ -92,11 +97,10 @@ public:
     Role role_;
 
 private:
-    QString name_;
-    bool humanControlled_;
-    bool computerControlled;
+    QString m_name;
+    bool m_humanControlled;
     // the previous action of this player
-    MWindow::Action lastAction_;
+    MWindow::Action m_lastAction;
 
 public:
     QRectF startPosition_;
@@ -104,12 +108,12 @@ public:
     QRectF attackPosition_;
 
 protected:
-    QMap<MWindow::Action,QPixmapList> images_;
-    Pitch *pitch_;
-    QMap<MWindow::Action,QPointF> moveDistance_;
-    int step_;
-    QTimer *outOfAction_;
-    int speed_;
+    QMap<MWindow::Action,QPixmapList> m_images;
+    Pitch *m_pitch;
+    QMap<MWindow::Action,QPointF> m_moveDistance;
+    int m_step;
+    QTimer *m_outOfAction;
+    int m_speed;
 };
 
 #endif // PLAYER_H

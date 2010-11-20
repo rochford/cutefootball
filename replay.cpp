@@ -8,7 +8,6 @@
 #include "Player.h"
 #include "screengraphics.h"
 
-const int KReplayFrameRate = 40.00; // ms
 
 Replay::Replay(Pitch* p,
                QObject *parent) :
@@ -39,7 +38,6 @@ void Replay::replayStart()
 
     // only display last 5 seconds
     int startFrame = frameCounter_ - 5*(1000/KReplayFrameRate);
-    qDebug() << "replay startFrame" << startFrame;
 
     replayTimeLine_->setFrameRange(startFrame, frameCounter_);
     replayTimeLine_->setDuration(5*1000);
@@ -62,32 +60,27 @@ void Replay::makeReplaySnapshot()
     // set the timeline value for the animation objects
     qreal f = frameCounter_ / (KGameLength/KReplayFrameRate);
     animationItems[0]->setPosAt(f, pitch_->getBall()->pos());
-
+    f = frameCounter_ / (KGameLength/KReplayFrameRate);
     int cnt = 1;
-    foreach (Player *p, pitch_->players_) {
-
-        f = frameCounter_ / (KGameLength/KReplayFrameRate);
+    foreach (Player *p, pitch_->m_players)
         animationItems[cnt++]->setPosAt(f, p->pos());
-        }
+
     frameCounter_++;
 }
 
 void Replay::replayFrame(int frame)
 {
-    pitch_->view->centerOn(pitch_->getBall()->pos());
-    pitch_->scoreText_->updatePosition();
+    pitch_->m_view->centerOn(pitch_->getBall()->pos());
+    pitch_->m_scoreText->updatePosition();
 
     if (frame == frameCounter_)
         replayStop();
 
-    qDebug() << "replayFrame frame" << frame;
-    foreach (QGraphicsItemAnimation *anim, animationItems) {
-        qreal f = frame/ (KGameLength/40.00);
-        QPointF before = anim->item()->pos();
-
+    qreal f = frame/ (KGameLength/40.00);
+    foreach (QGraphicsItemAnimation *anim, animationItems)
         anim->item()->setPos(anim->posAt(f));
-    }
-    pitch_->scene->update();
+
+    pitch_->m_scene->update();
 }
 
 void Replay::createAnimationItems()
@@ -97,7 +90,7 @@ void Replay::createAnimationItems()
     anim->setTimeLine(replayTimeLine_);
     animationItems.append(anim);
 
-    foreach (Player *p, pitch_->players_) {
+    foreach (Player *p, pitch_->m_players) {
         QGraphicsItemAnimation* anim = new QGraphicsItemAnimation(this);
         anim->setItem(p);
         anim->setTimeLine(replayTimeLine_);

@@ -10,44 +10,60 @@ GoalKeeper::GoalKeeper(QString name,
                        Team* team)
     : Player(name,true,pitch,team,Player::GoalKeeper)
 {
-    setPixmap(QPixmap(QString(":/images/keeperNorth.PNG")));
 }
 
 void GoalKeeper::createPixmaps()
 {
-    QString gkN(":/images/keeperNorth.PNG");
+    pixmapInsert(MWindow::North, "playerNorth.PNG", "playerNorth1.PNG", "playerNorth2.PNG", KGoalKeeperColor);
+    pixmapInsert(MWindow::NorthEast, "playerNorthEast.PNG", "playerNorthEast1.PNG", "playerNorthEast2.PNG", KGoalKeeperColor);
+    pixmapInsert(MWindow::East, "playerEast.PNG", "playerEast1.PNG", "playerEast2.PNG", KGoalKeeperColor);
+    pixmapInsert(MWindow::SouthEast, "playerSouthEast.PNG", "playerSouthEast1.PNG", "playerSouthEast2.PNG", KGoalKeeperColor);
+    pixmapInsert(MWindow::South, "playerSouth.PNG", "playerSouth1.PNG", "playerSouth2.PNG", KGoalKeeperColor);
+    pixmapInsert(MWindow::SouthWest, "playerSouthWest.PNG", "playerSouthWest1.PNG", "playerSouthWest2.PNG", KGoalKeeperColor);
+    pixmapInsert(MWindow::West, "playerWest.PNG", "playerWest1.PNG", "playerWest2.PNG", KGoalKeeperColor);
+    pixmapInsert(MWindow::NorthWest, "playerNorthWest.PNG", "playerNorthWest1.PNG", "playerNorthWest2.PNG", KGoalKeeperColor);
 
-    QPixmapList list;
-    list << QPixmap(gkN) << QPixmap(gkN) << QPixmap(gkN);
-    images_.insert(MWindow::North, list);
-    images_.insert(MWindow::NorthEast, list);
-    images_.insert(MWindow::East, list);
-    images_.insert(MWindow::SouthEast, list);
-    images_.insert(MWindow::South, list);
-    images_.insert(MWindow::SouthWest, list);
-    images_.insert(MWindow::West, list);
-    images_.insert(MWindow::NorthWest, list);
+    pixmapInsert(MWindow::ThrownIn, "playerNorthWest.PNG", "playerNorthWest1.PNG", "playerNorthWest2.PNG", KGoalKeeperColor); // TODO XXX TIM
 
-    images_.insert(MWindow::TackleNorth, list);
-    images_.insert(MWindow::TackleNorthEast, list);
-    images_.insert(MWindow::TackleEast, list);
-    images_.insert(MWindow::TackleSouthEast, list);
-    images_.insert(MWindow::TackleSouth, list);
-    images_.insert(MWindow::TackleSouthWest, list);
-    images_.insert(MWindow::TackleWest, list);
-    images_.insert(MWindow::TackleNorthWest, list);
+    pixmapInsert(MWindow::TackleNorth, "tackleNorth.PNG", "tackleNorth.PNG", "tackleNorth.PNG", KGoalKeeperColor); // TODO XXX TIM
+    pixmapInsert(MWindow::TackleNorthEast, "tackleNorthEast.PNG", "tackleNorthEast.PNG", "tackleNorthEast.PNG", KGoalKeeperColor); // TODO XXX TIM
+    pixmapInsert(MWindow::TackleEast, "tackleEast.PNG", "tackleEast.PNG", "tackleEast.PNG", KGoalKeeperColor); // TODO XXX TIM
+    pixmapInsert(MWindow::TackleSouthEast, "tackleSouthEast.PNG", "tackleSouthEast.PNG", "tackleSouthEast.PNG", KGoalKeeperColor); // TODO XXX TIM
+    pixmapInsert(MWindow::TackleSouth, "tackleSouth.PNG", "tackleSouth.PNG", "tackleSouth.PNG", KGoalKeeperColor); // TODO XXX TIM
+    pixmapInsert(MWindow::TackleSouthWest, "tackleSouthWest.PNG", "tackleSouthWest.PNG", "tackleSouthWest.PNG", KGoalKeeperColor); // TODO XXX TIM
+    pixmapInsert(MWindow::TackleWest, "tackleWest.PNG", "tackleWest.PNG", "tackleWest.PNG", KGoalKeeperColor); // TODO XXX TIM
+    pixmapInsert(MWindow::TackleNorthWest, "tackleNorthWest.PNG", "tackleNorthWest.PNG", "tackleNorthWest.PNG", KGoalKeeperColor); // TODO XXX TIM
 
-    images_.insert(MWindow::GoalCelebration, list); // TODO
+    pixmapInsert(MWindow::GoalCelebration, "playerNorth.PNG", "playerNorth1.PNG", "playerNorth2.PNG", KGoalKeeperColor); // TODO XXX TIM
 
-    images_.insert(MWindow::DiveLeft, list); // TODO
-    images_.insert(MWindow::DiveRight, list); // TODO
+    pixmapInsert(MWindow::DiveLeft, "playerNorth.PNG", "playerNorth1.PNG", "playerNorth2.PNG", KGoalKeeperColor); // TODO
+    pixmapInsert(MWindow::DiveRight, "playerNorth.PNG", "playerNorth1.PNG", "playerNorth2.PNG", KGoalKeeperColor); // TODO
+
+    // set default pixmap
+    setPixmap(m_images[MWindow::North].at(0));
+}
+
+void GoalKeeper::pixmapInsert(MWindow::Action a, QString s1, QString s2, QString s3, QRgb goalKeeperColor)
+{
+    QString s(":/images/red/");
+
+    QString n1(s), n2(s), n3(s);
+    QPixmap p1, p2, p3;
+
+    teamColorTransform(p1, n1.append(s1), qRgb(255, 0, 0), goalKeeperColor);
+    teamColorTransform(p2, n2.append(s2), qRgb(255, 0, 0), goalKeeperColor);
+    teamColorTransform(p3, n3.append(s3), qRgb(255, 0, 0), goalKeeperColor);
+
+    QList<QPixmap> list;
+    list << p1 <<  p2 << p3;
+    m_images.insert(a, list);
 }
 
 void GoalKeeper::advance(int phase)
 {
     if (!phase)
         return;
-    if (outOfAction_->isActive())
+    if (m_outOfAction->isActive())
         return;
     if ( hasBall_ )
          gkAdvanceWithBall();
@@ -63,22 +79,22 @@ void GoalKeeper::gkAdvanceWithoutBall()
         MWindow::Action action;
 
             if ( (dir == Team::SouthToNorth
-                && pitch_->bottomPenaltyArea->contains(pitch_->getBall()->pos()) )
+                && m_pitch->m_bottomPenaltyArea->contains(m_pitch->getBall()->pos()) )
             || (dir == Team::NorthToSouth
-                && pitch_->topPenaltyArea->contains(pitch_->getBall()->pos())) ) {
+                && m_pitch->m_topPenaltyArea->contains(m_pitch->getBall()->pos())) ) {
 
-            int dx = abs(pos().x() - pitch_->getBall()->pos().x());
-            int dy = abs(pos().y() - pitch_->getBall()->pos().y());
-            if ( pitch_->getBall()->controlledBy() && ( dx < 5) && (dy < 5) )
+            int dx = abs(pos().x() - m_pitch->getBall()->pos().x());
+            int dy = abs(pos().y() - m_pitch->getBall()->pos().y());
+            if ( m_pitch->getBall()->controlledBy() && ( dx < 5) && (dy < 5) )
                 action = MWindow::Tackle;
             else
-                action = calculateAction(pos(), pitch_->getBall()->pos());
+                action = calculateAction(pos(), m_pitch->getBall()->pos());
         } else {
             QPointF ownGoal;
             if ( dir == Team::SouthToNorth )
-                ownGoal = pitch_->bottomGoal->rect().topLeft();
+                ownGoal = m_pitch->m_bottomGoal->rect().topLeft();
             else
-                ownGoal = pitch_->topGoal->rect().bottomLeft();
+                ownGoal = m_pitch->m_topGoal->rect().bottomLeft();
             action = calculateAction(pos(), ownGoal);
         }
         move(action);
@@ -92,15 +108,9 @@ void GoalKeeper::gkAdvanceWithBall()
 
 void GoalKeeper::createMoves()
 {
-    moveDistance_.insert(MWindow::North, QPointF(0,-speed_));
-    moveDistance_.insert(MWindow::NorthEast, QPointF(speed_,-speed_));
-    moveDistance_.insert(MWindow::East, QPointF(speed_,0));
-    moveDistance_.insert(MWindow::SouthEast, QPointF(speed_,speed_));
-    moveDistance_.insert(MWindow::South, QPointF(0,speed_));
-    moveDistance_.insert(MWindow::SouthWest, QPointF(-speed_,speed_));
-    moveDistance_.insert(MWindow::West, QPointF(-speed_,0));
-    moveDistance_.insert(MWindow::NorthWest, QPointF(-speed_,-speed_));
+    Player::createMoves();
 
-    moveDistance_.insert(MWindow::DiveLeft, QPointF(5*speed_,0));
-    moveDistance_.insert(MWindow::DiveRight, QPointF(5*-speed_,0));
+    m_moveDistance.insert(MWindow::DiveLeft, QPointF(5*m_speed,0));
+    m_moveDistance.insert(MWindow::DiveRight, QPointF(5*-m_speed,0));
 }
+

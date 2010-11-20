@@ -31,7 +31,8 @@ HEADERS  += mainwindow.h \
     goalkeeper.h \
     replay.h \
     screengraphics.h \
-    game.h
+    game.h \
+    compileTimeSettings.h
 
 RESOURCES += \
     soccer.qrc

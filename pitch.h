@@ -8,6 +8,7 @@
 #include <QPainter>
 #include <QList>
 
+#include "compileTimeSettings.h"
 #include "mainwindow.h"
 #include "team.h" // Team::Direction
 
@@ -22,21 +23,12 @@ class QTimeLine;
 class Ball;
 class Player;
 class Team;
+#ifdef REFEREE_USED
 class Referee;
+#endif //
 class Replay;
 class ScreenGraphics;
 class Game;
-
-const int KGameRefreshRate = 1000 / 24; // ms
-const int KGameLength = 80*1000; // 80 seconds
-const int KColumn = 5; // Left, l-Centre, centre, r-centre, Right
-// goalkepper-defence-midfield-attack,attack-midfield-defence-goalkepper
-const int KRow = 8;
-
-const int KPlayerDefaultSpeed = 2;
-
-// scale factor for players & ball
-const qreal KScaleFactor = 1.6;
 
 class Pitch : public QObject
 {
@@ -56,9 +48,10 @@ public:
 
     void action(MWindow::Action act);
 
-    inline Ball* getBall() const { return ball_; }
-    inline Referee* referee() const { return referee_; }
-
+    inline Ball* getBall() const { return m_ball; }
+#ifdef REFEREE_USED
+    inline Referee* referee() const { return m_referee; }
+#endif //
     Player* selectNearestPlayer(Team* team);
 
     void setPlayerStartPositions(Team *team);
@@ -66,12 +59,12 @@ public:
     void setPlayerAttackPositions(Team *team);
     void setPiece(Team* t, SetPiece s);
 
-    void replayStart();
-    void replayStop();
-
-    inline Team* homeTeam() { return homeTeam_; }
-    inline Team* awayTeam() { return awayTeam_; }
+    inline Team* homeTeam() const { return m_homeTeam; }
+    inline Team* awayTeam() const { return m_awayTeam; }
     void updateDisplayTime(int timeLeftMs);
+    inline QPointF pitchEntrancePoint() const { return m_entrancePoint; }
+    inline Replay* replay() const { return m_replay; }
+    inline bool gameInProgress() const { m_gameInProgress; }
 
 public slots:
     void newGame();
@@ -79,44 +72,57 @@ public slots:
     void hasBallCheck();
     void selectNearestPlayer();
 
+    void replayStart();
+    void replayStop();
+
+    void gameStarted();
+    void gameStopped();
+
+private slots:
+    void removePlayers();
+
 signals:
    void focusedPlayerChanged();
+   void gameInProgress(bool playing);
 
 private:
     void createTeamPlayers(Team *team);
-    void removePlayers();
     void layoutPitch();
 
 public:
-    QList<Player*> players_;
-    QGraphicsScene *scene;
-    QGraphicsView *view;
+    QList<Player*> m_players;
+    QGraphicsScene *m_scene;
+    QGraphicsView *m_view;
     QGraphicsRectItem *m_footballPitch;
 
-    QGraphicsRectItem *bottomGoal;
-    QGraphicsRectItem *topGoal;
-    QGraphicsRectItem *bottomPenaltyArea;
-    QGraphicsRectItem *topPenaltyArea;
-    QGraphicsLineItem *centerLine_;
-    QGraphicsEllipseItem *centerCircle_;
-    ScreenGraphics *scoreText_;
-    QRectF pitchArea[KRow][KColumn];
+    QGraphicsRectItem *m_bottomGoal;
+    QGraphicsRectItem *m_topGoal;
+    QGraphicsRectItem *m_bottomPenaltyArea;
+    QGraphicsRectItem *m_topPenaltyArea;
+    QGraphicsLineItem *m_centerLine;
+    QGraphicsEllipseItem *m_centerCircle;
+    ScreenGraphics *m_scoreText;
+    QRectF m_pitchArea[KRow][KColumn];
 
-    Replay* replay_;
 private:
-    Team *homeTeam_;
-    Team *awayTeam_;
-    Ball *ball_;
-    Referee *referee_;
-    QTimer *motionTimer_;
+    Replay* m_replay;
+
+    Team *m_homeTeam;
+    Team *m_awayTeam;
+    Ball *m_ball;
+#ifdef REFEREE_USED
+    Referee *m_referee;
+#endif //
+    QTimer *m_motionTimer;
 
     Player *lastNearestPlayer_; // NOT OWNED
-    int remainingGameTime_;
 
-    QStateMachine *game;
-    Game *firstHalfState;
-    Game *secondHalfState;
-    QFinalState *allDone;
+    QStateMachine *m_game;
+    Game *m_firstHalfState;
+    Game *m_secondHalfState;
+    QFinalState *m_allDone;
+    QPointF m_entrancePoint;
+    bool m_gameInProgress;
 };
 
 #endif // PITCH_H
