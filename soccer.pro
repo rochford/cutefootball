@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     goalkeeper.cpp \
     replay.cpp \
     screengraphics.cpp \
-    game.cpp
+    game.cpp \
+    soundeffects.cpp
 
 HEADERS  += mainwindow.h \
     pitch.h \
@@ -32,7 +33,8 @@ HEADERS  += mainwindow.h \
     replay.h \
     screengraphics.h \
     game.h \
-    compileTimeSettings.h
+    compileTimeSettings.h \
+    soundeffects.h
 
 RESOURCES += \
     soccer.qrc

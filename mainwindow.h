@@ -78,7 +78,16 @@ private:
     QTimer *m_keyEventTimer;
     Action m_lastAction;
 
+    QFrame * m_frame;
+    QVBoxLayout *m_layout;
+
+    QPushButton* m_newGameBtn;
+    QPushButton* m_settingsBtn;
+    QPushButton* m_quitBtn;
+    QPushButton* m_aboutBtn;
+
     QAction* m_newGameAction;
+    QAction* m_quitAction;
     QAction* m_replayAction;
     QAction* m_settingsAction;
     QAction* m_aboutAction;

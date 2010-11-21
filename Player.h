@@ -98,6 +98,7 @@ public:
 
 private:
     QString m_name;
+    QString m_soundFile;
     bool m_humanControlled;
     // the previous action of this player
     MWindow::Action m_lastAction;

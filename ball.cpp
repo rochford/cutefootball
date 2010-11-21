@@ -2,6 +2,7 @@
 
 #include "ball.h"
 #include "team.h"
+#include "soundeffects.h"
 
 #include <QDebug>
 
@@ -134,14 +135,14 @@ void Ball::kickBall(MWindow::Action action, QPointF destination)
 
     if (action == MWindow::Shot)
         emit shot(destination);
+    emit soundEvent(SoundEffects::BallKick);
 }
 
 void Ball::updateBall(int frame)
 {
     // animation may no longer be running due to a goal
-    if ( animationTimer_->state() == QTimeLine::Running ) {
+    if ( animationTimer_->state() == QTimeLine::Running )
         setPos(animation_->posAt(frame/40.0));
-    }
 }
 
 QVariant Ball::itemChange(GraphicsItemChange change, const QVariant &value)

@@ -79,16 +79,16 @@ void GoalKeeper::gkAdvanceWithoutBall()
         MWindow::Action action;
 
             if ( (dir == Team::SouthToNorth
-                && m_pitch->m_bottomPenaltyArea->contains(m_pitch->getBall()->pos()) )
+                && m_pitch->m_bottomPenaltyArea->contains(m_pitch->ball()->pos()) )
             || (dir == Team::NorthToSouth
-                && m_pitch->m_topPenaltyArea->contains(m_pitch->getBall()->pos())) ) {
+                && m_pitch->m_topPenaltyArea->contains(m_pitch->ball()->pos())) ) {
 
-            int dx = abs(pos().x() - m_pitch->getBall()->pos().x());
-            int dy = abs(pos().y() - m_pitch->getBall()->pos().y());
-            if ( m_pitch->getBall()->controlledBy() && ( dx < 5) && (dy < 5) )
+            int dx = abs(pos().x() - m_pitch->ball()->pos().x());
+            int dy = abs(pos().y() - m_pitch->ball()->pos().y());
+            if ( m_pitch->ball()->controlledBy() && ( dx < 5) && (dy < 5) )
                 action = MWindow::Tackle;
             else
-                action = calculateAction(pos(), m_pitch->getBall()->pos());
+                action = calculateAction(pos(), m_pitch->ball()->pos());
         } else {
             QPointF ownGoal;
             if ( dir == Team::SouthToNorth )
