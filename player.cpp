@@ -11,6 +11,8 @@
 
 void teamColorTransform(QPixmap &pixmap, QString pix, QRgb colorFrom, QRgb colorTo)
 {
+    QColor KMaskColor(125,150,0);
+
     QImage img(pix);
     QRect rect = img.rect();
     for (int w = 0; w < img.width(); w++) {
@@ -21,6 +23,9 @@ void teamColorTransform(QPixmap &pixmap, QString pix, QRgb colorFrom, QRgb color
         }
     }
     pixmap = QPixmap::fromImage(img);
+
+    QBitmap bitmap = pixmap.createMaskFromColor(KMaskColor);
+    pixmap.setMask(bitmap);
 }
 
 MWindow::Action calculateAction(QPointF source,
@@ -144,7 +149,7 @@ void Player::paint(QPainter *painter,
     // the player that is focused get red circle around them
     if (m_humanControlled
         && !m_pitch->replay()->isReplay()
-        && m_pitch->gameInProgress()) {
+        /* && m_pitch->inProgress() */) {
         QBrush brush(Qt::white, Qt::Dense3Pattern);
         painter->setBrush(brush);
         painter->drawEllipse(QPointF(0,0), 8*KScaleFactor, 8*KScaleFactor);

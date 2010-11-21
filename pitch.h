@@ -65,7 +65,7 @@ public:
     void updateDisplayTime(int timeLeftMs);
     inline QPointF pitchEntrancePoint() const { return m_entrancePoint; }
     inline Replay* replay() const { return m_replay; }
-    inline bool gameInProgress() const { m_gameInProgress; }
+    inline bool inProgress() const { m_gameInProgress; }
     void playGameSound(SoundEffects::GameSound s);
 
 public slots:
