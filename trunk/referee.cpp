@@ -19,11 +19,11 @@ void Referee::advance(int phase)
     if (!phase)
         return;
 
-    MWindow::Action action = calculateAction(pos(), m_pitch->getBall()->pos());
+    MWindow::Action action = calculateAction(pos(), m_pitch->ball()->pos());
 
     // if within a few pixels then dont move towards ball anymore...
-    int dx = abs(pos().x() - m_pitch->getBall()->pos().x());
-    int dy = abs(pos().y() - m_pitch->getBall()->pos().y());
+    int dx = abs(pos().x() - m_pitch->ball()->pos().x());
+    int dy = abs(pos().y() - m_pitch->ball()->pos().y());
 
     // if too close, then move away from ball (do reverse action)
     if (dx < 15 || dy < 25) {

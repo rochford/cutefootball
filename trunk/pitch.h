@@ -11,6 +11,7 @@
 #include "compileTimeSettings.h"
 #include "mainwindow.h"
 #include "team.h" // Team::Direction
+#include "soundeffects.h"
 
 #include <QStateMachine>
 
@@ -43,12 +44,12 @@ public:
         Foul
     };
 
-    Pitch(const QRectF& footballGroundRect);
+    Pitch(const QRectF& footballGroundRect, QWidget* frame);
     ~Pitch();
 
     void action(MWindow::Action act);
 
-    inline Ball* getBall() const { return m_ball; }
+    inline Ball* ball() const { return m_ball; }
 #ifdef REFEREE_USED
     inline Referee* referee() const { return m_referee; }
 #endif //
@@ -65,6 +66,7 @@ public:
     inline QPointF pitchEntrancePoint() const { return m_entrancePoint; }
     inline Replay* replay() const { return m_replay; }
     inline bool gameInProgress() const { m_gameInProgress; }
+    void playGameSound(SoundEffects::GameSound s);
 
 public slots:
     void newGame();
@@ -103,7 +105,7 @@ public:
     QGraphicsEllipseItem *m_centerCircle;
     ScreenGraphics *m_scoreText;
     QRectF m_pitchArea[KRow][KColumn];
-
+    SoundEffects* m_soundEffects;
 private:
     Replay* m_replay;
 
@@ -123,6 +125,9 @@ private:
     QFinalState *m_allDone;
     QPointF m_entrancePoint;
     bool m_gameInProgress;
+
+    QWidget *m_menuFrame;
+    QGraphicsProxyWidget *m_proxyMenuFrame;
 };
 
 #endif // PITCH_H

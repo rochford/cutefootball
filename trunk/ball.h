@@ -12,6 +12,7 @@
 
 #include "mainwindow.h"
 #include "pitch.h"
+#include "soundeffects.h"
 
 class Player;
 
@@ -36,6 +37,7 @@ public:
 signals:
     void goalScored(bool topGoal);
     void shot(QPointF destination);
+    void soundEvent(SoundEffects::GameSound);
 
 public slots:
     void updateBall(int frame);

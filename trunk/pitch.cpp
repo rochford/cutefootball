@@ -16,8 +16,10 @@
 #include "replay.h"
 #include "screengraphics.h"
 #include "game.h"
+#include "soundEffects.h"
 
-Pitch::Pitch(const QRectF& footballGroundRect)
+
+Pitch::Pitch(const QRectF& footballGroundRect, QWidget* frame)
   : QObject(),
     m_scene(new QGraphicsScene(footballGroundRect)),
     m_view(new QGraphicsView(m_scene)),
@@ -27,7 +29,8 @@ Pitch::Pitch(const QRectF& footballGroundRect)
     m_topGoal(NULL),
     m_scoreText(NULL),
     m_centerLine(NULL),
-    m_centerCircle(NULL)
+    m_centerCircle(NULL),
+    m_menuFrame(frame)
 {
     m_motionTimer = new QTimer(this);
     m_motionTimer->setInterval(KGameRefreshRate);
@@ -49,12 +52,16 @@ Pitch::Pitch(const QRectF& footballGroundRect)
     m_replay = new Replay(this, this);
 
     m_scene->setBackgroundBrush(QPixmap(QString(":/images/pitch2.GIF")));
+    m_proxyMenuFrame = m_scene->addWidget(m_menuFrame);
+    m_proxyMenuFrame->setPos(m_scene->sceneRect().center());
 
     m_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_view->setAutoFillBackground(false);
 
     layoutPitch();
+
+    m_soundEffects = new SoundEffects(this);
 
     connect(m_motionTimer, SIGNAL(timeout()), m_scene, SLOT(advance()));
     connect(m_motionTimer, SIGNAL(timeout()), m_scene, SLOT(update()));
@@ -106,12 +113,29 @@ void Pitch::gameStopped()
 {
     m_gameInProgress = false;
     m_motionTimer->stop();
+    m_menuFrame->setVisible(true);
     emit gameInProgress(false);
 }
 
 void Pitch::setPiece(Team* t, SetPiece s)
 {
+    m_soundEffects->soundEvent(SoundEffects::Whistle);
     switch(s) {
+    case Pitch::KickOff:
+        foreach (Player *p, m_players) {
+                p->hasBall_ = false;
+                p->setPos(p->startPosition_.center());
+            }
+        if (t == m_awayTeam) {
+            m_awayTeam->setHasBall(true);
+            m_homeTeam->setHasBall(false);
+        } else {
+            m_awayTeam->setHasBall(false);
+            m_homeTeam->setHasBall(true);
+        }
+        m_scene->addItem(m_ball);
+        m_ball->setStartingPosition();
+        break;
     case Pitch::ThrowIn:
         {
             if (t == m_awayTeam) {
@@ -282,8 +306,8 @@ void Pitch::hasBallCheck()
     // which team has the ball?
     foreach (Player *p, m_players) {
         if (p->hasBall_) {
-            m_homeTeam->setHasBall(p->team_== this->m_homeTeam);
-            m_awayTeam->setHasBall(p->team_== this->m_awayTeam);
+            m_homeTeam->setHasBall(p->team_== m_homeTeam);
+            m_awayTeam->setHasBall(p->team_== m_awayTeam);
             break; // can break as now known
         }
     }
@@ -291,7 +315,11 @@ void Pitch::hasBallCheck()
 
 void Pitch::newGame()
 {
+    m_menuFrame->setVisible(false);
     m_ball = new Ball(this);
+    connect(m_ball, SIGNAL(soundEvent(SoundEffects::GameSound)),
+            m_soundEffects, SLOT(soundEvent(SoundEffects::GameSound)));
+
 
     m_homeTeam = new Team(QString("HOME"), KHomeTeamColor);
     m_awayTeam = new Team(QString("AWAY"), KAwayTeamColor);
@@ -471,6 +499,7 @@ void Pitch::setPlayerAttackPositions(Team *team)
 
 void Pitch::replayStart()
 {
+    m_scene->setBackgroundBrush(QBrush(QColor(Qt::gray)));
     m_motionTimer->stop();
 
     m_scoreText->setMode(ScreenGraphics::ReplayMode);
@@ -481,6 +510,15 @@ void Pitch::replayStart()
 
 void Pitch::replayStop()
 {
+    m_scene->setBackgroundBrush(QPixmap(QString(":/images/pitch2.GIF")));
+
+
+
     m_scoreText->setMode(ScreenGraphics::NormalMode);
     m_motionTimer->start();
+}
+
+void Pitch::playGameSound(SoundEffects::GameSound s)
+{
+    m_soundEffects->soundEvent(s);
 }

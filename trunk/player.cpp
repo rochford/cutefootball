@@ -2,6 +2,7 @@
 #include "pitch.h"
 #include "ball.h"
 #include "replay.h"
+#include "soundeffects.h"
 
 #include <QtGui>
 #include <QDebug>
@@ -15,7 +16,7 @@ void teamColorTransform(QPixmap &pixmap, QString pix, QRgb colorFrom, QRgb color
     for (int w = 0; w < img.width(); w++) {
         for (int h = 0; h < img.height(); h++) {
             QRgb rgb = img.pixel(w, h);
-            if (qRed(rgb) > 250 && qBlue(rgb) < 5 && qGreen(rgb) < 5)
+            if (qRed(rgb) > 250 && qBlue(rgb) < 8 && qGreen(rgb) < 8)
                 img.setPixel(QPoint(w,h), colorTo);
         }
     }
@@ -109,6 +110,7 @@ Player::Player(QString name,
     : QObject(),
     QGraphicsPixmapItem(NULL,NULL),
     m_name(name),
+    m_soundFile(QString(m_name + ".wav")),
     hasBall_(false),
     team_(team),
     role_(role),
@@ -126,7 +128,7 @@ Player::Player(QString name,
     // referees dont celebrate goals
     if (role != Player::LastDummy)
 #endif //
-        connect(m_pitch->getBall(), SIGNAL(goalScored(bool)), this, SLOT(goalScored(bool)));
+        connect(m_pitch->ball(), SIGNAL(goalScored(bool)), this, SLOT(goalScored(bool)));
 }
 
 QRectF Player::boundingRect() const
@@ -180,14 +182,15 @@ QPainterPath Player::shape() const
 void Player::movePlayer(MWindow::Action action)
 {
     // if the ball is not owned then take ownership
-    if (ballCollisionCheck() && !m_pitch->getBall()->controlledBy()) {
+    if (ballCollisionCheck() && !m_pitch->ball()->controlledBy()) {
+        SoundEffects::soundEvent(m_soundFile);
         hasBall_ = true;
-        m_pitch->getBall()->setControlledBy(this);
+        m_pitch->ball()->setControlledBy(this);
     } else if (!ballCollisionCheck())
         hasBall_ = false;
 
     if (hasBall_)
-        m_pitch->getBall()->moveBall(action, m_speed);
+        m_pitch->ball()->moveBall(action, m_speed);
 
     m_step++;
     // make the move
@@ -213,10 +216,10 @@ void Player::movePlayer(MWindow::Action action)
 bool Player::withinShootingDistance() const
 {
     if (team_->getDirection() == Team::NorthToSouth
-        && m_pitch->m_bottomPenaltyArea->contains(m_pitch->getBall()->pos()))
+        && m_pitch->m_bottomPenaltyArea->contains(m_pitch->ball()->pos()))
         return true;
     else if (team_->getDirection() == Team::SouthToNorth
-             && m_pitch->m_topPenaltyArea->contains(m_pitch->getBall()->pos()))
+             && m_pitch->m_topPenaltyArea->contains(m_pitch->ball()->pos()))
         return true;
     else {
         return false;
@@ -242,7 +245,7 @@ void Player::specialAction(MWindow::Action action)
         moveBy(m_moveDistance[action].x(), m_moveDistance[action].y());
         // if dive causes contact with the ball then transfer the ownership
         if (ballCollisionCheck()) {
-            m_pitch->getBall()->setControlledBy(this);
+            m_pitch->ball()->setControlledBy(this);
             hasBall_ = true;
         }
         return;
@@ -300,15 +303,15 @@ void Player::specialAction(MWindow::Action action)
                 goal = m_pitch->m_bottomGoal->rect().center();
             else
                 goal = m_pitch->m_topGoal->rect().center();
-             m_pitch->getBall()->kickBall(MWindow::Shot, dest);
+             m_pitch->ball()->kickBall(MWindow::Shot, dest);
              hasBall_ = false;
-             m_pitch->getBall()->setControlledBy(NULL);
+             m_pitch->ball()->setControlledBy(NULL);
         } else {
             Player *p = findAvailableTeamMate();
             if (p) {
-                m_pitch->getBall()->kickBall(MWindow::Pass, p->pos());
+                m_pitch->ball()->kickBall(MWindow::Pass, p->pos());
                 hasBall_ = false;
-                m_pitch->getBall()->setControlledBy(NULL);
+                m_pitch->ball()->setControlledBy(NULL);
             }
         }
     } else {
@@ -349,10 +352,10 @@ void Player::specialAction(MWindow::Action action)
 
         // if tackle causes contact with the ball then transfer the ownership
         if (ballCollisionCheck()) {
-            Player *p = m_pitch->getBall()->controlledBy();
+            Player *p = m_pitch->ball()->controlledBy();
             if (p)
                 p->isTackled(true);
-            m_pitch->getBall()->setControlledBy(this);
+            m_pitch->ball()->setControlledBy(this);
             hasBall_ = true;
         }
     }
@@ -476,12 +479,12 @@ void Player::computerAdvanceWithoutBall()
             // if close to the ball then tackle
 
             MWindow::Action action;
-            int dx = abs(pos().x() - m_pitch->getBall()->pos().x());
-            int dy = abs(pos().y() - m_pitch->getBall()->pos().y());
-            if ( m_pitch->getBall()->controlledBy() && ( dx < 10) && (dy < 10) )
+            int dx = abs(pos().x() - m_pitch->ball()->pos().x());
+            int dy = abs(pos().y() - m_pitch->ball()->pos().y());
+            if ( m_pitch->ball()->controlledBy() && ( dx < 10) && (dy < 10) )
                 action = MWindow::Tackle;
             else
-                action = calculateAction(pos(), m_pitch->getBall()->pos());
+                action = calculateAction(pos(), m_pitch->ball()->pos());
 
             move(action);
         }
@@ -496,7 +499,7 @@ void Player::computerAdvanceWithBall()
 
     // if the last action was thrownIn, then just pass the ball...
     if (m_lastAction == MWindow::ThrownIn) {
-        m_pitch->getBall()->setVisible(true);
+        m_pitch->ball()->setVisible(true);
         move(MWindow::Pass);
         return;
     }
@@ -517,7 +520,7 @@ void Player::computerAdvanceWithBall()
         if (withinShootingDistance()) {
             move(MWindow::Shot);
             hasBall_ = false;
-            m_pitch->getBall()->setControlledBy(NULL);
+            m_pitch->ball()->setControlledBy(NULL);
         }
         else
             move(act);

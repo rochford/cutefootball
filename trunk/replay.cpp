@@ -59,7 +59,7 @@ void Replay::makeReplaySnapshot()
     // make an animation object
     // set the timeline value for the animation objects
     qreal f = frameCounter_ / (KGameLength/KReplayFrameRate);
-    animationItems[0]->setPosAt(f, pitch_->getBall()->pos());
+    animationItems[0]->setPosAt(f, pitch_->ball()->pos());
     f = frameCounter_ / (KGameLength/KReplayFrameRate);
     int cnt = 1;
     foreach (Player *p, pitch_->m_players)
@@ -70,7 +70,7 @@ void Replay::makeReplaySnapshot()
 
 void Replay::replayFrame(int frame)
 {
-    pitch_->m_view->centerOn(pitch_->getBall()->pos());
+    pitch_->m_view->centerOn(pitch_->ball()->pos());
     pitch_->m_scoreText->updatePosition();
 
     if (frame == frameCounter_)
@@ -86,7 +86,7 @@ void Replay::replayFrame(int frame)
 void Replay::createAnimationItems()
 {
     QGraphicsItemAnimation* anim = new QGraphicsItemAnimation(this);
-    anim->setItem(pitch_->getBall());
+    anim->setItem(pitch_->ball());
     anim->setTimeLine(replayTimeLine_);
     animationItems.append(anim);
 

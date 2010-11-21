@@ -4,31 +4,47 @@
 #include "pitch.h"
 #include "replay.h"
 
-
 MWindow::MWindow(QWidget *parent)
     : QMainWindow(parent),
     m_keyEventTimer(NULL)
 {
     setWindowTitle(tr("Cute Football"));
 
+    m_frame = new QFrame();
+    m_newGameBtn = new QPushButton(this);
+    m_settingsBtn = new QPushButton(this);
+    m_quitBtn = new QPushButton(this);
+    m_aboutBtn = new QPushButton(this);
+
+    m_layout = new QVBoxLayout;
+
+    m_layout->addWidget(m_newGameBtn);
+    m_layout->addWidget(m_settingsBtn);
+    m_layout->addWidget(m_quitBtn);
+    m_frame->setLayout(m_layout);
+
     QRectF footballGround(0,0,400,600);
-    m_pitch = new Pitch(footballGround);
+    m_pitch = new Pitch(footballGround, m_frame);
 
     m_keyEventTimer = new QTimer(this);
     m_keyEventTimer->setInterval(KGameRefreshRate);
 
     createActions();
+    m_newGameBtn->setText(m_newGameAction->text());
+    m_settingsBtn->setText(m_settingsAction->text());
+    m_quitBtn->setText(m_quitAction->text());
+    m_aboutBtn->setText(m_aboutAction->text());
     createKeyboardActions();
 
     connect(m_keyEventTimer, SIGNAL(timeout()), this, SLOT(repeatKeyEvent()));
-
     connect(m_newGameAction, SIGNAL(triggered()), m_pitch, SLOT(newGame()));
-
     connect(m_replayAction, SIGNAL(triggered()), m_pitch, SLOT(replayStart()));
-
     connect(m_aboutAction, SIGNAL(triggered()), this, SLOT(about()));
-
     connect(m_pitch, SIGNAL(gameInProgress(bool)), this, SLOT(isPlaying(bool)));
+
+    connect(m_newGameBtn, SIGNAL(clicked(bool)), m_newGameAction, SIGNAL(triggered()));
+    connect(m_quitBtn, SIGNAL(clicked(bool)), m_quitAction, SIGNAL(triggered()));
+    connect(m_aboutBtn, SIGNAL(clicked(bool)), m_aboutAction, SIGNAL(triggered()));
 
     setCentralWidget(m_pitch->m_view);
     m_pitch->m_view->show();
@@ -44,19 +60,25 @@ void MWindow::createActions()
 {
     m_newGameAction = new QAction(QString(tr("New Game")), this);
     addAction(m_newGameAction);
+    m_newGameBtn->addAction(m_newGameAction);
 
     m_replayAction = new QAction(QString(tr("Replay")), this);
     m_replayAction->setEnabled(false);
 
     m_settingsAction = new QAction(QString(tr("Settings")), this);
-//    addAction(m_settingsAction);
+    addAction(m_settingsAction);
 
     m_aboutAction = new QAction(QString(tr("About")), this);
     addAction(m_aboutAction);
+    m_aboutBtn->addAction(m_aboutAction);
+
+    m_quitAction = new QAction(QString(tr("Quit")), this);
+    addAction(m_quitAction);
+    m_quitBtn->addAction(m_quitAction);
 
     m_fileMenu = menuBar()->addMenu(tr("&File"));
     m_fileMenu->addAction(m_newGameAction);
-//    m_fileMenu->addAction(m_settingsAction);
+    m_fileMenu->addAction(m_settingsAction);
 
     m_gameMenu = menuBar()->addMenu(tr("&Game"));
     m_gameMenu->addAction(m_replayAction);

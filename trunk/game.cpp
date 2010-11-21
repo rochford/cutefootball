@@ -6,7 +6,6 @@
 #include "replay.h"
 #include "screengraphics.h"
 
-
 GoalScoredState::GoalScoredState(Game *g, Pitch *p)
     : m_game(g),
     m_pitch(p)
@@ -86,11 +85,9 @@ void GoalScoredState::createPlayerAnimationItems(GameState g)
 void GoalScoredState::playFrame(int frame)
 {
     qDebug() << "GoalScoredState frame" << frame;
-    foreach (QGraphicsItemAnimation *anim, m_playerAnimationItems) {
-        qreal f = frame/ 100.00;
-
+    qreal f = frame/ 100.00;
+    foreach (QGraphicsItemAnimation *anim, m_playerAnimationItems)
         anim->item()->setPos(anim->posAt(f));
-    }
     m_pitch->m_scene->update();
 }
 
@@ -152,25 +149,18 @@ void Game::startPlayersLeavePitchAnim()
 {
     createPlayerAnimationItems(HalfOver);
     m_timeLineLeavePitch->start();
-    m_pitch->getBall()->setVisible(false);
+    m_pitch->ball()->setVisible(false);
     m_1second->stop();
     m_pitch->replay()->replaySnapShotTimer_->stop();
 }
 
 void Game::kickOff()
 {
-    foreach (Player *p, m_pitch->m_players) {
-            p->hasBall_ = false;
-            p->setPos(p->startPosition_.center());
-        }
-    m_pitch->homeTeam()->setHasBall(true);
-    m_pitch->awayTeam()->setHasBall(false);
-    m_pitch->m_scene->addItem(m_pitch->getBall());
-    m_pitch->getBall()->setStartingPosition();
+    m_pitch->setPiece(m_pitch->homeTeam(), Pitch::KickOff);
 
     // playing state transition to goalScoreState is not working
 #if 1
-    connect(m_pitch->getBall(), SIGNAL(goalScored(bool)), this, SLOT(kickOff()));
+    connect(m_pitch->ball(), SIGNAL(goalScored(bool)), this, SLOT(kickOff()));
 #else
     playing->addTransition(m_pitch->getBall(), SIGNAL(goalScored(bool)), m_goalScoredState);
 #endif //
@@ -264,13 +254,13 @@ void Game::onEntry(QEvent *event)
     m_timer->start();
     createPlayerAnimationItems(TakePositions);
     m_timeLineTakePositions->start();
-    m_pitch->getBall()->setVisible(true);
+    m_pitch->ball()->setVisible(true);
 }
 
 void Game::onExit(QEvent *event)
 {
     qDebug() << m_stateName << "onExit";
-    m_pitch->m_scene->removeItem(m_pitch->getBall());
+    m_pitch->m_scene->removeItem(m_pitch->ball());
 
     m_1second->stop();
     m_timer->stop();
