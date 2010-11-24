@@ -5,6 +5,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     MWindow w; 
+
 #ifdef Q_OS_SYMBIAN
     w.showMaximized();
 #else
