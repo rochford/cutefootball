@@ -3,6 +3,7 @@
 
 #include <QtGui>
 #include <qmap.h>
+#include "ui_mainMenu.h"
 
 class Pitch;
 
@@ -78,13 +79,9 @@ private:
     QTimer *m_keyEventTimer;
     Action m_lastAction;
 
-    QFrame * m_frame;
-    QVBoxLayout *m_layout;
+    Ui::Frame ui;
 
-    QPushButton* m_newGameBtn;
-    QPushButton* m_settingsBtn;
-    QPushButton* m_quitBtn;
-    QPushButton* m_aboutBtn;
+    QFrame* m_frame;
 
     QAction* m_newGameAction;
     QAction* m_quitAction;

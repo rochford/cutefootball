@@ -53,7 +53,7 @@ Pitch::Pitch(const QRectF& footballGroundRect, QWidget* frame)
 
     m_scene->setBackgroundBrush(QPixmap(QString(":/images/pitch2.GIF")));
     m_proxyMenuFrame = m_scene->addWidget(m_menuFrame);
-    m_proxyMenuFrame->setPos(m_scene->sceneRect().center());
+    m_proxyMenuFrame->setPos(10,10);
 
     m_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);

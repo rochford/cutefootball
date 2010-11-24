@@ -38,3 +38,6 @@ HEADERS  += mainwindow.h \
 
 RESOURCES += \
     soccer.qrc
+
+FORMS += \
+    mainMenu.ui
