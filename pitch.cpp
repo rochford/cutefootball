@@ -48,12 +48,14 @@ Pitch::Pitch(const QRectF& footballGroundRect, QWidget* frame)
     m_firstHalfState->addTransition(m_firstHalfState, SIGNAL(finished()),m_secondHalfState);
     m_secondHalfState->addTransition(m_secondHalfState, SIGNAL(finished()), m_allDone);
     connect(m_secondHalfState, SIGNAL(finished()), this, SLOT(removePlayers()));
+    connect(m_secondHalfState, SIGNAL(exited()), this, SLOT(gameStopped()));
 
     m_replay = new Replay(this, this);
 
     m_scene->setBackgroundBrush(QPixmap(QString(":/images/pitch2.GIF")));
     m_proxyMenuFrame = m_scene->addWidget(m_menuFrame);
     m_proxyMenuFrame->setPos(10,10);
+    m_proxyMenuFrame->setZValue(20);
 
     m_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -104,13 +106,16 @@ Player* Pitch::selectNearestPlayer(Team* team)
 
 void Pitch::gameStarted()
 {
+    qDebug() << "Pitch::gameStarted()";
     m_gameInProgress = true;
+    m_menuFrame->setVisible(false);
     m_motionTimer->start();
     emit gameInProgress(true);
 }
 
 void Pitch::gameStopped()
 {
+    qDebug() << "Pitch::gameStopped()";
     m_gameInProgress = false;
     m_motionTimer->stop();
     m_menuFrame->setVisible(true);
@@ -172,7 +177,6 @@ void Pitch::setPiece(Team* t, SetPiece s)
             // find the nearest player to the ball
             Player* goalKickTaker = selectNearestPlayer(t);
             if (goalKickTaker) {
-                // change the player graphic to be throw in graphic
                 goalKickTaker->setPos(m_ball->pos());
                 goalKickTaker->hasBall_ = true;
                 m_ball->setControlledBy(goalKickTaker);

@@ -28,6 +28,7 @@ void teamColorTransform(QPixmap &pixmap, QString pix, QRgb colorFrom, QRgb color
 
 MWindow::Action calculateAction(QPointF source,
                                 QPointF destination)
+
 {
     const int dx = source.x() - destination.x();
     const int dy = source.y() - destination.y();
@@ -49,6 +50,40 @@ MWindow::Action calculateAction(QPointF source,
         return MWindow::South;
 }
 
+MWindow::Action calculateTackleFromLastAction(MWindow::Action lastAction)
+{
+    MWindow::Action action;
+    switch(lastAction) {
+    case MWindow::North:
+        action = MWindow::TackleNorth;
+        break;
+    case MWindow::NorthEast:
+        action = MWindow::TackleNorthEast;
+        break;
+    case MWindow::East:
+        action = MWindow::TackleEast;
+        break;
+    case MWindow::SouthEast:
+        action = MWindow::TackleSouthEast;
+        break;
+    case MWindow::South:
+        action = MWindow::TackleSouth;
+        break;
+    case MWindow::SouthWest:
+        action = MWindow::TackleSouthWest;
+        break;
+    case MWindow::West:
+        action = MWindow::TackleWest;
+        break;
+    case MWindow::NorthWest:
+        action = MWindow::TackleNorthWest;
+        break;
+    default:
+        break;
+    }
+    return action;
+}
+
 void Player::createMoves()
 {
     m_moveDistance.insert(MWindow::North, QPointF(0,-m_speed));
@@ -64,7 +99,6 @@ void Player::createMoves()
 void Player::pixmapInsert(MWindow::Action a, QString s1, QString s2, QString s3, QRgb teamColor)
 {
     QString s(":/images/red/");
-    qDebug() << "team name" << team_->name_ << s1;
 
     QString key1(team_->name_), key2(team_->name_), key3(team_->name_);
     key1.append(s1);
@@ -77,18 +111,15 @@ void Player::pixmapInsert(MWindow::Action a, QString s1, QString s2, QString s3,
     if (!QPixmapCache::find(key1, &p1)) {
         teamColorTransform(p1, n1.append(s1), qRgb(255, 0, 0), teamColor);
         QPixmapCache::insert(key1, p1);
-        qDebug() << "pixmap insert " << key1;
     }
 
     if (!QPixmapCache::find(key2, &p2)) {
         teamColorTransform(p2, n2.append(s2), qRgb(255, 0, 0), teamColor);
         QPixmapCache::insert(key2, p2);
-        qDebug() << "pixmap insert " << key2;
     }
     if (!QPixmapCache::find(key3, &p3)) {
         teamColorTransform(p3, n3.append(s3), qRgb(255, 0, 0), teamColor);
         QPixmapCache::insert(key3, p3);
-        qDebug() << "pixmap insert " << key3;
     }
 
     QList<QPixmap> list;
@@ -276,42 +307,53 @@ void Player::specialAction(MWindow::Action action)
     }
 
     const QPointF p(pos());
-    const int KShotPower = this->m_pitch->m_scene->sceneRect().width() / 2;
-    QPointF dest(p);
+    const int KShotPower = m_pitch->m_scene->sceneRect().width() / 2;
+    const int KPassPower = m_pitch->m_scene->sceneRect().width() / 5;
+    QPointF shotDest(p);
+    QPointF passDest(p);
     switch(m_lastAction)
     {
     case MWindow::North:
-        dest.setY(p.y() - KShotPower);
+        shotDest.setY(p.y() - KShotPower);
+        passDest.setY(p.y() - KPassPower);
         break;
     case MWindow::NorthEast:
-        dest.setX(p.x() + KShotPower);
-        dest.setY(p.y() - KShotPower);
+        shotDest.setX(p.x() + KShotPower);
+        shotDest.setY(p.y() - KShotPower);
+        passDest.setX(p.x() + KPassPower);
+        passDest.setY(p.y() - KPassPower);
         break;
     case MWindow::East:
-        dest.setX(p.x() + KShotPower);
+        shotDest.setX(p.x() + KShotPower);
+        passDest.setX(p.x() + KPassPower);
         break;
     case MWindow::SouthEast:
-        dest.setX(p.x() + KShotPower);
-        dest.setY(p.y() + KShotPower);
+        shotDest.setX(p.x() + KShotPower);
+        shotDest.setY(p.y() + KShotPower);
+        passDest.setX(p.x() + KPassPower);
+        passDest.setY(p.y() + KPassPower);
         break;
     case MWindow::South:
-        dest.setY(p.y() + KShotPower);
+        shotDest.setY(p.y() + KShotPower);
+        passDest.setY(p.y() + KPassPower);
         break;
     case MWindow::SouthWest:
-        dest.setX(p.x() - KShotPower);
-        dest.setY(p.y() + KShotPower);
+        shotDest.setX(p.x() - KShotPower);
+        passDest.setY(p.y() + KPassPower);
         break;
     case MWindow::West:
-        dest.setX(p.x() - KShotPower);
+        shotDest.setX(p.x() - KShotPower);
+        passDest.setX(p.x() - KPassPower);
         break;
     case MWindow::NorthWest:
-        dest.setX(p.x() - KShotPower);
-        dest.setY(p.y() - KShotPower);
+        shotDest.setX(p.x() - KShotPower);
+        shotDest.setY(p.y() - KShotPower);
+        passDest.setX(p.x() - KPassPower);
+        passDest.setY(p.y() - KPassPower);
         break;
     default:
         break;
     }
-
 
     // if not have ball then must be tackle
     // if have ball then either shot or pass
@@ -319,54 +361,25 @@ void Player::specialAction(MWindow::Action action)
         if (action == MWindow::ButtonLongPress
             || action == MWindow::Shot
             || withinShootingDistance()) {
-            QPointF goal;
-            // prefer the player closest to the opposition goal
-            if (team_->getDirection() == Team::NorthToSouth)
-                goal = m_pitch->m_bottomGoal->rect().center();
-            else
-                goal = m_pitch->m_topGoal->rect().center();
-             m_pitch->ball()->kickBall(MWindow::Shot, dest);
+             m_pitch->ball()->kickBall(MWindow::Shot, shotDest);
              hasBall_ = false;
              m_pitch->ball()->setControlledBy(NULL);
         } else {
-            Player *p = findAvailableTeamMate();
+            Player *p = findAvailableTeamMate(pos());
             if (p) {
                 m_pitch->ball()->kickBall(MWindow::Pass, p->pos());
-                hasBall_ = false;
-                m_pitch->ball()->setControlledBy(NULL);
+            } else {
+                // pass short in direction travelling
+                m_pitch->ball()->kickBall(MWindow::Pass, passDest);
             }
+            hasBall_ = false;
+            m_pitch->ball()->setControlledBy(NULL);
         }
     } else {
         // perform tackle here...
 
-        switch(m_lastAction) {
-        case MWindow::North:
-            action = MWindow::TackleNorth;
-            break;
-        case MWindow::NorthEast:
-            action = MWindow::TackleNorthEast;
-            break;
-        case MWindow::East:
-            action = MWindow::TackleEast;
-            break;
-        case MWindow::SouthEast:
-            action = MWindow::TackleSouthEast;
-            break;
-        case MWindow::South:
-            action = MWindow::TackleSouth;
-            break;
-        case MWindow::SouthWest:
-            action = MWindow::TackleSouthWest;
-            break;
-        case MWindow::West:
-            action = MWindow::TackleWest;
-            break;
-        case MWindow::NorthWest:
-            action = MWindow::TackleNorthWest;
-            break;
-        default:
-            break;
-        }
+        action = calculateTackleFromLastAction(m_lastAction);
+
         setPixmap(m_images[action].at(0));
         moveBy(m_moveDistance[m_lastAction].x(), m_moveDistance[m_lastAction].y());
         m_outOfAction->stop();
@@ -415,11 +428,10 @@ void Player::move(MWindow::Action action)
 // Not man marked
 // must have direct line of sight
 // furthest forward player is preferred
-Player* Player::findAvailableTeamMate() const
+Player* Player::findAvailableTeamMate(QPointF myPos) const
 {
-    // 1 find an attacker to pass to
     Player *bestPlayer = NULL;
-    int nearest = 0xffff;
+//    int nearest = 0xffff;
     foreach (Player *p, m_pitch->m_players) {
         if (p->team_!= team_)
             continue;
@@ -430,19 +442,13 @@ Player* Player::findAvailableTeamMate() const
 //        if ( p->isManMarked() )
 //            continue;
 
-        QPointF goal;
-        // prefer the player closest to the opposition goal
-        if (team_->getDirection() == Team::NorthToSouth)
-            goal = m_pitch->m_bottomGoal->rect().center();
-        else
-            goal = m_pitch->m_topGoal->rect().center();
+        const int dx = p->pos().x() - myPos.x();
+        const int dy = p->pos().y() - myPos.y();
 
-        const int dx = p->pos().x() - goal.x();
-        const int dy = p->pos().y() - goal.y();
-
-        if ((qAbs(dx*dx)+qAbs(dy*dy)) < nearest) {
+//        if ((qAbs(dx*dx)+qAbs(dy*dy)) < nearest) {
+        if (qAbs(dx) < 50 && qAbs(dy) < 50) {
             bestPlayer = p;
-            nearest = qAbs(qAbs(dx*dx)+qAbs(dy*dy));
+//            nearest = qAbs(qAbs(dx*dx)+qAbs(dy*dy));
         }
     }
     return bestPlayer;

@@ -56,10 +56,14 @@ void GoalScoredState::createPlayerAnimationItems(GameState g)
         switch(g)
         {
         case TakePositions:
+        {
             anim->setTimeLine(m_timeLineReturnStartPositions);
             tmp = p->pos();
             stepX = ( p->startPosition_.center().x() - tmp.x()) / 100.0;
             stepY = ( p->startPosition_.center().y() - tmp.y()) / 100.0;
+            MWindow::Action a = calculateAction(tmp, p->startPosition_.center());
+            p->movePlayer(a);
+        }
             break;
 
         case Celebrate:
@@ -136,7 +140,6 @@ Game::Game(Pitch* p,
     connect(m_1second, SIGNAL(timeout()), this, SLOT(decrementGameTime()));
 
     connect(m_playingState, SIGNAL(entered()), m_pitch, SLOT(gameStarted()));
-    connect(m_playingState, SIGNAL(exited()), m_pitch, SLOT(gameStopped()));
 }
 
 void Game::decrementGameTime()
@@ -201,17 +204,25 @@ void Game::createPlayerAnimationItems(GameState g)
         switch(g)
         {
         case TakePositions:
+            {
             anim->setTimeLine(m_timeLineTakePositions);
             tmp = p->pos();
             stepX = ( p->startPosition_.center().x() - tmp.x()) / 100.0;
             stepY = ( p->startPosition_.center().y() - tmp.y()) / 100.0;
+            MWindow::Action a = calculateAction(tmp, p->startPosition_.center());
+            p->movePlayer(a);
+            }
             break;
 
         case HalfOver:
+            {
             anim->setTimeLine(m_timeLineLeavePitch);
             tmp = p->pos();
             stepX = ( m_pitch->pitchEntrancePoint().x() - tmp.x() ) / 100.0;
             stepY = ( m_pitch->pitchEntrancePoint().y() - tmp.y() ) / 100.0;
+            MWindow::Action a = calculateAction(tmp, m_pitch->pitchEntrancePoint());
+            p->movePlayer(a);
+            }
             break;
 
         default:
