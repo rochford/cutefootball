@@ -11,8 +11,6 @@
 
 void teamColorTransform(QPixmap &pixmap, QString pix, QRgb colorFrom, QRgb colorTo)
 {
-    QColor KMaskColor(125,150,0);
-
     QImage img(pix);
     QRect rect = img.rect();
     for (int w = 0; w < img.width(); w++) {
@@ -24,7 +22,7 @@ void teamColorTransform(QPixmap &pixmap, QString pix, QRgb colorFrom, QRgb color
     }
     pixmap = QPixmap::fromImage(img);
 
-    QBitmap bitmap = pixmap.createMaskFromColor(KMaskColor);
+    QBitmap bitmap = pixmap.createMaskFromColor(KCuteFootballMaskColor);
     pixmap.setMask(bitmap);
 }
 
@@ -66,13 +64,32 @@ void Player::createMoves()
 void Player::pixmapInsert(MWindow::Action a, QString s1, QString s2, QString s3, QRgb teamColor)
 {
     QString s(":/images/red/");
+    qDebug() << "team name" << team_->name_ << s1;
+
+    QString key1(team_->name_), key2(team_->name_), key3(team_->name_);
+    key1.append(s1);
+    key2.append(s2);
+    key3.append(s3);
 
     QString n1(s), n2(s), n3(s);
     QPixmap p1, p2, p3;
 
-    teamColorTransform(p1, n1.append(s1), qRgb(255, 0, 0), teamColor);
-    teamColorTransform(p2, n2.append(s2), qRgb(255, 0, 0), teamColor);
-    teamColorTransform(p3, n3.append(s3), qRgb(255, 0, 0), teamColor);
+    if (!QPixmapCache::find(key1, &p1)) {
+        teamColorTransform(p1, n1.append(s1), qRgb(255, 0, 0), teamColor);
+        QPixmapCache::insert(key1, p1);
+        qDebug() << "pixmap insert " << key1;
+    }
+
+    if (!QPixmapCache::find(key2, &p2)) {
+        teamColorTransform(p2, n2.append(s2), qRgb(255, 0, 0), teamColor);
+        QPixmapCache::insert(key2, p2);
+        qDebug() << "pixmap insert " << key2;
+    }
+    if (!QPixmapCache::find(key3, &p3)) {
+        teamColorTransform(p3, n3.append(s3), qRgb(255, 0, 0), teamColor);
+        QPixmapCache::insert(key3, p3);
+        qDebug() << "pixmap insert " << key3;
+    }
 
     QList<QPixmap> list;
     list << p1 <<  p2 << p3;

@@ -9,7 +9,7 @@
 #include "team.h"
 #include "pitch.h"
 
-typedef QList<QPixmap> QPixmapList;
+typedef QList<QPixmap> PixmapList;
 
 MWindow::Action calculateAction(QPointF source,
                                 QPointF destination);
@@ -109,7 +109,7 @@ public:
     QRectF attackPosition_;
 
 protected:
-    QMap<MWindow::Action,QPixmapList> m_images;
+    QMap<MWindow::Action,PixmapList> m_images;
     Pitch *m_pitch;
     QMap<MWindow::Action,QPointF> m_moveDistance;
     int m_step;

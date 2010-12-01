@@ -77,7 +77,7 @@ void Referee::createPixmaps()
 {
     QString ref(":/images/ref.png");
 
-    QPixmapList list;
+    PixmapList list;
     list << QPixmap(ref) << QPixmap(ref) << QPixmap(ref);
 
     m_images.insert(MWindow::North, list);

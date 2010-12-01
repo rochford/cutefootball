@@ -1,10 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>images/ref.png</file>
-        <file>images/ball1.png</file>
-        <file>images/ball2.png</file>
-        <file>images/ball3.png</file>
-        <file>images/ball.png</file>
         <file>images/pitch2.GIF</file>
         <file>images/red/playerEast.PNG</file>
         <file>images/red/playerEast1.PNG</file>
@@ -38,5 +34,6 @@
         <file>images/red/tackleSouthEast.PNG</file>
         <file>images/red/tackleSouthWest.PNG</file>
         <file>images/red/tackleWest.PNG</file>
+        <file>images/ball.png</file>
     </qresource>
 </RCC>

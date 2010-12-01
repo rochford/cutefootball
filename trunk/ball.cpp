@@ -17,6 +17,10 @@ Ball::Ball(Pitch* pitch)
     animationTimer_(NULL),
     controlledBy_(NULL)
 {
+    QBitmap bitmap = pixmap().createMaskFromColor(KCuteFootballMaskColor);
+    pixmap().setMask(bitmap);
+
+    setTransformOriginPoint(boundingRect().center());
     setPos(start_.x(), start_.y());
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
     setZValue(8);
@@ -45,20 +49,6 @@ void Ball::paint(QPainter *painter,
                  const QStyleOptionGraphicsItem *option,
                  QWidget *widget)
 {
-    switch(step_ % 4) {
-    case 0:
-        setPixmap(QPixmap(QString(":/images/ball.png")));
-        break;
-    case 1:
-        setPixmap(QPixmap(QString(":/images/ball1.png")));
-        break;
-    case 2:
-        setPixmap(QPixmap(QString(":/images/ball2.png")));
-        break;
-    case 3:
-        setPixmap(QPixmap(QString(":/images/ball3.png")));
-        break;
-    }
     // Scale QGraphicsPixmapItem to wanted 'size' and keep the aspect ratio
     QSize pixmapSize = pixmap().size();
     pixmapSize.scale(QSizeF(20*KScaleFactor,20*KScaleFactor).toSize(), Qt::KeepAspectRatio);
@@ -83,15 +73,15 @@ void Ball::advance(int phase)
 
 void Ball::moveBall(MWindow::Action action, int speed)
 {
-    QMap<MWindow::Action,QPointF> moveDistance_;
-    moveDistance_.insert(MWindow::North, QPointF(0,-speed));
-    moveDistance_.insert(MWindow::NorthEast, QPointF(speed,-speed));
-    moveDistance_.insert(MWindow::East, QPointF(speed,0));
-    moveDistance_.insert(MWindow::SouthEast, QPointF(speed,speed));
-    moveDistance_.insert(MWindow::South, QPointF(0,speed));
-    moveDistance_.insert(MWindow::SouthWest, QPointF(-speed,speed));
-    moveDistance_.insert(MWindow::West, QPointF(-speed,0));
-    moveDistance_.insert(MWindow::NorthWest, QPointF(-speed,-speed));
+    QMap<MWindow::Action,QPointF> moveDistance;
+    moveDistance.insert(MWindow::North, QPointF(0,-speed));
+    moveDistance.insert(MWindow::NorthEast, QPointF(speed,-speed));
+    moveDistance.insert(MWindow::East, QPointF(speed,0));
+    moveDistance.insert(MWindow::SouthEast, QPointF(speed,speed));
+    moveDistance.insert(MWindow::South, QPointF(0,speed));
+    moveDistance.insert(MWindow::SouthWest, QPointF(-speed,speed));
+    moveDistance.insert(MWindow::West, QPointF(-speed,0));
+    moveDistance.insert(MWindow::NorthWest, QPointF(-speed,-speed));
 
     // old position
     QPointF oldPos=pos();
@@ -106,7 +96,8 @@ void Ball::moveBall(MWindow::Action action, int speed)
     case MWindow::SouthWest:
     case MWindow::West:
     case MWindow::NorthWest:
-        moveBy(moveDistance_[action].x(), moveDistance_[action].y());
+        setRotation((step_%4)*90.0);
+        moveBy(moveDistance[action].x(), moveDistance[action].y());
         break;
     case MWindow::Shot:
         // TODO shootBall(speed);
@@ -127,6 +118,8 @@ void Ball::kickBall(MWindow::Action action, QPointF destination)
     for (int i = 0; i <= 40; ++i) {
         animation_->setPosAt(i / 40.0, QPointF(tmp.x() + stepX,
                                                tmp.y() + stepY));
+        // Rotation in animations does not seem to work
+        // animation_->setRotationAt(i / 40.0, i*90.0);
         tmp.setX(tmp.x() + stepX);
         tmp.setY(tmp.y() + stepY);
     }
@@ -141,8 +134,11 @@ void Ball::kickBall(MWindow::Action action, QPointF destination)
 void Ball::updateBall(int frame)
 {
     // animation may no longer be running due to a goal
-    if ( animationTimer_->state() == QTimeLine::Running )
+    if ( animationTimer_->state() == QTimeLine::Running ) {
         setPos(animation_->posAt(frame/40.0));
+        // Rotation in animations does not seem to work
+        // setRotation(animation_->rotationAt(frame/40.0));
+    }
 }
 
 QVariant Ball::itemChange(GraphicsItemChange change, const QVariant &value)
