@@ -109,7 +109,6 @@ MWindow::~MWindow()
 
 void MWindow::repeatKeyEvent()
 {
-    qDebug() << "repeatKeyEvent";
     m_pitch->action(m_lastAction);
     m_keyEventTimer->start();
 }
@@ -121,7 +120,6 @@ void MWindow::keyPressEvent( QKeyEvent *event )
         return;
     }
 
-    qDebug() << "keyPressEvent";
     Action a = m_actions[ event->key() ];
 
     if ( m_pitch->replay()->isReplay() )
@@ -163,7 +161,7 @@ void MWindow::keyReleaseEvent( QKeyEvent *event )
         event->ignore();
         return;
     }
-    qDebug() << "keyReleaseEvent";
+
     Action a = m_actions[ event->key() ];
 
     if ( a != Button ) {

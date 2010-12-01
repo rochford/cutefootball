@@ -60,7 +60,7 @@ public:
     }
     inline bool humanControlled() const { return m_humanControlled; }
     void movePlayer(MWindow::Action action);
-    Player* findAvailableTeamMate() const;
+    Player* findAvailableTeamMate(QPointF myPos) const;
     void specialAction(MWindow::Action action);
     void isTackled(bool defeated);
 
