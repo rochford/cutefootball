@@ -30,6 +30,7 @@ public:
     };
 public slots:
     void playFrame(int frame);
+    void createTakePositionAnimation();
 
 protected:
     void onEntry ( QEvent * event );
@@ -53,13 +54,18 @@ class Game : public QState
     Q_OBJECT
 public:
     Game(Pitch *p, QString stateName, bool isFirstHalf);
-    ~Game() { m_timer->stop(); }
+    ~Game() { m_1second->stop(); }
 
     enum GameState {
         GoalScored, // reason for another kickoff
         TakePositions,
         HalfOver
     };
+    // stops the gameClock
+    void stopGameClock();
+
+signals:
+    void halfOver();
 
 public slots:
     void playFrame(int frame);
@@ -79,7 +85,6 @@ private:
     QString m_stateName;
     bool m_isFirstHalf;
 
-    QTimer *m_timer;
     QTimer *m_1second;
     // amounts of MS left in this half
     int m_remainingTimeInHalfMs;

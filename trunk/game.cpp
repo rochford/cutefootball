@@ -7,8 +7,9 @@
 #include "screengraphics.h"
 
 GoalScoredState::GoalScoredState(Game *g, Pitch *p)
-    : m_game(g),
-    m_pitch(p)
+    : QState(g),
+      m_game(g),
+      m_pitch(p)
 {
     m_celebrate = new QState(this);
     m_returnToPosition = new QState(this);
@@ -27,14 +28,20 @@ GoalScoredState::GoalScoredState(Game *g, Pitch *p)
     m_returnToPosition->addTransition(m_timeLineReturnStartPositions, SIGNAL(finished()), m_allDone);
 
     connect(m_timeLineCelebrate, SIGNAL(frameChanged(int)), this, SLOT(playFrame(int)));
-    connect(m_timeLineCelebrate, SIGNAL(finished()), m_timeLineReturnStartPositions, SLOT(start()));
+    connect(m_timeLineCelebrate, SIGNAL(finished()), this, SLOT(createTakePositionAnimation()));
     connect(m_timeLineReturnStartPositions, SIGNAL(frameChanged(int)), this, SLOT(playFrame(int)));
     connect(m_timeLineReturnStartPositions, SIGNAL(finished()), m_game, SLOT(kickOff()));
 }
 
+void GoalScoredState::createTakePositionAnimation()
+{
+    createPlayerAnimationItems(TakePositions);
+    m_timeLineReturnStartPositions->start();
+}
+
 void GoalScoredState::onEntry(QEvent *event)
 {
-    qDebug() << "GoalScoredState onEntry";
+    m_game->stopGameClock();
     createPlayerAnimationItems(Celebrate);
     m_timeLineCelebrate->start();
 }
@@ -69,8 +76,8 @@ void GoalScoredState::createPlayerAnimationItems(GameState g)
         case Celebrate:
             anim->setTimeLine(m_timeLineCelebrate);
             tmp = p->pos();
-            stepX = ( m_pitch->pitchEntrancePoint().x() - tmp.x() ) / 100.0;
-            stepY = ( m_pitch->pitchEntrancePoint().y() - tmp.y() ) / 100.0;
+            stepX = ( m_pitch->m_footballPitch->rect().center().x() - tmp.x() ) / 100.0;
+            stepY = ( m_pitch->m_footballPitch->rect().center().y() - tmp.y() ) / 100.0;
             break;
 
         default:
@@ -88,7 +95,6 @@ void GoalScoredState::createPlayerAnimationItems(GameState g)
 
 void GoalScoredState::playFrame(int frame)
 {
-    qDebug() << "GoalScoredState frame" << frame;
     qreal f = frame/ 100.00;
     foreach (QGraphicsItemAnimation *anim, m_playerAnimationItems)
         anim->item()->setPos(anim->posAt(f));
@@ -104,9 +110,6 @@ Game::Game(Pitch* p,
     m_remainingTimeInHalfMs(KHalfLength),
     m_isFirstHalf(isFirstHalf)
 {
-    m_timer = new QTimer(this);
-    m_timer->setInterval(KHalfLength);
-
     m_1second = new QTimer(this);
     m_1second->setInterval(1000);
 
@@ -126,14 +129,13 @@ Game::Game(Pitch* p,
     setInitialState(m_startState);
 
     m_startState->addTransition(m_timeLineTakePositions, SIGNAL(finished()), m_playingState);
-    m_playingState->addTransition(m_timer, SIGNAL(timeout()), m_halfEndState);
+    m_playingState->addTransition(this, SIGNAL(halfOver()), m_halfEndState);
     m_goalScoredState->addTransition(m_goalScoredState, SIGNAL(finished()), m_playingState);
     m_halfEndState->addTransition(m_timeLineLeavePitch, SIGNAL(finished()), m_allDoneState);
 
-    connect(m_timer,SIGNAL(timeout()), this, SLOT(startPlayersLeavePitchAnim()));
+    connect(this, SIGNAL(halfOver()), this, SLOT(startPlayersLeavePitchAnim()));
 
     connect(m_timeLineTakePositions, SIGNAL(finished()), this, SLOT(kickOff()));
-//    connect(m_timeLineTakePositions, SIGNAL(finished()), m_timer, SLOT(m_startState()));
     connect(m_timeLineTakePositions, SIGNAL(frameChanged(int)), this, SLOT(playFrame(int)));
     connect(m_timeLineLeavePitch, SIGNAL(frameChanged(int)), this, SLOT(playFrame(int)));
 
@@ -146,6 +148,8 @@ void Game::decrementGameTime()
 {
     m_remainingTimeInHalfMs = m_remainingTimeInHalfMs - 1000;
     m_pitch->updateDisplayTime(m_remainingTimeInHalfMs);
+    if (m_remainingTimeInHalfMs == 0)
+        emit halfOver();
 }
 
 void Game::startPlayersLeavePitchAnim()
@@ -157,16 +161,18 @@ void Game::startPlayersLeavePitchAnim()
     m_pitch->replay()->replaySnapShotTimer_->stop();
 }
 
+void Game::stopGameClock()
+{
+    if (m_1second->isActive())
+        m_1second->stop();
+}
+
 void Game::kickOff()
 {
     m_pitch->setPiece(m_pitch->homeTeam(), Pitch::KickOff);
 
     // playing state transition to goalScoreState is not working
-#if 1
-    connect(m_pitch->ball(), SIGNAL(goalScored(bool)), this, SLOT(kickOff()));
-#else
-    playing->addTransition(m_pitch->getBall(), SIGNAL(goalScored(bool)), m_goalScoredState);
-#endif //
+    m_playingState->addTransition(m_pitch->ball(), SIGNAL(goalScored(bool)), m_goalScoredState);
 
 #ifdef REFEREE_USED
     m_pitch->scene->addItem(m_pitch->referee());
@@ -240,7 +246,6 @@ void Game::createPlayerAnimationItems(GameState g)
 
 void Game::onEntry(QEvent *event)
 {
-    qDebug() << m_stateName << "onEntry";
     if (m_isFirstHalf) {
         m_pitch->homeTeam()->setDirection(Team::NorthToSouth);
         m_pitch->setPlayerStartPositions(m_pitch->homeTeam());
@@ -262,7 +267,6 @@ void Game::onEntry(QEvent *event)
         m_pitch->setPlayerAttackPositions(m_pitch->homeTeam());
         m_pitch->setPlayerDefendPositions(m_pitch->homeTeam());
     }
-    m_timer->start();
     createPlayerAnimationItems(TakePositions);
     m_timeLineTakePositions->start();
     m_pitch->ball()->setVisible(true);
@@ -270,9 +274,7 @@ void Game::onEntry(QEvent *event)
 
 void Game::onExit(QEvent *event)
 {
-    qDebug() << m_stateName << "onExit";
     m_pitch->m_scene->removeItem(m_pitch->ball());
 
     m_1second->stop();
-    m_timer->stop();
 }
