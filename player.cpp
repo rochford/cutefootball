@@ -503,7 +503,11 @@ void Player::computerAdvanceWithoutBall()
     setZValue(5);
     if (!team_->teamHasBall_) {
         Player *nearestPlayer = m_pitch->selectNearestPlayer(m_pitch->awayTeam());
-        if (nearestPlayer == this) {
+
+        if (nearestPlayer == this
+            || role_ == Player::LeftMidfield
+//            || role_ == Player::CentralMidfield
+            || role_ == Player::RightMidfield ) {
             // if close to the ball then tackle
 
             MWindow::Action action;

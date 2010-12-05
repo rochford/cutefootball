@@ -19,7 +19,7 @@ const int KColumn = 5; // Left, l-Centre, centre, r-centre, Right
 // goalkepper-defence-midfield-attack,attack-midfield-defence-goalkepper
 const int KRow = 8;
 
-const int KPlayerDefaultSpeed = 2;
+const int KPlayerDefaultSpeed = 3;
 
 // scale factor for players & ball
 const qreal KScaleFactor = 1.6;

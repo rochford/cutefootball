@@ -3,6 +3,7 @@
 #include "mainwindow.h"
 #include "pitch.h"
 #include "replay.h"
+#include "settingsDialog.h"
 
 MWindow::MWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -10,13 +11,18 @@ MWindow::MWindow(QWidget *parent)
 {
     setWindowTitle(tr("Cute Football"));
 
+    m_soundEffects = new SoundEffects(this);
+
     m_frame = new QFrame();
     ui.setupUi(m_frame);
     m_frame->setVisible(true);
     m_frame->setEnabled(true);
 
+    m_settingsDialog = new settingsDialog(this);
+    m_settingsDialog->setVisible(false);
+
     QRectF footballGround(0,0,400,600);
-    m_pitch = new Pitch(footballGround, m_frame);
+    m_pitch = new Pitch(footballGround, m_frame, m_settingsDialog);
 
     m_keyEventTimer = new QTimer(this);
     m_keyEventTimer->setInterval(KGameRefreshRate);
@@ -28,18 +34,48 @@ MWindow::MWindow(QWidget *parent)
     ui.m_aboutBtn->setText(m_aboutAction->text());
     createKeyboardActions();
 
+    createConnections();
+
+    setCentralWidget(m_pitch->m_view);
+    m_pitch->m_view->show();
+}
+
+void MWindow::createConnections()
+{
     connect(m_keyEventTimer, SIGNAL(timeout()), this, SLOT(repeatKeyEvent()));
     connect(m_newGameAction, SIGNAL(triggered()), m_pitch, SLOT(newGame()));
+    connect(m_settingsAction, SIGNAL(triggered()), this, SLOT(showSettingsDialog()));
     connect(m_replayAction, SIGNAL(triggered()), m_pitch, SLOT(replayStart()));
     connect(m_aboutAction, SIGNAL(triggered()), this, SLOT(about()));
     connect(m_pitch, SIGNAL(gameInProgress(bool)), this, SLOT(isPlaying(bool)));
 
     connect(ui.m_newGameBtn, SIGNAL(clicked(bool)), m_newGameAction, SIGNAL(triggered()));
+    connect(ui.m_newGameBtn, SIGNAL(clicked(bool)), this, SLOT(buttonClickedNoise()));
+    connect(ui.m_settingsBtn, SIGNAL(clicked(bool)), m_settingsAction, SIGNAL(triggered()));
+    connect(ui.m_settingsBtn, SIGNAL(clicked(bool)), this, SLOT(buttonClickedNoise()));
     connect(ui.m_quitBtn, SIGNAL(clicked(bool)), m_quitAction, SIGNAL(triggered()));
+    connect(ui.m_quitBtn, SIGNAL(clicked(bool)), this, SLOT(buttonClickedNoise()));
     connect(ui.m_aboutBtn, SIGNAL(clicked(bool)), m_aboutAction, SIGNAL(triggered()));
+    connect(ui.m_aboutBtn, SIGNAL(clicked(bool)), this, SLOT(buttonClickedNoise()));
 
-    setCentralWidget(m_pitch->m_view);
-    m_pitch->m_view->show();
+    connect(m_pitch, SIGNAL(gameInProgress(bool)), this, SLOT(enableActions(bool)));
+}
+
+void MWindow::enableActions(bool gameInProgress)
+{
+    m_newGameAction->setEnabled(!gameInProgress);
+    m_settingsAction->setEnabled(!gameInProgress);
+    m_aboutAction->setEnabled(!gameInProgress);
+}
+
+void MWindow::showSettingsDialog()
+{
+    m_settingsDialog->setVisible(true);
+}
+
+void MWindow::buttonClickedNoise()
+{
+    m_soundEffects->soundEvent(SoundEffects::BallKick);
 }
 
 void MWindow::isPlaying(bool playing)
@@ -59,6 +95,7 @@ void MWindow::createActions()
 
     m_settingsAction = new QAction(QString(tr("Settings")), this);
     addAction(m_settingsAction);
+    ui.m_settingsBtn->addAction(m_settingsAction);
 
     m_aboutAction = new QAction(QString(tr("About")), this);
     addAction(m_aboutAction);
@@ -71,6 +108,7 @@ void MWindow::createActions()
     m_fileMenu = menuBar()->addMenu(tr("&File"));
     m_fileMenu->addAction(m_newGameAction);
     m_fileMenu->addAction(m_settingsAction);
+    m_fileMenu->addAction(m_quitAction);
 
     m_gameMenu = menuBar()->addMenu(tr("&Game"));
     m_gameMenu->addAction(m_replayAction);

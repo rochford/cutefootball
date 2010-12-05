@@ -144,6 +144,11 @@ Game::Game(Pitch* p,
     connect(m_playingState, SIGNAL(entered()), m_pitch, SLOT(gameStarted()));
 }
 
+void Game::setGameLength(int totalGameInMinutes)
+{
+    m_remainingTimeInHalfMs = (totalGameInMinutes * 60 *1000)/2.0;
+}
+
 void Game::decrementGameTime()
 {
     m_remainingTimeInHalfMs = m_remainingTimeInHalfMs - 1000;

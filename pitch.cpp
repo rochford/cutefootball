@@ -17,9 +17,12 @@
 #include "screengraphics.h"
 #include "game.h"
 #include "soundEffects.h"
+#include "settingsdialog.h"
 
 
-Pitch::Pitch(const QRectF& footballGroundRect, QWidget* frame)
+Pitch::Pitch(const QRectF& footballGroundRect,
+             QWidget* frame,
+             settingsDialog* settingsDlg)
   : QObject(),
     m_scene(new QGraphicsScene(footballGroundRect)),
     m_view(new QGraphicsView(m_scene)),
@@ -30,7 +33,8 @@ Pitch::Pitch(const QRectF& footballGroundRect, QWidget* frame)
     m_scoreText(NULL),
     m_centerLine(NULL),
     m_centerCircle(NULL),
-    m_menuFrame(frame)
+    m_menuFrame(frame),
+    m_settingsDlg(settingsDlg)
 {
     m_motionTimer = new QTimer(this);
     m_motionTimer->setInterval(KGameRefreshRate);
@@ -56,6 +60,10 @@ Pitch::Pitch(const QRectF& footballGroundRect, QWidget* frame)
     m_proxyMenuFrame = m_scene->addWidget(m_menuFrame);
     m_proxyMenuFrame->setPos(10,10);
     m_proxyMenuFrame->setZValue(20);
+
+    m_proxySettingsDlg = m_scene->addWidget((QWidget*)m_settingsDlg);
+    m_proxySettingsDlg->setPos(10,10);
+    m_proxySettingsDlg->setZValue(20);
 
     m_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -106,19 +114,19 @@ Player* Pitch::selectNearestPlayer(Team* team)
 
 void Pitch::gameStarted()
 {
-    qDebug() << "Pitch::gameStarted()";
     m_gameInProgress = true;
     m_menuFrame->setVisible(false);
+    m_settingsDlg->setVisible(false);
     m_motionTimer->start();
     emit gameInProgress(true);
 }
 
 void Pitch::gameStopped()
 {
-    qDebug() << "Pitch::gameStopped()";
     m_gameInProgress = false;
     m_motionTimer->stop();
     m_menuFrame->setVisible(true);
+    m_settingsDlg->setVisible(true);
     emit gameInProgress(false);
 }
 
@@ -319,6 +327,8 @@ void Pitch::hasBallCheck()
 
 void Pitch::newGame()
 {
+    m_firstHalfState->setGameLength(m_settingsDlg->gameLengthMinutes());
+    m_secondHalfState->setGameLength(m_settingsDlg->gameLengthMinutes());
     m_menuFrame->setVisible(false);
     m_ball = new Ball(this);
     connect(m_ball, SIGNAL(soundEvent(SoundEffects::GameSound)),

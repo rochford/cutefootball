@@ -73,7 +73,7 @@ void GoalKeeper::advance(int phase)
 
 void GoalKeeper::gkAdvanceWithoutBall()
 {
-    if (!team_->teamHasBall_) {
+//    if (!team_->teamHasBall_) {
         // if the ball enters the penalty area then go for it, otherwise return to goal line
         Team::Direction dir = team_->getDirection();
         MWindow::Action action;
@@ -92,18 +92,18 @@ void GoalKeeper::gkAdvanceWithoutBall()
         } else {
             QPointF ownGoal;
             if ( dir == Team::SouthToNorth )
-                ownGoal = m_pitch->m_bottomGoal->rect().topLeft();
+                ownGoal = m_pitch->m_bottomPenaltyArea->rect().center();
             else
-                ownGoal = m_pitch->m_topGoal->rect().bottomLeft();
+                ownGoal = m_pitch->m_topPenaltyArea->rect().center();
             action = calculateAction(pos(), ownGoal);
         }
         move(action);
-    }
+//    }
 }
 
 void GoalKeeper::gkAdvanceWithBall()
 {
-    move(MWindow::Pass);
+    move(MWindow::Shot);
 }
 
 void GoalKeeper::createMoves()

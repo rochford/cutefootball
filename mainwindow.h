@@ -6,6 +6,8 @@
 #include "ui_mainMenu.h"
 
 class Pitch;
+class SoundEffects;
+class settingsDialog;
 
 class MWindow : public QMainWindow
 {
@@ -64,13 +66,18 @@ protected:
 
 private:
     void createKeyboardActions();
-    void stopKeyEvent();
     void createActions();
+    void createConnections();
+
+    void stopKeyEvent();
 
 private slots:
     void repeatKeyEvent();
     void about();
     void isPlaying(bool playing);
+    void buttonClickedNoise();
+    void showSettingsDialog();
+    void enableActions(bool gameInProgress);
 
 private:
     Pitch *m_pitch;
@@ -89,12 +96,14 @@ private:
     QAction* m_settingsAction;
     QAction* m_aboutAction;
 
+    settingsDialog* m_settingsDialog;
 
     QMenu* m_fileMenu;
     QMenu* m_gameMenu;
     QMenu* m_helpMenu;
 
     QTime m_elapsedTime;
+    SoundEffects* m_soundEffects;
     };
 
 #endif // MAINWINDOW_H
