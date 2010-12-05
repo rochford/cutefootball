@@ -30,6 +30,7 @@ class Referee;
 class Replay;
 class ScreenGraphics;
 class Game;
+class settingsDialog;
 
 class Pitch : public QObject
 {
@@ -44,7 +45,9 @@ public:
         Foul
     };
 
-    Pitch(const QRectF& footballGroundRect, QWidget* frame);
+    Pitch(const QRectF& footballGroundRect,
+          QWidget* frame,
+          settingsDialog* settingsDlg);
     ~Pitch();
 
     void action(MWindow::Action act);
@@ -127,7 +130,9 @@ private:
     bool m_gameInProgress;
 
     QWidget *m_menuFrame;
+    settingsDialog *m_settingsDlg;
     QGraphicsProxyWidget *m_proxyMenuFrame;
+    QGraphicsProxyWidget *m_proxySettingsDlg;
 };
 
 #endif // PITCH_H

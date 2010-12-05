@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     replay.cpp \
     screengraphics.cpp \
     game.cpp \
-    soundeffects.cpp
+    soundeffects.cpp \
+    settingsdialog.cpp
 
 HEADERS  += mainwindow.h \
     pitch.h \
@@ -34,10 +35,12 @@ HEADERS  += mainwindow.h \
     screengraphics.h \
     game.h \
     compileTimeSettings.h \
-    soundeffects.h
+    soundeffects.h \
+    settingsdialog.h
 
 RESOURCES += \
     soccer.qrc
 
 FORMS += \
-    mainMenu.ui
+    mainMenu.ui \
+    settingsdialog.ui

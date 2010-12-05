@@ -63,6 +63,7 @@ public:
     };
     // stops the gameClock
     void stopGameClock();
+    void setGameLength(int totalGameInMinutes);
 
 signals:
     void halfOver();
