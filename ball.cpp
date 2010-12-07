@@ -182,14 +182,13 @@ QVariant Ball::itemChange(GraphicsItemChange change, const QVariant &value)
              // goal kick?
              if ( rect.top() > newPos.y()) {
                  newPos.setX(m_pitch->m_topGoal->rect().x());
-                 newPos.setX(m_pitch->m_topGoal->rect().y() + 20);
+                 newPos.setY(m_pitch->m_topGoal->rect().y() + 20);
                  m_pitch->setPiece(homeTeamTouchedLast ? m_pitch->awayTeam() : m_pitch->homeTeam(), Pitch::GoalKick);
                  return newPos;
              }
              if (rect.bottom() < newPos.y()) {
-                 newPos.setX(m_pitch->m_footballPitch->rect().left());
                  newPos.setX(m_pitch->m_bottomGoal->rect().x());
-                 newPos.setX(m_pitch->m_bottomGoal->rect().y() - 20);
+                 newPos.setY(m_pitch->m_bottomGoal->rect().y() - 20);
                  m_pitch->setPiece(homeTeamTouchedLast ? m_pitch->awayTeam() : m_pitch->homeTeam(), Pitch::GoalKick);
                  return newPos;
              }

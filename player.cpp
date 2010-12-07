@@ -84,6 +84,45 @@ MWindow::Action calculateTackleFromLastAction(MWindow::Action lastAction)
     return action;
 }
 
+
+Player::Player(QString name,
+               bool computerControlled,
+               Pitch *pitch,
+               Team* team,
+               Role role)
+    : QObject(),
+    QGraphicsPixmapItem(NULL,NULL),
+    m_name(name),
+    m_soundFile(QString(m_name + ".wav")),
+    hasBall_(false),
+    team_(team),
+    role_(role),
+    m_pitch(pitch),
+    m_speed(computerControlled ? KPlayerDefaultSpeed - 1 : KPlayerDefaultSpeed),
+    m_step(0),
+    m_outOfAction(NULL)
+{
+
+    m_keyEventTimer = new QTimer(this);
+    m_keyEventTimer->setInterval(KGameRefreshRate);
+
+    if (!computerControlled)
+        setFlag(QGraphicsItem::ItemIsFocusable);
+
+    setToolTip(m_name);
+    m_outOfAction = new QTimer(this);
+    m_outOfAction->setSingleShot(true);
+
+#ifdef REFEREE_USED
+    // referees dont celebrate goals
+    if (role != Player::LastDummy)
+#endif //
+    connect(m_pitch->ball(), SIGNAL(goalScored(bool)), this, SLOT(goalScored(bool)));
+    connect(m_keyEventTimer, SIGNAL(timeout()), this, SLOT(repeatKeyEvent()));
+
+    createKeyboardActions();
+}
+
 void Player::createMoves()
 {
     m_moveDistance.insert(MWindow::North, QPointF(0,-m_speed));
@@ -155,35 +194,6 @@ void Player::createPixmaps()
     setPixmap(m_images[MWindow::North].at(0));
 }
 
-Player::Player(QString name,
-               bool computerControlled,
-               Pitch *pitch,
-               Team* team,
-               Role role)
-    : QObject(),
-    QGraphicsPixmapItem(NULL,NULL),
-    m_name(name),
-    m_soundFile(QString(m_name + ".wav")),
-    hasBall_(false),
-    team_(team),
-    role_(role),
-    m_pitch(pitch),
-    m_humanControlled(false),
-    m_speed(computerControlled ? KPlayerDefaultSpeed - 1 : KPlayerDefaultSpeed),
-    m_step(0),
-    m_outOfAction(NULL)
-{
-    setToolTip(m_name);
-    m_outOfAction = new QTimer(this);
-    m_outOfAction->setSingleShot(true);
-
-#ifdef REFEREE_USED
-    // referees dont celebrate goals
-    if (role != Player::LastDummy)
-#endif //
-        connect(m_pitch->ball(), SIGNAL(goalScored(bool)), this, SLOT(goalScored(bool)));
-}
-
 QRectF Player::boundingRect() const
 {
     return QRectF(-18*KScaleFactor, -18*KScaleFactor,
@@ -195,9 +205,8 @@ void Player::paint(QPainter *painter,
                    QWidget *widget)
 {
     // the player that is focused get red circle around them
-    if (m_humanControlled
-        && !m_pitch->replay()->isReplay()
-        /* && m_pitch->inProgress() */) {
+    if ( hasFocus()
+        && !m_pitch->replay()->isReplay()) {
         QBrush brush(Qt::white, Qt::Dense3Pattern);
         painter->setBrush(brush);
         painter->drawEllipse(QPointF(0,0), 8*KScaleFactor, 8*KScaleFactor);
@@ -504,16 +513,13 @@ void Player::computerAdvanceWithoutBall()
     if (!team_->teamHasBall_) {
         Player *nearestPlayer = m_pitch->selectNearestPlayer(m_pitch->awayTeam());
 
-        if (nearestPlayer == this
-            || role_ == Player::LeftMidfield
-//            || role_ == Player::CentralMidfield
-            || role_ == Player::RightMidfield ) {
+        if (nearestPlayer == this ) {
             // if close to the ball then tackle
 
             MWindow::Action action;
             int dx = abs(pos().x() - m_pitch->ball()->pos().x());
             int dy = abs(pos().y() - m_pitch->ball()->pos().y());
-            if ( m_pitch->ball()->controlledBy() && ( dx < 10) && (dy < 10) )
+            if ( m_pitch->ball()->controlledBy() && ( dx < 5) && (dy < 5) )
                 action = MWindow::Tackle;
             else
                 action = calculateAction(pos(), m_pitch->ball()->pos());
@@ -563,7 +569,7 @@ void Player::computerAdvanceWithBall()
 void Player::automove()
 {
     // automove not applicable to human players or ball holders
-    if (m_humanControlled || hasBall_)
+    if (hasFocus() || hasBall_)
         return;
 
     QPointF desiredPosition(0,0);
@@ -593,3 +599,95 @@ void Player::advance(int phase)
         humanAdvance(phase);
 }
 
+void Player::keyPressEvent(QKeyEvent *event)
+{
+    if (event->isAutoRepeat() || !m_actions.contains(event->key())) {
+        event->ignore();
+        return;
+    }
+    qDebug() << "Player::keyPressEvent";
+
+    MWindow::Action a = m_actions[ event->key() ];
+
+
+    switch ( a )
+    {
+    case MWindow::Button:
+        m_elapsedTime.restart();
+        break;
+    case MWindow::North:
+    case MWindow::NorthEast:
+    case MWindow::East:
+    case MWindow::SouthEast:
+    case MWindow::South:
+    case MWindow::SouthWest:
+    case MWindow::West:
+    case MWindow::NorthWest:
+        // start a timer
+        m_lastAction = a;
+//        m_pitch->action(a);
+        move(a);
+        m_keyEventTimer->start();
+        break;
+    case MWindow::Replay:
+    default:
+        break;
+    }
+
+    event->accept();
+}
+
+void Player::keyReleaseEvent(QKeyEvent *event)
+{
+    if ( event->isAutoRepeat() || !m_actions.contains( event->key() ) ) {
+        event->ignore();
+        return;
+    }
+//    qDebug() << "Player::keyReleaseEvent";
+    MWindow::Action a = m_actions[ event->key() ];
+
+    if ( a != MWindow::Button ) {
+        stopKeyEvent();
+    } else {
+        int elapsed = m_elapsedTime.elapsed();
+        if ( elapsed > KLongPressValue )
+            move(MWindow::ButtonLongPress);
+//            m_pitch->action(MWindow::ButtonLongPress);
+        else
+//            m_pitch->action(MWindow::ButtonShortPress);
+            move(MWindow::ButtonShortPress);
+    }
+
+    event->accept();
+}
+
+
+void Player::repeatKeyEvent()
+{
+ //   qDebug() << "Player::repeatKeyEvent";
+ //   m_pitch->action(m_lastAction);
+   move(m_lastAction);
+   m_keyEventTimer->start();
+}
+
+void Player::stopKeyEvent()
+{
+    qDebug() << "Player::stopKeyEvent";
+    if (m_keyEventTimer->isActive())
+        m_keyEventTimer->stop();
+}
+
+void Player::createKeyboardActions()
+{
+//    qDebug() << "Player::createKeyboardActions";
+    m_actions.insert( Qt::Key_W, MWindow::North );
+    m_actions.insert( Qt::Key_E, MWindow::NorthEast );
+    m_actions.insert( Qt::Key_D, MWindow::East );
+    m_actions.insert( Qt::Key_C, MWindow::SouthEast );
+    m_actions.insert( Qt::Key_X, MWindow::South );
+    m_actions.insert( Qt::Key_Z, MWindow::SouthWest );
+    m_actions.insert( Qt::Key_A, MWindow::West );
+    m_actions.insert( Qt::Key_Q, MWindow::NorthWest );
+
+    m_actions.insert( Qt::Key_S, MWindow::Button );
+}

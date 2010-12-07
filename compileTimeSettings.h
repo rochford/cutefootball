@@ -10,7 +10,7 @@ const int KHalfLength = 60*1000; // seconds
 const QRgb KGoalKeeperColor = QColor(Qt::green).rgb();
 const int KReplayFrameRate = 40.00; // ms
 const int KOneSecondMs = 1000; // ms
-const int KLongPressValue = 800; // Ms
+const int KLongPressValue = 600; // Ms
 const QPen KWhitePaintPen(QBrush(Qt::white),3);
 
 const int KGameRefreshRate = 1000 / 24; // ms
