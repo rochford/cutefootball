@@ -6,8 +6,7 @@
 #include "settingsDialog.h"
 
 MWindow::MWindow(QWidget *parent)
-    : QMainWindow(parent),
-    m_keyEventTimer(NULL)
+    : QMainWindow(parent)
 {
     setWindowTitle(tr("Cute Football"));
 
@@ -24,9 +23,6 @@ MWindow::MWindow(QWidget *parent)
     QRectF footballGround(0,0,400,600);
     m_pitch = new Pitch(footballGround, m_frame, m_settingsDialog);
 
-    m_keyEventTimer = new QTimer(this);
-    m_keyEventTimer->setInterval(KGameRefreshRate);
-
     createActions();
     ui.m_newGameBtn->setText(m_newGameAction->text());
     ui.m_settingsBtn->setText(m_settingsAction->text());
@@ -42,11 +38,11 @@ MWindow::MWindow(QWidget *parent)
 
 void MWindow::createConnections()
 {
-    connect(m_keyEventTimer, SIGNAL(timeout()), this, SLOT(repeatKeyEvent()));
     connect(m_newGameAction, SIGNAL(triggered()), m_pitch, SLOT(newGame()));
     connect(m_settingsAction, SIGNAL(triggered()), this, SLOT(showSettingsDialog()));
     connect(m_replayAction, SIGNAL(triggered()), m_pitch, SLOT(replayStart()));
     connect(m_aboutAction, SIGNAL(triggered()), this, SLOT(about()));
+    connect(m_quitAction, SIGNAL(triggered()), this, SLOT(close()));
     connect(m_pitch, SIGNAL(gameInProgress(bool)), this, SLOT(isPlaying(bool)));
 
     connect(ui.m_newGameBtn, SIGNAL(clicked(bool)), m_newGameAction, SIGNAL(triggered()));
@@ -118,37 +114,14 @@ void MWindow::createActions()
     m_helpMenu->addAction(m_aboutAction);
 }
 
-void MWindow::stopKeyEvent()
-{
-    if (m_keyEventTimer->isActive())
-        m_keyEventTimer->stop();
-}
-
 void MWindow::createKeyboardActions()
 {
-    m_actions.insert( Qt::Key_W, North );
-    m_actions.insert( Qt::Key_E, NorthEast );
-    m_actions.insert( Qt::Key_D, East );
-    m_actions.insert( Qt::Key_C, SouthEast );
-    m_actions.insert( Qt::Key_X, South );
-    m_actions.insert( Qt::Key_Z, SouthWest );
-    m_actions.insert( Qt::Key_A, West );
-    m_actions.insert( Qt::Key_Q, NorthWest );
-
-    m_actions.insert( Qt::Key_S, Button );
-
     m_actions.insert( Qt::Key_R, Replay );
 }
 
 MWindow::~MWindow()
 {
     delete m_pitch;
-}
-
-void MWindow::repeatKeyEvent()
-{
-    m_pitch->action(m_lastAction);
-    m_keyEventTimer->start();
 }
 
 void MWindow::keyPressEvent( QKeyEvent *event )
@@ -167,22 +140,6 @@ void MWindow::keyPressEvent( QKeyEvent *event )
     else {
         switch ( a )
         {
-        case Button:
-            m_elapsedTime.restart();
-            break;
-        case North:
-        case NorthEast:
-        case East:
-        case SouthEast:
-        case South:
-        case SouthWest:
-        case West:
-        case NorthWest:
-            // start a timer
-            m_lastAction = a;
-            m_pitch->action(a);
-            m_keyEventTimer->start();
-            break;
         case Replay:
             m_pitch->replayStart();
             break;
@@ -190,28 +147,6 @@ void MWindow::keyPressEvent( QKeyEvent *event )
             break;
         }
     }
-    event->accept();
-}
-
-void MWindow::keyReleaseEvent( QKeyEvent *event )
-{
-    if ( event->isAutoRepeat() || !m_actions.contains( event->key() ) ) {
-        event->ignore();
-        return;
-    }
-
-    Action a = m_actions[ event->key() ];
-
-    if ( a != Button ) {
-        stopKeyEvent();
-    } else {
-        int elapsed = m_elapsedTime.elapsed();
-        if ( elapsed > KLongPressValue )
-            m_pitch->action(ButtonLongPress);
-        else
-            m_pitch->action(ButtonShortPress);
-    }
-
     event->accept();
 }
 

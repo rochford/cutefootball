@@ -27,7 +27,6 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     m_scene(new QGraphicsScene(footballGroundRect)),
     m_view(new QGraphicsView(m_scene)),
     m_motionTimer(NULL),
-    lastNearestPlayer_(NULL),
     m_bottomGoal(NULL),
     m_topGoal(NULL),
     m_scoreText(NULL),
@@ -86,20 +85,12 @@ Player* Pitch::selectNearestPlayer(Team* team)
     // nobody has ball, select the closest hometeam
     foreach (Player *p, m_players) {
         if (p->team_== team) {
-
             // dont select the goal keeper
             if (p->role_ == Player::GoalKeeper)
                 continue;
 
             if (!nearestPlayer)
                 nearestPlayer = p;
-
-            if (p->hasBall_) {
-                nearestPlayer = p;
-                break;
-            }
-
-            p->setHumanControlled(false);
 
             const int dx = p->pos().x() - m_ball->pos().x();
             const int dy = p->pos().y() - m_ball->pos().y();
@@ -114,7 +105,6 @@ Player* Pitch::selectNearestPlayer(Team* team)
 
 void Pitch::gameStarted()
 {
-    m_gameInProgress = true;
     m_menuFrame->setVisible(false);
     m_settingsDlg->setVisible(false);
     m_motionTimer->start();
@@ -123,7 +113,6 @@ void Pitch::gameStarted()
 
 void Pitch::gameStopped()
 {
-    m_gameInProgress = false;
     m_motionTimer->stop();
     m_menuFrame->setVisible(true);
     m_settingsDlg->setVisible(true);
@@ -182,13 +171,22 @@ void Pitch::setPiece(Team* t, SetPiece s)
                 m_homeTeam->setHasBall(true);
             }
 
-            // find the nearest player to the ball
-            Player* goalKickTaker = selectNearestPlayer(t);
-            if (goalKickTaker) {
-                goalKickTaker->setPos(m_ball->pos());
-                goalKickTaker->hasBall_ = true;
-                m_ball->setControlledBy(goalKickTaker);
-                goalKickTaker->move(MWindow::Pass);
+            Player *taker = NULL;
+            foreach (Player *p, m_players) {
+                if (p->team_== t) {
+
+                    // dont select the goal keeper
+                    if (p->role_ == Player::GoalKeeper)
+                        taker = p;
+                        break;
+                }
+            }
+
+            if (taker) {
+                taker->setPos(m_ball->pos());
+                taker->hasBall_ = true;
+                m_ball->setControlledBy(taker);
+                taker->move(MWindow::Shot);
                 // hide the ball
             //   m_ball->setVisible(false);
             }
@@ -201,27 +199,14 @@ void Pitch::setPiece(Team* t, SetPiece s)
 
 void Pitch::selectNearestPlayer()
 {
+    qDebug() << "Pitch::selectNearestPlayer";
     Player *p = selectNearestPlayer(m_homeTeam);
-    if (p) {
+    if (p) // {
         m_scene->setFocusItem(p);
-        p->setHumanControlled(true);
-        if (lastNearestPlayer_ != p) {
-            lastNearestPlayer_ = p;
-            emit focusedPlayerChanged();
-        }
-    }
-    else if (lastNearestPlayer_) {
-        m_scene->setFocusItem(lastNearestPlayer_);
-        lastNearestPlayer_->setHumanControlled(true);
-    }
 }
 
 Pitch::~Pitch()
 {
-    lastNearestPlayer_ = NULL;
-    delete m_ball;
-    delete m_awayTeam;
-    delete m_homeTeam;
 }
 
 void Pitch::removePlayers()
@@ -350,17 +335,6 @@ void Pitch::newGame()
     m_replay->createAnimationItems();
 
     m_game->start();
-}
-
-void Pitch::action(MWindow::Action action)
-{
-    // action is only applicabled to the human controlled player
-    foreach (Player *p, m_players) {
-        if (p->humanControlled() && (p->team_== m_homeTeam)) {
-            p->move(action);
-            return;
-        }
-    }
 }
 
 void Pitch::createTeamPlayers(Team *team)

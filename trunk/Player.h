@@ -5,6 +5,7 @@
 #include <QGraphicsPixmapItem>
 #include <QStyleOptionGraphicsItem>
 #include <QPainter>
+#include <qmap.h>
 
 #include "team.h"
 #include "pitch.h"
@@ -46,6 +47,8 @@ public:
     virtual void advance(int phase);
     virtual void createPixmaps();
     virtual void createMoves();
+    void keyPressEvent(QKeyEvent *event);
+    void keyReleaseEvent(QKeyEvent *event);
 
     inline int speed() const { return m_speed; }
     bool ballCollisionCheck();
@@ -53,12 +56,6 @@ public:
     bool isManMarked() const;
 
     void move(MWindow::Action action);
-
-    inline void setHumanControlled(bool human)
-    {
-        m_humanControlled = human;
-    }
-    inline bool humanControlled() const { return m_humanControlled; }
     void movePlayer(MWindow::Action action);
     Player* findAvailableTeamMate(QPointF myPos) const;
     void specialAction(MWindow::Action action);
@@ -68,6 +65,9 @@ public:
 
 public slots:
     void goalScored(bool isTopGoal);
+
+private slots:
+    void repeatKeyEvent();
 
 protected:
     QRectF boundingRect() const;
@@ -90,6 +90,9 @@ private:
 
     void automove();
 
+    void stopKeyEvent();
+    void createKeyboardActions();
+
 public:
     bool hasBall_;
     Team* team_;
@@ -99,9 +102,11 @@ public:
 private:
     QString m_name;
     QString m_soundFile;
-    bool m_humanControlled;
     // the previous action of this player
     MWindow::Action m_lastAction;
+    QTime m_elapsedTime;
+    QMap<int,MWindow::Action> m_actions;
+    QTimer *m_keyEventTimer;
 
 public:
     QRectF startPosition_;

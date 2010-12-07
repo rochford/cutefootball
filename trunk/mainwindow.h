@@ -62,17 +62,13 @@ public:
 
 protected:
     virtual void keyPressEvent( QKeyEvent *event );
-    virtual void keyReleaseEvent( QKeyEvent *event );
 
 private:
     void createKeyboardActions();
     void createActions();
     void createConnections();
 
-    void stopKeyEvent();
-
 private slots:
-    void repeatKeyEvent();
     void about();
     void isPlaying(bool playing);
     void buttonClickedNoise();
@@ -83,8 +79,6 @@ private:
     Pitch *m_pitch;
 
     QMap<int,Action> m_actions;
-    QTimer *m_keyEventTimer;
-    Action m_lastAction;
 
     Ui::Frame ui;
 
@@ -102,7 +96,6 @@ private:
     QMenu* m_gameMenu;
     QMenu* m_helpMenu;
 
-    QTime m_elapsedTime;
     SoundEffects* m_soundEffects;
     };
 

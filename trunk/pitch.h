@@ -50,8 +50,6 @@ public:
           settingsDialog* settingsDlg);
     ~Pitch();
 
-    void action(MWindow::Action act);
-
     inline Ball* ball() const { return m_ball; }
 #ifdef REFEREE_USED
     inline Referee* referee() const { return m_referee; }
@@ -68,7 +66,6 @@ public:
     void updateDisplayTime(int timeLeftMs);
     inline QPointF pitchEntrancePoint() const { return m_entrancePoint; }
     inline Replay* replay() const { return m_replay; }
-    inline bool inProgress() const { m_gameInProgress; }
     void playGameSound(SoundEffects::GameSound s);
 
 public slots:
@@ -87,7 +84,6 @@ private slots:
     void removePlayers();
 
 signals:
-   void focusedPlayerChanged();
    void gameInProgress(bool playing);
 
 private:
@@ -120,14 +116,11 @@ private:
 #endif //
     QTimer *m_motionTimer;
 
-    Player *lastNearestPlayer_; // NOT OWNED
-
     QStateMachine *m_game;
     Game *m_firstHalfState;
     Game *m_secondHalfState;
     QFinalState *m_allDone;
     QPointF m_entrancePoint;
-    bool m_gameInProgress;
 
     QWidget *m_menuFrame;
     settingsDialog *m_settingsDlg;
