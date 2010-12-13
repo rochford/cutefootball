@@ -109,6 +109,7 @@ void Ball::moveBall(MWindow::Action action, int speed)
 
 void Ball::kickBall(MWindow::Action action, QPointF destination)
 {
+    setControlledByNobody();
     // calculate the difference between present and destination
     QPointF tmp = pos();
 

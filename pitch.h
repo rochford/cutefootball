@@ -15,6 +15,7 @@
 
 #include <QStateMachine>
 
+
 class QGraphicsEllipseItem;
 class QGraphicsLineItem;
 class QGraphicsView;
@@ -119,6 +120,8 @@ private:
     QStateMachine *m_game;
     Game *m_firstHalfState;
     Game *m_secondHalfState;
+    Game *m_extraTimeFirstHalfState;
+    Game *m_extraTimeSecondHalfState;
     QFinalState *m_allDone;
     QPointF m_entrancePoint;
 

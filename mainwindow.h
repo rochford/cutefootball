@@ -82,7 +82,7 @@ private:
 
     Ui::Frame ui;
 
-    QFrame* m_frame;
+    QFrame* m_mainMenuFrame;
 
     QAction* m_newGameAction;
     QAction* m_quitAction;

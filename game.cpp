@@ -103,7 +103,7 @@ void GoalScoredState::playFrame(int frame)
 
 Game::Game(Pitch* p,
      QString stateName,
-     bool isFirstHalf)
+     bool isFirstHalf, bool isExtraTime)
     : QState(),
     m_pitch(p),
     m_stateName(stateName),

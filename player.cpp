@@ -32,6 +32,7 @@ MWindow::Action calculateAction(QPointF source,
 {
     const int dx = source.x() - destination.x();
     const int dy = source.y() - destination.y();
+
     if (dx > 0 && dy == 0)
         return MWindow::West;
     else if (dx >= 0 && dy < 0)
@@ -168,27 +169,27 @@ void Player::pixmapInsert(MWindow::Action a, QString s1, QString s2, QString s3,
 
 void Player::createPixmaps()
 {
-    pixmapInsert(MWindow::North, "playerNorth.PNG", "playerNorth1.PNG", "playerNorth2.PNG", team_->color.rgb());
-    pixmapInsert(MWindow::NorthEast, "playerNorthEast.PNG", "playerNorthEast1.PNG", "playerNorthEast2.PNG", team_->color.rgb());
-    pixmapInsert(MWindow::East, "playerEast.PNG", "playerEast1.PNG", "playerEast2.PNG", team_->color.rgb());
-    pixmapInsert(MWindow::SouthEast, "playerSouthEast.PNG", "playerSouthEast1.PNG", "playerSouthEast2.PNG", team_->color.rgb());
-    pixmapInsert(MWindow::South, "playerSouth.PNG", "playerSouth1.PNG", "playerSouth2.PNG", team_->color.rgb());
-    pixmapInsert(MWindow::SouthWest, "playerSouthWest.PNG", "playerSouthWest1.PNG", "playerSouthWest2.PNG", team_->color.rgb());
-    pixmapInsert(MWindow::West, "playerWest.PNG", "playerWest1.PNG", "playerWest2.PNG", team_->color.rgb());
-    pixmapInsert(MWindow::NorthWest, "playerNorthWest.PNG", "playerNorthWest1.PNG", "playerNorthWest2.PNG", team_->color.rgb());
+    pixmapInsert(MWindow::North, "pN.PNG", "pN1.PNG", "pN2.PNG", team_->color.rgb());
+    pixmapInsert(MWindow::NorthEast, "pNE.PNG", "pNE1.PNG", "pNE2.PNG", team_->color.rgb());
+    pixmapInsert(MWindow::East, "pE.PNG", "pE1.PNG", "pE2.PNG", team_->color.rgb());
+    pixmapInsert(MWindow::SouthEast, "pSE.PNG", "pSE1.PNG", "pSE2.PNG", team_->color.rgb());
+    pixmapInsert(MWindow::South, "pS.PNG", "pS1.PNG", "pS2.PNG", team_->color.rgb());
+    pixmapInsert(MWindow::SouthWest, "pSWest.PNG", "pSW1.PNG", "pSW2.PNG", team_->color.rgb());
+    pixmapInsert(MWindow::West, "pW.PNG", "pW1.PNG", "pW2.PNG", team_->color.rgb());
+    pixmapInsert(MWindow::NorthWest, "pNW.PNG", "pNW1.PNG", "pNW2.PNG", team_->color.rgb());
 
-    pixmapInsert(MWindow::ThrownIn, "playerNorthWest.PNG", "playerNorthWest1.PNG", "playerNorthWest2.PNG", team_->color.rgb()); // TODO XXX TIM
+    pixmapInsert(MWindow::ThrownIn, "pNW.PNG", "pNW1.PNG", "pNW2.PNG", team_->color.rgb()); // TODO XXX TIM
 
-    pixmapInsert(MWindow::TackleNorth, "tackleNorth.PNG", "tackleNorth.PNG", "tackleNorth.PNG", team_->color.rgb()); // TODO XXX TIM
-    pixmapInsert(MWindow::TackleNorthEast, "tackleNorthEast.PNG", "tackleNorthEast.PNG", "tackleNorthEast.PNG", team_->color.rgb()); // TODO XXX TIM
-    pixmapInsert(MWindow::TackleEast, "tackleEast.PNG", "tackleEast.PNG", "tackleEast.PNG", team_->color.rgb()); // TODO XXX TIM
-    pixmapInsert(MWindow::TackleSouthEast, "tackleSouthEast.PNG", "tackleSouthEast.PNG", "tackleSouthEast.PNG", team_->color.rgb()); // TODO XXX TIM
-    pixmapInsert(MWindow::TackleSouth, "tackleSouth.PNG", "tackleSouth.PNG", "tackleSouth.PNG", team_->color.rgb()); // TODO XXX TIM
-    pixmapInsert(MWindow::TackleSouthWest, "tackleSouthWest.PNG", "tackleSouthWest.PNG", "tackleSouthWest.PNG", team_->color.rgb()); // TODO XXX TIM
-    pixmapInsert(MWindow::TackleWest, "tackleWest.PNG", "tackleWest.PNG", "tackleWest.PNG", team_->color.rgb()); // TODO XXX TIM
-    pixmapInsert(MWindow::TackleNorthWest, "tackleNorthWest.PNG", "tackleNorthWest.PNG", "tackleNorthWest.PNG", team_->color.rgb()); // TODO XXX TIM
+    pixmapInsert(MWindow::TackleNorth, "tackleN.PNG", "tackleN.PNG", "tackleN.PNG", team_->color.rgb()); // TODO XXX TIM
+    pixmapInsert(MWindow::TackleNorthEast, "tackleNE.PNG", "tackleNE.PNG", "tackleNE.PNG", team_->color.rgb()); // TODO XXX TIM
+    pixmapInsert(MWindow::TackleEast, "tackleE.PNG", "tackleE.PNG", "tackleE.PNG", team_->color.rgb()); // TODO XXX TIM
+    pixmapInsert(MWindow::TackleSouthEast, "tackleSE.PNG", "tackleSE.PNG", "tackleSE.PNG", team_->color.rgb()); // TODO XXX TIM
+    pixmapInsert(MWindow::TackleSouth, "tackleS.PNG", "tackleS.PNG", "tackleS.PNG", team_->color.rgb()); // TODO XXX TIM
+    pixmapInsert(MWindow::TackleSouthWest, "tackleSW.PNG", "tackleSW.PNG", "tackleSouthWest.PNG", team_->color.rgb()); // TODO XXX TIM
+    pixmapInsert(MWindow::TackleWest, "tackleW.PNG", "tackleW.PNG", "tackleW.PNG", team_->color.rgb()); // TODO XXX TIM
+    pixmapInsert(MWindow::TackleNorthWest, "tackleNW.PNG", "tackleNW.PNG", "tackleNW.PNG", team_->color.rgb()); // TODO XXX TIM
 
-    pixmapInsert(MWindow::GoalCelebration, "playerNorth.PNG", "playerNorth1.PNG", "playerNorth2.PNG", team_->color.rgb()); // TODO XXX TIM
+    pixmapInsert(MWindow::GoalCelebration, "pN.PNG", "pN1.PNG", "pN2.PNG", team_->color.rgb()); // TODO XXX TIM
 
     // set default pixmap
     setPixmap(m_images[MWindow::North].at(0));
@@ -372,7 +373,6 @@ void Player::specialAction(MWindow::Action action)
             || withinShootingDistance()) {
              m_pitch->ball()->kickBall(MWindow::Shot, shotDest);
              hasBall_ = false;
-             m_pitch->ball()->setControlledBy(NULL);
         } else {
             Player *p = findAvailableTeamMate(pos());
             if (p) {
@@ -382,7 +382,6 @@ void Player::specialAction(MWindow::Action action)
                 m_pitch->ball()->kickBall(MWindow::Pass, passDest);
             }
             hasBall_ = false;
-            m_pitch->ball()->setControlledBy(NULL);
         }
     } else {
         // perform tackle here...
@@ -558,7 +557,7 @@ void Player::computerAdvanceWithBall()
         if (withinShootingDistance()) {
             move(MWindow::Shot);
             hasBall_ = false;
-            m_pitch->ball()->setControlledBy(NULL);
+            m_pitch->ball()->setControlledByNobody();
         }
         else
             move(act);
