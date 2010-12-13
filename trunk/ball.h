@@ -33,6 +33,7 @@ public:
     void kickBall(MWindow::Action action, QPointF destination);
     inline Player* controlledBy() { return controlledBy_; }
     inline void setControlledBy(Player* p) { controlledBy_ = p; }
+    inline void setControlledByNobody() { controlledBy_ = NULL; }
 
 signals:
     void goalScored(bool topGoal);

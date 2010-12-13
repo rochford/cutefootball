@@ -14,30 +14,30 @@ GoalKeeper::GoalKeeper(QString name,
 
 void GoalKeeper::createPixmaps()
 {
-    pixmapInsert(MWindow::North, "playerNorth.PNG", "playerNorth1.PNG", "playerNorth2.PNG", KGoalKeeperColor);
-    pixmapInsert(MWindow::NorthEast, "playerNorthEast.PNG", "playerNorthEast1.PNG", "playerNorthEast2.PNG", KGoalKeeperColor);
-    pixmapInsert(MWindow::East, "playerEast.PNG", "playerEast1.PNG", "playerEast2.PNG", KGoalKeeperColor);
-    pixmapInsert(MWindow::SouthEast, "playerSouthEast.PNG", "playerSouthEast1.PNG", "playerSouthEast2.PNG", KGoalKeeperColor);
-    pixmapInsert(MWindow::South, "playerSouth.PNG", "playerSouth1.PNG", "playerSouth2.PNG", KGoalKeeperColor);
-    pixmapInsert(MWindow::SouthWest, "playerSouthWest.PNG", "playerSouthWest1.PNG", "playerSouthWest2.PNG", KGoalKeeperColor);
-    pixmapInsert(MWindow::West, "playerWest.PNG", "playerWest1.PNG", "playerWest2.PNG", KGoalKeeperColor);
-    pixmapInsert(MWindow::NorthWest, "playerNorthWest.PNG", "playerNorthWest1.PNG", "playerNorthWest2.PNG", KGoalKeeperColor);
+    pixmapInsert(MWindow::North, "pN.PNG", "pN1.PNG", "pN2.PNG", KGoalKeeperColor);
+    pixmapInsert(MWindow::NorthEast, "pNE.PNG", "pNE1.PNG", "pNE2.PNG", KGoalKeeperColor);
+    pixmapInsert(MWindow::East, "pE.PNG", "pE1.PNG", "pE2.PNG", KGoalKeeperColor);
+    pixmapInsert(MWindow::SouthEast, "pSE.PNG", "pSE1.PNG", "pSE2.PNG", KGoalKeeperColor);
+    pixmapInsert(MWindow::South, "pS.PNG", "pS1.PNG", "pS2.PNG", KGoalKeeperColor);
+    pixmapInsert(MWindow::SouthWest, "pSW.PNG", "pSW1.PNG", "pSW2.PNG", KGoalKeeperColor);
+    pixmapInsert(MWindow::West, "pW.PNG", "pW1.PNG", "pW2.PNG", KGoalKeeperColor);
+    pixmapInsert(MWindow::NorthWest, "pNW.PNG", "pNW1.PNG", "pNW2.PNG", KGoalKeeperColor);
 
-    pixmapInsert(MWindow::ThrownIn, "playerNorthWest.PNG", "playerNorthWest1.PNG", "playerNorthWest2.PNG", KGoalKeeperColor); // TODO XXX TIM
+    pixmapInsert(MWindow::ThrownIn, "pNW.PNG", "pNW1.PNG", "pNW2.PNG", KGoalKeeperColor); // TODO XXX TIM
 
-    pixmapInsert(MWindow::TackleNorth, "tackleNorth.PNG", "tackleNorth.PNG", "tackleNorth.PNG", KGoalKeeperColor); // TODO XXX TIM
-    pixmapInsert(MWindow::TackleNorthEast, "tackleNorthEast.PNG", "tackleNorthEast.PNG", "tackleNorthEast.PNG", KGoalKeeperColor); // TODO XXX TIM
-    pixmapInsert(MWindow::TackleEast, "tackleEast.PNG", "tackleEast.PNG", "tackleEast.PNG", KGoalKeeperColor); // TODO XXX TIM
-    pixmapInsert(MWindow::TackleSouthEast, "tackleSouthEast.PNG", "tackleSouthEast.PNG", "tackleSouthEast.PNG", KGoalKeeperColor); // TODO XXX TIM
-    pixmapInsert(MWindow::TackleSouth, "tackleSouth.PNG", "tackleSouth.PNG", "tackleSouth.PNG", KGoalKeeperColor); // TODO XXX TIM
-    pixmapInsert(MWindow::TackleSouthWest, "tackleSouthWest.PNG", "tackleSouthWest.PNG", "tackleSouthWest.PNG", KGoalKeeperColor); // TODO XXX TIM
-    pixmapInsert(MWindow::TackleWest, "tackleWest.PNG", "tackleWest.PNG", "tackleWest.PNG", KGoalKeeperColor); // TODO XXX TIM
-    pixmapInsert(MWindow::TackleNorthWest, "tackleNorthWest.PNG", "tackleNorthWest.PNG", "tackleNorthWest.PNG", KGoalKeeperColor); // TODO XXX TIM
+    pixmapInsert(MWindow::TackleNorth, "tackleN.PNG", "tackleN.PNG", "tackleN.PNG", KGoalKeeperColor); // TODO XXX TIM
+    pixmapInsert(MWindow::TackleNorthEast, "tackleNE.PNG", "tackleNE.PNG", "tackleNE.PNG", KGoalKeeperColor); // TODO XXX TIM
+    pixmapInsert(MWindow::TackleEast, "tackleE.PNG", "tackleE.PNG", "tackleE.PNG", KGoalKeeperColor); // TODO XXX TIM
+    pixmapInsert(MWindow::TackleSouthEast, "tackleSE.PNG", "tackleSE.PNG", "tackleSE.PNG", KGoalKeeperColor); // TODO XXX TIM
+    pixmapInsert(MWindow::TackleSouth, "tackleS.PNG", "tackleS.PNG", "tackleS.PNG", KGoalKeeperColor); // TODO XXX TIM
+    pixmapInsert(MWindow::TackleSouthWest, "tackleSW.PNG", "tackleSW.PNG", "tackleSW.PNG", KGoalKeeperColor); // TODO XXX TIM
+    pixmapInsert(MWindow::TackleWest, "tackleW.PNG", "tackleW.PNG", "tackleW.PNG", KGoalKeeperColor); // TODO XXX TIM
+    pixmapInsert(MWindow::TackleNorthWest, "tackleNW.PNG", "tackleNW.PNG", "tackleNW.PNG", KGoalKeeperColor); // TODO XXX TIM
 
-    pixmapInsert(MWindow::GoalCelebration, "playerNorth.PNG", "playerNorth1.PNG", "playerNorth2.PNG", KGoalKeeperColor); // TODO XXX TIM
+    pixmapInsert(MWindow::GoalCelebration, "pN.PNG", "pN1.PNG", "pN2.PNG", KGoalKeeperColor); // TODO XXX TIM
 
-    pixmapInsert(MWindow::DiveLeft, "playerNorth.PNG", "playerNorth1.PNG", "playerNorth2.PNG", KGoalKeeperColor); // TODO
-    pixmapInsert(MWindow::DiveRight, "playerNorth.PNG", "playerNorth1.PNG", "playerNorth2.PNG", KGoalKeeperColor); // TODO
+    pixmapInsert(MWindow::DiveLeft, "pN.PNG", "pN1.PNG", "pN2.PNG", KGoalKeeperColor); // TODO
+    pixmapInsert(MWindow::DiveRight, "pN.PNG", "pN1.PNG", "pN2.PNG", KGoalKeeperColor); // TODO
 
     // set default pixmap
     setPixmap(m_images[MWindow::North].at(0));

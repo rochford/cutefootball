@@ -39,8 +39,10 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     m_motionTimer->setInterval(KGameRefreshRate);
 
     m_game = new QStateMachine(this);
-    m_firstHalfState = new Game(this, "first half", true);
-    m_secondHalfState = new Game(this, "second half", false);
+    m_firstHalfState = new Game(this, "first half", true, false);
+    m_secondHalfState = new Game(this, "second half", false, false);
+    m_extraTimeFirstHalfState = new Game(this, "extra time first half", true, true);
+    m_extraTimeSecondHalfState = new Game(this, "extra time second half", false, true);
     m_allDone = new QFinalState();
 
     m_game->addState(m_firstHalfState);
@@ -50,8 +52,8 @@ Pitch::Pitch(const QRectF& footballGroundRect,
 
     m_firstHalfState->addTransition(m_firstHalfState, SIGNAL(finished()),m_secondHalfState);
     m_secondHalfState->addTransition(m_secondHalfState, SIGNAL(finished()), m_allDone);
-    connect(m_secondHalfState, SIGNAL(finished()), this, SLOT(removePlayers()));
-    connect(m_secondHalfState, SIGNAL(exited()), this, SLOT(gameStopped()));
+    connect(m_allDone, SIGNAL(entered()), this, SLOT(removePlayers()));
+    connect(m_allDone, SIGNAL(entered()), this, SLOT(gameStopped()));
 
     m_replay = new Replay(this, this);
 
@@ -77,6 +79,7 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     connect(m_motionTimer, SIGNAL(timeout()), this, SLOT(hasBallCheck()));
     connect(m_motionTimer, SIGNAL(timeout()), this, SLOT(selectNearestPlayer()));
 }
+
 
 Player* Pitch::selectNearestPlayer(Team* team)
 {

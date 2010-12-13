@@ -53,7 +53,7 @@ class Game : public QState
 {
     Q_OBJECT
 public:
-    Game(Pitch *p, QString stateName, bool isFirstHalf);
+    Game(Pitch *p, QString stateName, bool isFirstHalf, bool isExtraTime);
     ~Game() { m_1second->stop(); }
 
     enum GameState {

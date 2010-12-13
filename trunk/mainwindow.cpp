@@ -12,16 +12,16 @@ MWindow::MWindow(QWidget *parent)
 
     m_soundEffects = new SoundEffects(this);
 
-    m_frame = new QFrame();
-    ui.setupUi(m_frame);
-    m_frame->setVisible(true);
-    m_frame->setEnabled(true);
+    m_mainMenuFrame = new QFrame();
+    ui.setupUi(m_mainMenuFrame);
+    m_mainMenuFrame->setVisible(true);
+    m_mainMenuFrame->setEnabled(true);
 
     m_settingsDialog = new settingsDialog(this);
     m_settingsDialog->setVisible(false);
 
     QRectF footballGround(0,0,400,600);
-    m_pitch = new Pitch(footballGround, m_frame, m_settingsDialog);
+    m_pitch = new Pitch(footballGround, m_mainMenuFrame, m_settingsDialog);
 
     createActions();
     ui.m_newGameBtn->setText(m_newGameAction->text());
