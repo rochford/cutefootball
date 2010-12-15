@@ -43,4 +43,5 @@ RESOURCES += \
 
 FORMS += \
     mainMenu.ui \
-    settingsdialog.ui
+    settingsdialog.ui \
+    mainwindow.ui

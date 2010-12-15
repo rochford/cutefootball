@@ -25,7 +25,7 @@ const int KPlayerDefaultSpeed = 3;
 const qreal KScaleFactor = 1.6;
 
 const QColor KHomeTeamColor = Qt::blue;
-const QColor KAwayTeamColor = Qt::yellow;
+const QColor KAwayTeamColor = Qt::red;
 const QColor KCuteFootballMaskColor(103,123,9);
 
 #endif // COMPILETIMESETTINGS_H
