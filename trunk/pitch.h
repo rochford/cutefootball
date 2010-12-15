@@ -47,6 +47,8 @@ public:
     };
 
     Pitch(const QRectF& footballGroundRect,
+          QGraphicsView* view,
+          SoundEffects* se,
           QWidget* frame,
           settingsDialog* settingsDlg);
     ~Pitch();
@@ -90,11 +92,12 @@ signals:
 private:
     void createTeamPlayers(Team *team);
     void layoutPitch();
+    void createTeams();
 
 public:
     QList<Player*> m_players;
     QGraphicsScene *m_scene;
-    QGraphicsView *m_view;
+    QGraphicsView *m_view;  // NOT OWNED
     QGraphicsRectItem *m_footballPitch;
 
     QGraphicsRectItem *m_bottomGoal;
@@ -105,8 +108,9 @@ public:
     QGraphicsEllipseItem *m_centerCircle;
     ScreenGraphics *m_scoreText;
     QRectF m_pitchArea[KRow][KColumn];
-    SoundEffects* m_soundEffects;
+    SoundEffects* m_soundEffects;  // NOT OWNED
 private:
+    QList<Team*> m_teams;
     Replay* m_replay;
 
     Team *m_homeTeam;

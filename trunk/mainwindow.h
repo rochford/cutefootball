@@ -4,6 +4,7 @@
 #include <QtGui>
 #include <qmap.h>
 #include "ui_mainMenu.h"
+#include "ui_mainwindow.h"
 
 class Pitch;
 class SoundEffects;
@@ -65,7 +66,6 @@ protected:
 
 private:
     void createKeyboardActions();
-    void createActions();
     void createConnections();
 
 private slots:
@@ -77,26 +77,15 @@ private slots:
 
 private:
     Pitch *m_pitch;
+    settingsDialog* m_settingsDialog;
+    SoundEffects* m_soundEffects;
 
     QMap<int,Action> m_actions;
 
     Ui::Frame ui;
-
     QFrame* m_mainMenuFrame;
 
-    QAction* m_newGameAction;
-    QAction* m_quitAction;
-    QAction* m_replayAction;
-    QAction* m_settingsAction;
-    QAction* m_aboutAction;
-
-    settingsDialog* m_settingsDialog;
-
-    QMenu* m_fileMenu;
-    QMenu* m_gameMenu;
-    QMenu* m_helpMenu;
-
-    SoundEffects* m_soundEffects;
+    Ui::MainWindow uiMainWindow;
     };
 
 #endif // MAINWINDOW_H

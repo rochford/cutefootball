@@ -21,11 +21,13 @@
 
 
 Pitch::Pitch(const QRectF& footballGroundRect,
+             QGraphicsView* view,
+             SoundEffects* se,
              QWidget* frame,
              settingsDialog* settingsDlg)
   : QObject(),
     m_scene(new QGraphicsScene(footballGroundRect)),
-    m_view(new QGraphicsView(m_scene)),
+    m_view(view),
     m_motionTimer(NULL),
     m_bottomGoal(NULL),
     m_topGoal(NULL),
@@ -33,8 +35,12 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     m_centerLine(NULL),
     m_centerCircle(NULL),
     m_menuFrame(frame),
-    m_settingsDlg(settingsDlg)
+    m_settingsDlg(settingsDlg),
+    m_soundEffects(se)
 {
+    m_view->setScene(m_scene);
+    m_scene->setBackgroundBrush(QPixmap(QString(":/images/pitch2.GIF")));
+
     m_motionTimer = new QTimer(this);
     m_motionTimer->setInterval(KGameRefreshRate);
 
@@ -57,30 +63,23 @@ Pitch::Pitch(const QRectF& footballGroundRect,
 
     m_replay = new Replay(this, this);
 
-    m_scene->setBackgroundBrush(QPixmap(QString(":/images/pitch2.GIF")));
     m_proxyMenuFrame = m_scene->addWidget(m_menuFrame);
-    m_proxyMenuFrame->setPos(10,10);
     m_proxyMenuFrame->setZValue(20);
 
     m_proxySettingsDlg = m_scene->addWidget((QWidget*)m_settingsDlg);
-    m_proxySettingsDlg->setPos(10,10);
     m_proxySettingsDlg->setZValue(20);
-
-    m_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    m_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    m_view->setAutoFillBackground(false);
 
     layoutPitch();
 
-    m_soundEffects = new SoundEffects(this);
     m_soundEffects->soundEnabled(m_settingsDlg->soundEnabled());
+
+    createTeams();
 
     connect(m_motionTimer, SIGNAL(timeout()), m_scene, SLOT(advance()));
     connect(m_motionTimer, SIGNAL(timeout()), m_scene, SLOT(update()));
     connect(m_motionTimer, SIGNAL(timeout()), this, SLOT(hasBallCheck()));
     connect(m_motionTimer, SIGNAL(timeout()), this, SLOT(selectNearestPlayer()));
     connect(m_settingsDlg, SIGNAL(soundChanged(bool)), m_soundEffects, SLOT(soundEnabled(bool)));
-
 }
 
 
@@ -207,12 +206,17 @@ void Pitch::selectNearestPlayer()
 {
     qDebug() << "Pitch::selectNearestPlayer";
     Player *p = selectNearestPlayer(m_homeTeam);
-    if (p) // {
+    if (p)
         m_scene->setFocusItem(p);
 }
 
 Pitch::~Pitch()
 {
+    delete m_replay;
+    if (m_motionTimer->isActive())
+        m_motionTimer->stop();
+    delete m_motionTimer;
+    delete m_game;
 }
 
 void Pitch::removePlayers()
@@ -316,6 +320,41 @@ void Pitch::hasBallCheck()
     }
 }
 
+void Pitch::createTeams()
+{
+    for (int i = 0; i < 5; ++i) {
+        QColor col;
+        QString teamName;
+        switch(i) {
+        case 0:
+            teamName = "United";
+            col = KHomeTeamColor;
+            break;
+        case 1:
+            teamName = "City";
+            col = KAwayTeamColor;
+            break;
+        case 2:
+            teamName = "Dynamo";
+            col = QColor(Qt::blue);
+            break;
+        case 3:
+            teamName = "Stars";
+            col = QColor(Qt::green);
+            break;
+        case 4:
+            teamName = "Town";
+            col = QColor(Qt::black);
+            break;
+        default:
+            break;
+        }
+
+        Team* t = new Team(teamName, col);
+        m_teams.append(t);
+    }
+}
+
 void Pitch::newGame()
 {
     m_firstHalfState->setGameLength(m_settingsDlg->gameLengthMinutes());
@@ -326,8 +365,8 @@ void Pitch::newGame()
             m_soundEffects, SLOT(soundEvent(SoundEffects::GameSound)));
 
 
-    m_homeTeam = new Team(QString("HOME"), KHomeTeamColor);
-    m_awayTeam = new Team(QString("AWAY"), KAwayTeamColor);
+    m_homeTeam = m_teams.at(3);
+    m_awayTeam = m_teams.at(4);
 
     createTeamPlayers(m_homeTeam);
     connect(m_ball, SIGNAL(goalScored(bool)), m_homeTeam, SLOT(goalScored(bool)));
@@ -350,7 +389,7 @@ void Pitch::createTeamPlayers(Team *team)
             << "jack" << "kai" << "luke" << "matt" << "nigel" << "oscar" << "pete"<< "roger" << "steve" << "tom" << "walt";
     bool isHomeTeam(false);
 
-    if (team->name() == QString("HOME"))
+    if (team == m_homeTeam)
         isHomeTeam = true;
 
     QPointF startPos(0,m_scene->sceneRect().height()/2);

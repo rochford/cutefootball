@@ -32,5 +32,8 @@
         <file>images/red/tackleSE.PNG</file>
         <file>images/red/tackleSW.PNG</file>
         <file>images/ref.png</file>
+        <file>images/red/pNW.PNG</file>
+        <file>images/red/pNW1.PNG</file>
+        <file>images/red/pNW2.PNG</file>
     </qresource>
 </RCC>
