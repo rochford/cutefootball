@@ -7,6 +7,7 @@ settingsDialog::settingsDialog(QWidget *parent) :
 {
     ui->setupUi(this);
     m_gameLengthMinutes = ui->spinBox->value();
+    m_soundEnabled = ui->checkBox->isChecked();
     connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(updateSettings()));
 }
 
@@ -18,5 +19,7 @@ settingsDialog::~settingsDialog()
 void settingsDialog::updateSettings()
 {
     m_gameLengthMinutes = ui->spinBox->value();
+    m_soundEnabled = ui->checkBox->isChecked();
+    emit soundChanged(m_soundEnabled);
 }
 

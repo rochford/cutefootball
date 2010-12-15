@@ -17,11 +17,15 @@ SoundEffects::~SoundEffects()
 
 void SoundEffects::soundEvent(QString fileName)
 {
-    QSound::play(fileName);
+    if (m_soundEnabled)
+        QSound::play(fileName);
 }
 
 void SoundEffects::soundEvent(GameSound e)
 {
+    if (!m_soundEnabled)
+        return;
+
     switch(e) {
     case BallKick:
         m_ballKick->play();

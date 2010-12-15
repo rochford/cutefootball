@@ -246,7 +246,7 @@ void Player::movePlayer(MWindow::Action action)
 {
     // if the ball is not owned then take ownership
     if (ballCollisionCheck() && !m_pitch->ball()->controlledBy()) {
-        SoundEffects::soundEvent(m_soundFile);
+        m_pitch->m_soundEffects->soundEvent(m_soundFile);
         hasBall_ = true;
         m_pitch->ball()->setControlledBy(this);
     } else if (!ballCollisionCheck())
