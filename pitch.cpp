@@ -73,11 +73,14 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     layoutPitch();
 
     m_soundEffects = new SoundEffects(this);
+    m_soundEffects->soundEnabled(m_settingsDlg->soundEnabled());
 
     connect(m_motionTimer, SIGNAL(timeout()), m_scene, SLOT(advance()));
     connect(m_motionTimer, SIGNAL(timeout()), m_scene, SLOT(update()));
     connect(m_motionTimer, SIGNAL(timeout()), this, SLOT(hasBallCheck()));
     connect(m_motionTimer, SIGNAL(timeout()), this, SLOT(selectNearestPlayer()));
+    connect(m_settingsDlg, SIGNAL(soundChanged(bool)), m_soundEffects, SLOT(soundEnabled(bool)));
+
 }
 
 
