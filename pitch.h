@@ -15,7 +15,6 @@
 
 #include <QStateMachine>
 
-
 class QGraphicsEllipseItem;
 class QGraphicsLineItem;
 class QGraphicsView;
@@ -25,10 +24,9 @@ class QTimeLine;
 class Ball;
 class Player;
 class Team;
-#ifdef REFEREE_USED
-class Referee;
-#endif //
+#ifdef REPLAY_FEATURE
 class Replay;
+#endif // REPLAY_FEATURE
 class ScreenGraphics;
 class Game;
 class settingsDialog;
@@ -54,21 +52,18 @@ public:
     ~Pitch();
 
     inline Ball* ball() const { return m_ball; }
-#ifdef REFEREE_USED
-    inline Referee* referee() const { return m_referee; }
-#endif //
     Player* selectNearestPlayer(Team* team);
 
     void setPlayerStartPositions(Team *team);
-    void setPlayerDefendPositions(Team *team);
-    void setPlayerAttackPositions(Team *team);
     void setPiece(Team* t, SetPiece s);
 
     inline Team* homeTeam() const { return m_homeTeam; }
     inline Team* awayTeam() const { return m_awayTeam; }
     void updateDisplayTime(int timeLeftMs);
     inline QPointF pitchEntrancePoint() const { return m_entrancePoint; }
+#ifdef REPLAY_FEATURE
     inline Replay* replay() const { return m_replay; }
+#endif // REPLAY_FEATURE
     void playGameSound(SoundEffects::GameSound s);
 
 public slots:
@@ -76,10 +71,10 @@ public slots:
 
     void hasBallCheck();
     void selectNearestPlayer();
-
+#ifdef REPLAY_FEATURE
     void replayStart();
     void replayStop();
-
+#endif // REPLAY_FEATURE
     void gameStarted();
     void gameStopped();
 
@@ -111,14 +106,12 @@ public:
     SoundEffects* m_soundEffects;  // NOT OWNED
 private:
     QList<Team*> m_teams;
+#ifdef REPLAY_FEATURE
     Replay* m_replay;
-
+#endif // REPLAY_FEATURE
     Team *m_homeTeam;
     Team *m_awayTeam;
     Ball *m_ball;
-#ifdef REFEREE_USED
-    Referee *m_referee;
-#endif //
     QTimer *m_motionTimer;
 
     QStateMachine *m_game;

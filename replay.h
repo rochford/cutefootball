@@ -1,6 +1,8 @@
 #ifndef REPLAY_H
 #define REPLAY_H
 
+#ifdef REPLAY_FEATURE
+
 #include <QObject>
 #include <QList>
 #include <QTimeLine>
@@ -33,5 +35,7 @@ public:
     qreal frameCounter_;
     QList<QGraphicsItemAnimation*> animationItems;
 };
+
+#endif // REPLAY_FEATURE
 
 #endif // REPLAY_H

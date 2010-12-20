@@ -48,10 +48,10 @@ public:
         ThrownIn,
 
         GoalCelebration,
-
+#ifdef REPLAY_FEATURE
         // replay last n seconds
         Replay,
-
+#endif // REPLAY_FEATURE
         YellowCard,
         RedCard,
 
@@ -61,27 +61,33 @@ public:
 
         DoNothing };
 
+#ifdef REPLAY_FEATURE
 protected:
     virtual void keyPressEvent( QKeyEvent *event );
+#endif // REPLAY_FEATURE
 
 private:
+#ifdef REPLAY_FEATURE
     void createKeyboardActions();
+#endif // REPLAY_FEATURE
     void createConnections();
 
 private slots:
     void about();
-    void isPlaying(bool playing);
     void buttonClickedNoise();
     void showSettingsDialog();
     void enableActions(bool gameInProgress);
+#ifdef REPLAY_FEATURE
+    void isPlaying(bool playing);
+#endif // REPLAY_FEATURE
 
 private:
     Pitch *m_pitch;
     settingsDialog* m_settingsDialog;
     SoundEffects* m_soundEffects;
-
+#ifdef REPLAY_FEATURE
     QMap<int,Action> m_actions;
-
+#endif // REPLAY_FEATURE
     Ui::Frame ui;
     QFrame* m_mainMenuFrame;
 

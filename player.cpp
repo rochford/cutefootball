@@ -207,15 +207,15 @@ void Player::paint(QPainter *painter,
 {
     // the player that is focused get red circle around them
     if ( hasFocus()
-        && !m_pitch->replay()->isReplay()) {
+#ifdef REPLAY_FEATURE
+        && !m_pitch->replay()->isReplay()
+#endif // REPLAY_FEATURE
+            )
+    {
         QBrush brush(Qt::white, Qt::Dense3Pattern);
         painter->setBrush(brush);
         painter->drawEllipse(QPointF(0,0), 8*KScaleFactor, 8*KScaleFactor);
     }
-#ifdef SHOW_PLAYER_NAMES_AS_TOOLTIPS
-    if ( ( hasBall_ || humanControlled_ ) && !pitch_->replay()->isReplay() )
-        painter->drawText(QPointF(12,12), toolTip());
-#endif //
 
     QSize pixmapSize = pixmap().size();
     pixmapSize.scale(QSizeF(36*KScaleFactor,36*KScaleFactor).toSize(), Qt::KeepAspectRatio);
@@ -571,13 +571,7 @@ void Player::automove()
     if (hasFocus() || hasBall_)
         return;
 
-    QPointF desiredPosition(0,0);
-    if ( team_->state_ == Team::Attacking )
-        desiredPosition = attackPosition_.center();
-    else
-        desiredPosition = defencePosition_.center();
-
-    MWindow::Action act = calculateAction(pos(), desiredPosition);
+    MWindow::Action act = calculateAction(pos(), startPosition_.center());
     move(act);
 }
 
@@ -604,7 +598,6 @@ void Player::keyPressEvent(QKeyEvent *event)
         event->ignore();
         return;
     }
-    qDebug() << "Player::keyPressEvent";
 
     MWindow::Action a = m_actions[ event->key() ];
 
@@ -628,7 +621,9 @@ void Player::keyPressEvent(QKeyEvent *event)
         move(a);
         m_keyEventTimer->start();
         break;
+#ifdef REPLAY_FEATURE
     case MWindow::Replay:
+#endif // REPLAY_FEATURE
     default:
         break;
     }
@@ -642,7 +637,6 @@ void Player::keyReleaseEvent(QKeyEvent *event)
         event->ignore();
         return;
     }
-//    qDebug() << "Player::keyReleaseEvent";
     MWindow::Action a = m_actions[ event->key() ];
 
     if ( a != MWindow::Button ) {
@@ -663,7 +657,6 @@ void Player::keyReleaseEvent(QKeyEvent *event)
 
 void Player::repeatKeyEvent()
 {
- //   qDebug() << "Player::repeatKeyEvent";
  //   m_pitch->action(m_lastAction);
    move(m_lastAction);
    m_keyEventTimer->start();
@@ -671,14 +664,12 @@ void Player::repeatKeyEvent()
 
 void Player::stopKeyEvent()
 {
-    qDebug() << "Player::stopKeyEvent";
     if (m_keyEventTimer->isActive())
         m_keyEventTimer->stop();
 }
 
 void Player::createKeyboardActions()
 {
-//    qDebug() << "Player::createKeyboardActions";
     m_actions.insert( Qt::Key_W, MWindow::North );
     m_actions.insert( Qt::Key_E, MWindow::NorthEast );
     m_actions.insert( Qt::Key_D, MWindow::East );

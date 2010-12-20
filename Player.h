@@ -110,8 +110,6 @@ private:
 
 public:
     QRectF startPosition_;
-    QRectF defencePosition_;
-    QRectF attackPosition_;
 
 protected:
     QMap<MWindow::Action,PixmapList> m_images;

@@ -3,7 +3,6 @@
 Team::Team(QString teamName, QColor teamColor)
     : name_(teamName),
     color(teamColor),
-    state_(Attacking),
     teamHasBall_(false),
     goals_(0)
 {
@@ -12,7 +11,6 @@ Team::Team(QString teamName, QColor teamColor)
 void Team::setHasBall(bool hasBall)
 {
     teamHasBall_ = hasBall;
-    hasBall ? state_ = Attacking : state_ = Defending;
 }
 
 void Team::goalScored(bool isNorthGoal)
