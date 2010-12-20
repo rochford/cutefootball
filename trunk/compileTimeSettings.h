@@ -2,10 +2,7 @@
 #define COMPILETIMESETTINGS_H
 
 #include <QtGui>
-
-// #define REFEREE_USED
-// #define SHOW_PLAYER_NAMES_AS_TOOLTIPS
-
+// #define REPLAY_FEATURE
 const int KHalfLength = 60*1000; // seconds
 const QRgb KGoalKeeperColor = QColor(Qt::green).rgb();
 const int KReplayFrameRate = 40.00; // ms

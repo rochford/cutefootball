@@ -2,7 +2,6 @@
 #include "pitch.h"
 #include "ball.h"
 #include "Player.h"
-#include "referee.h"
 #include "replay.h"
 #include "screengraphics.h"
 
@@ -163,7 +162,9 @@ void Game::startPlayersLeavePitchAnim()
     m_timeLineLeavePitch->start();
     m_pitch->ball()->setVisible(false);
     m_1second->stop();
+#ifdef REPLAY_FEATURE
     m_pitch->replay()->replaySnapShotTimer_->stop();
+#endif // REPLAY_FEATURE
 }
 
 void Game::stopGameClock()
@@ -179,12 +180,11 @@ void Game::kickOff()
     // playing state transition to goalScoreState is not working
     m_playingState->addTransition(m_pitch->ball(), SIGNAL(goalScored(bool)), m_goalScoredState);
 
-#ifdef REFEREE_USED
-    m_pitch->scene->addItem(m_pitch->referee());
-#endif //
 
     m_1second->start();
+#ifdef REPLAY_FEATURE
     m_pitch->replay()->replaySnapShotTimer_->start();
+#endif // REPLAY_FEATURE
 }
 
 void Game::playFrame(int frame)
@@ -254,23 +254,15 @@ void Game::onEntry(QEvent *event)
     if (m_isFirstHalf) {
         m_pitch->homeTeam()->setDirection(Team::NorthToSouth);
         m_pitch->setPlayerStartPositions(m_pitch->homeTeam());
-        m_pitch->setPlayerAttackPositions(m_pitch->homeTeam());
-        m_pitch->setPlayerDefendPositions(m_pitch->homeTeam());
 
         m_pitch->awayTeam()->setDirection(Team::SouthToNorth);
         m_pitch->setPlayerStartPositions(m_pitch->awayTeam());
-        m_pitch->setPlayerAttackPositions(m_pitch->awayTeam());
-        m_pitch->setPlayerDefendPositions(m_pitch->awayTeam());
     } else {
         m_pitch->awayTeam()->setDirection(Team::NorthToSouth);
         m_pitch->setPlayerStartPositions(m_pitch->awayTeam());
-        m_pitch->setPlayerAttackPositions(m_pitch->awayTeam());
-        m_pitch->setPlayerDefendPositions(m_pitch->awayTeam());
 
         m_pitch->homeTeam()->setDirection(Team::SouthToNorth);
         m_pitch->setPlayerStartPositions(m_pitch->homeTeam());
-        m_pitch->setPlayerAttackPositions(m_pitch->homeTeam());
-        m_pitch->setPlayerDefendPositions(m_pitch->homeTeam());
     }
     createPlayerAnimationItems(TakePositions);
     m_timeLineTakePositions->start();

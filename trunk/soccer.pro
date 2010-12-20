@@ -16,7 +16,6 @@ SOURCES += main.cpp\
     player.cpp \
     ball.cpp \
     team.cpp \
-    referee.cpp \
     goalkeeper.cpp \
     replay.cpp \
     screengraphics.cpp \
@@ -29,7 +28,6 @@ HEADERS  += mainwindow.h \
     Player.h \
     ball.h \
     team.h \
-    referee.h \
     goalkeeper.h \
     replay.h \
     screengraphics.h \

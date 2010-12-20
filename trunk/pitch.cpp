@@ -11,9 +11,10 @@
 #include "ball.h"
 #include "Player.h"
 #include "team.h"
-#include "referee.h"
 #include "goalkeeper.h"
+#ifdef REPLAY_FEATURE
 #include "replay.h"
+#endif // REPLAY_FEATURE
 #include "screengraphics.h"
 #include "game.h"
 #include "soundEffects.h"
@@ -61,8 +62,9 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     connect(m_allDone, SIGNAL(entered()), this, SLOT(removePlayers()));
     connect(m_allDone, SIGNAL(entered()), this, SLOT(gameStopped()));
 
+#ifdef REPLAY_FEATURE
     m_replay = new Replay(this, this);
-
+#endif // REPLAY_FEATURE
     m_proxyMenuFrame = m_scene->addWidget(m_menuFrame);
     m_proxyMenuFrame->setZValue(20);
 
@@ -204,7 +206,6 @@ void Pitch::setPiece(Team* t, SetPiece s)
 
 void Pitch::selectNearestPlayer()
 {
-    qDebug() << "Pitch::selectNearestPlayer";
     Player *p = selectNearestPlayer(m_homeTeam);
     if (p)
         m_scene->setFocusItem(p);
@@ -212,7 +213,9 @@ void Pitch::selectNearestPlayer()
 
 Pitch::~Pitch()
 {
+#ifdef REPLAY_FEATURE
     delete m_replay;
+#endif // REPLAY_FEATURE
     if (m_motionTimer->isActive())
         m_motionTimer->stop();
     delete m_motionTimer;
@@ -322,35 +325,14 @@ void Pitch::hasBallCheck()
 
 void Pitch::createTeams()
 {
-    for (int i = 0; i < 5; ++i) {
-        QColor col;
-        QString teamName;
-        switch(i) {
-        case 0:
-            teamName = "United";
-            col = KHomeTeamColor;
-            break;
-        case 1:
-            teamName = "City";
-            col = KAwayTeamColor;
-            break;
-        case 2:
-            teamName = "Dynamo";
-            col = QColor(Qt::blue);
-            break;
-        case 3:
-            teamName = "Stars";
-            col = QColor(Qt::green);
-            break;
-        case 4:
-            teamName = "Town";
-            col = QColor(Qt::black);
-            break;
-        default:
-            break;
-        }
-
-        Team* t = new Team(teamName, col);
+    QStringList teamNames;
+    teamNames << "United" << "City" << "Dynamo" << "Galaxy"
+                 << "Town" << "Athletic" << "Real" << "Sporting";
+    QList<Qt::GlobalColor> colours;
+    colours << Qt::darkBlue << Qt::magenta << Qt::darkRed << Qt::yellow
+            << Qt::black << Qt::gray << Qt::white << Qt::darkYellow;
+    for (int i = 0; i < 8; ++i) {
+        Team* t = new Team(teamNames.at(i), colours.at(i));
         m_teams.append(t);
     }
 }
@@ -361,24 +343,19 @@ void Pitch::newGame()
     m_secondHalfState->setGameLength(m_settingsDlg->gameLengthMinutes());
     m_menuFrame->setVisible(false);
     m_ball = new Ball(this);
-    connect(m_ball, SIGNAL(soundEvent(SoundEffects::GameSound)),
-            m_soundEffects, SLOT(soundEvent(SoundEffects::GameSound)));
 
-
-    m_homeTeam = m_teams.at(3);
-    m_awayTeam = m_teams.at(4);
+    m_homeTeam = m_teams.at(0);
+    m_awayTeam = m_teams.at(1);
 
     createTeamPlayers(m_homeTeam);
-    connect(m_ball, SIGNAL(goalScored(bool)), m_homeTeam, SLOT(goalScored(bool)));
     createTeamPlayers(m_awayTeam);
     connect(m_ball, SIGNAL(goalScored(bool)), m_awayTeam, SLOT(goalScored(bool)));
-#ifdef REFEREE_USED
-    m_referee = new Referee(this);
-    m_referee->createPixmaps();
-    m_referee->createMoves();
-#endif // REFEREE_USED
+    connect(m_ball, SIGNAL(goalScored(bool)), m_homeTeam, SLOT(goalScored(bool)));
+    connect(m_ball, SIGNAL(soundEvent(SoundEffects::GameSound)),
+            m_soundEffects, SLOT(soundEvent(SoundEffects::GameSound)));
+#ifdef REPLAY_FEATURE
     m_replay->createAnimationItems();
-
+#endif // REPLAY_FEATURE
     m_game->start();
 }
 
@@ -455,81 +432,7 @@ void Pitch::setPlayerStartPositions(Team *team)
         }
     }
 }
-
-void Pitch::setPlayerDefendPositions(Team *team)
-{
-    bool nToS(false);
-    if (team->getDirection() == Team::NorthToSouth)
-        nToS = true;
-
-    QMap<int,QRectF> defendPositions;
-    defendPositions.insert(Player::GoalKeeper,
-                         m_pitchArea[nToS ? 0 : 7][2]);
-    defendPositions.insert(Player::LeftDefence,
-                         m_pitchArea[nToS ? 1 : 6][0]);
-    defendPositions.insert(Player::LeftCentralDefence,
-                         m_pitchArea[nToS ? 1 : 6][1]);
-    defendPositions.insert(Player::RightCentralDefence,
-                         m_pitchArea[nToS ? 1 : 6][3]);
-    defendPositions.insert(Player::RightDefence,
-                         m_pitchArea[nToS ? 1 : 6][4]);
-    defendPositions.insert(Player::LeftMidfield,
-                         m_pitchArea[nToS ? 2 : 5][0]);
-    defendPositions.insert(Player::CentralMidfield,
-                         m_pitchArea[nToS ? 1 : 6][2]);
-    defendPositions.insert(Player::RightMidfield,
-                         m_pitchArea[nToS ? 2 : 5][4]);
-    defendPositions.insert(Player::LeftAttack,
-                         m_pitchArea[nToS ? 3 : 4][0]);
-    defendPositions.insert(Player::CentralAttack,
-                         m_pitchArea[nToS ? 3 : 4][2]);
-    defendPositions.insert(Player::RightAttack,
-                         m_pitchArea[nToS ? 3 : 4][4]);
-
-    // action is only applicabled to the human controlled player
-    foreach (Player *p, m_players) {
-        if (p->team_ == team)
-            p->defencePosition_ = defendPositions[p->role_];
-    }
-}
-
-void Pitch::setPlayerAttackPositions(Team *team)
-{
-    bool nToS(false);
-    if (team->getDirection() == Team::NorthToSouth)
-        nToS = true;
-
-    QMap<int,QRectF> attackPositions;
-    attackPositions.insert(Player::GoalKeeper,
-                         m_pitchArea[nToS ? 0 : 7][2]);
-    attackPositions.insert(Player::LeftDefence,
-                         m_pitchArea[nToS ? 2 : 6][0]);
-    attackPositions.insert(Player::LeftCentralDefence,
-                         m_pitchArea[nToS ? 2 : 6][1]);
-    attackPositions.insert(Player::RightCentralDefence,
-                         m_pitchArea[nToS ? 2 : 6][3]);
-    attackPositions.insert(Player::RightDefence,
-                         m_pitchArea[nToS ? 2 : 6][4]);
-    attackPositions.insert(Player::LeftMidfield,
-                         m_pitchArea[nToS ? 4 : 2][0]);
-    attackPositions.insert(Player::CentralMidfield,
-                         m_pitchArea[nToS ? 5 : 3][2]);
-    attackPositions.insert(Player::RightMidfield,
-                         m_pitchArea[nToS ? 4 : 2][4]);
-    attackPositions.insert(Player::LeftAttack,
-                         m_pitchArea[nToS ? 6 : 1][0]);
-    attackPositions.insert(Player::CentralAttack,
-                         m_pitchArea[nToS ? 6 : 1][2]);
-    attackPositions.insert(Player::RightAttack,
-                         m_pitchArea[nToS ? 6 : 1][4]);
-
-    // action is only applicabled to the human controlled player
-    foreach (Player *p, m_players) {
-        if (p->team_ == team)
-            p->attackPosition_ = attackPositions[p->role_];
-    }
-}
-
+#ifdef REPLAY_FEATURE
 void Pitch::replayStart()
 {
     m_scene->setBackgroundBrush(QBrush(QColor(Qt::gray)));
@@ -550,7 +453,7 @@ void Pitch::replayStop()
     m_scoreText->setMode(ScreenGraphics::NormalMode);
     m_motionTimer->start();
 }
-
+#endif // REPLAY_FEATURE
 void Pitch::playGameSound(SoundEffects::GameSound s)
 {
     m_soundEffects->soundEvent(s);

@@ -1,3 +1,5 @@
+#ifdef REPLAY_FEATURE
+
 #include <QGraphicsItemAnimation>
 
 #include <QDebug>
@@ -97,3 +99,4 @@ void Replay::createAnimationItems()
         animationItems.append(anim);
     }
 }
+#endif // REPLAY_FEATURE

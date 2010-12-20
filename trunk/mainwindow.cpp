@@ -2,7 +2,9 @@
 
 #include "mainwindow.h"
 #include "pitch.h"
+#ifdef REPLAY_FEATURE
 #include "replay.h"
+#endif // REPLAY_FEATURE
 #include "settingsDialog.h"
 
 MWindow::MWindow(QWidget *parent)
@@ -37,7 +39,9 @@ MWindow::MWindow(QWidget *parent)
     ui.m_aboutBtn->addAction(uiMainWindow.actionAbout);
     ui.m_quitBtn->addAction(uiMainWindow.actionQuit);
 
+#ifdef REPLAY_FEATURE
     createKeyboardActions();
+#endif // REPLAY_FEATURE
 
     createConnections();
 
@@ -48,10 +52,12 @@ void MWindow::createConnections()
 {
     connect(uiMainWindow.actionNew_Game, SIGNAL(triggered()), m_pitch, SLOT(newGame()));
     connect(uiMainWindow.actionSettings, SIGNAL(triggered()), this, SLOT(showSettingsDialog()));
+#ifdef REPLAY_FEATURE
     connect(uiMainWindow.actionReplay, SIGNAL(triggered()), m_pitch, SLOT(replayStart()));
+    connect(m_pitch, SIGNAL(gameInProgress(bool)), this, SLOT(isPlaying(bool)));
+#endif // REPLAY_FEATURE
     connect(uiMainWindow.actionAbout, SIGNAL(triggered()), this, SLOT(about()));
     connect(uiMainWindow.actionQuit, SIGNAL(triggered()), this, SLOT(close()));
-    connect(m_pitch, SIGNAL(gameInProgress(bool)), this, SLOT(isPlaying(bool)));
 
     connect(ui.m_newGameBtn, SIGNAL(clicked(bool)), this, SLOT(buttonClickedNoise()));
     connect(ui.m_newGameBtn, SIGNAL(clicked(bool)), uiMainWindow.actionNew_Game, SIGNAL(triggered()));
@@ -82,16 +88,13 @@ void MWindow::buttonClickedNoise()
     m_soundEffects->soundEvent(SoundEffects::BallKick);
 }
 
+#ifdef REPLAY_FEATURE
 void MWindow::isPlaying(bool playing)
 {
     uiMainWindow.menuGame->setEnabled(playing);
     uiMainWindow.actionReplay->setEnabled(playing);
 }
-
-void MWindow::createKeyboardActions()
-{
-    m_actions.insert( Qt::Key_R, Replay );
-}
+#endif // REPLAY_FEATURE
 
 MWindow::~MWindow()
 {
@@ -99,6 +102,18 @@ MWindow::~MWindow()
     delete m_soundEffects;
     delete m_mainMenuFrame;
     delete m_settingsDialog;
+}
+
+void MWindow::about()
+{
+    QMessageBox::about(this, tr("About Cute Football"),
+                       tr("Cute Football is written by XXX"));
+}
+
+#ifdef REPLAY_FEATURE
+void MWindow::createKeyboardActions()
+{
+    m_actions.insert( Qt::Key_R, Replay );
 }
 
 void MWindow::keyPressEvent( QKeyEvent *event )
@@ -126,9 +141,5 @@ void MWindow::keyPressEvent( QKeyEvent *event )
     }
     event->accept();
 }
+#endif // REPLAY_FEATURE
 
-void MWindow::about()
-{
-    QMessageBox::about(this, tr("About Cute Football"),
-                       tr("Cute Football is written by XXX"));
-}
