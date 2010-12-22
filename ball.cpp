@@ -15,7 +15,8 @@ Ball::Ball(Pitch* pitch)
     step_(0),
     animation_(NULL),
     animationTimer_(NULL),
-    controlledBy_(NULL)
+    controlledBy_(NULL),
+    m_lastPlayerToTouchBall(NULL)
 {
     QBitmap bitmap = pixmap().createMaskFromColor(KCuteFootballMaskColor);
     pixmap().setMask(bitmap);

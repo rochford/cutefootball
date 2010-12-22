@@ -36,14 +36,12 @@ public:
         Pass,
         Tackle,
 
-        TackleWest,
-        TackleNorthWest,
-        TackleNorthEast,
-        TackleSouthEast,
-        TackleSouthWest,
-        TackleEast,
-        TackleNorth,
-        TackleSouth,
+        // Due to loosing a tackle
+        FallenOver,
+
+        // tackle, but got player not ball
+        // TODO is this required
+        Foul,
 
 #ifndef INDOOR
          ThrownIn,

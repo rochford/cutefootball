@@ -25,15 +25,9 @@ void GoalKeeper::createPixmaps()
 #ifndef INDOOR
     pixmapInsert(MWindow::ThrownIn, "pNW.PNG", "pNW1.PNG", "pNW2.PNG", KGoalKeeperColor); // TODO XXX TIM
 #endif //
-    pixmapInsert(MWindow::TackleNorth, "tackleN.PNG", "tackleN.PNG", "tackleN.PNG", KGoalKeeperColor); // TODO XXX TIM
-    pixmapInsert(MWindow::TackleNorthEast, "tackleNE.PNG", "tackleNE.PNG", "tackleNE.PNG", KGoalKeeperColor); // TODO XXX TIM
-    pixmapInsert(MWindow::TackleEast, "tackleE.PNG", "tackleE.PNG", "tackleE.PNG", KGoalKeeperColor); // TODO XXX TIM
-    pixmapInsert(MWindow::TackleSouthEast, "tackleSE.PNG", "tackleSE.PNG", "tackleSE.PNG", KGoalKeeperColor); // TODO XXX TIM
-    pixmapInsert(MWindow::TackleSouth, "tackleS.PNG", "tackleS.PNG", "tackleS.PNG", KGoalKeeperColor); // TODO XXX TIM
-    pixmapInsert(MWindow::TackleSouthWest, "tackleSW.PNG", "tackleSW.PNG", "tackleSW.PNG", KGoalKeeperColor); // TODO XXX TIM
-    pixmapInsert(MWindow::TackleWest, "tackleW.PNG", "tackleW.PNG", "tackleW.PNG", KGoalKeeperColor); // TODO XXX TIM
-    pixmapInsert(MWindow::TackleNorthWest, "tackleNW.PNG", "tackleNW.PNG", "tackleNW.PNG", KGoalKeeperColor); // TODO XXX TIM
 
+    pixmapInsert(MWindow::Tackle, "tackleN.PNG", "tackleN.PNG", "tackleN.PNG", KGoalKeeperColor); // TODO XXX TIM
+    pixmapInsert(MWindow::FallenOver, "pNW.PNG", "pNW1.PNG", "pNW2.PNG", KGoalKeeperColor); // TODO XXX TIM
     // set default pixmap
     setPixmap(m_images[MWindow::North].at(0));
 }
@@ -60,7 +54,7 @@ void GoalKeeper::advance(int phase)
         return;
     if (m_outOfAction->isActive())
         return;
-    if ( hasBall_ )
+    if ( m_hasBall )
          gkAdvanceWithBall();
     else
         gkAdvanceWithoutBall();

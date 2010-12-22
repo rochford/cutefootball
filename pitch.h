@@ -128,6 +128,8 @@ private:
     settingsDialog *m_settingsDlg;
     QGraphicsProxyWidget *m_proxyMenuFrame;
     QGraphicsProxyWidget *m_proxySettingsDlg;
+
+
 };
 
 #endif // PITCH_H

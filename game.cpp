@@ -15,11 +15,11 @@ GoalScoredState::GoalScoredState(Game *g, Pitch *p)
     m_allDone = new QFinalState(this);
     setInitialState(m_celebrate);
 
-    m_timeLineCelebrate = new QTimeLine(1000*6, this);
+    m_timeLineCelebrate = new QTimeLine(1000*3, this);
     m_timeLineCelebrate->setCurveShape(QTimeLine::LinearCurve);
     m_timeLineCelebrate->setFrameRange(0, 100);
 
-    m_timeLineReturnStartPositions = new QTimeLine(1000*6, this);
+    m_timeLineReturnStartPositions = new QTimeLine(1000*3, this);
     m_timeLineReturnStartPositions->setCurveShape(QTimeLine::LinearCurve);
     m_timeLineReturnStartPositions->setFrameRange(0, 100);
 
@@ -40,6 +40,7 @@ void GoalScoredState::createTakePositionAnimation()
 
 void GoalScoredState::onEntry(QEvent *event)
 {
+    m_pitch->ball()->setVisible(false);
     m_game->stopGameClock();
     createPlayerAnimationItems(Celebrate);
     m_timeLineCelebrate->start();
@@ -112,11 +113,11 @@ Game::Game(Pitch* p,
     m_1second = new QTimer(this);
     m_1second->setInterval(1000);
 
-    m_timeLineTakePositions = new QTimeLine(1000*6, this);
+    m_timeLineTakePositions = new QTimeLine(1000*3, this);
     m_timeLineTakePositions->setCurveShape(QTimeLine::LinearCurve);
     m_timeLineTakePositions->setFrameRange(0, 100);
 
-    m_timeLineLeavePitch = new QTimeLine(1000*6, this);
+    m_timeLineLeavePitch = new QTimeLine(1000*3, this);
     m_timeLineLeavePitch->setCurveShape(QTimeLine::LinearCurve);
     m_timeLineLeavePitch->setFrameRange(0, 100);
 

@@ -51,33 +51,33 @@ MWindow::Action calculateAction(QPointF source,
         return MWindow::South;
 }
 
-MWindow::Action calculateTackleFromLastAction(MWindow::Action lastAction)
+int calculateTackleRotationFromLastAction(MWindow::Action lastAction)
 {
-    MWindow::Action action;
+    int action;
     switch(lastAction) {
     case MWindow::North:
-        action = MWindow::TackleNorth;
+        action = 0;
         break;
     case MWindow::NorthEast:
-        action = MWindow::TackleNorthEast;
+        action = 45;
         break;
     case MWindow::East:
-        action = MWindow::TackleEast;
+        action = 90;
         break;
     case MWindow::SouthEast:
-        action = MWindow::TackleSouthEast;
+        action = 135;
         break;
     case MWindow::South:
-        action = MWindow::TackleSouth;
+        action = 180;
         break;
     case MWindow::SouthWest:
-        action = MWindow::TackleSouthWest;
+        action = 225;
         break;
     case MWindow::West:
-        action = MWindow::TackleWest;
+        action = 270;
         break;
     case MWindow::NorthWest:
-        action = MWindow::TackleNorthWest;
+        action = 315;
         break;
     default:
         break;
@@ -95,7 +95,7 @@ Player::Player(QString name,
     QGraphicsPixmapItem(NULL,NULL),
     m_name(name),
     m_soundFile(QString(m_name + ".wav")),
-    hasBall_(false),
+    m_hasBall(false),
     team_(team),
     role_(role),
     m_pitch(pitch),
@@ -114,14 +114,11 @@ Player::Player(QString name,
     m_outOfAction = new QTimer(this);
     m_outOfAction->setSingleShot(true);
 
-#ifdef REFEREE_USED
-    // referees dont celebrate goals
-    if (role != Player::LastDummy)
-#endif //
-    connect(m_pitch->ball(), SIGNAL(goalScored(bool)), this, SLOT(goalScored(bool)));
     connect(m_keyEventTimer, SIGNAL(timeout()), this, SLOT(repeatKeyEvent()));
 
     createKeyboardActions();
+    setRotation(0);
+    setTransformOriginPoint(boundingRect().center());
 }
 
 void Player::createMoves()
@@ -180,15 +177,8 @@ void Player::createPixmaps()
 #ifndef INDOOR
     pixmapInsert(MWindow::ThrownIn, "pNW.PNG", "pNW1.PNG", "pNW2.PNG", team_->color.rgb()); // TODO XXX TIM
 #endif //
-    pixmapInsert(MWindow::TackleNorth, "tackleN.PNG", "tackleN.PNG", "tackleN.PNG", team_->color.rgb()); // TODO XXX TIM
-    pixmapInsert(MWindow::TackleNorthEast, "tackleNE.PNG", "tackleNE.PNG", "tackleNE.PNG", team_->color.rgb()); // TODO XXX TIM
-    pixmapInsert(MWindow::TackleEast, "tackleE.PNG", "tackleE.PNG", "tackleE.PNG", team_->color.rgb()); // TODO XXX TIM
-    pixmapInsert(MWindow::TackleSouthEast, "tackleSE.PNG", "tackleSE.PNG", "tackleSE.PNG", team_->color.rgb()); // TODO XXX TIM
-    pixmapInsert(MWindow::TackleSouth, "tackleS.PNG", "tackleS.PNG", "tackleS.PNG", team_->color.rgb()); // TODO XXX TIM
-    pixmapInsert(MWindow::TackleSouthWest, "tackleSW.PNG", "tackleSW.PNG", "tackleSouthWest.PNG", team_->color.rgb()); // TODO XXX TIM
-    pixmapInsert(MWindow::TackleWest, "tackleW.PNG", "tackleW.PNG", "tackleW.PNG", team_->color.rgb()); // TODO XXX TIM
-    pixmapInsert(MWindow::TackleNorthWest, "tackleNW.PNG", "tackleNW.PNG", "tackleNW.PNG", team_->color.rgb()); // TODO XXX TIM
-
+    pixmapInsert(MWindow::Tackle, "tackleN.PNG", "tackleN.PNG", "tackleN.PNG", team_->color.rgb());
+    pixmapInsert(MWindow::FallenOver, "pTackled.PNG", "pTackled.PNG", "pTackled.PNG", team_->color.rgb()); // TODO XXX TIM
     // set default pixmap
     setPixmap(m_images[MWindow::North].at(0));
 }
@@ -222,16 +212,6 @@ void Player::paint(QPainter *painter,
     painter->drawPixmap(boundingRect().toRect(), pixmap());
 }
 
-void Player::goalScored(bool isTopGoal)
-{
-    if (isTopGoal && (team_->getDirection() == Team::SouthToNorth))
-        // celebrate goal
-        ;
-    else if (!isTopGoal && (team_->getDirection() == Team::NorthToSouth))
-        // celebrate goal
-        ;
-}
-
 QPainterPath Player::shape() const
 {
     QPainterPath path;
@@ -245,12 +225,12 @@ void Player::movePlayer(MWindow::Action action)
     // if the ball is not owned then take ownership
     if (ballCollisionCheck() && !m_pitch->ball()->controlledBy()) {
         m_pitch->m_soundEffects->soundEvent(m_soundFile);
-        hasBall_ = true;
+        m_hasBall = true;
         m_pitch->ball()->setControlledBy(this);
     } else if (!ballCollisionCheck())
-        hasBall_ = false;
+        m_hasBall = false;
 
-    if (hasBall_)
+    if (m_hasBall)
         m_pitch->ball()->moveBall(action, m_speed);
 
     m_step++;
@@ -266,6 +246,7 @@ void Player::movePlayer(MWindow::Action action)
     case MWindow::West:
     case MWindow::NorthWest:
         setPixmap(m_images[action].at(m_step % 3));
+        setRotation(0);
         moveBy(m_moveDistance[action].x(), m_moveDistance[action].y());
         m_lastAction = action;
         break;
@@ -290,17 +271,46 @@ bool Player::withinShootingDistance() const
 void Player::specialAction(MWindow::Action action)
 {
     switch (action) {
-#ifndef INDOOR
-    case MWindow::ThrownIn:
-        {
+        case MWindow::Tackle:
+            {
+            // perform tackle here...
+            int rotation = calculateTackleRotationFromLastAction(m_lastAction);
+
+            setPixmap(m_images[MWindow::Tackle].at(0));
+            setRotation(rotation);
+            moveBy(m_moveDistance[m_lastAction].x(), m_moveDistance[m_lastAction].y());
+            m_outOfAction->stop();
+            m_outOfAction->start(500);
+
+            // if tackle causes contact with the ball then transfer the ownership
+            if (ballCollisionCheck()) {
+                Player *p = m_pitch->ball()->controlledBy();
+                if (p)
+                    p->isTackled(true);
+                m_pitch->ball()->setControlledBy(this);
+                m_hasBall = true;
+            }
+            return;
+            }
+    case MWindow::FallenOver:
+            {
             setPixmap(m_images[action].at(0));
+            // start an out of action timer
+            m_outOfAction->stop();
             m_outOfAction->start(1500);
-            m_lastAction = action;
-        }
-        return;
+            return;
+            }
+#ifndef INDOOR
+        case MWindow::ThrownIn:
+            {
+                setPixmap(m_images[action].at(0));
+                m_outOfAction->start(1500);
+                m_lastAction = action;
+            }
+            return;
 #endif //
-    default:
-        break;
+        default:
+            break;
     }
 
     const QPointF p(pos());
@@ -354,12 +364,12 @@ void Player::specialAction(MWindow::Action action)
 
     // if not have ball then must be tackle
     // if have ball then either shot or pass
-    if (hasBall_) {
+    if (m_hasBall) {
         if (action == MWindow::ButtonLongPress
             || action == MWindow::Shot
             || withinShootingDistance()) {
              m_pitch->ball()->kickBall(MWindow::Shot, shotDest);
-             hasBall_ = false;
+             m_hasBall = false;
         } else {
             Player *p = findAvailableTeamMate(pos());
             if (p) {
@@ -368,50 +378,39 @@ void Player::specialAction(MWindow::Action action)
                 // pass short in direction travelling
                 m_pitch->ball()->kickBall(MWindow::Pass, passDest);
             }
-            hasBall_ = false;
-        }
-    } else {
-        // perform tackle here...
-
-        action = calculateTackleFromLastAction(m_lastAction);
-
-        setPixmap(m_images[action].at(0));
-        moveBy(m_moveDistance[m_lastAction].x(), m_moveDistance[m_lastAction].y());
-        m_outOfAction->stop();
-        m_outOfAction->start(500);
-
-        // if tackle causes contact with the ball then transfer the ownership
-        if (ballCollisionCheck()) {
-            Player *p = m_pitch->ball()->controlledBy();
-            if (p)
-                p->isTackled(true);
-            m_pitch->ball()->setControlledBy(this);
-            hasBall_ = true;
+            m_hasBall = false;
         }
     }
 }
 
 void Player::isTackled(bool defeated)
 {
-    if (defeated) {
-        // TODO use a different pixmap
-        // start an out of action timer
-        m_outOfAction->stop();
-        m_outOfAction->start(1500);
-    }
+    move(MWindow::FallenOver);
 }
 
 void Player::move(MWindow::Action action)
 {
     if (m_outOfAction->isActive())
         return;
-    if (action == MWindow::ButtonShortPress
-        || action == MWindow::ButtonLongPress
-        || action == MWindow::Shot
+    if ( m_hasBall ) {
+        if ( action == MWindow::ButtonShortPress )
+            action = MWindow::Pass;
+        else if ( m_hasBall && action == MWindow::ButtonLongPress)
+            action = MWindow::Shot;
+    } else {
+        if ( action == MWindow::ButtonShortPress
+            || action == MWindow::ButtonLongPress )
+            action = MWindow::Tackle;
+    }
+
+    if ( // action == MWindow::ButtonShortPress
+        // || action == MWindow::ButtonLongPress
+        action == MWindow::Shot
 #ifndef INDOOR
         || action == MWindow::ThrownIn
 #endif //
         || action == MWindow::Tackle
+        || action == MWindow::FallenOver
         || action == MWindow::Pass)
         specialAction(action);
     else
@@ -486,7 +485,7 @@ bool Player::isManMarked() const
 
 void Player::computerAdvance(int phase)
 {
-    if (hasBall_)
+    if (m_hasBall)
          computerAdvanceWithBall();
     else
         computerAdvanceWithoutBall();
@@ -543,7 +542,7 @@ void Player::computerAdvanceWithBall()
     default:
         if (withinShootingDistance()) {
             move(MWindow::Shot);
-            hasBall_ = false;
+            m_hasBall = false;
             m_pitch->ball()->setControlledByNobody();
         }
         else
@@ -555,7 +554,7 @@ void Player::computerAdvanceWithBall()
 void Player::automove()
 {
     // automove not applicable to human players or ball holders
-    if (hasFocus() || hasBall_)
+    if (hasFocus() || m_hasBall)
         return;
 
     MWindow::Action act = calculateAction(pos(), startPosition_.center());
@@ -588,7 +587,6 @@ void Player::keyPressEvent(QKeyEvent *event)
 
     MWindow::Action a = m_actions[ event->key() ];
 
-
     switch ( a )
     {
     case MWindow::Button:
@@ -602,10 +600,9 @@ void Player::keyPressEvent(QKeyEvent *event)
     case MWindow::SouthWest:
     case MWindow::West:
     case MWindow::NorthWest:
-        // start a timer
         m_lastAction = a;
-//        m_pitch->action(a);
         move(a);
+        // start a timer
         m_keyEventTimer->start();
         break;
 #ifdef REPLAY_FEATURE
@@ -632,19 +629,15 @@ void Player::keyReleaseEvent(QKeyEvent *event)
         int elapsed = m_elapsedTime.elapsed();
         if ( elapsed > KLongPressValue )
             move(MWindow::ButtonLongPress);
-//            m_pitch->action(MWindow::ButtonLongPress);
         else
-//            m_pitch->action(MWindow::ButtonShortPress);
             move(MWindow::ButtonShortPress);
     }
 
     event->accept();
 }
 
-
 void Player::repeatKeyEvent()
 {
- //   m_pitch->action(m_lastAction);
    move(m_lastAction);
    m_keyEventTimer->start();
 }
