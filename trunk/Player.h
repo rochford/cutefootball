@@ -63,9 +63,6 @@ public:
 
     bool withinShootingDistance() const;
 
-public slots:
-    void goalScored(bool isTopGoal);
-
 private slots:
     void repeatKeyEvent();
 
@@ -94,10 +91,10 @@ private:
     void createKeyboardActions();
 
 public:
-    bool hasBall_;
+    bool m_hasBall;
     Team* team_;
-
     Role role_;
+    QRectF startPosition_;
 
 private:
     QString m_name;
@@ -106,9 +103,6 @@ private:
     QTime m_elapsedTime;
     QMap<int,MWindow::Action> m_actions;
     QTimer *m_keyEventTimer;
-
-public:
-    QRectF startPosition_;
 
 protected:
     // the previous action of this player

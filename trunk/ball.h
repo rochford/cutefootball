@@ -32,7 +32,11 @@ public:
 
     void kickBall(MWindow::Action action, QPointF destination);
     inline Player* controlledBy() { return controlledBy_; }
-    inline void setControlledBy(Player* p) { controlledBy_ = p; }
+    inline void setControlledBy(Player* p) {
+        controlledBy_ = p;
+        m_lastPlayerToTouchBall = p;
+    }
+    Player* lastPlayerToTouchBall() { return m_lastPlayerToTouchBall; }
     inline void setControlledByNobody() { controlledBy_ = NULL; }
 
 signals:
@@ -67,6 +71,8 @@ private:
     // ball passing animation
     QGraphicsItemAnimation *animation_;
     QTimeLine *animationTimer_;
+
+    Player* m_lastPlayerToTouchBall; // can be null // NOT OWNED
 };
 
 #endif // BALL_H

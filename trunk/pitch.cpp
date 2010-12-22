@@ -132,7 +132,7 @@ void Pitch::setPiece(Team* t, SetPiece s)
     switch(s) {
     case Pitch::KickOff:
         foreach (Player *p, m_players) {
-                p->hasBall_ = false;
+                p->m_hasBall = false;
                 p->setPos(p->startPosition_.center());
             }
         if (t == m_awayTeam) {
@@ -143,6 +143,7 @@ void Pitch::setPiece(Team* t, SetPiece s)
             m_homeTeam->setHasBall(true);
         }
         m_scene->addItem(m_ball);
+        ball()->setVisible(true);
         m_ball->setStartingPosition();
         break;
 #ifndef INDOOR
@@ -317,12 +318,10 @@ void Pitch::hasBallCheck()
     m_scoreText->updatePosition();
 
     // which team has the ball?
-    foreach (Player *p, m_players) {
-        if (p->hasBall_) {
-            m_homeTeam->setHasBall(p->team_== m_homeTeam);
-            m_awayTeam->setHasBall(p->team_== m_awayTeam);
-            break; // can break as now known
-        }
+    Player* p = m_ball->lastPlayerToTouchBall();
+    if ( p ) {
+        m_homeTeam->setHasBall(p->team_== m_homeTeam);
+        m_awayTeam->setHasBall(p->team_== m_awayTeam);
     }
 }
 
@@ -330,7 +329,7 @@ void Pitch::createTeams()
 {
     QStringList teamNames;
     teamNames << "United" << "City" << "Dynamo" << "Galaxy"
-                 << "Town" << "Athletic" << "Real" << "Sporting";
+              << "Town" << "Athletic" << "Real" << "Sporting";
     QList<Qt::GlobalColor> colours;
     colours << Qt::darkBlue << Qt::magenta << Qt::darkRed << Qt::yellow
             << Qt::black << Qt::gray << Qt::white << Qt::darkYellow;
@@ -365,8 +364,11 @@ void Pitch::newGame()
 void Pitch::createTeamPlayers(Team *team)
 {
     QStringList names;
-    names << "adam" << "bob" << "charlie" << "dave" << "ed" << "frank" << "george" << "harry" << "ian"
-            << "jack" << "kai" << "luke" << "matt" << "nigel" << "oscar" << "pete"<< "roger" << "steve" << "tom" << "walt";
+    names << "adam" << "bob" << "charlie" << "dave"
+          << "ed" << "frank" << "george" << "harry"
+          << "ian" << "jack" << "kai" << "luke"
+          << "matt" << "nigel" << "oscar" << "pete"
+          << "roger" << "steve" << "tom" << "walt";
     bool isHomeTeam(false);
 
     if (team == m_homeTeam)
@@ -454,7 +456,7 @@ void Pitch::setPlayerStartPositions(Team *team)
     // action is only applicabled to the human controlled player
     foreach (Player *p, m_players) {
         if (p->team_ == team) {
-            p->hasBall_ = false;
+            p->m_hasBall = false;
             p->startPosition_ = startPositions[p->role_];
         }
     }
