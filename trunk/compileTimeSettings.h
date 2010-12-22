@@ -3,6 +3,9 @@
 
 #include <QtGui>
 // #define REPLAY_FEATURE
+// is indoor football rules
+#define INDOOR
+
 const int KHalfLength = 60*1000; // seconds
 const QRgb KGoalKeeperColor = QColor(Qt::green).rgb();
 const int KReplayFrameRate = 40.00; // ms
@@ -21,8 +24,8 @@ const int KPlayerDefaultSpeed = 3;
 // scale factor for players & ball
 const qreal KScaleFactor = 1.6;
 
-const QColor KHomeTeamColor = Qt::blue;
-const QColor KAwayTeamColor = Qt::red;
+//const QColor KHomeTeamColor = Qt::blue;
+//const QColor KAwayTeamColor = Qt::red;
 const QColor KCuteFootballMaskColor(103,123,9);
 
 #endif // COMPILETIMESETTINGS_H

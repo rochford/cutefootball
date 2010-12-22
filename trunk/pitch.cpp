@@ -122,7 +122,7 @@ void Pitch::gameStopped()
 {
     m_motionTimer->stop();
     m_menuFrame->setVisible(true);
-    m_settingsDlg->setVisible(true);
+//    m_settingsDlg->setVisible(true);
     emit gameInProgress(false);
 }
 
@@ -145,6 +145,7 @@ void Pitch::setPiece(Team* t, SetPiece s)
         m_scene->addItem(m_ball);
         m_ball->setStartingPosition();
         break;
+#ifndef INDOOR
     case Pitch::ThrowIn:
         {
             if (t == m_awayTeam) {
@@ -168,6 +169,7 @@ void Pitch::setPiece(Team* t, SetPiece s)
             }
         }
         break;
+
     case Pitch::GoalKick:
         {
             if (t == m_awayTeam) {
@@ -199,6 +201,7 @@ void Pitch::setPiece(Team* t, SetPiece s)
             }
         }
         break;
+#endif // INDOOR
     default:
         break;
     }
@@ -369,10 +372,33 @@ void Pitch::createTeamPlayers(Team *team)
     if (team == m_homeTeam)
         isHomeTeam = true;
 
-    QPointF startPos(0,m_scene->sceneRect().height()/2);
-    for (int i = Player::GoalKeeper; i < Player::LastDummy; i++ ) {
+    QList<Player::Role> formation;
+#ifdef INDOOR
+    formation << Player::GoalKeeper
+              << Player::LeftCentralDefence
+              << Player::RightCentralDefence
+              << Player::LeftMidfield
+              << Player::RightMidfield
+              << Player::CentralAttack;
+#else
+    formation << Player::GoalKeeper
+              << Player::LeftDefence
+              << Player::LeftCentralDefence
+              << Player::RightCentralDefence
+              << Player::RightDefence
+              << Player::LeftMidfield
+              << Player::CentralMidfield
+              << Player::RightMidfield
+              << Player::LeftAttack
+              << Player::CentralAttack
+              << Player::RightAttack;
+#endif // INDOOR
+
+    QPointF startPos(0, m_scene->sceneRect().height()/2);
+    int i = 0;
+    foreach( Player::Role r, formation ) {
         Player *pl(NULL);
-        if (i == Player::GoalKeeper) {
+        if (r == Player::GoalKeeper) {
            pl = new GoalKeeper(
                     names.at(i),
                     this,
@@ -384,13 +410,14 @@ void Pitch::createTeamPlayers(Team *team)
                     !isHomeTeam,
                     this,
                     team,
-                    (Player::Role)i);
+                    r);
         }
         pl->createPixmaps();
         pl->createMoves();
         pl->setPos(startPos);
         m_players.append(pl);
         m_scene->addItem(pl);
+        i++;
     }
 }
 

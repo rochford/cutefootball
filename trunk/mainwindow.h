@@ -45,21 +45,21 @@ public:
         TackleNorth,
         TackleSouth,
 
-        ThrownIn,
+#ifndef INDOOR
+         ThrownIn,
+#endif // INDOOR
 
-        GoalCelebration,
 #ifdef REPLAY_FEATURE
         // replay last n seconds
         Replay,
 #endif // REPLAY_FEATURE
-        YellowCard,
-        RedCard,
+// TODO        YellowCard,
+// TODO        RedCard,
 
         // goal keeper moves
-        DiveLeft,
-        DiveRight,
-
-        DoNothing };
+// TODO       DiveLeft,
+// TODO        DiveRight
+    };
 
 #ifdef REPLAY_FEATURE
 protected:

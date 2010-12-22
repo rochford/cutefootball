@@ -61,6 +61,8 @@ private:
     // starting position of ball at kick off
     QPointF start_;
     int step_;
+    // last position of the ball
+    QPointF m_lastPos;
 
     // ball passing animation
     QGraphicsItemAnimation *animation_;
