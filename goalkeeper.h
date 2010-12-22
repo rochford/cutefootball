@@ -23,7 +23,7 @@ public:
 public:
     void createPixmaps();
     void advance(int phase);
-    void createMoves();
+//    void createMoves();
     void pixmapInsert(MWindow::Action a, QString s1, QString s2, QString s3, QRgb goalKeeperColor);
 
 private:

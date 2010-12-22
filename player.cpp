@@ -35,12 +35,12 @@ MWindow::Action calculateAction(QPointF source,
 
     if (dx > 0 && dy == 0)
         return MWindow::West;
+    else if (dx <= 0 && dy == 0)
+        return MWindow::East;
     else if (dx >= 0 && dy < 0)
         return MWindow::SouthWest;
     else if (dx > 0 && dy > 0)
         return MWindow::NorthWest;
-    else if (dx <= 0 && dy == 0)
-        return MWindow::East;
     else if (dx < 0 && dy > 0)
         return MWindow::NorthEast;
     else if (dx < 0 && dy < 0)
@@ -177,9 +177,9 @@ void Player::createPixmaps()
     pixmapInsert(MWindow::SouthWest, "pSWest.PNG", "pSW1.PNG", "pSW2.PNG", team_->color.rgb());
     pixmapInsert(MWindow::West, "pW.PNG", "pW1.PNG", "pW2.PNG", team_->color.rgb());
     pixmapInsert(MWindow::NorthWest, "pNW.PNG", "pNW1.PNG", "pNW2.PNG", team_->color.rgb());
-
+#ifndef INDOOR
     pixmapInsert(MWindow::ThrownIn, "pNW.PNG", "pNW1.PNG", "pNW2.PNG", team_->color.rgb()); // TODO XXX TIM
-
+#endif //
     pixmapInsert(MWindow::TackleNorth, "tackleN.PNG", "tackleN.PNG", "tackleN.PNG", team_->color.rgb()); // TODO XXX TIM
     pixmapInsert(MWindow::TackleNorthEast, "tackleNE.PNG", "tackleNE.PNG", "tackleNE.PNG", team_->color.rgb()); // TODO XXX TIM
     pixmapInsert(MWindow::TackleEast, "tackleE.PNG", "tackleE.PNG", "tackleE.PNG", team_->color.rgb()); // TODO XXX TIM
@@ -188,8 +188,6 @@ void Player::createPixmaps()
     pixmapInsert(MWindow::TackleSouthWest, "tackleSW.PNG", "tackleSW.PNG", "tackleSouthWest.PNG", team_->color.rgb()); // TODO XXX TIM
     pixmapInsert(MWindow::TackleWest, "tackleW.PNG", "tackleW.PNG", "tackleW.PNG", team_->color.rgb()); // TODO XXX TIM
     pixmapInsert(MWindow::TackleNorthWest, "tackleNW.PNG", "tackleNW.PNG", "tackleNW.PNG", team_->color.rgb()); // TODO XXX TIM
-
-    pixmapInsert(MWindow::GoalCelebration, "pN.PNG", "pN1.PNG", "pN2.PNG", team_->color.rgb()); // TODO XXX TIM
 
     // set default pixmap
     setPixmap(m_images[MWindow::North].at(0));
@@ -292,6 +290,7 @@ bool Player::withinShootingDistance() const
 void Player::specialAction(MWindow::Action action)
 {
     switch (action) {
+#ifndef INDOOR
     case MWindow::ThrownIn:
         {
             setPixmap(m_images[action].at(0));
@@ -299,19 +298,7 @@ void Player::specialAction(MWindow::Action action)
             m_lastAction = action;
         }
         return;
-    case MWindow::GoalCelebration:
-        setPixmap(m_images[action].at(0));
-        return;
-    case MWindow::DiveLeft:
-    case MWindow::DiveRight:
-        setPixmap(m_images[action].at(0));
-        moveBy(m_moveDistance[action].x(), m_moveDistance[action].y());
-        // if dive causes contact with the ball then transfer the ownership
-        if (ballCollisionCheck()) {
-            m_pitch->ball()->setControlledBy(this);
-            hasBall_ = true;
-        }
-        return;
+#endif //
     default:
         break;
     }
@@ -421,12 +408,11 @@ void Player::move(MWindow::Action action)
     if (action == MWindow::ButtonShortPress
         || action == MWindow::ButtonLongPress
         || action == MWindow::Shot
-        || action == MWindow::Tackle
-        || action == MWindow::Pass
+#ifndef INDOOR
         || action == MWindow::ThrownIn
-        || action == MWindow::DiveLeft
-        || action == MWindow::DiveRight
-        || action == MWindow::GoalCelebration)
+#endif //
+        || action == MWindow::Tackle
+        || action == MWindow::Pass)
         specialAction(action);
     else
         movePlayer(action);
@@ -533,19 +519,20 @@ void Player::computerAdvanceWithoutBall()
 void Player::computerAdvanceWithBall()
 {
     setZValue(6);
-
+#ifndef INDOOR
     // if the last action was thrownIn, then just pass the ball...
     if (m_lastAction == MWindow::ThrownIn) {
         m_pitch->ball()->setVisible(true);
         move(MWindow::Pass);
         return;
     }
+#endif //
 
     QPointF destination;
     if (team_->getDirection() == Team::SouthToNorth )
-        destination = QPointF(m_pitch->m_topGoal->rect().center().x(), m_pitch->m_topGoal->rect().top());
+        destination = QPointF(m_pitch->m_topGoal->rect().center().x(), m_pitch->m_topGoal->rect().bottom());
     else
-        destination = QPointF(m_pitch->m_bottomGoal->rect().center().x(), m_pitch->m_bottomGoal->rect().bottom());
+        destination = QPointF(m_pitch->m_bottomGoal->rect().center().x(), m_pitch->m_bottomGoal->rect().top());
 
     MWindow::Action act = calculateAction(pos(), destination);
 

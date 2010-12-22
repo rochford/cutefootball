@@ -36,11 +36,13 @@ class Pitch : public QObject
     Q_OBJECT
 public:
     enum SetPiece {
-        KickOff,
+#ifndef INDOOR
+        ThrowIn,
         GoalKick,
         Corner,
+#endif // INDOOR
+        KickOff,
         Penalty,
-        ThrowIn,
         Foul
     };
 

@@ -102,8 +102,7 @@ public:
 private:
     QString m_name;
     QString m_soundFile;
-    // the previous action of this player
-    MWindow::Action m_lastAction;
+
     QTime m_elapsedTime;
     QMap<int,MWindow::Action> m_actions;
     QTimer *m_keyEventTimer;
@@ -112,6 +111,8 @@ public:
     QRectF startPosition_;
 
 protected:
+    // the previous action of this player
+    MWindow::Action m_lastAction;
     QMap<MWindow::Action,PixmapList> m_images;
     Pitch *m_pitch;
     QMap<MWindow::Action,QPointF> m_moveDistance;

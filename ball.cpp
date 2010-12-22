@@ -159,7 +159,15 @@ QVariant Ball::itemChange(GraphicsItemChange change, const QVariant &value)
              setControlledBy(NULL);
              return start_;
          }
-
+#ifdef INDOOR
+         if (!rect.contains(newPos)) {
+             return m_lastPos;
+         }
+         else {
+             m_lastPos = newPos;
+             return newPos;
+         }
+#else
          // is the ball out of bounds?
          if (!rect.contains(newPos)) {
              // no player controls ball now
@@ -194,6 +202,7 @@ QVariant Ball::itemChange(GraphicsItemChange change, const QVariant &value)
                  return newPos;
              }
          }
+#endif //
      }
      return QGraphicsItem::itemChange(change, value);
  }

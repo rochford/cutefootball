@@ -22,9 +22,9 @@ void GoalKeeper::createPixmaps()
     pixmapInsert(MWindow::SouthWest, "pSW.PNG", "pSW1.PNG", "pSW2.PNG", KGoalKeeperColor);
     pixmapInsert(MWindow::West, "pW.PNG", "pW1.PNG", "pW2.PNG", KGoalKeeperColor);
     pixmapInsert(MWindow::NorthWest, "pNW.PNG", "pNW1.PNG", "pNW2.PNG", KGoalKeeperColor);
-
+#ifndef INDOOR
     pixmapInsert(MWindow::ThrownIn, "pNW.PNG", "pNW1.PNG", "pNW2.PNG", KGoalKeeperColor); // TODO XXX TIM
-
+#endif //
     pixmapInsert(MWindow::TackleNorth, "tackleN.PNG", "tackleN.PNG", "tackleN.PNG", KGoalKeeperColor); // TODO XXX TIM
     pixmapInsert(MWindow::TackleNorthEast, "tackleNE.PNG", "tackleNE.PNG", "tackleNE.PNG", KGoalKeeperColor); // TODO XXX TIM
     pixmapInsert(MWindow::TackleEast, "tackleE.PNG", "tackleE.PNG", "tackleE.PNG", KGoalKeeperColor); // TODO XXX TIM
@@ -33,11 +33,6 @@ void GoalKeeper::createPixmaps()
     pixmapInsert(MWindow::TackleSouthWest, "tackleSW.PNG", "tackleSW.PNG", "tackleSW.PNG", KGoalKeeperColor); // TODO XXX TIM
     pixmapInsert(MWindow::TackleWest, "tackleW.PNG", "tackleW.PNG", "tackleW.PNG", KGoalKeeperColor); // TODO XXX TIM
     pixmapInsert(MWindow::TackleNorthWest, "tackleNW.PNG", "tackleNW.PNG", "tackleNW.PNG", KGoalKeeperColor); // TODO XXX TIM
-
-    pixmapInsert(MWindow::GoalCelebration, "pN.PNG", "pN1.PNG", "pN2.PNG", KGoalKeeperColor); // TODO XXX TIM
-
-    pixmapInsert(MWindow::DiveLeft, "pN.PNG", "pN1.PNG", "pN2.PNG", KGoalKeeperColor); // TODO
-    pixmapInsert(MWindow::DiveRight, "pN.PNG", "pN1.PNG", "pN2.PNG", KGoalKeeperColor); // TODO
 
     // set default pixmap
     setPixmap(m_images[MWindow::North].at(0));
@@ -73,7 +68,7 @@ void GoalKeeper::advance(int phase)
 
 void GoalKeeper::gkAdvanceWithoutBall()
 {
-//    if (!team_->teamHasBall_) {
+    if (!team_->teamHasBall_) {
         // if the ball enters the penalty area then go for it, otherwise return to goal line
         Team::Direction dir = team_->getDirection();
         MWindow::Action action;
@@ -98,19 +93,17 @@ void GoalKeeper::gkAdvanceWithoutBall()
             action = calculateAction(pos(), ownGoal);
         }
         move(action);
-//    }
+    }
 }
 
 void GoalKeeper::gkAdvanceWithBall()
 {
+    Team::Direction dir = team_->getDirection();
+    if ( dir == Team::SouthToNorth )
+        m_lastAction = MWindow::North;
+    else
+        m_lastAction = MWindow::South;
     move(MWindow::Shot);
 }
 
-void GoalKeeper::createMoves()
-{
-    Player::createMoves();
-
-    m_moveDistance.insert(MWindow::DiveLeft, QPointF(5*m_speed,0));
-    m_moveDistance.insert(MWindow::DiveRight, QPointF(5*-m_speed,0));
-}
 
