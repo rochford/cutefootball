@@ -31,13 +31,13 @@ public:
     int type() const { return Type; }
 
     void kickBall(MWindow::Action action, QPointF destination);
-    inline Player* controlledBy() { return controlledBy_; }
-    inline void setControlledBy(Player* p) {
-        controlledBy_ = p;
+    inline Player* ballOwner() { return m_BallOwner; }
+    inline void setBallOwner(Player* p) {
+        m_BallOwner = p;
         m_lastPlayerToTouchBall = p;
     }
     Player* lastPlayerToTouchBall() { return m_lastPlayerToTouchBall; }
-    inline void setControlledByNobody() { controlledBy_ = NULL; }
+    inline void setNoBallOwner() { m_BallOwner = NULL; }
 
 signals:
     void goalScored(bool topGoal);
@@ -46,6 +46,7 @@ signals:
 
 public slots:
     void updateBall(int frame);
+    void updateBallOwner();
 
 protected:
     QRectF boundingRect() const;
@@ -56,11 +57,13 @@ protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
 private:
+    QTimer* m_ballOwnerTimer;
+
     Pitch *m_pitch; // NOT OWNED
     MWindow::Action previousAction;
     QPointF destination_;
     QPointF currentPosition_;
-    Player *controlledBy_; // NOT OWNED
+    Player *m_BallOwner; // NOT OWNED
 
     // starting position of ball at kick off
     QPointF start_;

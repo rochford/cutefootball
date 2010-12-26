@@ -54,7 +54,7 @@ void GoalKeeper::advance(int phase)
         return;
     if (m_outOfAction->isActive())
         return;
-    if ( m_hasBall )
+    if ( hasBall() )
          gkAdvanceWithBall();
     else
         gkAdvanceWithoutBall();
@@ -74,7 +74,7 @@ void GoalKeeper::gkAdvanceWithoutBall()
 
             qreal dx = abs(pos().x() - m_pitch->ball()->pos().x());
             qreal dy = abs(pos().y() - m_pitch->ball()->pos().y());
-            if ( m_pitch->ball()->controlledBy() && ( dx < 5) && (dy < 5) )
+            if ( m_pitch->ball()->ballOwner() && ( dx < 5) && (dy < 5) )
                 action = MWindow::Tackle;
             else
                 action = calculateAction(pos(), m_pitch->ball()->pos());

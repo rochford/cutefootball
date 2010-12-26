@@ -3,6 +3,7 @@
 #include "ball.h"
 #include "team.h"
 #include "soundeffects.h"
+#include "Player.h"
 
 #include <QDebug>
 
@@ -15,9 +16,13 @@ Ball::Ball(Pitch* pitch)
     step_(0),
     animation_(NULL),
     animationTimer_(NULL),
-    controlledBy_(NULL),
+    m_BallOwner(NULL),
     m_lastPlayerToTouchBall(NULL)
 {
+    m_ballOwnerTimer = new QTimer(this);
+    m_ballOwnerTimer->setInterval(250);
+    m_ballOwnerTimer->start();
+
     QBitmap bitmap = pixmap().createMaskFromColor(KCuteFootballMaskColor);
     pixmap().setMask(bitmap);
 
@@ -33,11 +38,37 @@ Ball::Ball(Pitch* pitch)
     animation_->setItem(this);
     animation_->setTimeLine(animationTimer_);
     connect(animationTimer_, SIGNAL(frameChanged(int)), this, SLOT(updateBall(int)));
+    connect(m_ballOwnerTimer, SIGNAL(timeout()), this, SLOT(updateBallOwner()));
 }
 
 Ball::~Ball()
 {
-    // do nothing
+    m_ballOwnerTimer->stop();
+    delete m_ballOwnerTimer;
+    delete animation_;
+    delete animationTimer_;
+}
+
+void Ball::updateBallOwner()
+{
+    // find a player who is near the ball.
+    // that player, now controls the ball
+    QList<QGraphicsItem*> list = m_pitch->m_scene->collidingItems(this,
+                                     Qt::IntersectsItemBoundingRect);
+
+    foreach(QGraphicsItem* i, list) {
+        Player* p = qgraphicsitem_cast<Player*>(i);
+        if (p) {
+            if ( p == m_BallOwner ) {
+                p->setHasBall(true);
+                break;
+            }
+            if ( m_BallOwner )
+                 m_BallOwner->setHasBall(false);
+            m_BallOwner = p;
+            p->setHasBall(true);
+        }
+    }
 }
 
 QRectF Ball::boundingRect() const
@@ -110,7 +141,9 @@ void Ball::moveBall(MWindow::Action action, int speed)
 
 void Ball::kickBall(MWindow::Action action, QPointF destination)
 {
-    setControlledByNobody();
+    if ( m_BallOwner )
+        m_BallOwner->setHasBall(false);
+    setNoBallOwner();
     // calculate the difference between present and destination
     QPointF tmp = pos();
 
@@ -157,7 +190,7 @@ QVariant Ball::itemChange(GraphicsItemChange change, const QVariant &value)
              || m_pitch->m_bottomGoal->contains(newPos)) {
              animationTimer_->stop();
              emit goalScored(m_pitch->m_topGoal->contains(newPos));
-             setControlledBy(NULL);
+             setBallOwner(NULL);
              return start_;
          }
 #ifdef INDOOR
