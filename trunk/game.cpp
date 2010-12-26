@@ -191,7 +191,7 @@ void Game::kickOff()
 void Game::playFrame(int frame)
 {
     m_pitch->m_scoreText->updatePosition();
-    m_pitch->m_view->centerOn(m_playerAnimationItems.at(0)->item());
+    m_pitch->m_view->centerOn(m_playerAnimationItems.last()->item());
     qreal f = frame/ 100.00;
     foreach (QGraphicsItemAnimation *anim, m_playerAnimationItems)
         anim->item()->setPos(anim->posAt(f));

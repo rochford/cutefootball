@@ -97,6 +97,7 @@ public:
     QGraphicsView *m_view;  // NOT OWNED
     QGraphicsRectItem *m_footballPitch;
 
+    QGraphicsPixmapItem* m_grass;
     QGraphicsRectItem *m_bottomGoal;
     QGraphicsRectItem *m_topGoal;
     QGraphicsRectItem *m_bottomPenaltyArea;
