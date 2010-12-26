@@ -133,7 +133,7 @@ void Pitch::setPiece(Team* t, SetPiece s)
     switch(s) {
     case Pitch::KickOff:
         foreach (Player *p, m_players) {
-                p->m_hasBall = false;
+                p->setHasBall(false);
                 p->setPos(p->startPosition_.center());
             }
         if (t == m_awayTeam) {
@@ -459,7 +459,7 @@ void Pitch::setPlayerStartPositions(Team *team)
     // action is only applicabled to the human controlled player
     foreach (Player *p, m_players) {
         if (p->team_ == team) {
-            p->m_hasBall = false;
+            p->setHasBall(false);
             p->startPosition_ = startPositions[p->role_];
         }
     }

@@ -53,8 +53,6 @@ public:
     inline int speed() const { return m_speed; }
     bool ballCollisionCheck();
 
-    bool isManMarked() const;
-
     void move(MWindow::Action action);
     void movePlayer(MWindow::Action action);
     Player* findAvailableTeamMate(QPointF myPos) const;
@@ -62,6 +60,9 @@ public:
     void isTackled(bool defeated);
 
     bool withinShootingDistance() const;
+
+    inline void setHasBall(bool hasBall) { m_hasBall = hasBall; }
+    inline bool hasBall() { return m_hasBall; }
 
 private slots:
     void repeatKeyEvent();
@@ -89,6 +90,7 @@ private:
 
     void stopKeyEvent();
     void createKeyboardActions();
+    QPointF calculateDestination(MWindow::Action act);
 
 public:
     bool m_hasBall;
