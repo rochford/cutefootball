@@ -39,8 +39,9 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     m_settingsDlg(settingsDlg),
     m_soundEffects(se)
 {
+    m_view->scale(1.5,1.5);
     m_view->setScene(m_scene);
-    m_scene->setBackgroundBrush(QPixmap(QString(":/images/pitch2.GIF")));
+    m_scene->setBackgroundBrush(QBrush(Qt::black));
 
     m_motionTimer = new QTimer(this);
     m_motionTimer->setInterval(KGameRefreshRate);
@@ -236,30 +237,13 @@ void Pitch::removePlayers()
 
 void Pitch::layoutPitch()
 {
+    m_grass = new QGraphicsPixmapItem(QPixmap(QString(":/images/pitch2.GIF")));
+    m_scene->addItem(m_grass);
+
     // create the pitch
     m_footballPitch = m_scene->addRect(30, 30, m_scene->width()-60, m_scene->height() -60,
                                     KWhitePaintPen,
                                     QBrush(Qt::white,Qt::NoBrush) );
-
-    // divide the pitch into areas
-    // makes it easier for computer based movement
-    QPointF tlTopHalf = m_footballPitch->rect().topLeft();
-    QPointF brBottomHalf = m_footballPitch->rect().bottomRight();
-    QPointF brTopHalf = brBottomHalf - QPointF(m_footballPitch->rect().height()/2,0);
-    QPointF tlBottomHalf = tlTopHalf + QPointF(m_footballPitch->rect().height()/2,0);
-
-    const qreal w = m_footballPitch->rect().width();
-    const qreal h = m_footballPitch->rect().height();
-
-    for (int row = 0; row < KRow; row++) {
-        for (int col = 0; col < KColumn; col++) {
-            qreal tlx = (w / KColumn) * col;
-            qreal tly = (h / KRow ) * row;
-            QPointF tl(tlTopHalf + QPointF(tlx,tly));
-            QPointF br(tl + QPointF(w/KColumn,h/KRow));
-            m_pitchArea[row][col] = QRectF(tl, br);
-        }
-    }
 
     // half way line
     m_centerLine = m_scene->addLine(m_scene->sceneRect().left()+30,m_scene->sceneRect().height()/2.0,
@@ -289,7 +273,26 @@ void Pitch::layoutPitch()
                                     KWhitePaintPen,
                                     QBrush(Qt::white,Qt::NoBrush) );
 
-    m_entrancePoint = QPointF(0, m_scene->sceneRect().height()/2);
+    m_entrancePoint = QPointF(0, (m_scene->sceneRect().height())/2);
+    // divide the pitch into areas
+    // makes it easier for computer based movement
+    QPointF tlTopHalf = m_footballPitch->rect().topLeft();
+    QPointF brBottomHalf = m_footballPitch->rect().bottomRight();
+    QPointF brTopHalf = brBottomHalf - QPointF(m_footballPitch->rect().height()/2,0);
+    QPointF tlBottomHalf = tlTopHalf + QPointF(m_footballPitch->rect().height()/2,0);
+
+    const qreal w = m_footballPitch->rect().width();
+    const qreal h = m_footballPitch->rect().height();
+
+    for (int row = 0; row < KRow; row++) {
+        for (int col = 0; col < KColumn; col++) {
+            qreal tlx = (w / KColumn) * col;
+            qreal tly = (h / KRow ) * row;
+            QPointF tl(tlTopHalf + QPointF(tlx,tly));
+            QPointF br(tl + QPointF(w/KColumn,h/KRow));
+            m_pitchArea[row][col] = QRectF(tl, br);
+        }
+    }
 }
 
 void Pitch::updateDisplayTime(int timeLeftMs)
