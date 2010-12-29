@@ -16,7 +16,7 @@ Ball::Ball(Pitch* pitch)
     step_(0),
     animation_(NULL),
     animationTimer_(NULL),
-    m_BallOwner(NULL),
+    m_ballOwner(NULL),
     m_lastPlayerToTouchBall(NULL)
 {
     m_ballOwnerTimer = new QTimer(this);
@@ -59,13 +59,13 @@ void Ball::updateBallOwner()
     foreach(QGraphicsItem* i, list) {
         Player* p = qgraphicsitem_cast<Player*>(i);
         if (p) {
-            if ( p == m_BallOwner ) {
+            if ( p == m_ballOwner ) {
                 p->setHasBall(true);
                 break;
             }
-            if ( m_BallOwner )
-                 m_BallOwner->setHasBall(false);
-            m_BallOwner = p;
+            if ( m_ballOwner )
+                 m_ballOwner->setHasBall(false);
+            m_ballOwner = p;
             p->setHasBall(true);
         }
     }
@@ -141,8 +141,8 @@ void Ball::moveBall(MWindow::Action action, int speed)
 
 void Ball::kickBall(MWindow::Action action, QPointF destination)
 {
-    if ( m_BallOwner )
-        m_BallOwner->setHasBall(false);
+    if ( m_ballOwner )
+        m_ballOwner->setHasBall(false);
     setNoBallOwner();
     // calculate the difference between present and destination
     QPointF tmp = pos();

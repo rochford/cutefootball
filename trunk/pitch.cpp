@@ -134,7 +134,7 @@ void Pitch::setPiece(Team* t, SetPiece s)
     case Pitch::KickOff:
         foreach (Player *p, m_players) {
                 p->setHasBall(false);
-                p->setPos(p->startPosition_.center());
+                p->setPos(p->m_startPositionRectF.center());
             }
         if (t == m_awayTeam) {
             m_awayTeam->setHasBall(true);
@@ -336,7 +336,7 @@ void Pitch::createTeams()
     QList<Qt::GlobalColor> colours;
     colours << Qt::darkBlue << Qt::magenta << Qt::darkRed << Qt::yellow
             << Qt::black << Qt::gray << Qt::white << Qt::darkYellow;
-    for (int i = 0; i < 8; ++i) {
+    for (int i = 0; i < teamNames.count(); ++i) {
         Team* t = new Team(teamNames.at(i), colours.at(i));
         m_teams.append(t);
     }
@@ -426,6 +426,34 @@ void Pitch::createTeamPlayers(Team *team)
     }
 }
 
+void Pitch::setPlayerDefendZone(Player *p)
+{
+    bool nToS(false);
+    if (p->team_->getDirection() == Team::NorthToSouth)
+        nToS = true;
+
+    QPointF tlTopHalf = m_footballPitch->rect().topLeft();
+    QPointF brBottomHalf = m_footballPitch->rect().bottomRight();
+    QPointF brTopHalf = brBottomHalf - QPointF(m_footballPitch->rect().height()/2,0);
+    QPointF tlBottomHalf = tlTopHalf + QPointF(m_footballPitch->rect().height()/2,0);
+    QRectF topHalf(tlTopHalf, brTopHalf);
+    QRectF bottomHalf(tlBottomHalf, brBottomHalf);
+
+    QRectF zone;
+    switch (p->role_)
+    {
+    case Player::RightAttack:
+    case Player::CentralAttack:
+    case Player::LeftAttack:
+        nToS ? zone = bottomHalf : zone = topHalf;
+        break;
+    default:
+        zone = p->m_startPositionRectF;
+        break;
+    }
+    p->m_defendZone = zone;
+}
+
 void Pitch::setPlayerStartPositions(Team *team)
 {
     bool nToS(false);
@@ -456,11 +484,11 @@ void Pitch::setPlayerStartPositions(Team *team)
     startPositions.insert(Player::RightAttack,
                          m_pitchArea[nToS ? 3 : 4][4]);
 
-    // action is only applicabled to the human controlled player
     foreach (Player *p, m_players) {
         if (p->team_ == team) {
             p->setHasBall(false);
-            p->startPosition_ = startPositions[p->role_];
+            p->m_startPositionRectF = startPositions[p->role_];
+            setPlayerDefendZone(p);
         }
     }
 }

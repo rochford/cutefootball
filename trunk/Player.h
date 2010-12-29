@@ -20,6 +20,7 @@ class Player : public QObject,
                public QGraphicsPixmapItem
 {
     Q_OBJECT
+
 public:
     enum Role {GoalKeeper = 1,
                LeftDefence,
@@ -96,7 +97,9 @@ public:
     bool m_hasBall;
     Team* team_;
     Role role_;
-    QRectF startPosition_;
+    QRectF m_startPositionRectF;
+    // player will defend this zone of pitch
+    QRectF m_defendZone;
 
 private:
     QString m_name;

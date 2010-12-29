@@ -90,6 +90,7 @@ private:
     void createTeamPlayers(Team *team);
     void layoutPitch();
     void createTeams();
+    void setPlayerDefendZone(Player *p);
 
 public:
     QList<Player*> m_players;
