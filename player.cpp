@@ -393,6 +393,10 @@ void Player::specialAction(MWindow::Action action)
 
 void Player::isTackled(bool defeated)
 {
+    if ( m_hasBall ) {
+        m_pitch->ball()->setNoBallOwner();
+        m_hasBall = false;
+    }
     move(MWindow::FallenOver);
 }
 
@@ -411,9 +415,7 @@ void Player::move(MWindow::Action action)
             action = MWindow::Tackle;
     }
 
-    if ( // action == MWindow::ButtonShortPress
-        // || action == MWindow::ButtonLongPress
-        action == MWindow::Shot
+    if ( action == MWindow::Shot
 #ifndef INDOOR
         || action == MWindow::ThrownIn
 #endif //
@@ -443,10 +445,8 @@ Player* Player::findAvailableTeamMate(QPointF myPos) const
         const int dx = p->pos().x() - myPos.x();
         const int dy = p->pos().y() - myPos.y();
 
-//        if ((qAbs(dx*dx)+qAbs(dy*dy)) < nearest) {
         if (qAbs(dx) < 50 && qAbs(dy) < 50) {
             bestPlayer = p;
-//            nearest = qAbs(qAbs(dx*dx)+qAbs(dy*dy));
         }
     }
     return bestPlayer;
@@ -478,23 +478,21 @@ void Player::computerAdvance(int phase)
 void Player::computerAdvanceWithoutBall()
 {
     setZValue(5);
-//    if (!team_->teamHasBall_) {
-        Player *nearestPlayer = m_pitch->selectNearestPlayer(m_pitch->awayTeam());
+    Player *nearestPlayer = m_pitch->selectNearestPlayer(m_pitch->awayTeam());
 
-        if (nearestPlayer == this ) {
-            // if close to the ball then tackle
+    if (nearestPlayer == this ) {
+        // if close to the ball then tackle
 
-            MWindow::Action action;
-            int dx = abs(pos().x() - m_pitch->ball()->pos().x());
-            int dy = abs(pos().y() - m_pitch->ball()->pos().y());
-            if ( m_pitch->ball()->ballOwner() && ( dx < 10) && (dy < 10) )
-                action = MWindow::Tackle;
-            else
-                action = calculateAction(pos(), m_pitch->ball()->pos());
+        MWindow::Action action;
+        int dx = abs(pos().x() - m_pitch->ball()->pos().x());
+        int dy = abs(pos().y() - m_pitch->ball()->pos().y());
+        if ( m_pitch->ball()->ballOwner() && ( dx < 10) && (dy < 10) )
+            action = MWindow::Tackle;
+        else
+            action = calculateAction(pos(), m_pitch->ball()->pos());
 
-            move(action);
-        }
- //   }
+        move(action);
+    }
     else
        automove();
 }
@@ -527,7 +525,6 @@ void Player::computerAdvanceWithBall()
         if (withinShootingDistance()) {
             move(MWindow::Shot);
             m_hasBall = false;
-            m_pitch->ball()->setNoBallOwner();
         }
         else
             move(act);
@@ -541,7 +538,13 @@ void Player::automove()
     if (hasFocus() || m_hasBall)
         return;
 
-    MWindow::Action act = calculateAction(pos(), startPosition_.center());
+    MWindow::Action act;
+    // If the ball enters m_defendZone then move towards it
+    if ( m_defendZone.contains( m_pitch->ball()->pos() ) )
+        act = calculateAction( pos(), m_pitch->ball()->pos() );
+    else
+        act = calculateAction( pos(), m_startPositionRectF.center() );
+
     move(act);
 }
 
@@ -616,7 +619,6 @@ void Player::keyReleaseEvent(QKeyEvent *event)
         else
             move(MWindow::ButtonShortPress);
     }
-
     event->accept();
 }
 

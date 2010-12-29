@@ -31,13 +31,13 @@ public:
     int type() const { return Type; }
 
     void kickBall(MWindow::Action action, QPointF destination);
-    inline Player* ballOwner() { return m_BallOwner; }
+    inline Player* ballOwner() { return m_ballOwner; }
     inline void setBallOwner(Player* p) {
-        m_BallOwner = p;
+        m_ballOwner = p;
         m_lastPlayerToTouchBall = p;
     }
     Player* lastPlayerToTouchBall() { return m_lastPlayerToTouchBall; }
-    inline void setNoBallOwner() { m_BallOwner = NULL; }
+    inline void setNoBallOwner() { m_ballOwner = NULL; }
 
 signals:
     void goalScored(bool topGoal);
@@ -63,7 +63,7 @@ private:
     MWindow::Action previousAction;
     QPointF destination_;
     QPointF currentPosition_;
-    Player *m_BallOwner; // NOT OWNED
+    Player *m_ballOwner; // NOT OWNED
 
     // starting position of ball at kick off
     QPointF start_;

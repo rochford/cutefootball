@@ -66,9 +66,9 @@ void GoalScoredState::createPlayerAnimationItems(GameState g)
         {
             anim->setTimeLine(m_timeLineReturnStartPositions);
             tmp = p->pos();
-            stepX = ( p->startPosition_.center().x() - tmp.x()) / 100.0;
-            stepY = ( p->startPosition_.center().y() - tmp.y()) / 100.0;
-            MWindow::Action a = calculateAction(tmp, p->startPosition_.center());
+            stepX = ( p->m_startPositionRectF.center().x() - tmp.x()) / 100.0;
+            stepY = ( p->m_startPositionRectF.center().y() - tmp.y()) / 100.0;
+            MWindow::Action a = calculateAction(tmp, p->m_startPositionRectF.center());
             p->movePlayer(a);
         }
             break;
@@ -219,9 +219,9 @@ void Game::createPlayerAnimationItems(GameState g)
             {
             anim->setTimeLine(m_timeLineTakePositions);
             tmp = p->pos();
-            stepX = ( p->startPosition_.center().x() - tmp.x()) / 100.0;
-            stepY = ( p->startPosition_.center().y() - tmp.y()) / 100.0;
-            MWindow::Action a = calculateAction(tmp, p->startPosition_.center());
+            stepX = ( p->m_startPositionRectF.center().x() - tmp.x()) / 100.0;
+            stepY = ( p->m_startPositionRectF.center().y() - tmp.y()) / 100.0;
+            MWindow::Action a = calculateAction(tmp, p->m_startPositionRectF.center());
             p->movePlayer(a);
             }
             break;
