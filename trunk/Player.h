@@ -52,18 +52,20 @@ public:
     void keyReleaseEvent(QKeyEvent *event);
 
     inline int speed() const { return m_speed; }
-    bool ballCollisionCheck();
+    bool ballCollisionCheck() const;
+    bool playerCollisionCheck() const;
 
     void move(MWindow::Action action);
     void movePlayer(MWindow::Action action);
     Player* findAvailableTeamMate(QPointF myPos) const;
     void specialAction(MWindow::Action action);
-    void isTackled(bool defeated);
+    void setTackled();
 
     bool withinShootingDistance() const;
 
     inline void setHasBall(bool hasBall) { m_hasBall = hasBall; }
-    inline bool hasBall() { return m_hasBall; }
+    inline bool hasBall() const { return m_hasBall; }
+    Team* team() const { return m_team; }
 
 private slots:
     void repeatKeyEvent();
@@ -95,7 +97,6 @@ private:
 
 public:
     bool m_hasBall;
-    Team* team_;
     Role role_;
     QRectF m_startPositionRectF;
     // player will defend this zone of pitch
@@ -110,6 +111,7 @@ private:
     QTimer *m_keyEventTimer;
 
 protected:
+    Team* m_team;
     // the previous action of this player
     MWindow::Action m_lastAction;
     QMap<MWindow::Action,PixmapList> m_images;

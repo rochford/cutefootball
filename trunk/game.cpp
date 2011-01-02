@@ -38,7 +38,7 @@ void GoalScoredState::createTakePositionAnimation()
     m_timeLineReturnStartPositions->start();
 }
 
-void GoalScoredState::onEntry(QEvent *event)
+void GoalScoredState::onEntry(QEvent * /* event */)
 {
     m_pitch->ball()->setVisible(false);
     m_game->stopGameClock();
@@ -52,6 +52,10 @@ void GoalScoredState::createPlayerAnimationItems(GameState g)
     m_playerAnimationItems.clear(); // TODO XXX TIM delete all
 
     foreach (Player *p, m_pitch->m_players) {
+        if ( g == Celebrate && !p->team()->scoredLastGoal() ) {
+            continue;
+        }
+
         QGraphicsItemAnimation* anim = new QGraphicsItemAnimation(this);
         anim->setItem(p);
         m_playerAnimationItems.append(anim);
@@ -60,7 +64,7 @@ void GoalScoredState::createPlayerAnimationItems(GameState g)
         qreal stepX;
         qreal stepY;
 
-        switch(g)
+        switch( g )
         {
         case TakePositions:
         {
@@ -250,7 +254,7 @@ void Game::createPlayerAnimationItems(GameState g)
     }
 }
 
-void Game::onEntry(QEvent *event)
+void Game::onEntry(QEvent * /* event */)
 {
     if (m_isFirstHalf) {
         m_pitch->homeTeam()->setDirection(Team::NorthToSouth);
@@ -270,7 +274,7 @@ void Game::onEntry(QEvent *event)
     m_pitch->ball()->setVisible(true);
 }
 
-void Game::onExit(QEvent *event)
+void Game::onExit(QEvent * /* event */)
 {
     m_pitch->m_scene->removeItem(m_pitch->ball());
 

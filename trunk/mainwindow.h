@@ -39,10 +39,6 @@ public:
         // Due to loosing a tackle
         FallenOver,
 
-        // tackle, but got player not ball
-        // TODO is this required
-        Foul,
-
 #ifndef INDOOR
          ThrownIn,
 #endif // INDOOR

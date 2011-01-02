@@ -96,7 +96,7 @@ Player::Player(QString name,
     m_name(name),
     m_soundFile(QString(m_name + ".wav")),
     m_hasBall(false),
-    team_(team),
+    m_team(team),
     role_(role),
     m_pitch(pitch),
     m_speed(computerControlled ? KPlayerDefaultSpeed - 1 : KPlayerDefaultSpeed),
@@ -137,7 +137,7 @@ void Player::pixmapInsert(MWindow::Action a, QString s1, QString s2, QString s3,
 {
     QString s(":/images/red/");
 
-    QString key1(team_->name_), key2(team_->name_), key3(team_->name_);
+    QString key1(m_team->name_), key2(m_team->name_), key3(m_team->name_);
     key1.append(s1);
     key2.append(s2);
     key3.append(s3);
@@ -166,19 +166,19 @@ void Player::pixmapInsert(MWindow::Action a, QString s1, QString s2, QString s3,
 
 void Player::createPixmaps()
 {
-    pixmapInsert(MWindow::North, "pN.PNG", "pN1.PNG", "pN2.PNG", team_->color.rgb());
-    pixmapInsert(MWindow::NorthEast, "pNE.PNG", "pNE1.PNG", "pNE2.PNG", team_->color.rgb());
-    pixmapInsert(MWindow::East, "pE.PNG", "pE1.PNG", "pE2.PNG", team_->color.rgb());
-    pixmapInsert(MWindow::SouthEast, "pSE.PNG", "pSE1.PNG", "pSE2.PNG", team_->color.rgb());
-    pixmapInsert(MWindow::South, "pS.PNG", "pS1.PNG", "pS2.PNG", team_->color.rgb());
-    pixmapInsert(MWindow::SouthWest, "pSWest.PNG", "pSW1.PNG", "pSW2.PNG", team_->color.rgb());
-    pixmapInsert(MWindow::West, "pW.PNG", "pW1.PNG", "pW2.PNG", team_->color.rgb());
-    pixmapInsert(MWindow::NorthWest, "pNW.PNG", "pNW1.PNG", "pNW2.PNG", team_->color.rgb());
+    pixmapInsert(MWindow::North, "pN.PNG", "pN1.PNG", "pN2.PNG", m_team->color.rgb());
+    pixmapInsert(MWindow::NorthEast, "pNE.PNG", "pNE1.PNG", "pNE2.PNG", m_team->color.rgb());
+    pixmapInsert(MWindow::East, "pE.PNG", "pE1.PNG", "pE2.PNG", m_team->color.rgb());
+    pixmapInsert(MWindow::SouthEast, "pSE.PNG", "pSE1.PNG", "pSE2.PNG", m_team->color.rgb());
+    pixmapInsert(MWindow::South, "pS.PNG", "pS1.PNG", "pS2.PNG", m_team->color.rgb());
+    pixmapInsert(MWindow::SouthWest, "pSWest.PNG", "pSW1.PNG", "pSW2.PNG", m_team->color.rgb());
+    pixmapInsert(MWindow::West, "pW.PNG", "pW1.PNG", "pW2.PNG", m_team->color.rgb());
+    pixmapInsert(MWindow::NorthWest, "pNW.PNG", "pNW1.PNG", "pNW2.PNG", m_team->color.rgb());
 #ifndef INDOOR
     pixmapInsert(MWindow::ThrownIn, "pNW.PNG", "pNW1.PNG", "pNW2.PNG", team_->color.rgb()); // TODO XXX TIM
 #endif //
-    pixmapInsert(MWindow::Tackle, "tackleN.PNG", "tackleN.PNG", "tackleN.PNG", team_->color.rgb());
-    pixmapInsert(MWindow::FallenOver, "pTackled.PNG", "pTackled.PNG", "pTackled.PNG", team_->color.rgb()); // TODO XXX TIM
+    pixmapInsert(MWindow::Tackle, "tackleN.PNG", "tackleN.PNG", "tackleN.PNG", m_team->color.rgb());
+    pixmapInsert(MWindow::FallenOver, "pTackled.PNG", "pTackled.PNG", "pTackled.PNG", m_team->color.rgb()); // TODO XXX TIM
     // set default pixmap
     setPixmap(m_images[MWindow::North].at(0));
 }
@@ -257,10 +257,10 @@ void Player::movePlayer(MWindow::Action action)
 
 bool Player::withinShootingDistance() const
 {
-    if (team_->getDirection() == Team::NorthToSouth
+    if (m_team->getDirection() == Team::NorthToSouth
         && m_pitch->m_bottomPenaltyArea->contains(m_pitch->ball()->pos()))
         return true;
-    else if (team_->getDirection() == Team::SouthToNorth
+    else if (m_team->getDirection() == Team::SouthToNorth
              && m_pitch->m_topPenaltyArea->contains(m_pitch->ball()->pos()))
         return true;
     else {
@@ -338,14 +338,27 @@ void Player::specialAction(MWindow::Action action)
             m_outOfAction->stop();
             m_outOfAction->start(500);
 
-            // if tackle causes contact with the ball then transfer the ownership
-            if (ballCollisionCheck()) {
+            const bool ballCollision = ballCollisionCheck();
+            const bool playerCollision = playerCollisionCheck();
+
+            if ( playerCollision && !ballCollision ) {
                 Player *p = m_pitch->ball()->ballOwner();
                 if (p)
-                    p->isTackled(true);
+                    p->setTackled(); // TODO foul logic here...
+            }
+            // if tackle causes contact with the ball then transfer the ownership
+            else if ( playerCollision && ballCollision  ) {
+                Player *p = m_pitch->ball()->ballOwner();
+                if (p)
+                    p->setTackled();
                 QPointF ballDest = calculateDestination(MWindow::Pass);
                 m_pitch->ball()->kickBall(MWindow::Pass, ballDest);
             }
+            else if ( !playerCollision && ballCollision ) {
+                QPointF ballDest = calculateDestination(MWindow::Pass);
+                m_pitch->ball()->kickBall(MWindow::Pass, ballDest);
+            }
+
             return;
             }
     case MWindow::FallenOver:
@@ -391,7 +404,7 @@ void Player::specialAction(MWindow::Action action)
     }
 }
 
-void Player::isTackled(bool defeated)
+void Player::setTackled()
 {
     if ( m_hasBall ) {
         m_pitch->ball()->setNoBallOwner();
@@ -436,7 +449,7 @@ Player* Player::findAvailableTeamMate(QPointF myPos) const
     Player *bestPlayer = NULL;
 //    int nearest = 0xffff;
     foreach (Player *p, m_pitch->m_players) {
-        if (p->team_!= team_)
+        if (p->m_team!= m_team)
             continue;
         // not self
         if (p == this)
@@ -452,7 +465,7 @@ Player* Player::findAvailableTeamMate(QPointF myPos) const
     return bestPlayer;
 }
 
-bool Player::ballCollisionCheck()
+bool Player::ballCollisionCheck() const
 {
     // collision check before move...
     QList<QGraphicsItem*> list = collidingItems(Qt::IntersectsItemBoundingRect);
@@ -461,6 +474,21 @@ bool Player::ballCollisionCheck()
             continue;
         Ball *b = qgraphicsitem_cast<Ball *>(item);
         if ( b ) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool Player::playerCollisionCheck() const
+{
+    // collision check before move...
+    QList<QGraphicsItem*> list = collidingItems(Qt::IntersectsItemBoundingRect);
+    foreach (QGraphicsItem *item, list) {
+        if (item == this)
+            continue;
+        Player *p = qgraphicsitem_cast<Player *>(item);
+        if ( p && ( team() != p->team() ) ) {
             return true;
         }
     }
@@ -510,7 +538,7 @@ void Player::computerAdvanceWithBall()
 #endif //
 
     QPointF destination;
-    if (team_->getDirection() == Team::SouthToNorth )
+    if (m_team->getDirection() == Team::SouthToNorth )
         destination = QPointF(m_pitch->m_topGoal->rect().center().x(), m_pitch->m_topGoal->rect().bottom());
     else
         destination = QPointF(m_pitch->m_bottomGoal->rect().center().x(), m_pitch->m_bottomGoal->rect().top());
@@ -559,7 +587,7 @@ void Player::advance(int phase)
         return;
     if (m_outOfAction->isActive())
         return;
-    if (team_ == m_pitch->awayTeam())
+    if (m_team == m_pitch->awayTeam())
         computerAdvance(phase);
     else
         humanAdvance(phase);
