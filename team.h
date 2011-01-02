@@ -15,6 +15,7 @@ public:
     void setDirection(Direction dir) { dir_ = dir; }
     Direction getDirection() { return dir_; }
     void setHasBall(bool hasBall);
+    bool scoredLastGoal() { return m_scoredLastGoal; }
 
 public slots:
     void goalScored(bool isNorthGoal);
@@ -25,6 +26,8 @@ public:
     Direction dir_;
     bool teamHasBall_;
     int goals_;
+    // this team scored the last goal
+    bool m_scoredLastGoal;
 };
 
 

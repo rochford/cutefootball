@@ -62,9 +62,9 @@ void GoalKeeper::advance(int phase)
 
 void GoalKeeper::gkAdvanceWithoutBall()
 {
-    if (!team_->teamHasBall_) {
+    if (!m_team->teamHasBall_) {
         // if the ball enters the penalty area then go for it, otherwise return to goal line
-        Team::Direction dir = team_->getDirection();
+        Team::Direction dir = m_team->getDirection();
         MWindow::Action action;
 
             if ( (dir == Team::SouthToNorth
@@ -92,7 +92,7 @@ void GoalKeeper::gkAdvanceWithoutBall()
 
 void GoalKeeper::gkAdvanceWithBall()
 {
-    Team::Direction dir = team_->getDirection();
+    Team::Direction dir = m_team->getDirection();
     if ( dir == Team::SouthToNorth )
         m_lastAction = MWindow::North;
     else

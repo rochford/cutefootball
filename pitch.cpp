@@ -92,7 +92,7 @@ Player* Pitch::selectNearestPlayer(Team* team)
     Player *nearestPlayer(NULL);
     // nobody has ball, select the closest hometeam
     foreach (Player *p, m_players) {
-        if (p->team_== team) {
+        if (p->team()== team) {
             // dont select the goal keeper
             if (p->role_ == Player::GoalKeeper)
                 continue;
@@ -131,6 +131,7 @@ void Pitch::setPiece(Team* t, SetPiece s)
 {
     m_soundEffects->soundEvent(SoundEffects::Whistle);
     switch(s) {
+    case Pitch::Foul: // TODO foul logic
     case Pitch::KickOff:
         foreach (Player *p, m_players) {
                 p->setHasBall(false);
@@ -323,8 +324,8 @@ void Pitch::hasBallCheck()
     // which team has the ball?
     Player* p = m_ball->lastPlayerToTouchBall();
     if ( p ) {
-        m_homeTeam->setHasBall(p->team_== m_homeTeam);
-        m_awayTeam->setHasBall(p->team_== m_awayTeam);
+        m_homeTeam->setHasBall(p->team()== m_homeTeam);
+        m_awayTeam->setHasBall(p->team()== m_awayTeam);
     }
 }
 
@@ -429,7 +430,7 @@ void Pitch::createTeamPlayers(Team *team)
 void Pitch::setPlayerDefendZone(Player *p)
 {
     bool nToS(false);
-    if (p->team_->getDirection() == Team::NorthToSouth)
+    if (p->team()->getDirection() == Team::NorthToSouth)
         nToS = true;
 
     QPointF tlTopHalf = m_footballPitch->rect().topLeft();
@@ -485,7 +486,7 @@ void Pitch::setPlayerStartPositions(Team *team)
                          m_pitchArea[nToS ? 3 : 4][4]);
 
     foreach (Player *p, m_players) {
-        if (p->team_ == team) {
+        if (p->team() == team) {
             p->setHasBall(false);
             p->m_startPositionRectF = startPositions[p->role_];
             setPlayerDefendZone(p);
