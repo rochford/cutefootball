@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>m_frameAbout</class>
+ <widget class="QFrame" name="m_frameAbout">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>240</width>
+    <height>320</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Frame</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QFrame { background: transparent; border: none; } 
+
+QPushButton, QCheckbox {
+   border: none; 
+	color: white; 
+	background-color: black; 
+	font: bold large &quot;Rockwell Extra Bold&quot;; 
+	font-size: 18px; 
+}
+
+QPushButton:pressed {
+		color: gold; 
+}
+QPushButton:hover {
+		color: gold; 
+}
+QDialog {
+	color: white; 
+	background-color: &quot;#677B09&quot;; 
+	font: bold large &quot;Rockwell Extra Bold&quot;; 
+	font-size: 18px; 
+}
+
+QSpinBox, QLabel {
+	color: white; 
+	background-color: black; 
+	font: bold large &quot;Rockwell Extra Bold&quot;; 
+	font-size: 18px; 
+}</string>
+  </property>
+  <property name="frameShape">
+   <enum>QFrame::StyledPanel</enum>
+  </property>
+  <property name="frameShadow">
+   <enum>QFrame::Raised</enum>
+  </property>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>40</y>
+     <width>145</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Game Length</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

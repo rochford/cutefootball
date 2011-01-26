@@ -2,8 +2,82 @@
 #include "pitch.h"
 #include "ball.h"
 #include "Player.h"
-#include "replay.h"
 #include "screengraphics.h"
+
+FoulState::FoulState(Game *g, Pitch *p)
+    : QState(g),
+      m_game(g),
+      m_pitch(p)
+{
+    m_takePositions = new QState(this);
+    m_allDone = new QFinalState(this);
+    setInitialState(m_takePositions);
+
+    m_timeLineTakePositions = new QTimeLine(1000*3, this);
+    m_timeLineTakePositions->setCurveShape(QTimeLine::LinearCurve);
+    m_timeLineTakePositions->setFrameRange(0, 100);
+
+    m_takePositions->addTransition(m_takePositions, SIGNAL(finished()), m_allDone);
+
+    connect(m_timeLineTakePositions, SIGNAL(frameChanged(int)), this, SLOT(playFrame(int)));
+    connect(m_timeLineTakePositions, SIGNAL(finished()), m_game, SLOT(kickOff()));
+}
+
+void FoulState::onEntry(QEvent * /* event */)
+{
+    qDebug() << "FoulState::onEntry";
+    m_game->stopGameClock();
+    createPlayerAnimationItems(TakePositions);
+    m_timeLineTakePositions->start();
+}
+
+// animate from present player position to another point.
+void FoulState::createPlayerAnimationItems(GameState g)
+{
+    m_playerAnimationItems.clear(); // TODO XXX TIM delete all
+
+    foreach (Player *p, m_pitch->m_players) {
+        QGraphicsItemAnimation* anim = new QGraphicsItemAnimation(this);
+        anim->setItem(p);
+        m_playerAnimationItems.append(anim);
+
+        QPointF tmp;
+        qreal stepX;
+        qreal stepY;
+
+        switch( g )
+        {
+        case TakePositions:
+        {
+            anim->setTimeLine(m_timeLineTakePositions);
+            tmp = p->pos();
+            stepX = ( p->m_startPositionRectF.center().x() - tmp.x()) / 100.0;
+            stepY = ( p->m_startPositionRectF.center().y() - tmp.y()) / 100.0;
+            MWindow::Action a = calculateAction(tmp, p->m_startPositionRectF.center());
+            p->movePlayer(a);
+        }
+            break;
+
+        default:
+            break;
+        }
+
+        for (int i = 0; i < 100; ++i) {
+            anim->setPosAt(i / 100.0, QPointF(tmp.x() + stepX,
+                                              tmp.y() + stepY));
+            tmp.setX(tmp.x() + stepX);
+            tmp.setY(tmp.y() + stepY);
+        }
+    }
+}
+
+void FoulState::playFrame(int frame)
+{
+    qreal f = frame/ 100.00;
+    foreach (QGraphicsItemAnimation *anim, m_playerAnimationItems)
+        anim->item()->setPos(anim->posAt(f));
+    m_pitch->m_scene->update();
+}
 
 GoalScoredState::GoalScoredState(Game *g, Pitch *p)
     : QState(g),
@@ -105,6 +179,7 @@ void GoalScoredState::playFrame(int frame)
     m_pitch->m_scene->update();
 }
 
+
 Game::Game(Pitch* p,
      QString stateName,
      bool isFirstHalf, bool isExtraTime)
@@ -129,12 +204,14 @@ Game::Game(Pitch* p,
     m_playingState = new QState(this);
     m_halfEndState = new QState(this);
     m_goalScoredState = new GoalScoredState(this, m_pitch);
+    m_foulState = new FoulState(this, m_pitch);
     m_allDoneState = new QFinalState(this);
     setInitialState(m_startState);
 
     m_startState->addTransition(m_timeLineTakePositions, SIGNAL(finished()), m_playingState);
     m_playingState->addTransition(this, SIGNAL(halfOver()), m_halfEndState);
     m_goalScoredState->addTransition(m_goalScoredState, SIGNAL(finished()), m_playingState);
+    m_foulState->addTransition(m_foulState, SIGNAL(finished()), m_playingState);
     m_halfEndState->addTransition(m_timeLineLeavePitch, SIGNAL(finished()), m_allDoneState);
 
     connect(this, SIGNAL(halfOver()), this, SLOT(startPlayersLeavePitchAnim()));
@@ -167,9 +244,6 @@ void Game::startPlayersLeavePitchAnim()
     m_timeLineLeavePitch->start();
     m_pitch->ball()->setVisible(false);
     m_1second->stop();
-#ifdef REPLAY_FEATURE
-    m_pitch->replay()->replaySnapShotTimer_->stop();
-#endif // REPLAY_FEATURE
 }
 
 void Game::stopGameClock()
@@ -180,16 +254,13 @@ void Game::stopGameClock()
 
 void Game::kickOff()
 {
+    qDebug() << "Game::kickOff()";
     m_pitch->setPiece(m_pitch->homeTeam(), Pitch::KickOff);
 
-    // playing state transition to goalScoreState is not working
+    m_playingState->addTransition(m_pitch, SIGNAL(foul()), m_foulState);
     m_playingState->addTransition(m_pitch->ball(), SIGNAL(goalScored(bool)), m_goalScoredState);
 
-
     m_1second->start();
-#ifdef REPLAY_FEATURE
-    m_pitch->replay()->replaySnapShotTimer_->start();
-#endif // REPLAY_FEATURE
 }
 
 void Game::playFrame(int frame)

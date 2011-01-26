@@ -19,12 +19,11 @@ ScreenGraphics::ScreenGraphics(Pitch *p)
     : QObject(p),
     m_pitch(p),
     m_scoreText(NULL),
-    m_mode(NormalMode),
     m_timer(NULL)
 {
     m_scoreText = m_pitch->m_scene->addSimpleText(QString("XXX"),KSmallFont);
     m_scoreText->setVisible(false);
-    m_scoreText->setZValue(KReallyHighZValue);
+    m_scoreText->setZValue(Pitch::ZScoreText);
 
     m_timer = new QTimer(this);
     m_timer->setInterval(500);
@@ -60,13 +59,3 @@ void ScreenGraphics::changeFont()
     m_pitch->m_scene->update();
 }
 
-void ScreenGraphics::setMode(ScreenGraphicsMode mode)
-{
-    if (mode == ScreenGraphics::ReplayMode )
-        m_timer->start();
-    else {
-        m_timer->stop();
-        m_scoreText->setFont(KSmallFont);
-    }
-    m_mode = mode;
-}

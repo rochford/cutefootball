@@ -17,6 +17,34 @@ class QTimeLine;
 class Pitch;
 class Game;
 
+class FoulState : public QState
+{
+    Q_OBJECT
+public:
+    FoulState(Game *g, Pitch *p);
+    ~FoulState() {}
+
+    enum GameState {
+        TakePositions
+    };
+public slots:
+    void playFrame(int frame);
+
+protected:
+    void onEntry (QEvent * event );
+
+private:
+    void createPlayerAnimationItems(GameState g);
+
+private:
+    QState *m_takePositions;
+    QFinalState *m_allDone;
+    Game *m_game;
+    Pitch* m_pitch;
+    QTimeLine *m_timeLineTakePositions;
+    QList<QGraphicsItemAnimation*> m_playerAnimationItems;
+};
+
 class GoalScoredState : public QState
 {
     Q_OBJECT
@@ -94,6 +122,7 @@ private:
     QState *m_playingState;
     QState *m_halfEndState;
     GoalScoredState *m_goalScoredState;
+    FoulState* m_foulState;
     QFinalState *m_allDoneState;
 
     QTimeLine *m_timeLineTakePositions;

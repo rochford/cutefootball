@@ -40,6 +40,8 @@ public:
            Pitch* pitch,
            Team* team,
            Player::Role role);
+    virtual ~Player();
+
     enum { Type = UserType + 2 };
 
     virtual int type() const
@@ -76,7 +78,7 @@ protected:
     void paint(QPainter *painter,
                           const QStyleOptionGraphicsItem *option,
                           QWidget *widget);
-
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
     void pixmapInsert(MWindow::Action a,
                       QString s1,
                       QString s2,
@@ -109,6 +111,8 @@ private:
     QTime m_elapsedTime;
     QMap<int,MWindow::Action> m_actions;
     QTimer *m_keyEventTimer;
+    // last position of the player
+    QPointF m_lastPos;
 
 protected:
     Team* m_team;
