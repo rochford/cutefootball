@@ -22,9 +22,6 @@ void GoalKeeper::createPixmaps()
     pixmapInsert(MWindow::SouthWest, "pSW.PNG", "pSW1.PNG", "pSW2.PNG", KGoalKeeperColor);
     pixmapInsert(MWindow::West, "pW.PNG", "pW1.PNG", "pW2.PNG", KGoalKeeperColor);
     pixmapInsert(MWindow::NorthWest, "pNW.PNG", "pNW1.PNG", "pNW2.PNG", KGoalKeeperColor);
-#ifndef INDOOR
-    pixmapInsert(MWindow::ThrownIn, "pNW.PNG", "pNW1.PNG", "pNW2.PNG", KGoalKeeperColor); // TODO XXX TIM
-#endif //
 
     pixmapInsert(MWindow::Tackle, "tackleN.PNG", "tackleN.PNG", "tackleN.PNG", KGoalKeeperColor); // TODO XXX TIM
     pixmapInsert(MWindow::FallenOver, "pNW.PNG", "pNW1.PNG", "pNW2.PNG", KGoalKeeperColor); // TODO XXX TIM
@@ -74,17 +71,20 @@ void GoalKeeper::gkAdvanceWithoutBall()
 
             qreal dx = abs(pos().x() - m_pitch->ball()->pos().x());
             qreal dy = abs(pos().y() - m_pitch->ball()->pos().y());
-            if ( m_pitch->ball()->ballOwner() && ( dx < 5) && (dy < 5) )
+            if ( m_pitch->ball()->ballOwner() && ( dx < 15) && (dy < 15) )
                 action = MWindow::Tackle;
             else
                 action = calculateAction(pos(), m_pitch->ball()->pos());
         } else {
             QPointF ownGoal;
+            /*
+              TODO
             if ( dir == Team::SouthToNorth )
-                ownGoal = m_pitch->m_bottomPenaltyArea->rect().center();
+                ownGoal = m_pitch->m_bottomPenaltyArea->  rect().center();
             else
-                ownGoal = m_pitch->m_topPenaltyArea->rect().center();
+               ownGoal = m_pitch->m_topPenaltyArea->rect().center();
             action = calculateAction(pos(), ownGoal);
+            */
         }
         move(action);
     }

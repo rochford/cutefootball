@@ -31,12 +31,12 @@ public:
     int type() const { return Type; }
 
     void kickBall(MWindow::Action action, QPointF destination);
-    inline Player* ballOwner() { return m_ballOwner; }
+    inline Player* ballOwner() const { return m_ballOwner; }
     inline void setBallOwner(Player* p) {
         m_ballOwner = p;
         m_lastPlayerToTouchBall = p;
     }
-    Player* lastPlayerToTouchBall() { return m_lastPlayerToTouchBall; }
+    Player* lastPlayerToTouchBall() const { return m_lastPlayerToTouchBall; }
     inline void setNoBallOwner() { m_ballOwner = NULL; }
 
 signals:

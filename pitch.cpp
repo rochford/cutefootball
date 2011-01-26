@@ -12,9 +12,6 @@
 #include "Player.h"
 #include "team.h"
 #include "goalkeeper.h"
-#ifdef REPLAY_FEATURE
-#include "replay.h"
-#endif // REPLAY_FEATURE
 #include "screengraphics.h"
 #include "game.h"
 #include "soundEffects.h"
@@ -24,7 +21,6 @@
 Pitch::Pitch(const QRectF& footballGroundRect,
              QGraphicsView* view,
              SoundEffects* se,
-             QWidget* frame,
              settingsDialog* settingsDlg)
   : QObject(),
     m_scene(new QGraphicsScene(footballGroundRect)),
@@ -35,13 +31,12 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     m_scoreText(NULL),
     m_centerLine(NULL),
     m_centerCircle(NULL),
-    m_menuFrame(frame),
     m_settingsDlg(settingsDlg),
     m_soundEffects(se)
 {
     m_view->scale(1.5,1.5);
     m_view->setScene(m_scene);
-    m_scene->setBackgroundBrush(QBrush(Qt::black));
+    m_scene->setBackgroundBrush(QBrush(Qt::blue));
 
     m_motionTimer = new QTimer(this);
     m_motionTimer->setInterval(KGameRefreshRate);
@@ -63,14 +58,8 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     connect(m_allDone, SIGNAL(entered()), this, SLOT(removePlayers()));
     connect(m_allDone, SIGNAL(entered()), this, SLOT(gameStopped()));
 
-#ifdef REPLAY_FEATURE
-    m_replay = new Replay(this, this);
-#endif // REPLAY_FEATURE
-    m_proxyMenuFrame = m_scene->addWidget(m_menuFrame);
-    m_proxyMenuFrame->setZValue(20);
-
     m_proxySettingsDlg = m_scene->addWidget((QWidget*)m_settingsDlg);
-    m_proxySettingsDlg->setZValue(20);
+    m_proxySettingsDlg->setZValue(ZMenus);
 
     layoutPitch();
 
@@ -113,7 +102,6 @@ Player* Pitch::selectNearestPlayer(Team* team)
 
 void Pitch::gameStarted()
 {
-    m_menuFrame->setVisible(false);
     m_settingsDlg->setVisible(false);
     m_motionTimer->start();
     emit gameInProgress(true);
@@ -122,7 +110,6 @@ void Pitch::gameStarted()
 void Pitch::gameStopped()
 {
     m_motionTimer->stop();
-    m_menuFrame->setVisible(true);
 //    m_settingsDlg->setVisible(true);
     emit gameInProgress(false);
 }
@@ -132,6 +119,8 @@ void Pitch::setPiece(Team* t, SetPiece s)
     m_soundEffects->soundEvent(SoundEffects::Whistle);
     switch(s) {
     case Pitch::Foul: // TODO foul logic
+        //emit foul();
+        break;
     case Pitch::KickOff:
         foreach (Player *p, m_players) {
                 p->setHasBall(false);
@@ -149,61 +138,6 @@ void Pitch::setPiece(Team* t, SetPiece s)
         m_ball->setStartingPosition();
         break;
 #ifndef INDOOR
-    case Pitch::ThrowIn:
-        {
-            if (t == m_awayTeam) {
-                m_awayTeam->setHasBall(true);
-                m_homeTeam->setHasBall(false);
-            } else {
-                m_awayTeam->setHasBall(false);
-                m_homeTeam->setHasBall(true);
-            }
-
-            // find the nearest player to the ball and move them to the throw in position
-            Player* throwInTaker = selectNearestPlayer(t);
-            if (throwInTaker) {
-                // change the player graphic to be throw in graphic
-                throwInTaker->setPos(m_ball->pos());
-                throwInTaker->hasBall_ = true;
-                m_ball->setControlledBy(throwInTaker);
-                throwInTaker->move(MWindow::ThrownIn);
-                // hide the ball
-               m_ball->setVisible(false);
-            }
-        }
-        break;
-
-    case Pitch::GoalKick:
-        {
-            if (t == m_awayTeam) {
-                m_awayTeam->setHasBall(true);
-                m_homeTeam->setHasBall(false);
-            } else {
-                m_awayTeam->setHasBall(false);
-                m_homeTeam->setHasBall(true);
-            }
-
-            Player *taker = NULL;
-            foreach (Player *p, m_players) {
-                if (p->team_== t) {
-
-                    // dont select the goal keeper
-                    if (p->role_ == Player::GoalKeeper)
-                        taker = p;
-                        break;
-                }
-            }
-
-            if (taker) {
-                taker->setPos(m_ball->pos());
-                taker->hasBall_ = true;
-                m_ball->setControlledBy(taker);
-                taker->move(MWindow::Shot);
-                // hide the ball
-            //   m_ball->setVisible(false);
-            }
-        }
-        break;
 #endif // INDOOR
     default:
         break;
@@ -219,9 +153,6 @@ void Pitch::selectNearestPlayer()
 
 Pitch::~Pitch()
 {
-#ifdef REPLAY_FEATURE
-    delete m_replay;
-#endif // REPLAY_FEATURE
     if (m_motionTimer->isActive())
         m_motionTimer->stop();
     delete m_motionTimer;
@@ -242,13 +173,13 @@ void Pitch::layoutPitch()
     m_scene->addItem(m_grass);
 
     // create the pitch
-    m_footballPitch = m_scene->addRect(30, 30, m_scene->width()-60, m_scene->height() -60,
+    m_footballPitch = m_scene->addRect(0, 0, m_scene->width(), m_scene->height() ,
                                     KWhitePaintPen,
                                     QBrush(Qt::white,Qt::NoBrush) );
 
     // half way line
-    m_centerLine = m_scene->addLine(m_scene->sceneRect().left()+30,m_scene->sceneRect().height()/2.0,
-                         m_scene->sceneRect().right()-30,m_scene->sceneRect().height()/2.0, KWhitePaintPen);
+    m_centerLine = m_scene->addLine(m_scene->sceneRect().left(),m_scene->sceneRect().height()/2.0,
+                         m_scene->sceneRect().right(),m_scene->sceneRect().height()/2.0, KWhitePaintPen);
 
     // center circle
     m_centerCircle = m_scene->addEllipse((m_scene->sceneRect().width()/2.0) -80,(m_scene->sceneRect().height()/2.0)-80,
@@ -257,22 +188,32 @@ void Pitch::layoutPitch()
     m_scoreText = new ScreenGraphics(this);
 
     // create the goals
-    m_bottomGoal = m_scene->addRect((m_scene->width() / 2)-60, m_scene->height()-30,120,25,
-                   QPen(Qt::black),
-                   QBrush(Qt::black,Qt::CrossPattern) );
-    m_topGoal = m_scene->addRect((m_scene->width() / 2)-60,5,120,25,
-                   QPen(Qt::black),
-                   QBrush(Qt::black,Qt::CrossPattern) );
+    m_bottomGoal = m_scene->addRect((m_scene->width() / 2)-60, m_scene->height(),120,25,
+                   KWhitePaintPen,
+                   QBrush(Qt::white,Qt::SolidPattern) );
+    m_topGoal = m_scene->addRect((m_scene->width() / 2)-60,-25,120,25,
+                   KWhitePaintPen,
+                   QBrush(Qt::white,Qt::SolidPattern) );
 
     // penalty areas
-    m_topPenaltyArea = m_scene->addRect((m_scene->width() / 2)-90, 30,
-                                    180, 100,
-                                    KWhitePaintPen,
-                                    QBrush(Qt::white,Qt::NoBrush) );
-    m_bottomPenaltyArea = m_scene->addRect((m_scene->width() / 2)-90, m_scene->height()-130,
-                                       180, 100,
-                                    KWhitePaintPen,
-                                    QBrush(Qt::white,Qt::NoBrush) );
+    QPainterPath path;
+    QRectF penaltyRectF((m_scene->width() / 2)-90, -50, 180, 100 );
+    path.moveTo(penaltyRectF.center());
+    path.arcTo(penaltyRectF,180.0,180.0);
+    path.closeSubpath();
+
+    m_topPenaltyArea = m_scene->addPath(path,
+                                        KWhitePaintPen,
+                                        QBrush(Qt::white,Qt::NoBrush) );
+
+    QPainterPath path2;
+    QRectF penaltyRectF2((m_scene->width() / 2)-90, m_scene->height()-50, 180, 100 );
+    path2.moveTo(penaltyRectF2.center());
+    path2.arcTo(penaltyRectF2,180.0,-180.0);
+    path2.closeSubpath();
+    m_bottomPenaltyArea = m_scene->addPath(path2,
+                                        KWhitePaintPen,
+                                        QBrush(Qt::white,Qt::NoBrush) );
 
     m_entrancePoint = QPointF(0, (m_scene->sceneRect().height())/2);
     // divide the pitch into areas
@@ -347,7 +288,6 @@ void Pitch::newGame()
 {
     m_firstHalfState->setGameLength(m_settingsDlg->gameLengthMinutes());
     m_secondHalfState->setGameLength(m_settingsDlg->gameLengthMinutes());
-    m_menuFrame->setVisible(false);
     m_ball = new Ball(this);
 
     m_homeTeam = m_teams.at(0);
@@ -359,9 +299,7 @@ void Pitch::newGame()
     connect(m_ball, SIGNAL(goalScored(bool)), m_homeTeam, SLOT(goalScored(bool)));
     connect(m_ball, SIGNAL(soundEvent(SoundEffects::GameSound)),
             m_soundEffects, SLOT(soundEvent(SoundEffects::GameSound)));
-#ifdef REPLAY_FEATURE
-    m_replay->createAnimationItems();
-#endif // REPLAY_FEATURE
+
     m_game->start();
 }
 
@@ -383,21 +321,10 @@ void Pitch::createTeamPlayers(Team *team)
     formation << Player::GoalKeeper
               << Player::LeftCentralDefence
               << Player::RightCentralDefence
-              << Player::LeftMidfield
-              << Player::RightMidfield
-              << Player::CentralAttack;
-#else
-    formation << Player::GoalKeeper
-              << Player::LeftDefence
-              << Player::LeftCentralDefence
-              << Player::RightCentralDefence
-              << Player::RightDefence
-              << Player::LeftMidfield
               << Player::CentralMidfield
-              << Player::RightMidfield
               << Player::LeftAttack
-              << Player::CentralAttack
               << Player::RightAttack;
+#else
 #endif // INDOOR
 
     QPointF startPos(0, m_scene->sceneRect().height()/2);
@@ -448,6 +375,10 @@ void Pitch::setPlayerDefendZone(Player *p)
     case Player::LeftAttack:
         nToS ? zone = bottomHalf : zone = topHalf;
         break;
+    case Player::LeftCentralDefence:
+    case Player::RightCentralDefence:
+        nToS ? zone = topHalf : zone = bottomHalf;
+        break;
     default:
         zone = p->m_startPositionRectF;
         break;
@@ -493,28 +424,7 @@ void Pitch::setPlayerStartPositions(Team *team)
         }
     }
 }
-#ifdef REPLAY_FEATURE
-void Pitch::replayStart()
-{
-    m_scene->setBackgroundBrush(QBrush(QColor(Qt::gray)));
-    m_motionTimer->stop();
 
-    m_scoreText->setMode(ScreenGraphics::ReplayMode);
-    m_scoreText->setText(tr("REPLAY"));
-
-    m_replay->replayStart();
-}
-
-void Pitch::replayStop()
-{
-    m_scene->setBackgroundBrush(QPixmap(QString(":/images/pitch2.GIF")));
-
-
-
-    m_scoreText->setMode(ScreenGraphics::NormalMode);
-    m_motionTimer->start();
-}
-#endif // REPLAY_FEATURE
 void Pitch::playGameSound(SoundEffects::GameSound s)
 {
     m_soundEffects->soundEvent(s);

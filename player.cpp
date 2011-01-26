@@ -1,7 +1,6 @@
 #include "Player.h"
 #include "pitch.h"
 #include "ball.h"
-#include "replay.h"
 #include "soundeffects.h"
 
 #include <QtGui>
@@ -85,7 +84,6 @@ int calculateTackleRotationFromLastAction(MWindow::Action lastAction)
     return action;
 }
 
-
 Player::Player(QString name,
                bool computerControlled,
                Pitch *pitch,
@@ -103,7 +101,7 @@ Player::Player(QString name,
     m_step(0),
     m_outOfAction(NULL)
 {
-
+    setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
     m_keyEventTimer = new QTimer(this);
     m_keyEventTimer->setInterval(KGameRefreshRate);
 
@@ -119,6 +117,16 @@ Player::Player(QString name,
     createKeyboardActions();
     setRotation(0);
     setTransformOriginPoint(boundingRect().center());
+}
+
+Player::~Player()
+{
+    m_moveDistance.clear();
+    m_images.clear();
+    m_actions.clear();
+
+    delete m_keyEventTimer;
+    delete m_outOfAction;
 }
 
 void Player::createMoves()
@@ -174,9 +182,7 @@ void Player::createPixmaps()
     pixmapInsert(MWindow::SouthWest, "pSWest.PNG", "pSW1.PNG", "pSW2.PNG", m_team->color.rgb());
     pixmapInsert(MWindow::West, "pW.PNG", "pW1.PNG", "pW2.PNG", m_team->color.rgb());
     pixmapInsert(MWindow::NorthWest, "pNW.PNG", "pNW1.PNG", "pNW2.PNG", m_team->color.rgb());
-#ifndef INDOOR
-    pixmapInsert(MWindow::ThrownIn, "pNW.PNG", "pNW1.PNG", "pNW2.PNG", team_->color.rgb()); // TODO XXX TIM
-#endif //
+
     pixmapInsert(MWindow::Tackle, "tackleN.PNG", "tackleN.PNG", "tackleN.PNG", m_team->color.rgb());
     pixmapInsert(MWindow::FallenOver, "pTackled.PNG", "pTackled.PNG", "pTackled.PNG", m_team->color.rgb()); // TODO XXX TIM
     // set default pixmap
@@ -194,12 +200,7 @@ void Player::paint(QPainter *painter,
                    QWidget *widget)
 {
     // the player that is focused get red circle around them
-    if ( hasFocus()
-#ifdef REPLAY_FEATURE
-        && !m_pitch->replay()->isReplay()
-#endif // REPLAY_FEATURE
-            )
-    {
+    if ( hasFocus() ) {
         QBrush brush(Qt::white, Qt::Dense3Pattern);
         painter->setBrush(brush);
         painter->drawEllipse(QPointF(0,0), 8*KScaleFactor, 8*KScaleFactor);
@@ -342,9 +343,12 @@ void Player::specialAction(MWindow::Action action)
             const bool playerCollision = playerCollisionCheck();
 
             if ( playerCollision && !ballCollision ) {
+                qDebug() << "Player::specialAction foul";
                 Player *p = m_pitch->ball()->ballOwner();
                 if (p)
-                    p->setTackled(); // TODO foul logic here...
+                    p->setTackled();
+                // TODO foul logic here...
+                m_pitch->setPiece( team(), Pitch::Foul);
             }
             // if tackle causes contact with the ball then transfer the ownership
             else if ( playerCollision && ballCollision  ) {
@@ -369,15 +373,6 @@ void Player::specialAction(MWindow::Action action)
             m_outOfAction->start(1500);
             return;
             }
-#ifndef INDOOR
-        case MWindow::ThrownIn:
-            {
-                setPixmap(m_images[action].at(0));
-                m_outOfAction->start(1500);
-                m_lastAction = action;
-            }
-            return;
-#endif //
         default:
             break;
     }
@@ -429,9 +424,6 @@ void Player::move(MWindow::Action action)
     }
 
     if ( action == MWindow::Shot
-#ifndef INDOOR
-        || action == MWindow::ThrownIn
-#endif //
         || action == MWindow::Tackle
         || action == MWindow::FallenOver
         || action == MWindow::Pass)
@@ -505,7 +497,7 @@ void Player::computerAdvance(int phase)
 
 void Player::computerAdvanceWithoutBall()
 {
-    setZValue(5);
+    setZValue(Pitch::ZComputerControlledPlayer);
     Player *nearestPlayer = m_pitch->selectNearestPlayer(m_pitch->awayTeam());
 
     if (nearestPlayer == this ) {
@@ -527,15 +519,7 @@ void Player::computerAdvanceWithoutBall()
 
 void Player::computerAdvanceWithBall()
 {
-    setZValue(6);
-#ifndef INDOOR
-    // if the last action was thrownIn, then just pass the ball...
-    if (m_lastAction == MWindow::ThrownIn) {
-        m_pitch->ball()->setVisible(true);
-        move(MWindow::Pass);
-        return;
-    }
-#endif //
+    setZValue(Pitch::ZFocusedPlayer);
 
     QPointF destination;
     if (m_team->getDirection() == Team::SouthToNorth )
@@ -620,9 +604,6 @@ void Player::keyPressEvent(QKeyEvent *event)
         // start a timer
         m_keyEventTimer->start();
         break;
-#ifdef REPLAY_FEATURE
-    case MWindow::Replay:
-#endif // REPLAY_FEATURE
     default:
         break;
     }
@@ -664,14 +645,35 @@ void Player::stopKeyEvent()
 
 void Player::createKeyboardActions()
 {
-    m_actions.insert( Qt::Key_W, MWindow::North );
-    m_actions.insert( Qt::Key_E, MWindow::NorthEast );
-    m_actions.insert( Qt::Key_D, MWindow::East );
-    m_actions.insert( Qt::Key_C, MWindow::SouthEast );
-    m_actions.insert( Qt::Key_X, MWindow::South );
-    m_actions.insert( Qt::Key_Z, MWindow::SouthWest );
-    m_actions.insert( Qt::Key_A, MWindow::West );
-    m_actions.insert( Qt::Key_Q, MWindow::NorthWest );
+    m_actions.insert( Qt::Key_8, MWindow::North );
+    m_actions.insert( Qt::Key_9, MWindow::NorthEast );
+    m_actions.insert( Qt::Key_6, MWindow::East );
+    m_actions.insert( Qt::Key_3, MWindow::SouthEast );
+    m_actions.insert( Qt::Key_2, MWindow::South );
+    m_actions.insert( Qt::Key_1, MWindow::SouthWest );
+    m_actions.insert( Qt::Key_4, MWindow::West );
+    m_actions.insert( Qt::Key_7, MWindow::NorthWest );
 
-    m_actions.insert( Qt::Key_S, MWindow::Button );
+    m_actions.insert( Qt::Key_5, MWindow::Button );
 }
+
+QVariant Player::itemChange(GraphicsItemChange change, const QVariant &value)
+ {
+     if (change == ItemPositionChange && scene()) {
+         // value is the new position.
+         QPointF newPos = value.toPointF();
+         QRectF pitch = m_pitch->m_footballPitch->rect();
+
+#ifdef INDOOR
+         if (!pitch.contains(newPos)) {
+             return m_lastPos;
+         }
+         else {
+             m_lastPos = newPos;
+             return newPos;
+         }
+#else
+#endif //
+     }
+     return QGraphicsItem::itemChange(change, value);
+ }

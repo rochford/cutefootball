@@ -3,7 +3,6 @@
 
 #include <QtGui>
 #include <qmap.h>
-#include "ui_mainMenu.h"
 #include "ui_mainwindow.h"
 
 class Pitch;
@@ -82,8 +81,6 @@ private:
 #ifdef REPLAY_FEATURE
     QMap<int,Action> m_actions;
 #endif // REPLAY_FEATURE
-    Ui::Frame ui;
-    QFrame* m_mainMenuFrame;
 
     Ui::MainWindow uiMainWindow;
     };

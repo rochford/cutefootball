@@ -13,16 +13,10 @@ class ScreenGraphics : public QObject
     Q_OBJECT
 public:
 
-    enum ScreenGraphicsMode {
-        NormalMode,
-        ReplayMode
-        };
-
     ScreenGraphics(Pitch *p);
     virtual ~ScreenGraphics();
     void updatePosition();
     void setText(QString s);
-    void setMode(ScreenGraphicsMode mode);
 
 signals:
 
@@ -33,7 +27,6 @@ public slots:
 private:
     Pitch *m_pitch;
     QGraphicsSimpleTextItem *m_scoreText;
-    ScreenGraphicsMode m_mode;
     QTimer *m_timer;
 };
 

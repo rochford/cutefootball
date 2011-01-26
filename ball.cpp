@@ -29,7 +29,7 @@ Ball::Ball(Pitch* pitch)
     setTransformOriginPoint(boundingRect().center());
     setPos(start_.x(), start_.y());
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
-    setZValue(8);
+    setZValue(Pitch::ZBall);
 
     animation_ = new QGraphicsItemAnimation(this);
     animationTimer_ = new QTimeLine(1000, this);
@@ -202,40 +202,6 @@ QVariant Ball::itemChange(GraphicsItemChange change, const QVariant &value)
              return newPos;
          }
 #else
-         // is the ball out of bounds?
-         if (!rect.contains(newPos)) {
-             // no player controls ball now
-             setControlledBy(NULL);
-
-             // goal kick or corner?
-             bool homeTeamTouchedLast = m_pitch->homeTeam()->teamHasBall_;
-
-             // throw in?
-             if (rect.right() < newPos.x()) {
-                 m_pitch->setPiece(homeTeamTouchedLast ? m_pitch->awayTeam() : m_pitch->homeTeam(), Pitch::ThrowIn);
-                 newPos.setX(m_pitch->m_footballPitch->rect().right());
-                 return newPos;
-             }
-             if (rect.x() > newPos.x()) {
-                 m_pitch->setPiece(homeTeamTouchedLast ? m_pitch->awayTeam() : m_pitch->homeTeam(), Pitch::ThrowIn);
-                 newPos.setX(m_pitch->m_footballPitch->rect().left());
-                 return newPos;
-             }
-
-             // goal kick?
-             if ( rect.top() > newPos.y()) {
-                 newPos.setX(m_pitch->m_topGoal->rect().x());
-                 newPos.setY(m_pitch->m_topGoal->rect().y() + 20);
-                 m_pitch->setPiece(homeTeamTouchedLast ? m_pitch->awayTeam() : m_pitch->homeTeam(), Pitch::GoalKick);
-                 return newPos;
-             }
-             if (rect.bottom() < newPos.y()) {
-                 newPos.setX(m_pitch->m_bottomGoal->rect().x());
-                 newPos.setY(m_pitch->m_bottomGoal->rect().y() - 20);
-                 m_pitch->setPiece(homeTeamTouchedLast ? m_pitch->awayTeam() : m_pitch->homeTeam(), Pitch::GoalKick);
-                 return newPos;
-             }
-         }
 #endif //
      }
      return QGraphicsItem::itemChange(change, value);

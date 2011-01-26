@@ -2,7 +2,6 @@
 #define COMPILETIMESETTINGS_H
 
 #include <QtGui>
-// #define REPLAY_FEATURE
 // is indoor football rules
 #define INDOOR
 
@@ -22,7 +21,7 @@ const int KRow = 8;
 const int KPlayerDefaultSpeed = 3;
 
 // scale factor for players & ball
-const qreal KScaleFactor = 1.6;
+const qreal KScaleFactor = 1.0;
 
 const QColor KCuteFootballMaskColor(103,123,9);
 

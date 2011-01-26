@@ -46,10 +46,23 @@ public:
         Foul
     };
 
+    enum ZValues {
+        ZStadium = 1,
+        ZPitchGrass,
+        ZPitchMarkings,
+        ZComputerControlledPlayer,
+        ZHumanControlledPlayer,
+        ZFocusedPlayer,
+        ZBall,
+        ZGoalObject,
+        ZScoreText,
+        ZMenus,
+        ZMainMenu
+    };
+
     Pitch(const QRectF& footballGroundRect,
           QGraphicsView* view,
           SoundEffects* se,
-          QWidget* frame,
           settingsDialog* settingsDlg);
     ~Pitch();
 
@@ -85,6 +98,7 @@ private slots:
 
 signals:
    void gameInProgress(bool playing);
+   void foul();
 
 private:
     void createTeamPlayers(Team *team);
@@ -101,8 +115,8 @@ public:
     QGraphicsPixmapItem* m_grass;
     QGraphicsRectItem *m_bottomGoal;
     QGraphicsRectItem *m_topGoal;
-    QGraphicsRectItem *m_bottomPenaltyArea;
-    QGraphicsRectItem *m_topPenaltyArea;
+    QGraphicsPathItem *m_bottomPenaltyArea;
+    QGraphicsPathItem *m_topPenaltyArea;
     QGraphicsLineItem *m_centerLine;
     QGraphicsEllipseItem *m_centerCircle;
     ScreenGraphics *m_scoreText;
@@ -126,12 +140,8 @@ private:
     QFinalState *m_allDone;
     QPointF m_entrancePoint;
 
-    QWidget *m_menuFrame;
     settingsDialog *m_settingsDlg;
-    QGraphicsProxyWidget *m_proxyMenuFrame;
     QGraphicsProxyWidget *m_proxySettingsDlg;
-
-
 };
 
 #endif // PITCH_H
