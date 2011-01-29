@@ -1,19 +1,20 @@
 #ifndef SETTINGSDIALOG_H
 #define SETTINGSDIALOG_H
 
-#include <QDialog>
+#include <QFrame>
+class MWindow;
 
 namespace Ui {
-    class settingsDialog;
+    class settingsFrame;
 }
 
-class settingsDialog : public QDialog
+class settingsFrame : public QFrame
 {
     Q_OBJECT
 
 public:
-    explicit settingsDialog(QWidget *parent = 0);
-    ~settingsDialog();
+    explicit settingsFrame(MWindow *parent = 0);
+    ~settingsFrame();
     int gameLengthMinutes() const { return m_gameLengthMinutes; }
     bool soundEnabled() const { return m_soundEnabled; }
 
@@ -24,7 +25,7 @@ private slots:
     void updateSettings();
 
 private:
-    Ui::settingsDialog *ui;
+    Ui::settingsFrame *ui;
     int m_gameLengthMinutes;
     bool m_soundEnabled;
 };

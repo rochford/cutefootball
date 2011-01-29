@@ -7,7 +7,9 @@
 
 class Pitch;
 class SoundEffects;
-class settingsDialog;
+class settingsFrame;
+class aboutFrame;
+class mainMenuFrame;
 
 class MWindow : public QMainWindow
 {
@@ -38,14 +40,6 @@ public:
         // Due to loosing a tackle
         FallenOver,
 
-#ifndef INDOOR
-         ThrownIn,
-#endif // INDOOR
-
-#ifdef REPLAY_FEATURE
-        // replay last n seconds
-        Replay,
-#endif // REPLAY_FEATURE
 // TODO        YellowCard,
 // TODO        RedCard,
 
@@ -54,33 +48,27 @@ public:
 // TODO        DiveRight
     };
 
-#ifdef REPLAY_FEATURE
-protected:
-    virtual void keyPressEvent( QKeyEvent *event );
-#endif // REPLAY_FEATURE
-
 private:
-#ifdef REPLAY_FEATURE
-    void createKeyboardActions();
-#endif // REPLAY_FEATURE
     void createConnections();
 
+public slots:
+    void hideSettingsFrame();
+    void hideAboutFrame();
+
 private slots:
-    void about();
+    void newGame();
+    void showAboutFrame();
     void buttonClickedNoise();
-    void showSettingsDialog();
+    void showSettingsFrame();
+    void showMainMenuFrame();
     void enableActions(bool gameInProgress);
-#ifdef REPLAY_FEATURE
-    void isPlaying(bool playing);
-#endif // REPLAY_FEATURE
 
 private:
     Pitch *m_pitch;
-    settingsDialog* m_settingsDialog;
+    settingsFrame* m_settingsFrame;
+    aboutFrame* m_aboutFrame;
+    mainMenuFrame* m_mainMenuFrame;
     SoundEffects* m_soundEffects;
-#ifdef REPLAY_FEATURE
-    QMap<int,Action> m_actions;
-#endif // REPLAY_FEATURE
 
     Ui::MainWindow uiMainWindow;
     };

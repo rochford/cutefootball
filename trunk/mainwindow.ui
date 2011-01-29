@@ -18,9 +18,9 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>230</y>
+      <y>0</y>
       <width>241</width>
-      <height>71</height>
+      <height>301</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -38,6 +38,9 @@
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -54,12 +57,6 @@
     <addaction name="actionSettings"/>
     <addaction name="actionQuit"/>
    </widget>
-   <widget class="QMenu" name="menuGame">
-    <property name="title">
-     <string>Game</string>
-    </property>
-    <addaction name="actionReplay"/>
-   </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
      <string>Help</string>
@@ -67,7 +64,6 @@
     <addaction name="actionAbout"/>
    </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuGame"/>
    <addaction name="menuAbout"/>
   </widget>
   <widget class="QStatusBar" name="statusbar">
@@ -80,27 +76,19 @@
     <string>New Game</string>
    </property>
   </action>
-  <action name="actionSettings">
-   <property name="text">
-    <string>Settings</string>
-   </property>
-  </action>
   <action name="actionQuit">
    <property name="text">
     <string>Quit</string>
    </property>
   </action>
-  <action name="actionReplay">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Replay</string>
-   </property>
-  </action>
   <action name="actionAbout">
    <property name="text">
     <string>About</string>
+   </property>
+  </action>
+  <action name="actionSettings">
+   <property name="text">
+    <string>Settings</string>
    </property>
   </action>
  </widget>

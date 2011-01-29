@@ -13,8 +13,6 @@ const QFont KSmallFont("Times", 12, QFont::Bold);
 const QFont KLargeFont("Times", 20, QFont::Bold);
 #endif // Q_OS_SYMBIAN
 
-const int KReallyHighZValue = 10;
-
 ScreenGraphics::ScreenGraphics(Pitch *p)
     : QObject(p),
     m_pitch(p),
