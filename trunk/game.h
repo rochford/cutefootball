@@ -92,6 +92,7 @@ public:
     // stops the gameClock
     void stopGameClock();
     void setGameLength(int totalGameInMinutes);
+    inline int remainingTimeInHalfMs() { return m_remainingTimeInHalfMs; }
 
 signals:
     void halfOver();

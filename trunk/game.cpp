@@ -114,6 +114,7 @@ void GoalScoredState::createTakePositionAnimation()
 
 void GoalScoredState::onEntry(QEvent * /* event */)
 {
+    m_pitch->updateDisplayTime(m_game->remainingTimeInHalfMs());
     m_pitch->ball()->setVisible(false);
     m_game->stopGameClock();
     createPlayerAnimationItems(Celebrate);
@@ -126,9 +127,8 @@ void GoalScoredState::createPlayerAnimationItems(GameState g)
     m_playerAnimationItems.clear(); // TODO XXX TIM delete all
 
     foreach (Player *p, m_pitch->m_players) {
-        if ( g == Celebrate && !p->team()->scoredLastGoal() ) {
+        if ( g == Celebrate && !p->team()->scoredLastGoal() )
             continue;
-        }
 
         QGraphicsItemAnimation* anim = new QGraphicsItemAnimation(this);
         anim->setItem(p);

@@ -19,56 +19,6 @@
   <property name="frameShadow">
    <enum>QFrame::Raised</enum>
   </property>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>20</y>
-     <width>201</width>
-     <height>251</height>
-    </rect>
-   </property>
-   <property name="autoFillBackground">
-    <bool>false</bool>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">QFrame { background: transparent; border: none; } 
-
-QPushButton, QCheckbox {
-   border: none; 
-	color: white; 
-	background-color: black; 
-	font: bold large &quot;Rockwell Extra Bold&quot;; 
-	font-size: 18px; 
-}
-
-QPushButton:pressed {
-		color: gold; 
-}
-QPushButton:hover {
-		color: gold; 
-}
-QDialog {
-	color: white; 
-	background-color: &quot;#677B09&quot;; 
-	font: bold large &quot;Rockwell Extra Bold&quot;; 
-	font-size: 18px; 
-}
-
-QSpinBox, QLabel {
-	color: white; 
-	background-color: black; 
-	font: bold large &quot;Rockwell Extra Bold&quot;; 
-	font-size: 18px; 
-}</string>
-   </property>
-   <property name="text">
-    <string>Copyright 2011, Tim Rochford</string>
-   </property>
-   <property name="wordWrap">
-    <bool>true</bool>
-   </property>
-  </widget>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
@@ -114,6 +64,59 @@ QSpinBox, QLabel {
    </property>
    <property name="standardButtons">
     <set>QDialogButtonBox::Ok</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>241</width>
+     <height>271</height>
+    </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QFrame { background: transparent; border: none; } 
+
+QPushButton, QCheckbox {
+   border: none; 
+	color: white; 
+	background-color: black; 
+	font: bold large &quot;Rockwell Extra Bold&quot;; 
+	font-size: 18px; 
+}
+
+QPushButton:pressed {
+		color: gold; 
+}
+QPushButton:hover {
+		color: gold; 
+}
+QDialog {
+	color: white; 
+	background-color: &quot;#677B09&quot;; 
+	font: bold large &quot;Rockwell Extra Bold&quot;; 
+	font-size: 18px; 
+}
+
+QSpinBox, QLabel {
+	color: white; 
+	background-color: black; 
+	font: bold large &quot;Rockwell Extra Bold&quot;; 
+	font-size: 18px; 
+}</string>
+   </property>
+   <property name="text">
+    <string>Developed by Tim Rochford</string>
+   </property>
+   <property name="scaledContents">
+    <bool>false</bool>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
    </property>
   </widget>
  </widget>
