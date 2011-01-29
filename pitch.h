@@ -29,7 +29,7 @@ class Replay;
 #endif // REPLAY_FEATURE
 class ScreenGraphics;
 class Game;
-class settingsDialog;
+class settingsFrame;
 
 class Pitch : public QObject
 {
@@ -63,7 +63,7 @@ public:
     Pitch(const QRectF& footballGroundRect,
           QGraphicsView* view,
           SoundEffects* se,
-          settingsDialog* settingsDlg);
+          settingsFrame* settingsDlg);
     ~Pitch();
 
     inline Ball* ball() const { return m_ball; }
@@ -140,8 +140,7 @@ private:
     QFinalState *m_allDone;
     QPointF m_entrancePoint;
 
-    settingsDialog *m_settingsDlg;
-    QGraphicsProxyWidget *m_proxySettingsDlg;
+    settingsFrame *m_settingsFrame;
 };
 
 #endif // PITCH_H

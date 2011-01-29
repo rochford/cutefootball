@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>aboutDialog</class>
- <widget class="QDialog" name="aboutDialog">
+ <class>mainMenuDialog</class>
+ <widget class="QDialog" name="mainMenuDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -57,27 +57,48 @@ QSpinBox, QLabel {
     <enum>Qt::Horizontal</enum>
    </property>
    <property name="standardButtons">
-    <set>QDialogButtonBox::Ok</set>
+    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
    </property>
   </widget>
-  <widget class="QLabel" name="label">
+  <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>20</y>
-     <width>201</width>
-     <height>251</height>
+     <x>0</x>
+     <y>0</y>
+     <width>241</width>
+     <height>261</height>
     </rect>
    </property>
-   <property name="autoFillBackground">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Copyright 2011, Tim Rochford</string>
-   </property>
-   <property name="wordWrap">
-    <bool>true</bool>
-   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QPushButton" name="m_newGameBtn">
+      <property name="text">
+       <string>Play Game</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="m_settingsBtn">
+      <property name="text">
+       <string>Settings</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="m_aboutBtn">
+      <property name="text">
+       <string>About</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="m_quitBtn">
+      <property name="text">
+       <string>Quit</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
  </widget>
  <resources/>
@@ -85,7 +106,7 @@ QSpinBox, QLabel {
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>aboutDialog</receiver>
+   <receiver>mainMenuDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -101,7 +122,7 @@ QSpinBox, QLabel {
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>aboutDialog</receiver>
+   <receiver>mainMenuDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

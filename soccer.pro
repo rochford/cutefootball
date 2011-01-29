@@ -20,7 +20,9 @@ SOURCES += main.cpp\
     screengraphics.cpp \
     game.cpp \
     soundeffects.cpp \
-    settingsdialog.cpp
+    settingsFrame.cpp \
+    aboutFrame.cpp \
+    mainMenuFrame.cpp
 
 HEADERS  += mainwindow.h \
     pitch.h \
@@ -32,12 +34,15 @@ HEADERS  += mainwindow.h \
     game.h \
     compileTimeSettings.h \
     soundeffects.h \
-    settingsdialog.h
+    settingsFrame.h \
+    aboutFrame.h \
+    mainMenuFrame.h
 
 RESOURCES += \
     soccer.qrc
 
 FORMS += \
-    settingsdialog.ui \
     mainwindow.ui \
-    about.ui
+    settingsFrame.ui \
+    aboutFrame.ui \
+    mainMenuFrame.ui

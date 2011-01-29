@@ -15,13 +15,13 @@
 #include "screengraphics.h"
 #include "game.h"
 #include "soundEffects.h"
-#include "settingsdialog.h"
+#include "settingsFrame.h"
 
 
 Pitch::Pitch(const QRectF& footballGroundRect,
              QGraphicsView* view,
              SoundEffects* se,
-             settingsDialog* settingsDlg)
+             settingsFrame* settingsDlg)
   : QObject(),
     m_scene(new QGraphicsScene(footballGroundRect)),
     m_view(view),
@@ -31,7 +31,7 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     m_scoreText(NULL),
     m_centerLine(NULL),
     m_centerCircle(NULL),
-    m_settingsDlg(settingsDlg),
+    m_settingsFrame(settingsDlg),
     m_soundEffects(se)
 {
     m_view->scale(1.5,1.5);
@@ -58,12 +58,12 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     connect(m_allDone, SIGNAL(entered()), this, SLOT(removePlayers()));
     connect(m_allDone, SIGNAL(entered()), this, SLOT(gameStopped()));
 
-    m_proxySettingsDlg = m_scene->addWidget((QWidget*)m_settingsDlg);
-    m_proxySettingsDlg->setZValue(ZMenus);
+//    m_proxySettingsDlg = m_scene->addWidget((QWidget*)m_settingsDlg);
+//    m_proxySettingsDlg->setZValue(ZMenus);
 
     layoutPitch();
 
-    m_soundEffects->soundEnabled(m_settingsDlg->soundEnabled());
+    m_soundEffects->soundEnabled(m_settingsFrame->soundEnabled());
 
     createTeams();
 
@@ -71,7 +71,7 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     connect(m_motionTimer, SIGNAL(timeout()), m_scene, SLOT(update()));
     connect(m_motionTimer, SIGNAL(timeout()), this, SLOT(hasBallCheck()));
     connect(m_motionTimer, SIGNAL(timeout()), this, SLOT(selectNearestPlayer()));
-    connect(m_settingsDlg, SIGNAL(soundChanged(bool)), m_soundEffects, SLOT(soundEnabled(bool)));
+    connect(m_settingsFrame, SIGNAL(soundChanged(bool)), m_soundEffects, SLOT(soundEnabled(bool)));
 }
 
 
@@ -102,7 +102,7 @@ Player* Pitch::selectNearestPlayer(Team* team)
 
 void Pitch::gameStarted()
 {
-    m_settingsDlg->setVisible(false);
+    m_settingsFrame->setVisible(false);
     m_motionTimer->start();
     emit gameInProgress(true);
 }
@@ -137,8 +137,6 @@ void Pitch::setPiece(Team* t, SetPiece s)
         ball()->setVisible(true);
         m_ball->setStartingPosition();
         break;
-#ifndef INDOOR
-#endif // INDOOR
     default:
         break;
     }
@@ -182,8 +180,8 @@ void Pitch::layoutPitch()
                          m_scene->sceneRect().right(),m_scene->sceneRect().height()/2.0, KWhitePaintPen);
 
     // center circle
-    m_centerCircle = m_scene->addEllipse((m_scene->sceneRect().width()/2.0) -80,(m_scene->sceneRect().height()/2.0)-80,
-                      160.0, 160.0, KWhitePaintPen);
+    m_centerCircle = m_scene->addEllipse((m_scene->sceneRect().width()/2.0) -40,(m_scene->sceneRect().height()/2.0)-40,
+                      80.0, 80.0, KWhitePaintPen);
     // simple text
     m_scoreText = new ScreenGraphics(this);
 
@@ -286,8 +284,8 @@ void Pitch::createTeams()
 
 void Pitch::newGame()
 {
-    m_firstHalfState->setGameLength(m_settingsDlg->gameLengthMinutes());
-    m_secondHalfState->setGameLength(m_settingsDlg->gameLengthMinutes());
+    m_firstHalfState->setGameLength(m_settingsFrame->gameLengthMinutes());
+    m_secondHalfState->setGameLength(m_settingsFrame->gameLengthMinutes());
     m_ball = new Ball(this);
 
     m_homeTeam = m_teams.at(0);

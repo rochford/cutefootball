@@ -645,14 +645,23 @@ void Player::stopKeyEvent()
 
 void Player::createKeyboardActions()
 {
+#ifdef Q_OS_SYMBIAN
+    m_actions.insert( Qt::Key_2, MWindow::North );
+    m_actions.insert( Qt::Key_3, MWindow::NorthEast );
+    m_actions.insert( Qt::Key_9, MWindow::SouthEast );
+    m_actions.insert( Qt::Key_8, MWindow::South );
+    m_actions.insert( Qt::Key_7, MWindow::SouthWest );
+    m_actions.insert( Qt::Key_1, MWindow::NorthWest );
+#else
     m_actions.insert( Qt::Key_8, MWindow::North );
     m_actions.insert( Qt::Key_9, MWindow::NorthEast );
-    m_actions.insert( Qt::Key_6, MWindow::East );
     m_actions.insert( Qt::Key_3, MWindow::SouthEast );
     m_actions.insert( Qt::Key_2, MWindow::South );
     m_actions.insert( Qt::Key_1, MWindow::SouthWest );
-    m_actions.insert( Qt::Key_4, MWindow::West );
     m_actions.insert( Qt::Key_7, MWindow::NorthWest );
+#endif
+    m_actions.insert( Qt::Key_4, MWindow::West );
+    m_actions.insert( Qt::Key_6, MWindow::East );
 
     m_actions.insert( Qt::Key_5, MWindow::Button );
 }
