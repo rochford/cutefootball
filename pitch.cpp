@@ -21,7 +21,7 @@
 Pitch::Pitch(const QRectF& footballGroundRect,
              QGraphicsView* view,
              SoundEffects* se,
-             settingsFrame* settingsDlg)
+             settingsFrame* settingsFrame)
   : QObject(),
     m_scene(new QGraphicsScene(footballGroundRect)),
     m_view(view),
@@ -31,7 +31,7 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     m_scoreText(NULL),
     m_centerLine(NULL),
     m_centerCircle(NULL),
-    m_settingsFrame(settingsDlg),
+    m_settingsFrame(settingsFrame),
     m_soundEffects(se)
 {
     m_view->scale(1.5,1.5);
@@ -57,9 +57,6 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     m_secondHalfState->addTransition(m_secondHalfState, SIGNAL(finished()), m_allDone);
     connect(m_allDone, SIGNAL(entered()), this, SLOT(removePlayers()));
     connect(m_allDone, SIGNAL(entered()), this, SLOT(gameStopped()));
-
-//    m_proxySettingsDlg = m_scene->addWidget((QWidget*)m_settingsDlg);
-//    m_proxySettingsDlg->setZValue(ZMenus);
 
     layoutPitch();
 
@@ -102,7 +99,6 @@ Player* Pitch::selectNearestPlayer(Team* team)
 
 void Pitch::gameStarted()
 {
-    m_settingsFrame->setVisible(false);
     m_motionTimer->start();
     emit gameInProgress(true);
 }
@@ -110,7 +106,6 @@ void Pitch::gameStarted()
 void Pitch::gameStopped()
 {
     m_motionTimer->stop();
-//    m_settingsDlg->setVisible(true);
     emit gameInProgress(false);
 }
 
@@ -315,15 +310,12 @@ void Pitch::createTeamPlayers(Team *team)
         isHomeTeam = true;
 
     QList<Player::Role> formation;
-#ifdef INDOOR
     formation << Player::GoalKeeper
               << Player::LeftCentralDefence
               << Player::RightCentralDefence
               << Player::CentralMidfield
               << Player::LeftAttack
               << Player::RightAttack;
-#else
-#endif // INDOOR
 
     QPointF startPos(0, m_scene->sceneRect().height()/2);
     int i = 0;

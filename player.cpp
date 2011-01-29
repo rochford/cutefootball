@@ -258,15 +258,16 @@ void Player::movePlayer(MWindow::Action action)
 
 bool Player::withinShootingDistance() const
 {
-    if (m_team->getDirection() == Team::NorthToSouth
-        && m_pitch->m_bottomPenaltyArea->contains(m_pitch->ball()->pos()))
+    int dy = 0;
+    if (m_team->getDirection() == Team::NorthToSouth)
+        dy = abs(m_pitch->m_bottomGoal->pos().y() - m_pitch->ball()->pos().y());
+    else
+        dy = abs(m_pitch->m_topGoal->pos().y() - m_pitch->ball()->pos().y());
+
+    if (m_pitch->m_footballPitch->rect().height() / 3 < dy)
         return true;
-    else if (m_team->getDirection() == Team::SouthToNorth
-             && m_pitch->m_topPenaltyArea->contains(m_pitch->ball()->pos()))
-        return true;
-    else {
+    else
         return false;
-    }
 }
 
 QPointF Player::calculateDestination(MWindow::Action act)

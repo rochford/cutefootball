@@ -24,9 +24,6 @@ class QTimeLine;
 class Ball;
 class Player;
 class Team;
-#ifdef REPLAY_FEATURE
-class Replay;
-#endif // REPLAY_FEATURE
 class ScreenGraphics;
 class Game;
 class settingsFrame;
@@ -36,11 +33,6 @@ class Pitch : public QObject
     Q_OBJECT
 public:
     enum SetPiece {
-#ifndef INDOOR
-        ThrowIn,
-        GoalKick,
-        Corner,
-#endif // INDOOR
         KickOff,
         Penalty,
         Foul
@@ -76,9 +68,6 @@ public:
     inline Team* awayTeam() const { return m_awayTeam; }
     void updateDisplayTime(int timeLeftMs);
     inline QPointF pitchEntrancePoint() const { return m_entrancePoint; }
-#ifdef REPLAY_FEATURE
-    inline Replay* replay() const { return m_replay; }
-#endif // REPLAY_FEATURE
     void playGameSound(SoundEffects::GameSound s);
 
 public slots:
@@ -86,10 +75,6 @@ public slots:
 
     void hasBallCheck();
     void selectNearestPlayer();
-#ifdef REPLAY_FEATURE
-    void replayStart();
-    void replayStop();
-#endif // REPLAY_FEATURE
     void gameStarted();
     void gameStopped();
 
