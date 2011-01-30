@@ -63,7 +63,7 @@ QSpinBox, QLabel {
     <item>
      <widget class="QPushButton" name="m_newGameBtn">
       <property name="text">
-       <string>Play Game</string>
+       <string>Play</string>
       </property>
      </widget>
     </item>
@@ -92,7 +92,7 @@ QSpinBox, QLabel {
   </widget>
   <action name="actionNewGame">
    <property name="text">
-    <string>New Game</string>
+    <string>Play</string>
    </property>
   </action>
   <action name="actionSettings">

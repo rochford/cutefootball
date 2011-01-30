@@ -99,7 +99,7 @@ private:
 
 public:
     bool m_hasBall;
-    Role role_;
+    Role m_role;
     QRectF m_startPositionRectF;
     // player will defend this zone of pitch
     QRectF m_defendZone;

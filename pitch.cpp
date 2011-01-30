@@ -80,7 +80,7 @@ Player* Pitch::selectNearestPlayer(Team* team)
     foreach (Player *p, m_players) {
         if (p->team()== team) {
             // dont select the goal keeper
-            if (p->role_ == Player::GoalKeeper)
+            if (p->m_role == Player::GoalKeeper)
                 continue;
 
             if (!nearestPlayer)
@@ -240,12 +240,12 @@ void Pitch::updateDisplayTime(int timeLeftMs)
         str.append(" ");
         str.append(m_homeTeam->name());
         str.append(" ");
-        str.append(QString::number(m_homeTeam->goals_));
+        str.append(QString::number(m_homeTeam->m_goals));
         str.append(" - ");
 
         str.append(m_awayTeam->name());
         str.append(" ");
-        str.append(QString::number(m_awayTeam->goals_));
+        str.append(QString::number(m_awayTeam->m_goals));
         m_scoreText->setText(str);
     }
 }
@@ -284,7 +284,9 @@ void Pitch::newGame()
     m_ball = new Ball(this);
 
     m_homeTeam = m_teams.at(0);
+    m_homeTeam->newGame();
     m_awayTeam = m_teams.at(1);
+    m_awayTeam->newGame();
 
     createTeamPlayers(m_homeTeam);
     createTeamPlayers(m_awayTeam);
@@ -358,7 +360,7 @@ void Pitch::setPlayerDefendZone(Player *p)
     QRectF bottomHalf(tlBottomHalf, brBottomHalf);
 
     QRectF zone;
-    switch (p->role_)
+    switch (p->m_role)
     {
     case Player::RightAttack:
     case Player::CentralAttack:
@@ -409,7 +411,7 @@ void Pitch::setPlayerStartPositions(Team *team)
     foreach (Player *p, m_players) {
         if (p->team() == team) {
             p->setHasBall(false);
-            p->m_startPositionRectF = startPositions[p->role_];
+            p->m_startPositionRectF = startPositions[p->m_role];
             setPlayerDefendZone(p);
         }
     }

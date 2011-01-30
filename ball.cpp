@@ -193,7 +193,7 @@ QVariant Ball::itemChange(GraphicsItemChange change, const QVariant &value)
              setBallOwner(NULL);
              return start_;
          }
-#ifdef INDOOR
+
          if (!rect.contains(newPos)) {
              return m_lastPos;
          }
@@ -201,8 +201,6 @@ QVariant Ball::itemChange(GraphicsItemChange change, const QVariant &value)
              m_lastPos = newPos;
              return newPos;
          }
-#else
-#endif //
      }
      return QGraphicsItem::itemChange(change, value);
  }

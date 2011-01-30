@@ -95,7 +95,7 @@ Player::Player(QString name,
     m_soundFile(QString(m_name + ".wav")),
     m_hasBall(false),
     m_team(team),
-    role_(role),
+    m_role(role),
     m_pitch(pitch),
     m_speed(computerControlled ? KPlayerDefaultSpeed - 1 : KPlayerDefaultSpeed),
     m_step(0),
@@ -264,7 +264,7 @@ bool Player::withinShootingDistance() const
     else
         dy = abs(m_pitch->m_topGoal->pos().y() - m_pitch->ball()->pos().y());
 
-    if (m_pitch->m_footballPitch->rect().height() / 3 < dy)
+    if ( ( m_pitch->m_footballPitch->rect().height() / 4 ) > dy)
         return true;
     else
         return false;
@@ -389,12 +389,11 @@ void Player::specialAction(MWindow::Action action)
              m_hasBall = false;
         } else {
             Player *p = findAvailableTeamMate(pos());
-            if (p) {
+            if (p)
                 m_pitch->ball()->kickBall(MWindow::Pass, p->pos());
-            } else {
+            else
                 // pass short in direction travelling
                 m_pitch->ball()->kickBall(MWindow::Pass, dest);
-            }
             m_hasBall = false;
         }
     }
@@ -451,9 +450,8 @@ Player* Player::findAvailableTeamMate(QPointF myPos) const
         const int dx = p->pos().x() - myPos.x();
         const int dy = p->pos().y() - myPos.y();
 
-        if (qAbs(dx) < 50 && qAbs(dy) < 50) {
+        if (qAbs(dx) < 50 && qAbs(dy) < 50)
             bestPlayer = p;
-        }
     }
     return bestPlayer;
 }
@@ -466,9 +464,8 @@ bool Player::ballCollisionCheck() const
         if (item == this)
             continue;
         Ball *b = qgraphicsitem_cast<Ball *>(item);
-        if ( b ) {
+        if ( b )
             return true;
-        }
     }
     return false;
 }
@@ -481,9 +478,8 @@ bool Player::playerCollisionCheck() const
         if (item == this)
             continue;
         Player *p = qgraphicsitem_cast<Player *>(item);
-        if ( p && ( team() != p->team() ) ) {
+        if ( p && ( team() != p->team() ) )
             return true;
-        }
     }
     return false;
 }
@@ -530,7 +526,7 @@ void Player::computerAdvanceWithBall()
 
     MWindow::Action act = calculateAction(pos(), destination);
 
-    switch(role_) {
+    switch(m_role) {
     case Player::GoalKeeper:
         // should not happen
         break;
@@ -551,14 +547,16 @@ void Player::automove()
     if (hasFocus() || m_hasBall)
         return;
 
-    MWindow::Action act;
-    // If the ball enters m_defendZone then move towards it
-    if ( m_defendZone.contains( m_pitch->ball()->pos() ) )
-        act = calculateAction( pos(), m_pitch->ball()->pos() );
-    else
-        act = calculateAction( pos(), m_startPositionRectF.center() );
+    if (!m_team->teamHasBall()) {
+        MWindow::Action act;
+        // If the ball enters m_defendZone then move towards it
+        if ( m_defendZone.contains( m_pitch->ball()->pos() ) )
+            act = calculateAction( pos(), m_pitch->ball()->pos() );
+        else
+            act = calculateAction( pos(), m_startPositionRectF.center() );
 
-    move(act);
+        move(act);
+    }
 }
 
 void Player::humanAdvance(int phase)
@@ -674,16 +672,17 @@ QVariant Player::itemChange(GraphicsItemChange change, const QVariant &value)
          QPointF newPos = value.toPointF();
          QRectF pitch = m_pitch->m_footballPitch->rect();
 
-#ifdef INDOOR
-         if (!pitch.contains(newPos)) {
+         if (!hasFocus()
+                 && ( m_role != Player::GoalKeeper )
+                 && ( m_pitch->m_bottomPenaltyArea->contains(newPos) || m_pitch->m_topPenaltyArea->contains(newPos) ) )
              return m_lastPos;
-         }
+
+         if (!pitch.contains(newPos))
+             return m_lastPos;
          else {
              m_lastPos = newPos;
              return newPos;
          }
-#else
-#endif //
      }
      return QGraphicsItem::itemChange(change, value);
  }

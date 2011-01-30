@@ -73,7 +73,7 @@
   </widget>
   <action name="actionNew_Game">
    <property name="text">
-    <string>New Game</string>
+    <string>Play</string>
    </property>
   </action>
   <action name="actionQuit">

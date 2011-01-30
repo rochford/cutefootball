@@ -1,6 +1,8 @@
 #ifndef COMPILETIMESETTINGS_H
 #define COMPILETIMESETTINGS_H
 
+const QString versionNumber("0.1");
+
 #include <QtGui>
 // is indoor football rules
 #define INDOOR

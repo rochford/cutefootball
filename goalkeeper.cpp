@@ -59,7 +59,7 @@ void GoalKeeper::advance(int phase)
 
 void GoalKeeper::gkAdvanceWithoutBall()
 {
-    if (!m_team->teamHasBall_) {
+    if (!m_team->teamHasBall()) {
         // if the ball enters the penalty area then go for it, otherwise return to goal line
         Team::Direction dir = m_team->getDirection();
         MWindow::Action action;
