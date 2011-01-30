@@ -49,18 +49,25 @@ public:
     };
 
 private:
+    enum Frame {
+        MainMenu,
+        Settings,
+        About,
+        GraphicsView
+    };
+
     void createConnections();
 
 public slots:
     void hideSettingsFrame();
     void hideAboutFrame();
+    void showFrame(Frame f);
 
 private slots:
     void newGame();
     void showAboutFrame();
     void buttonClickedNoise();
     void showSettingsFrame();
-    void showMainMenuFrame();
     void enableActions(bool gameInProgress);
 
 private:

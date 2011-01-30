@@ -15,7 +15,6 @@ MWindow::MWindow(QWidget *parent)
     m_settingsFrame = new settingsFrame(this);
     m_mainMenuFrame = new mainMenuFrame(this);
     uiMainWindow.setupUi(this);
-    uiMainWindow.menubar->setVisible(false);
 
     QRectF footballGround(0,0,400,600);
     m_pitch = new Pitch(footballGround,
@@ -25,7 +24,7 @@ MWindow::MWindow(QWidget *parent)
 
     createConnections();
     setCentralWidget( uiMainWindow.m_graphicsView );
-    showMainMenuFrame();
+    showFrame(MWindow::MainMenu);
 }
 
 void MWindow::createConnections()
@@ -45,32 +44,50 @@ void MWindow::enableActions(bool gameInProgress)
     uiMainWindow.actionSettings->setEnabled(!gameInProgress);
     uiMainWindow.actionAbout->setEnabled(!gameInProgress);
     uiMainWindow.actionQuit->setEnabled(true);
+    if (!gameInProgress)
+        showFrame(MWindow::MainMenu);
 }
 
 void MWindow::hideAboutFrame()
 {
-    showMainMenuFrame();
+    showFrame(MWindow::MainMenu);
 }
 
 void MWindow::hideSettingsFrame()
 {
-    showMainMenuFrame();
+    showFrame(MWindow::MainMenu);
 }
 
 void MWindow::showSettingsFrame()
 {
+    showFrame(MWindow::Settings);
+}
+
+void MWindow::showFrame(Frame f)
+{
+    uiMainWindow.menubar->setVisible(false);
     m_mainMenuFrame->setVisible(false);
     m_aboutFrame->setVisible(false);
     uiMainWindow.m_graphicsView->setVisible(false);
-    m_settingsFrame->setVisible(true);
-}
-
-void MWindow::showMainMenuFrame()
-{
-    m_aboutFrame->setVisible(false);
     m_settingsFrame->setVisible(false);
-    uiMainWindow.m_graphicsView->setVisible(false);
-    m_mainMenuFrame->setVisible(true);
+
+    switch (f) {
+    case MWindow::About:
+        m_aboutFrame->setVisible(true);
+        break;
+    case MWindow::Settings:
+        m_settingsFrame->setVisible(true);
+        break;
+    case MWindow::MainMenu:
+        m_mainMenuFrame->setVisible(true);
+        break;
+    case MWindow::GraphicsView:
+        uiMainWindow.menubar->setVisible(true);
+        uiMainWindow.m_graphicsView->setVisible(true);
+        break;
+    default:
+        break;
+    }
 }
 
 void MWindow::buttonClickedNoise()
@@ -89,21 +106,14 @@ MWindow::~MWindow()
 
 void MWindow::newGame()
 {
-    m_settingsFrame->setVisible(false);
-    m_aboutFrame->setVisible(false);
-    m_mainMenuFrame->setVisible(false);
-    uiMainWindow.menubar->setVisible(true);
-    uiMainWindow.m_graphicsView->setVisible(true);
+    showFrame(MWindow::GraphicsView);
     enableActions(true);
     m_pitch->newGame();
 }
 
 void MWindow::showAboutFrame()
 {
-    m_settingsFrame->setVisible(false);
-    m_mainMenuFrame->setVisible(false);
-    uiMainWindow.m_graphicsView->setVisible(false);
-    m_aboutFrame->setVisible(true);
+    showFrame(MWindow::About);
 }
 
 
