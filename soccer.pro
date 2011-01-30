@@ -22,7 +22,9 @@ SOURCES += main.cpp\
     soundeffects.cpp \
     settingsFrame.cpp \
     aboutFrame.cpp \
-    mainMenuFrame.cpp
+    mainMenuFrame.cpp \
+    goalscoredstate.cpp \
+    foulstate.cpp
 
 HEADERS  += mainwindow.h \
     pitch.h \
@@ -36,7 +38,9 @@ HEADERS  += mainwindow.h \
     soundeffects.h \
     settingsFrame.h \
     aboutFrame.h \
-    mainMenuFrame.h
+    mainMenuFrame.h \
+    goalscoredstate.h \
+    foulstate.h
 
 RESOURCES += \
     soccer.qrc

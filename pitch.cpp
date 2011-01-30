@@ -114,7 +114,7 @@ void Pitch::setPiece(Team* t, SetPiece s)
     m_soundEffects->soundEvent(SoundEffects::Whistle);
     switch(s) {
     case Pitch::Foul: // TODO foul logic
-        //emit foul();
+        // emit foul();
         break;
     case Pitch::KickOff:
         foreach (Player *p, m_players) {

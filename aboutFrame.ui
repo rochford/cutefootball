@@ -13,73 +13,83 @@
   <property name="windowTitle">
    <string>Frame</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QFrame { background: transparent; border: none; } 
+
+QPushButton, QCheckbox {
+   border: none; 
+	color: white; 
+	background-color: black; 
+	font: bold large &quot;Rockwell Extra Bold&quot;; 
+	font-size: 18px; 
+}
+
+QPushButton:pressed {
+		color: gold; 
+}
+QPushButton:hover {
+		color: gold; 
+}
+QDialog {
+	color: white; 
+	background-color: &quot;#677B09&quot;; 
+	font: bold large &quot;Rockwell Extra Bold&quot;; 
+	font-size: 18px; 
+}
+
+QSpinBox, QLabel {
+	color: white; 
+	background-color: black; 
+	font: bold large &quot;Rockwell Extra Bold&quot;; 
+	font-size: 18px; 
+}</string>
+  </property>
   <property name="frameShape">
    <enum>QFrame::StyledPanel</enum>
   </property>
   <property name="frameShadow">
    <enum>QFrame::Raised</enum>
   </property>
-  <widget class="QDialogButtonBox" name="buttonBox">
+  <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>270</y>
-     <width>221</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">QFrame { background: transparent; border: none; } 
-
-QPushButton, QCheckbox {
-   border: none; 
-	color: white; 
-	background-color: black; 
-	font: bold large &quot;Rockwell Extra Bold&quot;; 
-	font-size: 18px; 
-}
-
-QPushButton:pressed {
-		color: gold; 
-}
-QPushButton:hover {
-		color: gold; 
-}
-QDialog {
-	color: white; 
-	background-color: &quot;#677B09&quot;; 
-	font: bold large &quot;Rockwell Extra Bold&quot;; 
-	font-size: 18px; 
-}
-
-QSpinBox, QLabel {
-	color: white; 
-	background-color: black; 
-	font: bold large &quot;Rockwell Extra Bold&quot;; 
-	font-size: 18px; 
-}</string>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-   <property name="standardButtons">
-    <set>QDialogButtonBox::Ok</set>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
+     <x>-1</x>
+     <y>-1</y>
      <width>241</width>
-     <height>271</height>
+     <height>321</height>
     </rect>
    </property>
-   <property name="autoFillBackground">
-    <bool>false</bool>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">QFrame { background: transparent; border: none; } 
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QLabel" name="label">
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string>Copyright 2011, Tim Rochford</string>
+      </property>
+      <property name="scaledContents">
+       <bool>false</bool>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="versionLabel">
+      <property name="text">
+       <string>123</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QDialogButtonBox" name="buttonBox">
+      <property name="styleSheet">
+       <string notr="true">QFrame { background: transparent; border: none; } 
 
 QPushButton, QCheckbox {
    border: none; 
@@ -108,16 +118,29 @@ QSpinBox, QLabel {
 	font: bold large &quot;Rockwell Extra Bold&quot;; 
 	font-size: 18px; 
 }</string>
-   </property>
-   <property name="text">
-    <string>Developed by Tim Rochford</string>
-   </property>
-   <property name="scaledContents">
-    <bool>false</bool>
-   </property>
-   <property name="wordWrap">
-    <bool>true</bool>
-   </property>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="standardButtons">
+       <set>QDialogButtonBox::Ok</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+   </layout>
   </widget>
  </widget>
  <resources/>
