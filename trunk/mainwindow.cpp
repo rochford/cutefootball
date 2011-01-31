@@ -4,6 +4,7 @@
 #include "pitch.h"
 #include "settingsFrame.h"
 #include "aboutFrame.h"
+#include "teamSelectionFrame.h"
 #include "mainMenuFrame.h"
 
 MWindow::MWindow(QWidget *parent)
@@ -14,6 +15,8 @@ MWindow::MWindow(QWidget *parent)
     m_aboutFrame = new aboutFrame(this);
     m_settingsFrame = new settingsFrame(this);
     m_mainMenuFrame = new mainMenuFrame(this);
+    m_teamSelectionFrame = new TeamSelectionFrame(this);
+
     uiMainWindow.setupUi(this);
 
     QRectF footballGround(0,0,400,600);
@@ -29,8 +32,8 @@ MWindow::MWindow(QWidget *parent)
 
 void MWindow::createConnections()
 {
-    connect(uiMainWindow.actionNew_Game, SIGNAL(triggered()), this, SLOT(newGame()));
-    connect(uiMainWindow.actionNew_Game, SIGNAL(triggered()), m_pitch, SLOT(newGame()));
+    connect(uiMainWindow.actionNew_Game, SIGNAL(triggered()), this, SLOT(showTeamSelectionFrame()));
+//    connect(uiMainWindow.actionNew_Game, SIGNAL(triggered()), m_pitch, SLOT(newGame()));
     connect(uiMainWindow.actionSettings, SIGNAL(triggered()), this, SLOT(showSettingsFrame()));
     connect(uiMainWindow.actionAbout, SIGNAL(triggered()), this, SLOT(showAboutFrame()));
     connect(uiMainWindow.actionQuit, SIGNAL(triggered()), this, SLOT(close()));
@@ -63,6 +66,16 @@ void MWindow::showSettingsFrame()
     showFrame(MWindow::Settings);
 }
 
+void MWindow::hideTeamSelectionFrame()
+{
+    showFrame(MWindow::MainMenu);
+}
+
+void MWindow::showTeamSelectionFrame()
+{
+    showFrame(MWindow::TeamSelection);
+}
+
 void MWindow::showFrame(Frame f)
 {
     uiMainWindow.menubar->setVisible(false);
@@ -70,6 +83,7 @@ void MWindow::showFrame(Frame f)
     m_aboutFrame->setVisible(false);
     uiMainWindow.m_graphicsView->setVisible(false);
     m_settingsFrame->setVisible(false);
+    m_teamSelectionFrame->setVisible(false);
 
     switch (f) {
     case MWindow::About:
@@ -84,6 +98,9 @@ void MWindow::showFrame(Frame f)
     case MWindow::GraphicsView:
         uiMainWindow.menubar->setVisible(true);
         uiMainWindow.m_graphicsView->setVisible(true);
+        break;
+    case MWindow::TeamSelection:
+        m_teamSelectionFrame->setVisible(true);
         break;
     default:
         break;
@@ -101,6 +118,7 @@ MWindow::~MWindow()
     delete m_soundEffects;
     delete m_settingsFrame;
     delete m_aboutFrame;
+    delete m_teamSelectionFrame;
     delete m_mainMenuFrame;
 }
 

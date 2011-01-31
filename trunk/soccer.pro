@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     aboutFrame.cpp \
     mainMenuFrame.cpp \
     goalscoredstate.cpp \
-    foulstate.cpp
+    foulstate.cpp \
+    teamSelectionFrame.cpp
 
 HEADERS  += mainwindow.h \
     pitch.h \
@@ -40,7 +41,8 @@ HEADERS  += mainwindow.h \
     aboutFrame.h \
     mainMenuFrame.h \
     goalscoredstate.h \
-    foulstate.h
+    foulstate.h \
+    teamSelectionFrame.h
 
 RESOURCES += \
     soccer.qrc
@@ -49,4 +51,5 @@ FORMS += \
     mainwindow.ui \
     settingsFrame.ui \
     aboutFrame.ui \
-    mainMenuFrame.ui
+    mainMenuFrame.ui \
+    teamSelectionFrame.ui
