@@ -10,6 +10,7 @@ class SoundEffects;
 class settingsFrame;
 class aboutFrame;
 class mainMenuFrame;
+class TeamSelectionFrame;
 
 class MWindow : public QMainWindow
 {
@@ -53,27 +54,32 @@ private:
         MainMenu,
         Settings,
         About,
+        TeamSelection,
         GraphicsView
     };
 
     void createConnections();
 
 public slots:
+    void hideTeamSelectionFrame();
     void hideSettingsFrame();
     void hideAboutFrame();
     void showFrame(Frame f);
+    void newGame();
 
 private slots:
-    void newGame();
+
     void showAboutFrame();
     void buttonClickedNoise();
     void showSettingsFrame();
+    void showTeamSelectionFrame();
     void enableActions(bool gameInProgress);
 
 private:
     Pitch *m_pitch;
     settingsFrame* m_settingsFrame;
     aboutFrame* m_aboutFrame;
+    TeamSelectionFrame* m_teamSelectionFrame;
     mainMenuFrame* m_mainMenuFrame;
     SoundEffects* m_soundEffects;
 
