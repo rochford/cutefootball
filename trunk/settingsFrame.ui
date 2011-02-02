@@ -14,35 +14,7 @@
    <string>Frame</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">QFrame { background: transparent; border: none; } 
-
-QPushButton, QCheckbox {
-   border: none; 
-	color: white; 
-	background-color: black; 
-	font: bold large &quot;Rockwell Extra Bold&quot;; 
-	font-size: 18px; 
-}
-
-QPushButton:pressed {
-		color: gold; 
-}
-QPushButton:hover {
-		color: gold; 
-}
-QDialog {
-	color: white; 
-	background-color: &quot;#677B09&quot;; 
-	font: bold large &quot;Rockwell Extra Bold&quot;; 
-	font-size: 18px; 
-}
-
-QSpinBox, QLabel {
-	color: white; 
-	background-color: black; 
-	font: bold large &quot;Rockwell Extra Bold&quot;; 
-	font-size: 18px; 
-}</string>
+   <string notr="true"/>
   </property>
   <property name="frameShape">
    <enum>QFrame::StyledPanel</enum>
@@ -149,7 +121,7 @@ QSpinBox, QLabel {
      <x>0</x>
      <y>0</y>
      <width>190</width>
-     <height>52</height>
+     <height>53</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -164,45 +136,17 @@ QSpinBox, QLabel {
      <widget class="QCheckBox" name="checkBox">
       <property name="font">
        <font>
-        <family>Rockwell Extra Bold</family>
-        <pointsize>18</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
+        <family>MS Shell Dlg 2</family>
+        <pointsize>8</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
        </font>
       </property>
       <property name="contextMenuPolicy">
        <enum>Qt::NoContextMenu</enum>
       </property>
       <property name="styleSheet">
-       <string notr="true">QFrame { background: transparent; border: none; } 
-
-QPushButton, QCheckbox {
-   border: none; 
-	color: white; 
-	background-color: black; 
-	font: bold large &quot;Rockwell Extra Bold&quot;; 
-	font-size: 18px; 
-}
-
-QPushButton:pressed {
-		color: gold; 
-}
-QPushButton:hover {
-		color: gold; 
-}
-QDialog {
-	color: white; 
-	background-color: &quot;#677B09&quot;; 
-	font: bold large &quot;Rockwell Extra Bold&quot;; 
-	font-size: 18px; 
-}
-
-QSpinBox, QLabel {
-	color: white; 
-	background-color: black; 
-	font: bold large &quot;Rockwell Extra Bold&quot;; 
-	font-size: 18px; 
-}</string>
+       <string notr="true"/>
       </property>
       <property name="text">
        <string/>

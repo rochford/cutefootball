@@ -53,3 +53,6 @@ FORMS += \
     aboutFrame.ui \
     mainMenuFrame.ui \
     teamSelectionFrame.ui
+
+OTHER_FILES += \
+    stylesheet.qss

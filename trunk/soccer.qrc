@@ -28,5 +28,6 @@
         <file>images/red/pNW1.PNG</file>
         <file>images/red/pNW2.PNG</file>
         <file>images/red/pTackled.PNG</file>
+        <file>stylesheet.qss</file>
     </qresource>
 </RCC>

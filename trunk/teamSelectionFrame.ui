@@ -14,35 +14,7 @@
    <string>Frame</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">QFrame { background: transparent; border: none; } 
-
-QPushButton, QCheckbox {
-   border: none; 
-	color: white; 
-	background-color: black; 
-	font: bold large &quot;Rockwell Extra Bold&quot;; 
-	font-size: 18px; 
-}
-
-QPushButton:pressed {
-		color: gold; 
-}
-QPushButton:hover {
-		color: gold; 
-}
-QDialog {
-	color: white; 
-	background-color: &quot;#677B09&quot;; 
-	font: bold large &quot;Rockwell Extra Bold&quot;; 
-	font-size: 18px; 
-}
-
-QSpinBox, QLabel {
-	color: white; 
-	background-color: black; 
-	font: bold large &quot;Rockwell Extra Bold&quot;; 
-	font-size: 18px; 
-}</string>
+   <string notr="true"/>
   </property>
   <property name="frameShape">
    <enum>QFrame::StyledPanel</enum>
