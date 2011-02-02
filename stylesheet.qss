@@ -1,0 +1,22 @@
+QFrame { background: transparent; border: none; }
+
+QPushButton, QCheckbox {
+   border: none;
+        color: white;
+        background-color: black;
+        font: bold large "Rockwell Extra Bold";
+        font-size: 18px;
+}
+
+QPushButton:pressed {
+        color: gold;
+}
+QPushButton:hover {
+        color: gold;
+}
+QComboBox, QSpinBox, QLabel {
+        color: white;
+        background-color: black;
+        font: bold large "Rockwell Extra Bold";
+        font-size: 18px;
+}
