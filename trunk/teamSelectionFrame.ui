@@ -43,7 +43,7 @@ Team</string>
        </widget>
       </item>
       <item>
-       <widget class="QComboBox" name="comboBox_2"/>
+       <widget class="QComboBox" name="m_homeTeamComboBox"/>
       </item>
       <item>
        <spacer name="verticalSpacer">
@@ -71,7 +71,7 @@ team</string>
        </widget>
       </item>
       <item>
-       <widget class="QComboBox" name="comboBox"/>
+       <widget class="QComboBox" name="m_awayTeamComboBox"/>
       </item>
       <item>
        <spacer name="verticalSpacer_2">
