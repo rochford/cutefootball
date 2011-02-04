@@ -1,0 +1,33 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/pitch2.GIF</file>
+        <file>images/ball.png</file>
+        <file>images/red/pN.PNG</file>
+        <file>images/red/pN1.PNG</file>
+        <file>images/red/pN2.PNG</file>
+        <file>images/red/pS.PNG</file>
+        <file>images/red/pS2.PNG</file>
+        <file>images/red/pS1.PNG</file>
+        <file>images/red/pE.PNG</file>
+        <file>images/red/pW.PNG</file>
+        <file>images/red/pW1.PNG</file>
+        <file>images/red/pW2.PNG</file>
+        <file>images/red/pE1.PNG</file>
+        <file>images/red/pE2.PNG</file>
+        <file>images/red/pSE.PNG</file>
+        <file>images/red/pSE1.PNG</file>
+        <file>images/red/pSE2.PNG</file>
+        <file>images/red/pSW.PNG</file>
+        <file>images/red/pSW1.PNG</file>
+        <file>images/red/pSW2.PNG</file>
+        <file>images/red/pNE.PNG</file>
+        <file>images/red/pNE1.PNG</file>
+        <file>images/red/pNE2.PNG</file>
+        <file>images/red/tackleN.PNG</file>
+        <file>images/red/pNW.PNG</file>
+        <file>images/red/pNW1.PNG</file>
+        <file>images/red/pNW2.PNG</file>
+        <file>images/red/pTackled.PNG</file>
+        <file>stylesheet.qss</file>
+    </qresource>
+</RCC>
