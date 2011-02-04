@@ -14,9 +14,18 @@ QPushButton:pressed {
 QPushButton:hover {
         color: gold;
 }
-QComboBox, QSpinBox, QLabel {
+QSpinBox, QLabel {
         color: white;
         background-color: black;
         font: bold large "Rockwell Extra Bold";
         font-size: 18px;
+}
+QComboBox {
+    color: black;
+    background-color: white;
+    font: bold large "Rockwell Extra Bold";
+    font-size: 18px;
+}
+QComboBox:hover {
+    color: gold;
 }

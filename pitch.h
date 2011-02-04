@@ -109,9 +109,7 @@ public:
     SoundEffects* m_soundEffects;  // NOT OWNED
 private:
     QList<Team*> m_teams;
-#ifdef REPLAY_FEATURE
-    Replay* m_replay;
-#endif // REPLAY_FEATURE
+
     Team *m_homeTeam;
     Team *m_awayTeam;
     Ball *m_ball;
