@@ -1,5 +1,5 @@
 QFrame {
-    background-color: green;
+    background: transparent;
     border: none;
 }
 
@@ -21,10 +21,6 @@ QPushButton:focus {
 
 QPushButton:hover {
         color: gold;
-}
-
-QPushButton:default {
-    border-color: yellow;
 }
 
 QSpinBox, QLabel {

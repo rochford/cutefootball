@@ -15,6 +15,8 @@
     </message>
     <message>
         <location filename="../mainwindow.ui" line="66"/>
+        <location filename="../mainwindow.ui" line="95"/>
+        <location filename="../mainwindow.ui" line="98"/>
         <source>Help</source>
         <translation type="unfinished"></translation>
     </message>
@@ -35,7 +37,12 @@
     </message>
     <message>
         <location filename="../mainwindow.ui" line="90"/>
-        <source>Settings</source>
+        <source>Game Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.ui" line="103"/>
+        <source>Input Settings</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -56,29 +63,61 @@
     </message>
 </context>
 <context>
+    <name>helpFrame</name>
+    <message>
+        <location filename="../helpFrame.ui" line="41"/>
+        <source>Only are allowed in the penalty area. A foul will result if an outfield player enters the penalty area. Game starts with a drop ball in the centre circle. No sliding tackles are allowed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>inputSettingsFrame</name>
+    <message>
+        <location filename="../inputSettingsFrame.ui" line="41"/>
+        <source>Keyboard controls are 1,2,3,4,6,7,8,9, and 5 to tackle, pass and shoot. A shot requires a long press. Players automatically tackle if they dont have the ball.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>mainMenuFrame</name>
     <message>
         <location filename="../mainMenuFrame.ui" line="51"/>
-        <location filename="../mainMenuFrame.ui" line="93"/>
+        <location filename="../mainMenuFrame.ui" line="107"/>
         <source>Play</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../mainMenuFrame.ui" line="58"/>
-        <location filename="../mainMenuFrame.ui" line="98"/>
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../mainMenuFrame.ui" line="65"/>
-        <location filename="../mainMenuFrame.ui" line="108"/>
-        <source>About</source>
+        <location filename="../mainMenuFrame.ui" line="127"/>
+        <source>Keyboard settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../mainMenuFrame.ui" line="72"/>
-        <location filename="../mainMenuFrame.ui" line="103"/>
+        <location filename="../mainMenuFrame.ui" line="132"/>
+        <source>Help</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainMenuFrame.ui" line="79"/>
+        <location filename="../mainMenuFrame.ui" line="122"/>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainMenuFrame.ui" line="86"/>
+        <location filename="../mainMenuFrame.ui" line="117"/>
         <source>Quit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainMenuFrame.ui" line="112"/>
+        <source>Game Settings</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
