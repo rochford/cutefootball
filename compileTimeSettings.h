@@ -1,11 +1,11 @@
 #ifndef COMPILETIMESETTINGS_H
 #define COMPILETIMESETTINGS_H
 
-const QString versionNumber("version 0.1");
-
 #include <QtGui>
-// is indoor football rules
-#define INDOOR
+
+const int KMajorVersion = 0;
+const int KMinorVersion = 2;
+const QString versionNumber(QObject::tr("version %1.%2"));
 
 const int KHalfLength = 60*1000; // seconds
 const QRgb KGoalKeeperColor = QColor(Qt::green).rgb();

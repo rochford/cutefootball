@@ -15,7 +15,6 @@ MWindow::MWindow(QWidget *parent)
     m_aboutFrame = new aboutFrame(this);
     m_settingsFrame = new settingsFrame(this);
     m_mainMenuFrame = new mainMenuFrame(this);
-    m_teamSelectionFrame = new TeamSelectionFrame(this);
 
     uiMainWindow.setupUi(this);
 
@@ -24,6 +23,7 @@ MWindow::MWindow(QWidget *parent)
                         uiMainWindow.m_graphicsView,
                         m_soundEffects,
                         m_settingsFrame);
+    m_teamSelectionFrame = new TeamSelectionFrame(this);
 
     createConnections();
     setCentralWidget( uiMainWindow.m_graphicsView );
@@ -33,7 +33,6 @@ MWindow::MWindow(QWidget *parent)
 void MWindow::createConnections()
 {
     connect(uiMainWindow.actionNew_Game, SIGNAL(triggered()), this, SLOT(showTeamSelectionFrame()));
-//    connect(uiMainWindow.actionNew_Game, SIGNAL(triggered()), m_pitch, SLOT(newGame()));
     connect(uiMainWindow.actionSettings, SIGNAL(triggered()), this, SLOT(showSettingsFrame()));
     connect(uiMainWindow.actionAbout, SIGNAL(triggered()), this, SLOT(showAboutFrame()));
     connect(uiMainWindow.actionQuit, SIGNAL(triggered()), this, SLOT(close()));
@@ -47,6 +46,10 @@ void MWindow::enableActions(bool gameInProgress)
     uiMainWindow.actionSettings->setEnabled(!gameInProgress);
     uiMainWindow.actionAbout->setEnabled(!gameInProgress);
     uiMainWindow.actionQuit->setEnabled(true);
+
+    uiMainWindow.menubar->setEnabled(true);
+    uiMainWindow.menuAbout->setEnabled(!gameInProgress);
+
     if (!gameInProgress)
         showFrame(MWindow::MainMenu);
 }
@@ -85,6 +88,8 @@ void MWindow::showFrame(Frame f)
     m_settingsFrame->setVisible(false);
     m_teamSelectionFrame->setVisible(false);
 
+    showNormal();
+
     switch (f) {
     case MWindow::About:
         m_aboutFrame->setVisible(true);
@@ -96,8 +101,15 @@ void MWindow::showFrame(Frame f)
         m_mainMenuFrame->setVisible(true);
         break;
     case MWindow::GraphicsView:
+#if defined(Q_OS_SYMBIAN) or defined(Q_WS_SIMULATOR)
+        // Toggle softkey visibility
+        setWindowFlags( windowFlags() ^ Qt::WindowSoftkeysVisibleHint );
+        showFullScreen();
+#endif //
         uiMainWindow.menubar->setVisible(true);
+        uiMainWindow.menuAbout->setVisible(false);
         uiMainWindow.m_graphicsView->setVisible(true);
+        uiMainWindow.m_graphicsView->setFocus();
         break;
     case MWindow::TeamSelection:
         m_teamSelectionFrame->setVisible(true);
@@ -122,11 +134,11 @@ MWindow::~MWindow()
     delete m_mainMenuFrame;
 }
 
-void MWindow::newGame()
+void MWindow::newGame(int homeTeam, int awayTeam)
 {
     showFrame(MWindow::GraphicsView);
     enableActions(true);
-    m_pitch->newGame();
+    m_pitch->newGame(homeTeam, awayTeam);
 }
 
 void MWindow::showAboutFrame()

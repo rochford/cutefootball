@@ -145,7 +145,7 @@ void Player::pixmapInsert(MWindow::Action a, QString s1, QString s2, QString s3,
 {
     QString s(":/images/red/");
 
-    QString key1(m_team->name_), key2(m_team->name_), key3(m_team->name_);
+    QString key1(m_team->name()), key2(m_team->name()), key3(m_team->name());
     key1.append(s1);
     key2.append(s2);
     key3.append(s3);

@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Cute Football</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="soccer.qrc">
+    <normaloff>:/images/ball.png</normaloff>:/images/ball.png</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QGraphicsView" name="m_graphicsView">
     <property name="geometry">
@@ -66,11 +70,6 @@
    <addaction name="menuFile"/>
    <addaction name="menuAbout"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-  </widget>
   <action name="actionNew_Game">
    <property name="text">
     <string>Play</string>
@@ -92,6 +91,8 @@
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="soccer.qrc"/>
+ </resources>
  <connections/>
 </ui>

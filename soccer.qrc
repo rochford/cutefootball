@@ -29,5 +29,7 @@
         <file>images/red/pNW2.PNG</file>
         <file>images/red/pTackled.PNG</file>
         <file>stylesheet.qss</file>
+        <file>translations/soccer_en.qm</file>
+        <file>translations/soccer_fi.qm</file>
     </qresource>
 </RCC>
