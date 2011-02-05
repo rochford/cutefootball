@@ -3,21 +3,21 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-
     QFile f(":/stylesheet.qss");
     f.open(QIODevice::ReadOnly | QIODevice::Text);
     QByteArray data = f.readAll();
     f.close();
+
+    QApplication a(argc, argv);
     a.setStyleSheet(QString(data));
 
-    MWindow w; 
+    QString locale("soccer_" + QLocale::system().name());
+    QTranslator appTranslator;
+    appTranslator.load(locale, ":/translations/");
+    a.installTranslator(&appTranslator);
 
-#ifdef Q_OS_SYMBIAN
+    MWindow w;
     w.showMaximized();
-#else
-    w.show();
-#endif
 
     return a.exec();
 }

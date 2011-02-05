@@ -9,6 +9,8 @@ QT       += core gui
 TARGET = soccer
 TEMPLATE = app
 
+TRANSLATIONS = translations/soccer_fi.ts \
+    translations/soccer_en.ts
 
 SOURCES += main.cpp\
         mainwindow.cpp \

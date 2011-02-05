@@ -11,9 +11,9 @@ public:
     // the attacking direction
     enum Direction { SouthToNorth, NorthToSouth };
     Team(QString teamName, QColor teamColor);
-    QString name() { return name_; }
-    void setDirection(Direction dir) { dir_ = dir; }
-    Direction getDirection() { return dir_; }
+    QString name() { return m_name; }
+    void setDirection(Direction dir) { m_direction = dir; }
+    Direction getDirection() { return m_direction; }
     void setHasBall(bool hasBall);
     bool scoredLastGoal() { return m_scoredLastGoal; }
     void newGame() { m_goals = 0; m_scoredLastGoal = false; m_teamHasBall = false; }
@@ -23,13 +23,13 @@ public slots:
     void goalScored(bool isNorthGoal);
 
 public:
-    QString name_;
     QColor color;
-    Direction dir_;
+    Direction m_direction;
     int m_goals;
     // this team scored the last goal
     bool m_scoredLastGoal;
 private:
+    QString m_name;
     bool m_teamHasBall;
 };
 

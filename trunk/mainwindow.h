@@ -20,6 +20,8 @@ public:
     MWindow(QWidget *parent = 0);
     virtual ~MWindow();
 
+    Pitch* pitch() { return m_pitch; }
+
     enum Action {
         West = 0,
         NorthWest,
@@ -65,7 +67,7 @@ public slots:
     void hideSettingsFrame();
     void hideAboutFrame();
     void showFrame(Frame f);
-    void newGame();
+    void newGame(int homeTeam, int awayTeam);
 
 private slots:
 
@@ -74,6 +76,7 @@ private slots:
     void showSettingsFrame();
     void showTeamSelectionFrame();
     void enableActions(bool gameInProgress);
+
 
 private:
     Pitch *m_pitch;

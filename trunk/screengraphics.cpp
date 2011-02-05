@@ -5,13 +5,8 @@
 
 #include "pitch.h"
 
-#ifdef Q_OS_SYMBIAN
-const QFont KSmallFont("Times", 9, QFont::Bold);
-const QFont KLargeFont("Times", 17, QFont::Bold);
-#else
-const QFont KSmallFont("Times", 12, QFont::Bold);
-const QFont KLargeFont("Times", 20, QFont::Bold);
-#endif // Q_OS_SYMBIAN
+const QFont KSmallFont("Times", 10, QFont::Bold);
+const QFont KLargeFont("Times", 16, QFont::Bold);
 
 ScreenGraphics::ScreenGraphics(Pitch *p)
     : QObject(p),

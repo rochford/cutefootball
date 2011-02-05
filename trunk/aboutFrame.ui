@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Frame</string>
+   <string/>
   </property>
   <property name="styleSheet">
    <string notr="true"/>
@@ -54,7 +54,7 @@
     <item>
      <widget class="QLabel" name="versionLabel">
       <property name="text">
-       <string>123</string>
+       <string/>
       </property>
      </widget>
     </item>

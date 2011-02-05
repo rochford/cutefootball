@@ -2,7 +2,7 @@
 #include <QDebug>
 
 Team::Team(QString teamName, QColor teamColor)
-    : name_(teamName),
+    : m_name(teamName),
     color(teamColor),
     m_teamHasBall(false),
     m_goals(0),
@@ -17,8 +17,8 @@ void Team::setHasBall(bool hasBall)
 
 void Team::goalScored(bool isNorthGoal)
 {
-    if ( (isNorthGoal && dir_ == Team::SouthToNorth)
-        || (!isNorthGoal && dir_ == Team::NorthToSouth) ) {
+    if ( (isNorthGoal && m_direction == Team::SouthToNorth)
+        || (!isNorthGoal && m_direction == Team::NorthToSouth) ) {
         m_goals++;
         m_scoredLastGoal = true;
     } else {

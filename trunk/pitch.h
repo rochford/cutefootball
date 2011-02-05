@@ -64,14 +64,16 @@ public:
     void setPlayerStartPositions(Team *team);
     void setPiece(Team* t, SetPiece s);
 
+    QList<Team*> teams() { return m_teams; }
     inline Team* homeTeam() const { return m_homeTeam; }
     inline Team* awayTeam() const { return m_awayTeam; }
+
     void updateDisplayTime(int timeLeftMs);
     inline QPointF pitchEntrancePoint() const { return m_entrancePoint; }
     void playGameSound(SoundEffects::GameSound s);
 
 public slots:
-    void newGame();
+    void newGame(int homeTeam, int awayTeam);
 
     void hasBallCheck();
     void selectNearestPlayer();

@@ -236,7 +236,7 @@ void Pitch::updateDisplayTime(int timeLeftMs)
         QTime tmp(0,0,0,0);
         tmp = tmp.addMSecs(timeLeftMs);
 
-        QString str(tmp.toString(QString(tr("mm:ss"))));
+        QString str(tmp.toString(QString("mm:ss")));
         str.append(" ");
         str.append(m_homeTeam->name());
         str.append(" ");
@@ -277,15 +277,15 @@ void Pitch::createTeams()
     }
 }
 
-void Pitch::newGame()
+void Pitch::newGame(int homeTeam, int awayTeam)
 {
     m_firstHalfState->setGameLength(m_settingsFrame->gameLengthMinutes());
     m_secondHalfState->setGameLength(m_settingsFrame->gameLengthMinutes());
     m_ball = new Ball(this);
 
-    m_homeTeam = m_teams.at(0);
+    m_homeTeam = m_teams.at(homeTeam);
     m_homeTeam->newGame();
-    m_awayTeam = m_teams.at(1);
+    m_awayTeam = m_teams.at(awayTeam);
     m_awayTeam->newGame();
 
     createTeamPlayers(m_homeTeam);

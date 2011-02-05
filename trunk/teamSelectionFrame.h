@@ -15,7 +15,12 @@ class TeamSelectionFrame : public QFrame
 public:
     explicit TeamSelectionFrame(MWindow *parent = 0);
     ~TeamSelectionFrame();
+private slots:
+    void checkSelectedTeams(const QString &);
+    void startGame();
+
 private:
+    MWindow* m_parent;
     Ui::teamSelectionFrame *ui;
 };
 
