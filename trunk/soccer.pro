@@ -12,6 +12,14 @@ TEMPLATE = app
 TRANSLATIONS = translations/soccer_fi.ts \
     translations/soccer_en.ts
 
+symbian:TARGET.UID3 = 0xEED6D15E
+
+# Add files and directories to ship with the application
+# by adapting the examples below.
+# file1.source = myfile
+# dir1.source = mydir
+DEPLOYMENTFOLDERS = # file1 dir1
+
 SOURCES += main.cpp\
         mainwindow.cpp \
     pitch.cpp \
@@ -27,7 +35,9 @@ SOURCES += main.cpp\
     mainMenuFrame.cpp \
     goalscoredstate.cpp \
     foulstate.cpp \
-    teamSelectionFrame.cpp
+    teamSelectionFrame.cpp \
+    helpFrame.cpp \
+    inputsettingsframe.cpp
 
 HEADERS  += mainwindow.h \
     pitch.h \
@@ -44,7 +54,9 @@ HEADERS  += mainwindow.h \
     mainMenuFrame.h \
     goalscoredstate.h \
     foulstate.h \
-    teamSelectionFrame.h
+    teamSelectionFrame.h \
+    helpFrame.h \
+    inputsettingsframe.h
 
 RESOURCES += \
     soccer.qrc
@@ -54,7 +66,13 @@ FORMS += \
     settingsFrame.ui \
     aboutFrame.ui \
     mainMenuFrame.ui \
-    teamSelectionFrame.ui
+    teamSelectionFrame.ui \
+    helpFrame.ui \
+    inputSettingsFrame.ui
 
 OTHER_FILES += \
     stylesheet.qss
+
+# Please do not modify the following two lines. Required for deployment.
+include(deployment.pri)
+qtcAddDeployment()

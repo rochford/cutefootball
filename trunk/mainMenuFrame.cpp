@@ -12,7 +12,9 @@ mainMenuFrame::mainMenuFrame(MWindow *parent) :
 #endif
     connect(ui->actionNewGame, SIGNAL(triggered()), parent, SLOT(showTeamSelectionFrame()));
     connect(ui->actionSettings, SIGNAL(triggered()), parent, SLOT(showSettingsFrame()));
+    connect(ui->actionInputSettings, SIGNAL(triggered()), parent, SLOT(showInputSettingsFrame()));
     connect(ui->actionAbout, SIGNAL(triggered()), parent, SLOT(showAboutFrame()));
+    connect(ui->actionHelp, SIGNAL(triggered()), parent,SLOT(showHelpFrame()));
     connect(ui->actionQuit, SIGNAL(triggered()), parent, SLOT(close()));
 }
 

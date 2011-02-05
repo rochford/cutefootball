@@ -87,7 +87,20 @@
   </action>
   <action name="actionSettings">
    <property name="text">
-    <string>Settings</string>
+    <string>Game Settings</string>
+   </property>
+  </action>
+  <action name="actionHelp">
+   <property name="text">
+    <string>Help</string>
+   </property>
+   <property name="toolTip">
+    <string>Help</string>
+   </property>
+  </action>
+  <action name="actionInputSettings">
+   <property name="text">
+    <string>Input Settings</string>
    </property>
   </action>
  </widget>

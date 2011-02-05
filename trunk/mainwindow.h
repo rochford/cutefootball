@@ -9,6 +9,8 @@ class Pitch;
 class SoundEffects;
 class settingsFrame;
 class aboutFrame;
+class helpFrame;
+class inputSettingsFrame;
 class mainMenuFrame;
 class TeamSelectionFrame;
 
@@ -56,6 +58,8 @@ private:
         MainMenu,
         Settings,
         About,
+        Help,
+        InputSettings,
         TeamSelection,
         GraphicsView
     };
@@ -66,22 +70,26 @@ public slots:
     void hideTeamSelectionFrame();
     void hideSettingsFrame();
     void hideAboutFrame();
+    void hideHelpFrame();
+    void hideInputSettingsFrame();
     void showFrame(Frame f);
     void newGame(int homeTeam, int awayTeam);
 
 private slots:
-
     void showAboutFrame();
+    void showHelpFrame();
+    void showInputSettingsFrame();
     void buttonClickedNoise();
     void showSettingsFrame();
     void showTeamSelectionFrame();
     void enableActions(bool gameInProgress);
 
-
 private:
     Pitch *m_pitch;
     settingsFrame* m_settingsFrame;
+    inputSettingsFrame* m_inputSettingsFrame;
     aboutFrame* m_aboutFrame;
+    helpFrame* m_helpFrame;
     TeamSelectionFrame* m_teamSelectionFrame;
     mainMenuFrame* m_mainMenuFrame;
     SoundEffects* m_soundEffects;

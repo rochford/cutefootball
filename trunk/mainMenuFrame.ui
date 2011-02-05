@@ -60,6 +60,20 @@
      </widget>
     </item>
     <item>
+     <widget class="QPushButton" name="m_inputBtn">
+      <property name="text">
+       <string>Keyboard settings</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="m_informationBtn">
+      <property name="text">
+       <string>Help</string>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QPushButton" name="m_aboutBtn">
       <property name="text">
        <string>About</string>
@@ -95,7 +109,7 @@
   </action>
   <action name="actionSettings">
    <property name="text">
-    <string>Settings</string>
+    <string>Game Settings</string>
    </property>
   </action>
   <action name="actionQuit">
@@ -106,6 +120,16 @@
   <action name="actionAbout">
    <property name="text">
     <string>About</string>
+   </property>
+  </action>
+  <action name="actionInputSettings">
+   <property name="text">
+    <string>Keyboard settings</string>
+   </property>
+  </action>
+  <action name="actionHelp">
+   <property name="text">
+    <string>Help</string>
    </property>
   </action>
  </widget>
@@ -168,6 +192,38 @@
     <hint type="sourcelabel">
      <x>120</x>
      <y>216</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_informationBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>actionHelp</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>120</x>
+     <y>175</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_inputBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>actionInputSettings</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>120</x>
+     <y>146</y>
     </hint>
     <hint type="destinationlabel">
      <x>-1</x>
