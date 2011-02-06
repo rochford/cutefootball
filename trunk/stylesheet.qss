@@ -1,5 +1,5 @@
 QFrame {
-    background: transparent;
+    background-color: "#677b09";
     border: none;
 }
 

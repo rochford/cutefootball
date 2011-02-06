@@ -23,7 +23,7 @@ MWindow::MWindow(QWidget *parent)
 
     uiMainWindow.setupUi(this);
 
-    QRectF footballGround(0,0,400,600);
+    QRectF footballGround(0,0,300,400);
     m_pitch = new Pitch(footballGround,
                         uiMainWindow.m_graphicsView,
                         m_soundEffects,
@@ -113,26 +113,34 @@ void MWindow::showFrame(Frame f)
     m_inputSettingsFrame->setVisible(false);
     m_teamSelectionFrame->setVisible(false);
 
-    showNormal();
-
     switch (f) {
     case MWindow::About:
         m_aboutFrame->setVisible(true);
+        m_aboutFrame->setFocus();
+        showMaximized();
         break;
     case MWindow::Help:
         m_helpFrame->setVisible(true);
+        m_helpFrame->setFocus();
+        showMaximized();
         break;
     case MWindow::InputSettings:
         m_inputSettingsFrame->setVisible(true);
+        m_inputSettingsFrame->setFocus();
+        showMaximized();
         break;
     case MWindow::Settings:
         m_settingsFrame->setVisible(true);
+        m_settingsFrame->setFocus();
+        showMaximized();
         break;
     case MWindow::MainMenu:
         m_mainMenuFrame->setVisible(true);
+        m_mainMenuFrame->setFocus();
+        showMaximized();
         break;
     case MWindow::GraphicsView:
-#if defined(Q_OS_SYMBIAN) or defined(Q_WS_SIMULATOR)
+#if defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR)
         // Toggle softkey visibility
         setWindowFlags( windowFlags() ^ Qt::WindowSoftkeysVisibleHint );
         showFullScreen();
@@ -144,6 +152,8 @@ void MWindow::showFrame(Frame f)
         break;
     case MWindow::TeamSelection:
         m_teamSelectionFrame->setVisible(true);
+        m_teamSelectionFrame->setFocus();
+        showMaximized();
         break;
     default:
         break;

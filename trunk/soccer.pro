@@ -71,7 +71,10 @@ FORMS += \
     inputSettingsFrame.ui
 
 OTHER_FILES += \
-    stylesheet.qss
+    stylesheet.qss \
+    teams/teams.txt \
+    teams/England.txt \
+    teams/Spain.txt
 
 # Please do not modify the following two lines. Required for deployment.
 include(deployment.pri)

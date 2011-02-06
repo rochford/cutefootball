@@ -139,6 +139,12 @@
    </layout>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>checkBox</tabstop>
+  <tabstop>horizontalSlider</tabstop>
+  <tabstop>buttonBox</tabstop>
+  <tabstop>spinBox</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
