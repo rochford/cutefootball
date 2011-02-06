@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>images/pitch2.GIF</file>
         <file>images/ball.png</file>
         <file>images/red/pN.PNG</file>
         <file>images/red/pN1.PNG</file>
@@ -31,5 +30,9 @@
         <file>stylesheet.qss</file>
         <file>translations/soccer_en.qm</file>
         <file>translations/soccer_fi.qm</file>
+        <file>images/pitch3.png</file>
+        <file>teams/teams.txt</file>
+        <file>teams/England.txt</file>
+        <file>teams/Spain.txt</file>
     </qresource>
 </RCC>

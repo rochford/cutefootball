@@ -92,6 +92,8 @@ private:
     void layoutPitch();
     void createTeams();
     void setPlayerDefendZone(Player *p);
+    void parseTeamList();
+    QStringList parsePlayers(QString teamName);
 
 public:
     QList<Player*> m_players;

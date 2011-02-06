@@ -59,12 +59,14 @@
     </property>
     <addaction name="actionNew_Game"/>
     <addaction name="actionSettings"/>
+    <addaction name="actionInputSettings"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
      <string>Help</string>
     </property>
+    <addaction name="actionHelp"/>
     <addaction name="actionAbout"/>
    </widget>
    <addaction name="menuFile"/>

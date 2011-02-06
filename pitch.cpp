@@ -162,35 +162,40 @@ void Pitch::removePlayers()
 
 void Pitch::layoutPitch()
 {
-    m_grass = new QGraphicsPixmapItem(QPixmap(QString(":/images/pitch2.GIF")));
+    const int KPitchBoundaryWidth = 20;
+    QPixmap pitchUnscaled(QString(":/images/pitch3.png"));
+    QPixmap pitchScaled = pitchUnscaled.scaled(QSize(m_scene->width(),m_scene->height()));
+    m_grass = new QGraphicsPixmapItem(pitchScaled);
     m_scene->addItem(m_grass);
 
     // create the pitch
-    m_footballPitch = m_scene->addRect(0, 0, m_scene->width(), m_scene->height() ,
+    m_footballPitch = m_scene->addRect(KPitchBoundaryWidth, KPitchBoundaryWidth,
+                                       m_scene->width()-(KPitchBoundaryWidth*2), m_scene->height()-(KPitchBoundaryWidth*2),
                                     KWhitePaintPen,
                                     QBrush(Qt::white,Qt::NoBrush) );
 
     // half way line
-    m_centerLine = m_scene->addLine(m_scene->sceneRect().left(),m_scene->sceneRect().height()/2.0,
-                         m_scene->sceneRect().right(),m_scene->sceneRect().height()/2.0, KWhitePaintPen);
+    m_centerLine = m_scene->addLine(m_footballPitch->rect().left(), (m_footballPitch->rect().height()/2.0)+KPitchBoundaryWidth,
+                                    m_footballPitch->rect().right(),(m_footballPitch->rect().height()/2.0)+KPitchBoundaryWidth,
+                                    KWhitePaintPen);
 
     // center circle
-    m_centerCircle = m_scene->addEllipse((m_scene->sceneRect().width()/2.0) -40,(m_scene->sceneRect().height()/2.0)-40,
+    m_centerCircle = m_scene->addEllipse((m_scene->width()/2.0)-40,(m_scene->height()/2.0)-40,
                       80.0, 80.0, KWhitePaintPen);
     // simple text
     m_scoreText = new ScreenGraphics(this);
 
     // create the goals
-    m_bottomGoal = m_scene->addRect((m_scene->width() / 2)-60, m_scene->height(),120,25,
+    m_bottomGoal = m_scene->addRect((m_scene->width() / 2)-60, m_scene->height()-KPitchBoundaryWidth,120,KPitchBoundaryWidth,
                    KWhitePaintPen,
-                   QBrush(Qt::white,Qt::SolidPattern) );
-    m_topGoal = m_scene->addRect((m_scene->width() / 2)-60,-25,120,25,
+                   QBrush(Qt::white,Qt::Dense5Pattern) );
+    m_topGoal = m_scene->addRect((m_scene->width() / 2)-60,0,120,KPitchBoundaryWidth,
                    KWhitePaintPen,
-                   QBrush(Qt::white,Qt::SolidPattern) );
+                   QBrush(Qt::white,Qt::Dense5Pattern) );
 
     // penalty areas
     QPainterPath path;
-    QRectF penaltyRectF((m_scene->width() / 2)-90, -50, 180, 100 );
+    QRectF penaltyRectF((m_scene->width() / 2)-80, 0, 160, KPitchBoundaryWidth*2 );
     path.moveTo(penaltyRectF.center());
     path.arcTo(penaltyRectF,180.0,180.0);
     path.closeSubpath();
@@ -200,7 +205,7 @@ void Pitch::layoutPitch()
                                         QBrush(Qt::white,Qt::NoBrush) );
 
     QPainterPath path2;
-    QRectF penaltyRectF2((m_scene->width() / 2)-90, m_scene->height()-50, 180, 100 );
+    QRectF penaltyRectF2((m_scene->width() / 2)-80, m_scene->height()-40, 160, 40 );
     path2.moveTo(penaltyRectF2.center());
     path2.arcTo(penaltyRectF2,180.0,-180.0);
     path2.closeSubpath();
@@ -263,18 +268,34 @@ void Pitch::hasBallCheck()
     }
 }
 
-void Pitch::createTeams()
+void Pitch::parseTeamList()
 {
-    QStringList teamNames;
-    teamNames << "United" << "City" << "Dynamo" << "Galaxy"
-              << "Town" << "Athletic" << "Real" << "Sporting";
-    QList<Qt::GlobalColor> colours;
-    colours << Qt::darkBlue << Qt::magenta << Qt::darkRed << Qt::yellow
-            << Qt::black << Qt::gray << Qt::white << Qt::darkYellow;
-    for (int i = 0; i < teamNames.count(); ++i) {
-        Team* t = new Team(teamNames.at(i), colours.at(i));
+    QStringList colorNames(QColor::colorNames());
+    qDebug() << QColor::colorNames();
+
+    qDebug() << "Pitch::parseTeamList()";
+    // for each team in the directory
+    QFile file(":/teams/teams.txt");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return;
+
+    int i = 0;
+    while (!file.atEnd()) {
+        QByteArray line = file.readLine();
+        QList<QByteArray> nameAndColor = line.split(',');
+        QString name = nameAndColor.at(0).simplified();
+        QString colorName = nameAndColor.at(1).simplified();
+        QColor col(colorName);
+        qDebug() << i << "," << name << "," << colorName << "," << col.name();
+        Team* t = new Team(name, col);
         m_teams.append(t);
     }
+    file.close();
+}
+
+void Pitch::createTeams()
+{
+    parseTeamList();
 }
 
 void Pitch::newGame(int homeTeam, int awayTeam)
@@ -298,14 +319,34 @@ void Pitch::newGame(int homeTeam, int awayTeam)
     m_game->start();
 }
 
-void Pitch::createTeamPlayers(Team *team)
+QStringList Pitch::parsePlayers(QString teamName)
 {
     QStringList names;
-    names << "adam" << "bob" << "charlie" << "dave"
-          << "ed" << "frank" << "george" << "harry"
-          << "ian" << "jack" << "kai" << "luke"
-          << "matt" << "nigel" << "oscar" << "pete"
-          << "roger" << "steve" << "tom" << "walt";
+
+    qDebug() << "Pitch::parsePlayers()";
+    // for each team in the directory
+    QString f(":/teams/");
+    f.append(teamName);
+    f.append(".txt");
+
+    QFile file(f);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return names;
+
+    while (!file.atEnd()) {
+        QByteArray line = file.readLine();
+
+        QString name(line.simplified());
+        qDebug() << name;
+        names.append(name);
+    }
+    file.close();
+    return names;
+}
+
+void Pitch::createTeamPlayers(Team *team)
+{
+    QStringList names = parsePlayers(team->name());
     bool isHomeTeam(false);
 
     if (team == m_homeTeam)
@@ -315,9 +356,9 @@ void Pitch::createTeamPlayers(Team *team)
     formation << Player::GoalKeeper
               << Player::LeftCentralDefence
               << Player::RightCentralDefence
-              << Player::CentralMidfield
-              << Player::LeftAttack
-              << Player::RightAttack;
+              << Player::LeftMidfield
+              << Player::RightMidfield
+              << Player::CentralAttack;
 
     QPointF startPos(0, m_scene->sceneRect().height()/2);
     int i = 0;
@@ -356,8 +397,13 @@ void Pitch::setPlayerDefendZone(Player *p)
     QPointF brBottomHalf = m_footballPitch->rect().bottomRight();
     QPointF brTopHalf = brBottomHalf - QPointF(m_footballPitch->rect().height()/2,0);
     QPointF tlBottomHalf = tlTopHalf + QPointF(m_footballPitch->rect().height()/2,0);
+    QPointF midTop(m_footballPitch->rect().width()/2,m_footballPitch->rect().top());
+    QPointF midBottom(m_footballPitch->rect().width()/2,m_footballPitch->rect().height());
+
     QRectF topHalf(tlTopHalf, brTopHalf);
     QRectF bottomHalf(tlBottomHalf, brBottomHalf);
+    QRectF leftHalf(tlTopHalf,midBottom);
+    QRectF rightHalf(midTop,brBottomHalf);
 
     QRectF zone;
     switch (p->m_role)
@@ -367,9 +413,18 @@ void Pitch::setPlayerDefendZone(Player *p)
     case Player::LeftAttack:
         nToS ? zone = bottomHalf : zone = topHalf;
         break;
+    case Player::LeftMidfield:
+        zone = leftHalf;
+        break;
+    case Player::RightMidfield:
+        zone = rightHalf;
+        break;
     case Player::LeftCentralDefence:
     case Player::RightCentralDefence:
         nToS ? zone = topHalf : zone = bottomHalf;
+        break;
+    case Player::GoalKeeper:
+        // goal keepers dont have a defend zone
         break;
     default:
         zone = p->m_startPositionRectF;

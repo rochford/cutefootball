@@ -1,0 +1,2 @@
+England,white
+Spain,red
