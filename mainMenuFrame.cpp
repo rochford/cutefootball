@@ -7,9 +7,7 @@ mainMenuFrame::mainMenuFrame(MWindow *parent) :
     ui(new Ui::mainMenuFrame)
 {
     ui->setupUi(this);
-#if defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR)
-    ui->verticalSpacer_2->changeSize(1,10);
-#endif
+
     connect(ui->actionNewGame, SIGNAL(triggered()), parent, SLOT(showTeamSelectionFrame()));
     connect(ui->actionSettings, SIGNAL(triggered()), parent, SLOT(showSettingsFrame()));
     connect(ui->actionInputSettings, SIGNAL(triggered()), parent, SLOT(showInputSettingsFrame()));

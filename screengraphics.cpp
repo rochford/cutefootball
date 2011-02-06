@@ -5,8 +5,8 @@
 
 #include "pitch.h"
 
-const QFont KSmallFont("Times", 10, QFont::Bold);
-const QFont KLargeFont("Times", 16, QFont::Bold);
+const QFont KSmallFont("Times", 6, QFont::Bold);
+const QFont KLargeFont("Times", 8, QFont::Bold);
 
 ScreenGraphics::ScreenGraphics(Pitch *p)
     : QObject(p),
