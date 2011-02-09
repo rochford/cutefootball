@@ -14,7 +14,7 @@ typedef QList<QPixmap> PixmapList;
 
 MWindow::Action calculateAction(QPointF source,
                                 QPointF destination);
-void teamColorTransform(QPixmap &pixmap, QString pix, QRgb colorFrom, QRgb colorTo);
+void teamColorTransform(QPixmap &pixmap, QString pix, QRgb colorFrom, QRgb shirtColor, QRgb shortColor);
 
 class Player : public QObject,
                public QGraphicsPixmapItem
@@ -83,7 +83,8 @@ protected:
                       QString s1,
                       QString s2,
                       QString s3,
-                      QRgb teamColor);
+                      QRgb shirtColor,
+                      QRgb shortColor);
 
 private:
     void humanAdvance(int phase);

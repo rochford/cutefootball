@@ -24,7 +24,7 @@ public:
     void createPixmaps();
     void advance(int phase);
 //    void createMoves();
-    void pixmapInsert(MWindow::Action a, QString s1, QString s2, QString s3, QRgb goalKeeperColor);
+    void pixmapInsert(MWindow::Action a, QString s1, QString s2, QString s3, QRgb goalKeeperShirtColor, QRgb goalKeeperShortColor);
 
 private:
     void gkAdvanceWithBall();

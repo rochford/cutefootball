@@ -8,7 +8,7 @@
 #include <QGraphicsItem>
 #include <QToolTip>
 
-void teamColorTransform(QPixmap &pixmap, QString pix, QRgb colorFrom, QRgb colorTo)
+void teamColorTransform(QPixmap &pixmap, QString pix, QRgb colorFrom, QRgb shirtColor, QRgb shortColor)
 {
     QImage img(pix);
     QRect rect = img.rect();
@@ -16,7 +16,9 @@ void teamColorTransform(QPixmap &pixmap, QString pix, QRgb colorFrom, QRgb color
         for (int h = 0; h < img.height(); h++) {
             QRgb rgb = img.pixel(w, h);
             if (qRed(rgb) > 250 && qBlue(rgb) < 8 && qGreen(rgb) < 8)
-                img.setPixel(QPoint(w,h), colorTo);
+                img.setPixel(QPoint(w,h), shirtColor);
+            else if (qRed(rgb) < 8 && qBlue(rgb) < 8 && qGreen(rgb) > 250)
+                img.setPixel(QPoint(w,h), shortColor);
         }
     }
     pixmap = QPixmap::fromImage(img);
@@ -141,7 +143,7 @@ void Player::createMoves()
     m_moveDistance.insert(MWindow::NorthWest, QPointF(-m_speed,-m_speed));
 }
 
-void Player::pixmapInsert(MWindow::Action a, QString s1, QString s2, QString s3, QRgb teamColor)
+void Player::pixmapInsert(MWindow::Action a, QString s1, QString s2, QString s3, QRgb shirtColor, QRgb shortColor)
 {
     QString s(":/images/red/");
 
@@ -154,16 +156,16 @@ void Player::pixmapInsert(MWindow::Action a, QString s1, QString s2, QString s3,
     QPixmap p1, p2, p3;
 
     if (!QPixmapCache::find(key1, &p1)) {
-        teamColorTransform(p1, n1.append(s1), qRgb(255, 0, 0), teamColor);
+        teamColorTransform(p1, n1.append(s1), qRgb(255, 0, 0), shirtColor, shortColor);
         QPixmapCache::insert(key1, p1);
     }
 
     if (!QPixmapCache::find(key2, &p2)) {
-        teamColorTransform(p2, n2.append(s2), qRgb(255, 0, 0), teamColor);
+        teamColorTransform(p2, n2.append(s2), qRgb(255, 0, 0), shirtColor, shortColor);
         QPixmapCache::insert(key2, p2);
     }
     if (!QPixmapCache::find(key3, &p3)) {
-        teamColorTransform(p3, n3.append(s3), qRgb(255, 0, 0), teamColor);
+        teamColorTransform(p3, n3.append(s3), qRgb(255, 0, 0), shirtColor, shortColor);
         QPixmapCache::insert(key3, p3);
     }
 
@@ -174,17 +176,17 @@ void Player::pixmapInsert(MWindow::Action a, QString s1, QString s2, QString s3,
 
 void Player::createPixmaps()
 {
-    pixmapInsert(MWindow::North, "pN.PNG", "pN1.PNG", "pN2.PNG", m_team->color.rgb());
-    pixmapInsert(MWindow::NorthEast, "pNE.PNG", "pNE1.PNG", "pNE2.PNG", m_team->color.rgb());
-    pixmapInsert(MWindow::East, "pE.PNG", "pE1.PNG", "pE2.PNG", m_team->color.rgb());
-    pixmapInsert(MWindow::SouthEast, "pSE.PNG", "pSE1.PNG", "pSE2.PNG", m_team->color.rgb());
-    pixmapInsert(MWindow::South, "pS.PNG", "pS1.PNG", "pS2.PNG", m_team->color.rgb());
-    pixmapInsert(MWindow::SouthWest, "pSWest.PNG", "pSW1.PNG", "pSW2.PNG", m_team->color.rgb());
-    pixmapInsert(MWindow::West, "pW.PNG", "pW1.PNG", "pW2.PNG", m_team->color.rgb());
-    pixmapInsert(MWindow::NorthWest, "pNW.PNG", "pNW1.PNG", "pNW2.PNG", m_team->color.rgb());
+    pixmapInsert(MWindow::North, "pN.PNG", "pN1.PNG", "pN2.PNG", m_team->m_shirtColor.rgb(), m_team->m_shortColor.rgb());
+    pixmapInsert(MWindow::NorthEast, "pNE.PNG", "pNE1.PNG", "pNE2.PNG", m_team->m_shirtColor.rgb(), m_team->m_shortColor.rgb());
+    pixmapInsert(MWindow::East, "pE.PNG", "pE1.PNG", "pE2.PNG", m_team->m_shirtColor.rgb(), m_team->m_shortColor.rgb());
+    pixmapInsert(MWindow::SouthEast, "pSE.PNG", "pSE1.PNG", "pSE2.PNG", m_team->m_shirtColor.rgb(), m_team->m_shortColor.rgb());
+    pixmapInsert(MWindow::South, "pS.PNG", "pS1.PNG", "pS2.PNG", m_team->m_shirtColor.rgb(), m_team->m_shortColor.rgb());
+    pixmapInsert(MWindow::SouthWest, "pSWest.PNG", "pSW1.PNG", "pSW2.PNG", m_team->m_shirtColor.rgb(), m_team->m_shortColor.rgb());
+    pixmapInsert(MWindow::West, "pW.PNG", "pW1.PNG", "pW2.PNG", m_team->m_shirtColor.rgb(), m_team->m_shortColor.rgb());
+    pixmapInsert(MWindow::NorthWest, "pNW.PNG", "pNW1.PNG", "pNW2.PNG", m_team->m_shirtColor.rgb(), m_team->m_shortColor.rgb());
 
-    pixmapInsert(MWindow::Tackle, "tackleN.PNG", "tackleN.PNG", "tackleN.PNG", m_team->color.rgb());
-    pixmapInsert(MWindow::FallenOver, "pTackled.PNG", "pTackled.PNG", "pTackled.PNG", m_team->color.rgb()); // TODO XXX TIM
+    pixmapInsert(MWindow::Tackle, "tackleN.PNG", "tackleN.PNG", "tackleN.PNG", m_team->m_shirtColor.rgb(), m_team->m_shortColor.rgb());
+    pixmapInsert(MWindow::FallenOver, "pTackled.PNG", "pTackled.PNG", "pTackled.PNG", m_team->m_shirtColor.rgb(), m_team->m_shortColor.rgb()); // TODO XXX TIM
     // set default pixmap
     setPixmap(m_images[MWindow::North].at(0));
 }

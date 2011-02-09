@@ -10,7 +10,7 @@ class Team : public QObject {
 public:
     // the attacking direction
     enum Direction { SouthToNorth, NorthToSouth };
-    Team(QString teamName, QColor teamColor);
+    Team(QString teamName, QColor shirtColor, QColor shortColor);
     QString name() { return m_name; }
     void setDirection(Direction dir) { m_direction = dir; }
     Direction getDirection() { return m_direction; }
@@ -23,7 +23,8 @@ public slots:
     void goalScored(bool isNorthGoal);
 
 public:
-    QColor color;
+    QColor m_shirtColor;
+    QColor m_shortColor;
     Direction m_direction;
     int m_goals;
     // this team scored the last goal

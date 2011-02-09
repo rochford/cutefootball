@@ -181,9 +181,10 @@ QVariant Ball::itemChange(GraphicsItemChange change, const QVariant &value)
      if (change == ItemPositionChange && scene()) {
          step_++;
 
+         // Ball is either on the pitch or in a goal, otherwise return last position
          // value is the new position.
          QPointF newPos = value.toPointF();
-         QRectF rect = m_pitch->m_footballPitch->rect();
+         QRectF pitchRect = m_pitch->m_footballPitch->rect();
 
          // has a goal been scored?
          if (m_pitch->m_topGoal->contains(newPos)
@@ -194,7 +195,7 @@ QVariant Ball::itemChange(GraphicsItemChange change, const QVariant &value)
              return start_;
          }
 
-         if (!rect.contains(newPos)) {
+         if (!pitchRect.contains(newPos)) {
              return m_lastPos;
          }
          else {
