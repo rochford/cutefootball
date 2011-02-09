@@ -1,2 +1,2 @@
-England,white
-Spain,red
+England,white,darkblue
+Spain,red,green

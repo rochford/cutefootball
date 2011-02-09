@@ -31,6 +31,7 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     m_scoreText(NULL),
     m_centerLine(NULL),
     m_centerCircle(NULL),
+    m_centerMark(NULL),
     m_settingsFrame(settingsFrame),
     m_soundEffects(se)
 {
@@ -162,7 +163,7 @@ void Pitch::removePlayers()
 
 void Pitch::layoutPitch()
 {
-    const int KPitchBoundaryWidth = 20;
+    const int KPitchBoundaryWidth = 40;
     QPixmap pitchUnscaled(QString(":/images/pitch3.png"));
     QPixmap pitchScaled = pitchUnscaled.scaled(QSize(m_scene->width(),m_scene->height()));
     m_grass = new QGraphicsPixmapItem(pitchScaled);
@@ -182,14 +183,17 @@ void Pitch::layoutPitch()
     // center circle
     m_centerCircle = m_scene->addEllipse((m_scene->width()/2.0)-40,(m_scene->height()/2.0)-40,
                       80.0, 80.0, KWhitePaintPen);
+    // center mark
+    m_centerMark = m_scene->addEllipse((m_scene->width()/2.0)-4,(m_scene->height()/2.0)-4,
+                      4.0, 4.0, KWhitePaintPen);
     // simple text
     m_scoreText = new ScreenGraphics(this);
 
     // create the goals
-    m_bottomGoal = m_scene->addRect((m_scene->width() / 2)-60, m_scene->height()-KPitchBoundaryWidth,120,KPitchBoundaryWidth,
+    m_bottomGoal = m_scene->addRect((m_scene->width() / 2)-60, m_scene->height()-KPitchBoundaryWidth,120,KPitchBoundaryWidth/2,
                    KWhitePaintPen,
                    QBrush(Qt::white,Qt::Dense5Pattern) );
-    m_topGoal = m_scene->addRect((m_scene->width() / 2)-60,0,120,KPitchBoundaryWidth,
+    m_topGoal = m_scene->addRect((m_scene->width() / 2)-60,KPitchBoundaryWidth/2,120,KPitchBoundaryWidth/2,
                    KWhitePaintPen,
                    QBrush(Qt::white,Qt::Dense5Pattern) );
 
@@ -205,7 +209,7 @@ void Pitch::layoutPitch()
                                         QBrush(Qt::white,Qt::NoBrush) );
 
     QPainterPath path2;
-    QRectF penaltyRectF2((m_scene->width() / 2)-80, m_scene->height()-40, 160, 40 );
+    QRectF penaltyRectF2((m_scene->width() / 2)-80, m_scene->height()-(KPitchBoundaryWidth*2), 160, KPitchBoundaryWidth*2);
     path2.moveTo(penaltyRectF2.center());
     path2.arcTo(penaltyRectF2,180.0,-180.0);
     path2.closeSubpath();
@@ -284,10 +288,12 @@ void Pitch::parseTeamList()
         QByteArray line = file.readLine();
         QList<QByteArray> nameAndColor = line.split(',');
         QString name = nameAndColor.at(0).simplified();
-        QString colorName = nameAndColor.at(1).simplified();
-        QColor col(colorName);
-        qDebug() << i << "," << name << "," << colorName << "," << col.name();
-        Team* t = new Team(name, col);
+        QString shirtColorString = nameAndColor.at(1).simplified();
+        QString shortColorString = nameAndColor.at(2).simplified();
+        QColor shirtColor(shirtColorString);
+        QColor shortColor(shortColorString);
+        qDebug() << i << "," << name << "," << shirtColor.name() << "," << shortColor.name();
+        Team* t = new Team(name, shirtColor, shortColor);
         m_teams.append(t);
     }
     file.close();
@@ -408,6 +414,7 @@ void Pitch::setPlayerDefendZone(Player *p)
     QRectF zone;
     switch (p->m_role)
     {
+#if 0
     case Player::RightAttack:
     case Player::CentralAttack:
     case Player::LeftAttack:
@@ -423,6 +430,7 @@ void Pitch::setPlayerDefendZone(Player *p)
     case Player::RightCentralDefence:
         nToS ? zone = topHalf : zone = bottomHalf;
         break;
+#endif //
     case Player::GoalKeeper:
         // goal keepers dont have a defend zone
         break;

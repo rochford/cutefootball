@@ -1,9 +1,10 @@
 #include "team.h"
 #include <QDebug>
 
-Team::Team(QString teamName, QColor teamColor)
+Team::Team(QString teamName, QColor shirtColor, QColor shortColor)
     : m_name(teamName),
-    color(teamColor),
+    m_shirtColor(shirtColor),
+    m_shortColor(shortColor),
     m_teamHasBall(false),
     m_goals(0),
     m_scoredLastGoal(false)

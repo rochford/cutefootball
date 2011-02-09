@@ -108,6 +108,7 @@ public:
     QGraphicsPathItem *m_topPenaltyArea;
     QGraphicsLineItem *m_centerLine;
     QGraphicsEllipseItem *m_centerCircle;
+    QGraphicsEllipseItem *m_centerMark;
     ScreenGraphics *m_scoreText;
     QRectF m_pitchArea[KRow][KColumn];
     SoundEffects* m_soundEffects;  // NOT OWNED

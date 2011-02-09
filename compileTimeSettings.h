@@ -8,7 +8,8 @@ const int KMinorVersion = 2;
 const QString versionNumber(QObject::tr("version %1.%2"));
 
 const int KHalfLength = 60*1000; // seconds
-const QRgb KGoalKeeperColor = QColor(Qt::green).rgb();
+const QRgb KGoalKeeperShirtColor = QColor(Qt::green).rgb();
+const QRgb KGoalKeeperShortColor = QColor(Qt::black).rgb();
 const int KReplayFrameRate = 40.00; // ms
 const int KOneSecondMs = 1000; // ms
 const int KLongPressValue = 600; // Ms
