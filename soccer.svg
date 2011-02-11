@@ -14,24 +14,26 @@
      transform="matrix(1.5250404,0,0,1.9191055,-0.0615411,-17.579151)"
      id="layer1">
     <rect
-       width="31.524044"
-       height="31.16683"
-       x="0.62512267"
-       y="0.29734981"
+       width="28.937666"
+       height="24.448341"
+       x="0.54018855"
+       y="1.2190173"
        id="rect2847"
-       style="fill:#008000;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+       style="fill:#008000;fill-rule:evenodd;stroke:#000000;stroke-width:0.84857291px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
     <text
-       x="3.5635285"
-       y="9.9991951"
-       transform="scale(0.73818035,1.3546825)"
+       x="3.1671982"
+       y="9.6975393"
+       transform="scale(0.80248076,1.2461358)"
        id="text2849"
        xml:space="preserve"
-       style="font-size:9.4593029px;font-style:normal;font-variant:normal;font-weight:800;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Rockwell Extra Bold;-inkscape-font-specification:'Rockwell Extra Bold, Ultra-Bold'"><tspan
-         x="3.5635285"
-         y="9.9991951"
-         id="tspan2851">Cute</tspan><tspan
-         x="3.5635285"
-         y="19.458498"
-         id="tspan2853">Soccer</tspan></text>
+       style="font-size:8.60315514px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Times New Roman;-inkscape-font-specification:Times New Roman"><tspan
+         x="3.1671982"
+         y="9.6975393"
+         id="tspan2851"
+         style="font-size:8.60315514px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;font-family:Times New Roman;-inkscape-font-specification:Times New Roman">Cute</tspan><tspan
+         x="3.1671982"
+         y="18.398897"
+         id="tspan2853"
+         style="font-size:8.60315514px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;font-family:Times New Roman;-inkscape-font-specification:Times New Roman">Soccer</tspan></text>
   </g>
 </svg>

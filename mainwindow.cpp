@@ -30,9 +30,20 @@ MWindow::MWindow(QWidget *parent)
                         m_settingsFrame);
     m_teamSelectionFrame = new TeamSelectionFrame(this);
 
+
     createConnections();
     setCentralWidget( uiMainWindow.m_graphicsView );
     showFrame(MWindow::MainMenu);
+}
+
+void MWindow::removeContextMenus()
+{
+    /* Remove context menu from the all widgets. */
+    QWidgetList widgets = QApplication::allWidgets();
+    QWidget* w=0;
+    foreach(w,widgets) {
+        w->setContextMenuPolicy(Qt::NoContextMenu);
+    }
 }
 
 void MWindow::createConnections()

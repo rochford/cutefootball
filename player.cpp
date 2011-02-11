@@ -676,9 +676,13 @@ QVariant Player::itemChange(GraphicsItemChange change, const QVariant &value)
 
          if (!hasFocus()
                  && ( m_role != Player::GoalKeeper )
-                 && ( m_pitch->m_bottomPenaltyArea->contains(newPos) || m_pitch->m_topPenaltyArea->contains(newPos) ) )
+                 && ( m_pitch->m_bottomPenaltyArea->contains(newPos) || m_pitch->m_topPenaltyArea->contains(newPos) ) ) {
+             if ( m_hasBall ) {
+                 m_pitch->ball()->setNoBallOwner();
+                 m_hasBall = false;
+             }
              return m_lastPos;
-
+            }
          if (!pitch.contains(newPos))
              return m_lastPos;
          else {

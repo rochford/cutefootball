@@ -65,6 +65,7 @@ private:
     };
 
     void createConnections();
+    void removeContextMenus();
 
 public slots:
     void hideTeamSelectionFrame();
@@ -83,6 +84,7 @@ private slots:
     void showSettingsFrame();
     void showTeamSelectionFrame();
     void enableActions(bool gameInProgress);
+
 
 private:
     Pitch *m_pitch;

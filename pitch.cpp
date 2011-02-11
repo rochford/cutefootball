@@ -43,10 +43,10 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     m_motionTimer->setInterval(KGameRefreshRate);
 
     m_game = new QStateMachine(this);
-    m_firstHalfState = new Game(this, "first half", true, false);
-    m_secondHalfState = new Game(this, "second half", false, false);
-    m_extraTimeFirstHalfState = new Game(this, "extra time first half", true, true);
-    m_extraTimeSecondHalfState = new Game(this, "extra time second half", false, true);
+    m_firstHalfState = new Game(this, tr("First half"), true, false);
+    m_secondHalfState = new Game(this, tr("Second half"), false, false);
+    m_extraTimeFirstHalfState = new Game(this, tr("extra time first half"), true, true);
+    m_extraTimeSecondHalfState = new Game(this, tr("extra time second half"), false, true);
     m_allDone = new QFinalState();
 
     m_game->addState(m_firstHalfState);
@@ -163,6 +163,11 @@ void Pitch::removePlayers()
 
 void Pitch::layoutPitch()
 {
+    QPixmap advertTop(":/images/advertTop.png");
+    QPixmap advertRight(":/images/advertRight.png");
+    QPixmap advertLeft(":/images/advertLeft.png");
+    QPixmap advertBottom(":/images/advertBottom.png");
+
     const int KPitchBoundaryWidth = 40;
     QPixmap pitchUnscaled(QString(":/images/pitch3.png"));
     QPixmap pitchScaled = pitchUnscaled.scaled(QSize(m_scene->width(),m_scene->height()));
@@ -174,6 +179,34 @@ void Pitch::layoutPitch()
                                        m_scene->width()-(KPitchBoundaryWidth*2), m_scene->height()-(KPitchBoundaryWidth*2),
                                     KWhitePaintPen,
                                     QBrush(Qt::white,Qt::NoBrush) );
+    // top line adverts
+    QPen advertPen(QBrush(advertTop),10);
+    m_scene->addLine(m_footballPitch->rect().left(), (m_footballPitch->rect().top()-advertPen.width()),
+                     (m_scene->width() / 2)-60-KWhitePaintPen.width()*4,(m_footballPitch->rect().top()-advertPen.width()),
+                     advertPen);
+    m_scene->addLine((m_scene->width() / 2)+60+KWhitePaintPen.width()*4, (m_footballPitch->rect().top()-advertPen.width()),
+                     m_footballPitch->rect().right(),(m_footballPitch->rect().top()-advertPen.width()),
+                     advertPen);
+    // bottom line adverts
+    advertPen = QPen(QBrush(advertBottom),10);
+    m_scene->addLine(m_footballPitch->rect().left(), (m_footballPitch->rect().bottom()+advertPen.width()),
+                     (m_scene->width() / 2)-60-KWhitePaintPen.width()*4,(m_footballPitch->rect().bottom()+advertPen.width()),
+                     advertPen);
+    m_scene->addLine((m_scene->width() / 2)+60+KWhitePaintPen.width()*4, (m_footballPitch->rect().bottom()+advertPen.width()),
+                     m_footballPitch->rect().right(),(m_footballPitch->rect().bottom()+advertPen.width()),
+                     advertPen);
+
+    // right line adverts
+    advertPen = QPen(QBrush(advertRight),10);
+    m_scene->addLine(m_footballPitch->rect().right()+advertPen.width(), (m_footballPitch->rect().top()-advertPen.width()),
+                     m_footballPitch->rect().right()+advertPen.width(), (m_footballPitch->rect().bottom()+advertPen.width()),
+                     advertPen);
+    // left line adverts
+    advertPen = QPen(QBrush(advertLeft),10);
+    m_scene->addLine(m_footballPitch->rect().left()-advertPen.width(), (m_footballPitch->rect().top()-advertPen.width()),
+                     m_footballPitch->rect().left()-advertPen.width(), (m_footballPitch->rect().bottom()+advertPen.width()),
+                     advertPen);
+
 
     // half way line
     m_centerLine = m_scene->addLine(m_footballPitch->rect().left(), (m_footballPitch->rect().height()/2.0)+KPitchBoundaryWidth,
@@ -275,9 +308,7 @@ void Pitch::hasBallCheck()
 void Pitch::parseTeamList()
 {
     QStringList colorNames(QColor::colorNames());
-    qDebug() << QColor::colorNames();
 
-    qDebug() << "Pitch::parseTeamList()";
     // for each team in the directory
     QFile file(":/teams/teams.txt");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -292,7 +323,7 @@ void Pitch::parseTeamList()
         QString shortColorString = nameAndColor.at(2).simplified();
         QColor shirtColor(shirtColorString);
         QColor shortColor(shortColorString);
-        qDebug() << i << "," << name << "," << shirtColor.name() << "," << shortColor.name();
+//        qDebug() << i << "," << name << "," << shirtColor.name() << "," << shortColor.name();
         Team* t = new Team(name, shirtColor, shortColor);
         m_teams.append(t);
     }
@@ -329,7 +360,6 @@ QStringList Pitch::parsePlayers(QString teamName)
 {
     QStringList names;
 
-    qDebug() << "Pitch::parsePlayers()";
     // for each team in the directory
     QString f(":/teams/");
     f.append(teamName);

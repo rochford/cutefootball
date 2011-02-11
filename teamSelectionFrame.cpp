@@ -12,13 +12,13 @@ TeamSelectionFrame::TeamSelectionFrame(MWindow *parent) :
 {
     ui->setupUi(this);
 
-    QStringList teamNames;
-    foreach( Team* t, m_parent->pitch()->teams())
-        teamNames.append(t->name());
+    foreach( Team* t, m_parent->pitch()->teams()) {
+        QString flagFile(QString(":/images/flags/") + t->name() + QString(".png"));
+        ui->m_homeTeamComboBox->addItem(QIcon(QPixmap(flagFile)),t->name());
+        ui->m_awayTeamComboBox->addItem(QIcon(QPixmap(flagFile)),t->name());
+    }
 
-    ui->m_homeTeamComboBox->addItems(teamNames);
     ui->m_homeTeamComboBox->setCurrentIndex(0);
-    ui->m_awayTeamComboBox->addItems(teamNames);
     ui->m_awayTeamComboBox->setCurrentIndex(1);
 
     connect(ui->buttonBox, SIGNAL(accepted()), parent, SLOT(hideTeamSelectionFrame()));
