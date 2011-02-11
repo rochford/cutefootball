@@ -16,8 +16,10 @@ int main(int argc, char *argv[])
     appTranslator.load(locale, ":/translations/");
     a.installTranslator(&appTranslator);
 
-    MWindow w;
-    w.showMaximized();
+    MWindow window;
+    window.showMaximized();
 
     return a.exec();
 }
+
+

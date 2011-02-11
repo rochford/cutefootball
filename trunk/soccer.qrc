@@ -34,5 +34,11 @@
         <file>teams/teams.txt</file>
         <file>teams/England.txt</file>
         <file>teams/Spain.txt</file>
+        <file>images/advertBottom.png</file>
+        <file>images/advertTop.png</file>
+        <file>images/advertLeft.png</file>
+        <file>images/advertRight.png</file>
+        <file>images/flags/England.png</file>
+        <file>images/flags/Spain.png</file>
     </qresource>
 </RCC>
