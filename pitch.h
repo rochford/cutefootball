@@ -12,7 +12,7 @@
 #include "mainwindow.h"
 #include "team.h" // Team::Direction
 #include "soundeffects.h"
-
+#include "settingsFrame.h"
 #include <QStateMachine>
 
 class QGraphicsEllipseItem;
@@ -26,7 +26,6 @@ class Player;
 class Team;
 class ScreenGraphics;
 class Game;
-class settingsFrame;
 
 class Pitch : public QObject
 {
@@ -71,7 +70,10 @@ public:
     void updateDisplayTime(int timeLeftMs);
     inline QPointF pitchEntrancePoint() const { return m_entrancePoint; }
     void playGameSound(SoundEffects::GameSound s);
-
+    bool extraTimeAllowed() const { return m_settingsFrame->extraTimeAllowed(); }
+    void setPenaltyShootOut(bool penalties) { m_isPenalties = penalties; }
+    inline bool extraTime() const {
+        return (homeTeam()->m_goals == awayTeam()->m_goals); }
 public slots:
     void newGame(int homeTeam, int awayTeam);
 
@@ -79,9 +81,6 @@ public slots:
     void selectNearestPlayer();
     void gameStarted();
     void gameStopped();
-
-private slots:
-    void removePlayers();
 
 signals:
    void gameInProgress(bool playing);
@@ -94,6 +93,8 @@ private:
     void setPlayerDefendZone(Player *p);
     void parseTeamList();
     QStringList parsePlayers(QString teamName);
+
+    inline bool penalties() const {  return m_isPenalties; }
 
 public:
     QList<Player*> m_players;
@@ -112,6 +113,7 @@ public:
     ScreenGraphics *m_scoreText;
     QRectF m_pitchArea[KRow][KColumn];
     SoundEffects* m_soundEffects;  // NOT OWNED
+
 private:
     QList<Team*> m_teams;
 
@@ -123,9 +125,12 @@ private:
     QStateMachine *m_game;
     Game *m_firstHalfState;
     Game *m_secondHalfState;
+    QFinalState *m_allDone;
     Game *m_extraTimeFirstHalfState;
     Game *m_extraTimeSecondHalfState;
-    QFinalState *m_allDone;
+    Game *m_penaltiesState;
+    bool m_isPenalties;
+
     QPointF m_entrancePoint;
 
     settingsFrame *m_settingsFrame;
