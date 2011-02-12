@@ -17,7 +17,6 @@
 #include "soundEffects.h"
 #include "settingsFrame.h"
 
-
 Pitch::Pitch(const QRectF& footballGroundRect,
              QGraphicsView* view,
              SoundEffects* se,
@@ -47,23 +46,26 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     m_secondHalfState = new Game(this, tr("Second half"), false, false);
     m_extraTimeFirstHalfState = new Game(this, tr("extra time first half"), true, true);
     m_extraTimeSecondHalfState = new Game(this, tr("extra time second half"), false, true);
+    m_penaltiesState = new Game(this, tr("penalty shoot out"), true, true);
     m_allDone = new QFinalState();
 
     m_game->addState(m_firstHalfState);
     m_game->addState(m_secondHalfState);
     m_game->addState(m_extraTimeFirstHalfState);
     m_game->addState(m_extraTimeSecondHalfState);
+    m_game->addState(m_penaltiesState);
     m_game->addState(m_allDone);
     m_game->setInitialState(m_firstHalfState);
 
     m_firstHalfState->addTransition(m_firstHalfState, SIGNAL(finished()),m_secondHalfState);
-//    m_secondHalfState->addTransition(m_secondHalfState, SIGNAL(finished()), m_allDone);
-    m_secondHalfState->addTransition(m_secondHalfState, SIGNAL(finished()), m_extraTimeFirstHalfState);
+
+    m_secondHalfState->addTransition(m_secondHalfState, SIGNAL(finished()), m_allDone);
     m_extraTimeFirstHalfState->addTransition(m_extraTimeFirstHalfState, SIGNAL(finished()), m_extraTimeSecondHalfState);
     m_extraTimeSecondHalfState->addTransition(m_extraTimeSecondHalfState, SIGNAL(finished()), m_allDone);
+    m_penaltiesState->addTransition(m_penaltiesState, SIGNAL(finished()), m_allDone);
 
-    connect(m_allDone, SIGNAL(entered()), this, SLOT(removePlayers()));
-    connect(m_allDone, SIGNAL(entered()), this, SLOT(gameStopped()));
+    connect(m_game, SIGNAL(finished()), this, SLOT(gameStopped()));
+    connect(m_game, SIGNAL(started()), this, SLOT(gameStarted()));
 
     layoutPitch();
 
@@ -120,14 +122,31 @@ Player* Pitch::selectNearestPlayer(Team* team)
 
 void Pitch::gameStarted()
 {
+    qDebug() << "Pitch::gameStarted()";
     m_motionTimer->start();
     emit gameInProgress(true);
 }
 
+
 void Pitch::gameStopped()
 {
-    m_motionTimer->stop();
-    emit gameInProgress(false);
+    qDebug() << "Pitch::gameStopped()";
+
+    if (m_game->initialState() == m_firstHalfState && extraTimeAllowed() && extraTime() ) {
+        m_game->setInitialState(m_extraTimeFirstHalfState);
+        m_game->start();
+    } else if (m_game->initialState() == m_extraTimeFirstHalfState && extraTime() ) {
+        m_game->setInitialState(m_penaltiesState);
+        m_game->start();
+    } else {
+        foreach(Player *p, m_players)
+            m_scene->removeItem(p);
+
+        m_players.clear();
+
+        m_motionTimer->stop();
+        emit gameInProgress(false);
+    }
 }
 
 void Pitch::setPiece(Team* t, SetPiece s)
@@ -163,15 +182,6 @@ void Pitch::selectNearestPlayer()
     Player *p = selectNearestPlayer(m_homeTeam);
     if (p)
         m_scene->setFocusItem(p);
-}
-
-
-void Pitch::removePlayers()
-{
-    foreach(Player *p, m_players)
-        m_scene->removeItem(p);
-
-    m_players.clear();
 }
 
 void Pitch::layoutPitch()
@@ -359,7 +369,6 @@ void Pitch::newGame(int homeTeam, int awayTeam)
 {
     m_firstHalfState->setGameLength(m_settingsFrame->gameLengthMinutes());
     m_secondHalfState->setGameLength(m_settingsFrame->gameLengthMinutes());
-
     m_extraTimeFirstHalfState->setGameLength(1);
     m_extraTimeSecondHalfState->setGameLength(1);
 
@@ -538,3 +547,4 @@ void Pitch::playGameSound(SoundEffects::GameSound s)
 {
     m_soundEffects->soundEvent(s);
 }
+

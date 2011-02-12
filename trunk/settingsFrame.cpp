@@ -8,11 +8,10 @@ settingsFrame::settingsFrame(MWindow *parent) :
     m_extraTime(false)
 {
     ui->setupUi(this);
-    m_gameLengthMinutes = ui->spinBox->value();
-    m_soundEnabled = ui->checkBoxSound->isChecked();
     connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(updateSettings()));
     connect(ui->buttonBox, SIGNAL(accepted()), parent, SLOT(hideSettingsFrame()));
     connect(ui->buttonBox, SIGNAL(rejected()), parent, SLOT(hideSettingsFrame()));
+    updateSettings();
 }
 
 settingsFrame::~settingsFrame()
