@@ -56,6 +56,7 @@ private:
     Pitch* m_pitch;
     QString m_stateName;
     bool m_isFirstHalf;
+    bool m_isExtraTime;
 
     QTimer *m_1second;
     // amounts of MS left in this half

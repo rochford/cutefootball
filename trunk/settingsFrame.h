@@ -17,7 +17,7 @@ public:
     ~settingsFrame();
     int gameLengthMinutes() const { return m_gameLengthMinutes; }
     bool soundEnabled() const { return m_soundEnabled; }
-
+    bool extraTimeAllowed() const { return m_extraTime; }
 signals:
     void soundChanged(bool enabled);
 
@@ -28,6 +28,7 @@ private:
     Ui::settingsFrame *ui;
     int m_gameLengthMinutes;
     bool m_soundEnabled;
+    bool m_extraTime;
 };
 
 #endif // SETTINGSDIALOG_H
