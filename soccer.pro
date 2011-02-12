@@ -59,7 +59,9 @@ HEADERS  += mainwindow.h \
     inputsettingsframe.h
 
 RESOURCES += \
-    soccer.qrc
+    soccer.qrc \
+    teams.qrc \
+    languages.qrc
 
 FORMS += \
     mainwindow.ui \
@@ -74,7 +76,12 @@ OTHER_FILES += \
     stylesheet.qss \
     teams/teams.txt \
     teams/England.txt \
-    teams/Spain.txt
+    teams/Spain.txt \
+    teams/Italy.txt \
+    teams/Finland.txt \
+    teams/Switzerland.txt \
+    teams/Germany.txt \
+    teams/France.txt
 
 # Please do not modify the following two lines. Required for deployment.
 include(deployment.pri)

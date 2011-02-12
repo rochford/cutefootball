@@ -4,11 +4,12 @@
 
 settingsFrame::settingsFrame(MWindow *parent) :
     QFrame(parent),
-    ui(new Ui::settingsFrame)
+    ui(new Ui::settingsFrame),
+    m_extraTime(false)
 {
     ui->setupUi(this);
     m_gameLengthMinutes = ui->spinBox->value();
-    m_soundEnabled = ui->checkBox->isChecked();
+    m_soundEnabled = ui->checkBoxSound->isChecked();
     connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(updateSettings()));
     connect(ui->buttonBox, SIGNAL(accepted()), parent, SLOT(hideSettingsFrame()));
     connect(ui->buttonBox, SIGNAL(rejected()), parent, SLOT(hideSettingsFrame()));
@@ -22,7 +23,8 @@ settingsFrame::~settingsFrame()
 void settingsFrame::updateSettings()
 {
     m_gameLengthMinutes = ui->spinBox->value();
-    m_soundEnabled = ui->checkBox->isChecked();
+    m_soundEnabled = ui->checkBoxSound->isChecked();
+    m_extraTime = ui->checkBoxExtraTime->isChecked();
     emit soundChanged(m_soundEnabled);
 }
 

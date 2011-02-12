@@ -14,34 +14,34 @@
         <translation>File</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="66"/>
-        <location filename="../mainwindow.ui" line="95"/>
-        <location filename="../mainwindow.ui" line="98"/>
+        <location filename="../mainwindow.ui" line="67"/>
+        <location filename="../mainwindow.ui" line="97"/>
+        <location filename="../mainwindow.ui" line="100"/>
         <source>Help</source>
         <translation>Help</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="75"/>
+        <location filename="../mainwindow.ui" line="77"/>
         <source>Play</source>
         <translation>Play</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="80"/>
+        <location filename="../mainwindow.ui" line="82"/>
         <source>Quit</source>
         <translation>Quit</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="85"/>
+        <location filename="../mainwindow.ui" line="87"/>
         <source>About</source>
         <translation>About</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="90"/>
+        <location filename="../mainwindow.ui" line="92"/>
         <source>Game Settings</source>
         <translation>Game Settings</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="103"/>
+        <location filename="../mainwindow.ui" line="105"/>
         <source>Input Settings</source>
         <translation>Control Settings</translation>
     </message>
@@ -56,6 +56,26 @@
         <source>mm:ss</source>
         <translatorcomment> </translatorcomment>
         <translation type="obsolete">mm:ss</translation>
+    </message>
+    <message>
+        <location filename="../pitch.cpp" line="46"/>
+        <source>First half</source>
+        <translation>First Half</translation>
+    </message>
+    <message>
+        <location filename="../pitch.cpp" line="47"/>
+        <source>Second half</source>
+        <translation>Second Half</translation>
+    </message>
+    <message>
+        <location filename="../pitch.cpp" line="48"/>
+        <source>extra time first half</source>
+        <translation>ET First Half</translation>
+    </message>
+    <message>
+        <location filename="../pitch.cpp" line="49"/>
+        <source>extra time second half</source>
+        <translation>ET Second Half</translation>
     </message>
 </context>
 <context>
@@ -85,9 +105,17 @@
 <context>
     <name>helpFrame</name>
     <message>
-        <location filename="../helpFrame.ui" line="41"/>
         <source>Only are allowed in the penalty area. A foul will result if an outfield player enters the penalty area. Game starts with a drop ball in the centre circle. No sliding tackles are allowed.</source>
-        <translation>Only goalkeepers are allowed in the penalty area. A foul will result if an outfield player enters the penalty area. Game starts with a drop ball in the centre circle. No sliding tackles are allowed.</translation>
+        <translation type="obsolete">Only goalkeepers are allowed in the penalty area. A foul will result if an outfield player enters the penalty area. Game starts with a drop ball in the centre circle. No sliding tackles are allowed.</translation>
+    </message>
+    <message>
+        <location filename="../helpFrame.ui" line="41"/>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Only goalkeepers are allowed in the penalty area. A foul will result if an outfield player enters the penalty area. Game starts with a drop ball in the centre circle. No sliding tackles are allowed.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -105,42 +133,42 @@
         <translation type="obsolete">Frame</translation>
     </message>
     <message>
-        <location filename="../mainMenuFrame.ui" line="51"/>
-        <location filename="../mainMenuFrame.ui" line="107"/>
+        <location filename="../mainMenuFrame.ui" line="43"/>
+        <location filename="../mainMenuFrame.ui" line="140"/>
         <source>Play</source>
         <translation>Play</translation>
     </message>
     <message>
-        <location filename="../mainMenuFrame.ui" line="58"/>
+        <location filename="../mainMenuFrame.ui" line="50"/>
         <source>Settings</source>
         <translation>Settings</translation>
     </message>
     <message>
-        <location filename="../mainMenuFrame.ui" line="65"/>
-        <location filename="../mainMenuFrame.ui" line="127"/>
+        <location filename="../mainMenuFrame.ui" line="57"/>
+        <location filename="../mainMenuFrame.ui" line="160"/>
         <source>Keyboard settings</source>
         <translation>Control Settings</translation>
     </message>
     <message>
-        <location filename="../mainMenuFrame.ui" line="72"/>
-        <location filename="../mainMenuFrame.ui" line="132"/>
+        <location filename="../mainMenuFrame.ui" line="64"/>
+        <location filename="../mainMenuFrame.ui" line="165"/>
         <source>Help</source>
         <translation>Help</translation>
     </message>
     <message>
-        <location filename="../mainMenuFrame.ui" line="79"/>
-        <location filename="../mainMenuFrame.ui" line="122"/>
+        <location filename="../mainMenuFrame.ui" line="71"/>
+        <location filename="../mainMenuFrame.ui" line="155"/>
         <source>About</source>
         <translation>About</translation>
     </message>
     <message>
-        <location filename="../mainMenuFrame.ui" line="86"/>
-        <location filename="../mainMenuFrame.ui" line="117"/>
+        <location filename="../mainMenuFrame.ui" line="78"/>
+        <location filename="../mainMenuFrame.ui" line="150"/>
         <source>Quit</source>
         <translation>Quit</translation>
     </message>
     <message>
-        <location filename="../mainMenuFrame.ui" line="112"/>
+        <location filename="../mainMenuFrame.ui" line="145"/>
         <source>Game Settings</source>
         <translation>Game Settings</translation>
     </message>
@@ -194,6 +222,10 @@ team</source>
         <location filename="../teamSelectionFrame.ui" line="92"/>
         <source>Computer</source>
         <translation>Computer</translation>
+    </message>
+</context>
+</TS>
+nslation>
     </message>
 </context>
 </TS>

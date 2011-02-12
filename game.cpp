@@ -8,12 +8,14 @@
 
 Game::Game(Pitch* p,
      QString stateName,
-     bool isFirstHalf, bool isExtraTime)
+     bool isFirstHalf,
+     bool isExtraTime)
     : QState(),
     m_pitch(p),
     m_stateName(stateName),
-    m_remainingTimeInHalfMs(KHalfLength),
-    m_isFirstHalf(isFirstHalf)
+    m_isFirstHalf(isFirstHalf),
+    m_isExtraTime(isExtraTime),
+    m_remainingTimeInHalfMs( KHalfLength )
 {
     m_1second = new QTimer(this);
     m_1second->setInterval(1000);
@@ -162,7 +164,15 @@ void Game::createPlayerAnimationItems(GameState g)
 
 void Game::onEntry(QEvent * /* event */)
 {
-    if (m_isFirstHalf) {
+    qDebug() << "Game::onEntry() " << m_stateName;
+
+    if (m_isExtraTime && m_isFirstHalf) {
+        qDebug() << "home team " << m_pitch->homeTeam()->m_goals;
+        qDebug() << "away team " << m_pitch->awayTeam()->m_goals;
+        if ( m_pitch->homeTeam()->m_goals == m_pitch->awayTeam()->m_goals )
+            qDebug() << "Need extra time";
+    }
+    if ( m_isFirstHalf ) {
         m_pitch->homeTeam()->setDirection(Team::NorthToSouth);
         m_pitch->setPlayerStartPositions(m_pitch->homeTeam());
 
@@ -182,6 +192,7 @@ void Game::onEntry(QEvent * /* event */)
 
 void Game::onExit(QEvent * /* event */)
 {
+    qDebug() << "Game::onExit() " << m_stateName;
     m_pitch->m_scene->removeItem(m_pitch->ball());
 
     m_1second->stop();

@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/">
+        <file>teams/England.txt</file>
+        <file>teams/Finland.txt</file>
+        <file>teams/Germany.txt</file>
+        <file>teams/Italy.txt</file>
+        <file>teams/Spain.txt</file>
+        <file>teams/Switzerland.txt</file>
+        <file>images/flags/England.png</file>
+        <file>images/flags/Finland.png</file>
+        <file>images/flags/Germany.png</file>
+        <file>images/flags/Italy.png</file>
+        <file>images/flags/Spain.png</file>
+        <file>images/flags/Switzerland.png</file>
+        <file>images/flags/France.png</file>
+        <file>teams/France.txt</file>
+        <file>teams/teams.txt</file>
+    </qresource>
+</RCC>

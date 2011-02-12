@@ -28,17 +28,10 @@
         <file>images/red/pNW2.PNG</file>
         <file>images/red/pTackled.PNG</file>
         <file>stylesheet.qss</file>
-        <file>translations/soccer_en.qm</file>
-        <file>translations/soccer_fi.qm</file>
         <file>images/pitch3.png</file>
-        <file>teams/teams.txt</file>
-        <file>teams/England.txt</file>
-        <file>teams/Spain.txt</file>
         <file>images/advertBottom.png</file>
         <file>images/advertTop.png</file>
         <file>images/advertLeft.png</file>
         <file>images/advertRight.png</file>
-        <file>images/flags/England.png</file>
-        <file>images/flags/Spain.png</file>
     </qresource>
 </RCC>

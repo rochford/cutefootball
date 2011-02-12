@@ -51,11 +51,17 @@ Pitch::Pitch(const QRectF& footballGroundRect,
 
     m_game->addState(m_firstHalfState);
     m_game->addState(m_secondHalfState);
+    m_game->addState(m_extraTimeFirstHalfState);
+    m_game->addState(m_extraTimeSecondHalfState);
     m_game->addState(m_allDone);
     m_game->setInitialState(m_firstHalfState);
 
     m_firstHalfState->addTransition(m_firstHalfState, SIGNAL(finished()),m_secondHalfState);
-    m_secondHalfState->addTransition(m_secondHalfState, SIGNAL(finished()), m_allDone);
+//    m_secondHalfState->addTransition(m_secondHalfState, SIGNAL(finished()), m_allDone);
+    m_secondHalfState->addTransition(m_secondHalfState, SIGNAL(finished()), m_extraTimeFirstHalfState);
+    m_extraTimeFirstHalfState->addTransition(m_extraTimeFirstHalfState, SIGNAL(finished()), m_extraTimeSecondHalfState);
+    m_extraTimeSecondHalfState->addTransition(m_extraTimeSecondHalfState, SIGNAL(finished()), m_allDone);
+
     connect(m_allDone, SIGNAL(entered()), this, SLOT(removePlayers()));
     connect(m_allDone, SIGNAL(entered()), this, SLOT(gameStopped()));
 
@@ -72,6 +78,20 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     connect(m_settingsFrame, SIGNAL(soundChanged(bool)), m_soundEffects, SLOT(soundEnabled(bool)));
 }
 
+Pitch::~Pitch()
+{
+    delete m_scene;
+
+    if (m_motionTimer->isActive())
+        m_motionTimer->stop();
+    delete m_motionTimer;
+    delete m_game;
+    delete m_firstHalfState;
+    delete m_secondHalfState;
+    delete m_extraTimeFirstHalfState;
+    delete m_extraTimeSecondHalfState;
+    delete m_allDone;
+}
 
 Player* Pitch::selectNearestPlayer(Team* team)
 {
@@ -145,13 +165,6 @@ void Pitch::selectNearestPlayer()
         m_scene->setFocusItem(p);
 }
 
-Pitch::~Pitch()
-{
-    if (m_motionTimer->isActive())
-        m_motionTimer->stop();
-    delete m_motionTimer;
-    delete m_game;
-}
 
 void Pitch::removePlayers()
 {
@@ -275,17 +288,23 @@ void Pitch::layoutPitch()
 void Pitch::updateDisplayTime(int timeLeftMs)
 {
     if ( m_game->isRunning() ) {
+        QString homeTeam(m_homeTeam->name());
+        homeTeam.truncate(3);
+
+        QString awayTeam(m_awayTeam->name());
+        awayTeam.truncate(3);
         QTime tmp(0,0,0,0);
         tmp = tmp.addMSecs(timeLeftMs);
 
         QString str(tmp.toString(QString("mm:ss")));
         str.append(" ");
-        str.append(m_homeTeam->name());
+
+        str.append(homeTeam);
         str.append(" ");
         str.append(QString::number(m_homeTeam->m_goals));
         str.append(" - ");
 
-        str.append(m_awayTeam->name());
+        str.append(awayTeam);
         str.append(" ");
         str.append(QString::number(m_awayTeam->m_goals));
         m_scoreText->setText(str);
@@ -314,16 +333,17 @@ void Pitch::parseTeamList()
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return;
 
-    int i = 0;
     while (!file.atEnd()) {
         QByteArray line = file.readLine();
         QList<QByteArray> nameAndColor = line.split(',');
         QString name = nameAndColor.at(0).simplified();
+
         QString shirtColorString = nameAndColor.at(1).simplified();
         QString shortColorString = nameAndColor.at(2).simplified();
+
         QColor shirtColor(shirtColorString);
         QColor shortColor(shortColorString);
-//        qDebug() << i << "," << name << "," << shirtColor.name() << "," << shortColor.name();
+
         Team* t = new Team(name, shirtColor, shortColor);
         m_teams.append(t);
     }
@@ -339,6 +359,10 @@ void Pitch::newGame(int homeTeam, int awayTeam)
 {
     m_firstHalfState->setGameLength(m_settingsFrame->gameLengthMinutes());
     m_secondHalfState->setGameLength(m_settingsFrame->gameLengthMinutes());
+
+    m_extraTimeFirstHalfState->setGameLength(1);
+    m_extraTimeSecondHalfState->setGameLength(1);
+
     m_ball = new Ball(this);
 
     m_homeTeam = m_teams.at(homeTeam);

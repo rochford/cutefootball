@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>translations/soccer_fi.ts</file>
+        <file>translations/soccer_en.ts</file>
+    </qresource>
+</RCC>
