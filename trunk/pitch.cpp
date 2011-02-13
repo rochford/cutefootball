@@ -34,9 +34,10 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     m_centerMark(NULL),
     m_settingsFrame(settingsFrame),
     m_soundEffects(se),
-    m_halfStatisticsFrame(NULL)
+    m_halfStatisticsFrame(NULL),
+    m_centerOnBall(false)
 {
-    m_view->scale(1.5,1.5);
+    m_view->scale(1.6,1.6);
     m_view->setScene(m_scene);
     m_scene->setBackgroundBrush(QBrush(Qt::blue));
 
@@ -74,6 +75,7 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     m_soundEffects->soundEnabled(m_settingsFrame->soundEnabled());
 
     createTeams();
+
 
     connect(m_motionTimer, SIGNAL(timeout()), m_scene, SLOT(advance()));
     connect(m_motionTimer, SIGNAL(timeout()), m_scene, SLOT(update()));
@@ -330,8 +332,11 @@ void Pitch::updateDisplayTime(int timeLeftMs)
 
 void Pitch::hasBallCheck()
 {
-    m_view->centerOn(m_ball->pos());
+    if (m_centerOnBall)
+        m_view->centerOn(m_ball->pos());
     m_scoreText->updatePosition();
+    m_halfStatisticsProxy->setPos(
+                m_view->mapToScene(m_view->rect().topLeft()));
 
     // which team has the ball?
     Player* p = m_ball->lastPlayerToTouchBall();
@@ -372,6 +377,12 @@ void Pitch::createTeams()
     parseTeamList();
 }
 
+void Pitch::countShots(Team* team, QPointF /* dest */)
+{
+    if (team)
+        team->setShots(team->shots() + 1);
+}
+
 void Pitch::newGame(int homeTeam, int awayTeam)
 {
     m_firstHalfState->setGameLength(m_settingsFrame->gameLengthMinutes());
@@ -389,6 +400,7 @@ void Pitch::newGame(int homeTeam, int awayTeam)
 
     createTeamPlayers(m_homeTeam);
     createTeamPlayers(m_awayTeam);
+    connect(m_ball, SIGNAL(shot(Team*,QPointF)), this, SLOT(countShots(Team*,QPointF)));
     connect(m_ball, SIGNAL(goalScored(bool)), m_awayTeam, SLOT(goalScored(bool)));
     connect(m_ball, SIGNAL(goalScored(bool)), m_homeTeam, SLOT(goalScored(bool)));
     connect(m_ball, SIGNAL(soundEvent(SoundEffects::GameSound)),
@@ -560,12 +572,9 @@ void Pitch::showHalfStatisticsFrame()
     m_halfStatisticsFrame->setHomeTeamGoals(m_homeTeam->m_goals);
     m_halfStatisticsFrame->setAwayTeamGoals(m_awayTeam->m_goals);
 
-    // TODO
-    m_halfStatisticsFrame->setHomeTeamShots(m_homeTeam->m_goals*2);
-    m_halfStatisticsFrame->setAwayTeamShots(m_awayTeam->m_goals*2);
+    m_halfStatisticsFrame->setHomeTeamShots(m_homeTeam->shots());
+    m_halfStatisticsFrame->setAwayTeamShots(m_awayTeam->shots());
 
-    m_halfStatisticsProxy->setPos(
-                m_view->mapToScene(m_view->rect().topLeft()));
     m_halfStatisticsFrame->setVisible(true);
 }
 
