@@ -25,6 +25,7 @@ public:
     enum Role {GoalKeeper = 1,
                LeftDefence,
                LeftCentralDefence,
+               CentralDefence,
                RightCentralDefence,
                RightDefence,
                LeftMidfield,
@@ -107,7 +108,6 @@ public:
 
 private:
     QString m_name;
-    QString m_soundFile;
 
     QTime m_elapsedTime;
     QMap<int,MWindow::Action> m_actions;

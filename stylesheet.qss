@@ -4,30 +4,30 @@ QFrame {
 }
 
 QPushButton, QCheckbox {
-   border: none;
-        color: white;
-        background-color: black;
-        font: bold large "Times";
-        font-size: 18px;
+    border: none;
+    color: white;
+    background-color: black;
+    font: bold large "Times";
+    font-size: 18px;
 }
 
 QPushButton:pressed {
-        color: gold;
+    color: gold;
 }
 
 QPushButton:focus {
-        color: gold;
+    color: gold;
 }
 
 QPushButton:hover {
-        color: gold;
+    color: gold;
 }
 
 QSpinBox, QLabel {
-        color: white;
-        background-color: black;
-        font: bold large "Times";
-        font-size: 18px;
+    color: white;
+    background-color: black;
+    font: bold large "Times";
+    font-size: 18px;
 }
 
 QComboBox {
@@ -38,4 +38,14 @@ QComboBox {
 }
 QComboBox:hover {
     color: gold;
+}
+
+HalfStatisticsFrame {
+    opacity: 50;
+    background: transparent;
+    border: grey;
+
+    color: gold;
+    font: bold large "Times";
+    font-size: 8px;
 }

@@ -26,6 +26,7 @@ class Player;
 class Team;
 class ScreenGraphics;
 class Game;
+class HalfStatisticsFrame;
 
 class Pitch : public QObject
 {
@@ -69,7 +70,6 @@ public:
 
     void updateDisplayTime(int timeLeftMs);
     inline QPointF pitchEntrancePoint() const { return m_entrancePoint; }
-    void playGameSound(SoundEffects::GameSound s);
     bool extraTimeAllowed() const { return m_settingsFrame->extraTimeAllowed(); }
     void setPenaltyShootOut(bool penalties) { m_isPenalties = penalties; }
     inline bool extraTime() const {
@@ -81,6 +81,9 @@ public slots:
     void selectNearestPlayer();
     void gameStarted();
     void gameStopped();
+
+    void showHalfStatisticsFrame();
+    void hideHalfStatisticsFrame();
 
 signals:
    void gameInProgress(bool playing);
@@ -134,6 +137,9 @@ private:
     QPointF m_entrancePoint;
 
     settingsFrame *m_settingsFrame;
+
+    HalfStatisticsFrame* m_halfStatisticsFrame;
+    QGraphicsProxyWidget *m_halfStatisticsProxy;
 };
 
 #endif // PITCH_H

@@ -5,3 +5,5 @@ Finland,white,white
 Switzerland,red,white
 Germany,white,black
 France,darkblue,white
+Portugal,red,white
+Sweden,yellow,blue

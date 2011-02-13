@@ -9,6 +9,7 @@ class SoundEffects : public QObject
     Q_OBJECT
 public:
     enum GameSound {
+        CrowdNoise,
         BallKick,
         Whistle,
         Goal,
@@ -27,6 +28,7 @@ private:
     bool m_soundEnabled;
     QSound* m_ballKick;
     QSound* m_whistle;
+    QSound* m_crowd;
 };
 
 #endif // SOUNDEFFECTS_H

@@ -20,11 +20,11 @@ Game::Game(Pitch* p,
     m_1second = new QTimer(this);
     m_1second->setInterval(1000);
 
-    m_timeLineTakePositions = new QTimeLine(1000*3, this);
+    m_timeLineTakePositions = new QTimeLine(1000*5, this);
     m_timeLineTakePositions->setCurveShape(QTimeLine::LinearCurve);
     m_timeLineTakePositions->setFrameRange(0, 100);
 
-    m_timeLineLeavePitch = new QTimeLine(1000*3, this);
+    m_timeLineLeavePitch = new QTimeLine(1000*5, this);
     m_timeLineLeavePitch->setCurveShape(QTimeLine::LinearCurve);
     m_timeLineLeavePitch->setFrameRange(0, 100);
 
@@ -43,6 +43,8 @@ Game::Game(Pitch* p,
     m_halfEndState->addTransition(m_timeLineLeavePitch, SIGNAL(finished()), m_allDoneState);
 
     connect(this, SIGNAL(halfOver()), this, SLOT(startPlayersLeavePitchAnim()));
+    connect(this, SIGNAL(halfOver()), m_pitch, SLOT(showHalfStatisticsFrame()));
+    connect(m_timeLineLeavePitch, SIGNAL(finished()), m_pitch, SLOT(hideHalfStatisticsFrame()));
 
     connect(m_timeLineTakePositions, SIGNAL(finished()), this, SLOT(kickOff()));
     connect(m_timeLineTakePositions, SIGNAL(frameChanged(int)), this, SLOT(playFrame(int)));
