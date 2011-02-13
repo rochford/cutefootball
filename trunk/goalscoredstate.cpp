@@ -41,7 +41,6 @@ void GoalScoredState::createTakePositionAnimation()
 void GoalScoredState::onEntry(QEvent * /* event */)
 {
     m_pitch->updateDisplayTime(m_game->remainingTimeInHalfMs());
-    m_pitch->ball()->setVisible(false);
     m_game->stopGameClock();
     createPlayerAnimationItems(Celebrate);
     m_timeLineCelebrate->start();

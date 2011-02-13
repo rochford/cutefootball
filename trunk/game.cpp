@@ -79,7 +79,6 @@ void Game::startPlayersLeavePitchAnim()
 {
     createPlayerAnimationItems(HalfOver);
     m_timeLineLeavePitch->start();
-    m_pitch->ball()->setVisible(false);
     m_1second->stop();
 }
 
@@ -172,7 +171,6 @@ void Game::onEntry(QEvent * /* event */)
         m_pitch->setPlayerStartPositions(m_pitch->awayTeam());
         createPlayerAnimationItems(TakePositions);
         m_timeLineTakePositions->start();
-        m_pitch->ball()->setVisible(true);
     } else { // if (m_stateName == QString(tr("Second half"))) {
         m_pitch->awayTeam()->setDirection(Team::NorthToSouth);
         m_pitch->setPlayerStartPositions(m_pitch->awayTeam());
@@ -181,7 +179,6 @@ void Game::onEntry(QEvent * /* event */)
         m_pitch->setPlayerStartPositions(m_pitch->homeTeam());
         createPlayerAnimationItems(TakePositions);
         m_timeLineTakePositions->start();
-        m_pitch->ball()->setVisible(true);
     }
 }
 
