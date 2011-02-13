@@ -94,7 +94,6 @@ Player::Player(QString name,
     : QObject(),
     QGraphicsPixmapItem(NULL,NULL),
     m_name(name),
-    m_soundFile(QString(m_name + ".wav")),
     m_hasBall(false),
     m_team(team),
     m_role(role),
@@ -227,7 +226,6 @@ void Player::movePlayer(MWindow::Action action)
 {
     // if the ball is not owned then take ownership
     if (ballCollisionCheck() && !m_pitch->ball()->ballOwner()) {
-        m_pitch->m_soundEffects->soundEvent(m_soundFile);
         m_hasBall = true;
         m_pitch->ball()->setBallOwner(this);
     } else if (!ballCollisionCheck())
@@ -674,15 +672,19 @@ QVariant Player::itemChange(GraphicsItemChange change, const QVariant &value)
          QPointF newPos = value.toPointF();
          QRectF pitch = m_pitch->m_footballPitch->rect();
 
-         if (!hasFocus()
-                 && ( m_role != Player::GoalKeeper )
-                 && ( m_pitch->m_bottomPenaltyArea->contains(newPos) || m_pitch->m_topPenaltyArea->contains(newPos) ) ) {
+         if ( ( m_role != Player::GoalKeeper )
+             && ( m_pitch->m_bottomPenaltyArea->contains(newPos)
+                || m_pitch->m_topPenaltyArea->contains(newPos) ) ) {
              if ( m_hasBall ) {
                  m_pitch->ball()->setNoBallOwner();
                  m_hasBall = false;
              }
-             return m_lastPos;
+             if ( hasFocus() ) {
+                 qDebug() << "Player::itemChange penalty!";
+             }
+            return m_lastPos;
             }
+
          if (!pitch.contains(newPos))
              return m_lastPos;
          else {

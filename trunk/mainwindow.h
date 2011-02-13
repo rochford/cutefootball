@@ -80,7 +80,6 @@ private slots:
     void showAboutFrame();
     void showHelpFrame();
     void showInputSettingsFrame();
-    void buttonClickedNoise();
     void showSettingsFrame();
     void showTeamSelectionFrame();
     void enableActions(bool gameInProgress);

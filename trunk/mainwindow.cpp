@@ -159,11 +159,6 @@ void MWindow::showFrame(Frame f)
     }
 }
 
-void MWindow::buttonClickedNoise()
-{
-    m_soundEffects->soundEvent(SoundEffects::BallKick);
-}
-
 MWindow::~MWindow()
 {
     delete m_pitch;

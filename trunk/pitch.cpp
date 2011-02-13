@@ -16,6 +16,7 @@
 #include "game.h"
 #include "soundEffects.h"
 #include "settingsFrame.h"
+#include "halfstatisticsframe.h"
 
 Pitch::Pitch(const QRectF& footballGroundRect,
              QGraphicsView* view,
@@ -32,7 +33,8 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     m_centerCircle(NULL),
     m_centerMark(NULL),
     m_settingsFrame(settingsFrame),
-    m_soundEffects(se)
+    m_soundEffects(se),
+    m_halfStatisticsFrame(NULL)
 {
     m_view->scale(1.5,1.5);
     m_view->setScene(m_scene);
@@ -244,6 +246,12 @@ void Pitch::layoutPitch()
     // simple text
     m_scoreText = new ScreenGraphics(this);
 
+    // half statistics frame
+    m_halfStatisticsFrame = new HalfStatisticsFrame();
+    m_halfStatisticsFrame->setVisible(false);
+    m_halfStatisticsProxy = m_scene->addWidget(m_halfStatisticsFrame);
+    m_halfStatisticsProxy->setZValue(ZMenus);
+
     // create the goals
     m_bottomGoal = m_scene->addRect((m_scene->width() / 2)-60, m_scene->height()-KPitchBoundaryWidth,120,KPitchBoundaryWidth/2,
                    KWhitePaintPen,
@@ -385,7 +393,7 @@ void Pitch::newGame(int homeTeam, int awayTeam)
     connect(m_ball, SIGNAL(goalScored(bool)), m_homeTeam, SLOT(goalScored(bool)));
     connect(m_ball, SIGNAL(soundEvent(SoundEffects::GameSound)),
             m_soundEffects, SLOT(soundEvent(SoundEffects::GameSound)));
-
+    m_soundEffects->soundEvent(SoundEffects::CrowdNoise);
     m_game->start();
 }
 
@@ -423,8 +431,7 @@ void Pitch::createTeamPlayers(Team *team)
 
     QList<Player::Role> formation;
     formation << Player::GoalKeeper
-              << Player::LeftCentralDefence
-              << Player::RightCentralDefence
+              << Player::CentralDefence
               << Player::LeftMidfield
               << Player::RightMidfield
               << Player::CentralAttack;
@@ -517,6 +524,8 @@ void Pitch::setPlayerStartPositions(Team *team)
                          m_pitchArea[nToS ? 1 : 6][0]);
     startPositions.insert(Player::LeftCentralDefence,
                          m_pitchArea[nToS ? 1 : 6][1]);
+    startPositions.insert(Player::CentralDefence,
+                         m_pitchArea[nToS ? 1 : 6][2]);
     startPositions.insert(Player::RightCentralDefence,
                          m_pitchArea[nToS ? 1 : 6][3]);
     startPositions.insert(Player::RightDefence,
@@ -543,8 +552,24 @@ void Pitch::setPlayerStartPositions(Team *team)
     }
 }
 
-void Pitch::playGameSound(SoundEffects::GameSound s)
+void Pitch::showHalfStatisticsFrame()
 {
-    m_soundEffects->soundEvent(s);
+    m_halfStatisticsFrame->setHomeTeamName(m_homeTeam->name());
+    m_halfStatisticsFrame->setAwayTeamName(m_awayTeam->name());
+
+    m_halfStatisticsFrame->setHomeTeamGoals(m_homeTeam->m_goals);
+    m_halfStatisticsFrame->setAwayTeamGoals(m_awayTeam->m_goals);
+
+    // TODO
+    m_halfStatisticsFrame->setHomeTeamShots(m_homeTeam->m_goals*2);
+    m_halfStatisticsFrame->setAwayTeamShots(m_awayTeam->m_goals*2);
+
+    m_halfStatisticsProxy->setPos(
+                m_view->mapToScene(m_view->rect().topLeft()));
+    m_halfStatisticsFrame->setVisible(true);
 }
 
+void Pitch::hideHalfStatisticsFrame()
+{
+    m_halfStatisticsFrame->setVisible(false);
+}

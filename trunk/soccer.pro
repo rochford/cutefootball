@@ -37,7 +37,8 @@ SOURCES += main.cpp\
     foulstate.cpp \
     teamSelectionFrame.cpp \
     helpFrame.cpp \
-    inputsettingsframe.cpp
+    inputsettingsframe.cpp \
+    halfstatisticsframe.cpp
 
 HEADERS  += mainwindow.h \
     pitch.h \
@@ -56,7 +57,8 @@ HEADERS  += mainwindow.h \
     foulstate.h \
     teamSelectionFrame.h \
     helpFrame.h \
-    inputsettingsframe.h
+    inputsettingsframe.h \
+    halfstatisticsframe.h
 
 RESOURCES += \
     soccer.qrc \
@@ -70,7 +72,8 @@ FORMS += \
     mainMenuFrame.ui \
     teamSelectionFrame.ui \
     helpFrame.ui \
-    inputSettingsFrame.ui
+    inputSettingsFrame.ui \
+    halfstatisticsframe.ui
 
 OTHER_FILES += \
     stylesheet.qss \
@@ -81,7 +84,9 @@ OTHER_FILES += \
     teams/Finland.txt \
     teams/Switzerland.txt \
     teams/Germany.txt \
-    teams/France.txt
+    teams/France.txt \
+    teams/Portugal.txt \
+    teams/Sweden.txt
 
 # Please do not modify the following two lines. Required for deployment.
 include(deployment.pri)

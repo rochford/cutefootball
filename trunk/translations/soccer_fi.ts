@@ -2,6 +2,55 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="fi_FI">
 <context>
+    <name>Game</name>
+    <message>
+        <location filename="../game.cpp" line="190"/>
+        <source>extra time second half</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../game.cpp" line="195"/>
+        <source>penalty shoot out</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>HalfStatisticsFrame</name>
+    <message>
+        <location filename="../halfstatisticsframe.ui" line="41"/>
+        <source>Statistics</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../halfstatisticsframe.ui" line="53"/>
+        <source>HomeTeam</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../halfstatisticsframe.ui" line="63"/>
+        <source>Away Team</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../halfstatisticsframe.ui" line="92"/>
+        <location filename="../halfstatisticsframe.ui" line="99"/>
+        <location filename="../halfstatisticsframe.ui" line="134"/>
+        <location filename="../halfstatisticsframe.ui" line="141"/>
+        <source>NNN</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../halfstatisticsframe.ui" line="110"/>
+        <source>Goals</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../halfstatisticsframe.ui" line="120"/>
+        <source>Shots</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <location filename="../mainwindow.ui" line="14"/>
@@ -49,23 +98,28 @@
 <context>
     <name>Pitch</name>
     <message>
-        <location filename="../pitch.cpp" line="46"/>
+        <location filename="../pitch.cpp" line="47"/>
         <source>First half</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pitch.cpp" line="47"/>
+        <location filename="../pitch.cpp" line="48"/>
         <source>Second half</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pitch.cpp" line="48"/>
+        <location filename="../pitch.cpp" line="49"/>
         <source>extra time first half</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pitch.cpp" line="49"/>
+        <location filename="../pitch.cpp" line="50"/>
         <source>extra time second half</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../pitch.cpp" line="51"/>
+        <source>penalty shoot out</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -156,7 +210,12 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settingsFrame.ui" line="73"/>
+        <location filename="../settingsFrame.ui" line="78"/>
+        <source>Extra Time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../settingsFrame.ui" line="111"/>
         <source>Game Length</source>
         <translation type="unfinished"></translation>
     </message>
