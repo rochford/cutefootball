@@ -24,7 +24,11 @@ public:
     Ball(Pitch* pitch);
     ~Ball();
 
-    inline void setStartingPosition() { setPos(start_.x(),start_.y()); }
+    void setStartingPosition() {
+        setPos(start_.x(),start_.y());
+        m_positionLocked = false;
+        setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
+    }
     void advance(int phase);
     void moveBall(MWindow::Action action, int speed);
     enum { Type = UserType + 1 };
@@ -58,6 +62,9 @@ protected:
 
 private:
     QTimer* m_ballOwnerTimer;
+
+    // ball position fixed until this is false
+    bool m_positionLocked;
 
     Pitch *m_pitch; // NOT OWNED
     MWindow::Action previousAction;

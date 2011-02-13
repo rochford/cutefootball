@@ -168,9 +168,8 @@ void Pitch::setPiece(Team* t, SetPiece s)
             m_awayTeam->setHasBall(false);
             m_homeTeam->setHasBall(true);
         }
-        m_scene->addItem(m_ball);
-        ball()->setVisible(true);
-        m_ball->setStartingPosition();
+        m_scene->addItem(ball());
+        ball()->setStartingPosition();
         break;
     default:
         break;
@@ -373,6 +372,7 @@ void Pitch::newGame(int homeTeam, int awayTeam)
     m_extraTimeSecondHalfState->setGameLength(1);
 
     m_ball = new Ball(this);
+    m_scene->addItem(m_ball);
 
     m_homeTeam = m_teams.at(homeTeam);
     m_homeTeam->newGame();
