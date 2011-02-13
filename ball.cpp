@@ -108,7 +108,7 @@ void Ball::moveBall(MWindow::Action action, int speed)
     if (m_positionLocked) {
         return;
     }
-
+    qDebug() << "Ball::moveBall ";
     QMap<MWindow::Action,QPointF> moveDistance;
     moveDistance.insert(MWindow::North, QPointF(0,-speed));
     moveDistance.insert(MWindow::NorthEast, QPointF(speed,-speed));
@@ -145,6 +145,7 @@ void Ball::moveBall(MWindow::Action action, int speed)
 
 void Ball::kickBall(MWindow::Action action, QPointF destination)
 {
+    qDebug() << "Ball::kickBall ";
     if (m_positionLocked)
         return;
 
@@ -158,12 +159,12 @@ void Ball::kickBall(MWindow::Action action, QPointF destination)
     // calculate the difference between present and destination
     QPointF tmp = pos();
 
-    const qreal stepX = (destination.x() - tmp.x()) / 40.0;
-    const qreal stepY = (destination.y() - tmp.y()) / 40.0;
+    qreal stepX = (destination.x() - tmp.x()) / 40.0;
+    qreal stepY = (destination.y() - tmp.y()) / 40.0;
 
     for (int i = 0; i <= 40; ++i) {
-        animation_->setPosAt(i / 40.0, QPointF(tmp.x() + stepX,
-                                               tmp.y() + stepY));
+        QPointF newPos(tmp.x() + stepX,tmp.y() + stepY);
+        animation_->setPosAt(i / 40.0, newPos);
         // Rotation in animations does not seem to work
         // animation_->setRotationAt(i / 40.0, i*90.0);
         tmp.setX(tmp.x() + stepX);
@@ -183,6 +184,8 @@ void Ball::updateBall(int frame)
     // animation may no longer be running due to a goal
     if ( (m_animationTimer->state() == QTimeLine::Running) && !m_positionLocked ) {
         QPointF newPos = animation_->posAt(frame/40.0);
+        if (!m_pitch->m_footballPitch->contains(newPos))
+            qDebug() << "Ball::updateBall XXX error" << frame;
         setPos(newPos);
         // Rotation in animations does not seem to work
         // setRotation(animation_->rotationAt(frame/40.0));
@@ -217,9 +220,11 @@ QVariant Ball::itemChange(GraphicsItemChange change, const QVariant &value)
 
         if (!pitchRect.contains(newPos) && !(m_pitch->m_topGoal->contains(newPos)
                                              || m_pitch->m_bottomGoal->contains(newPos))) {
-            qDebug() << "Ball::itemChange not in pitch";
+            qreal dx = newPos.x() - m_lastPos.x();
+            qreal dy = newPos.y() - m_lastPos.y();
+            qDebug() << "Ball::itemChange not in pitch, dx" << dx << "," << dy;
             m_animationTimer->stop();
-            return m_lastPos;
+            return QPointF(m_lastPos.x() - dx*1.5,m_lastPos.y()-dy*1.5);
         } else {
             m_lastPos = newPos;
             return newPos;

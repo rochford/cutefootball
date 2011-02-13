@@ -39,7 +39,10 @@ Pitch::Pitch(const QRectF& footballGroundRect,
 {
     m_view->scale(1.6,1.6);
     m_view->setScene(m_scene);
-    m_scene->setBackgroundBrush(QBrush(Qt::blue));
+
+    m_scene->setBackgroundBrush(QBrush(Qt::green));
+    // disable focus selection by user pressing scene items
+    m_scene->setStickyFocus(true);
 
     m_motionTimer = new QTimer(this);
     m_motionTimer->setInterval(KGameRefreshRate);
