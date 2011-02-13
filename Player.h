@@ -72,6 +72,7 @@ public:
 
 private slots:
     void repeatKeyEvent();
+    void allowedOffPitch(bool allowedOffPitch);
 
 protected:
     QRectF boundingRect() const;
@@ -124,6 +125,7 @@ protected:
     QMap<MWindow::Action,QPointF> m_moveDistance;
     int m_step;
     QTimer *m_outOfAction;
+    bool m_allowedOffPitch;
     int m_speed;
 };
 

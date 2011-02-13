@@ -45,7 +45,7 @@ public:
 
 signals:
     void goalScored(bool topGoal);
-    void shot(QPointF destination);
+    void shot(Team* teamShooting, QPointF destination);
     void soundEvent(SoundEffects::GameSound);
 
 public slots:
@@ -80,7 +80,7 @@ private:
 
     // ball passing animation
     QGraphicsItemAnimation *animation_;
-    QTimeLine *animationTimer_;
+    QTimeLine *m_animationTimer;
 
     Player* m_lastPlayerToTouchBall; // can be null // NOT OWNED
 };

@@ -51,10 +51,13 @@ void GoalKeeper::advance(int phase)
         return;
     if (m_outOfAction->isActive())
         return;
-    if ( hasBall() )
-         gkAdvanceWithBall();
-    else
+    if ( hasBall() ) {
+        qDebug() << "GoalKeeper::advance has ball";
+        gkAdvanceWithBall();
+    } else {
+        // qDebug() << "GoalKeeper::advance without ball";
         gkAdvanceWithoutBall();
+    }
 }
 
 void GoalKeeper::gkAdvanceWithoutBall()
@@ -69,11 +72,15 @@ void GoalKeeper::gkAdvanceWithoutBall()
             || (dir == Team::NorthToSouth
                 && m_pitch->m_topPenaltyArea->contains(m_pitch->ball()->pos())) ) {
 
+#if 0
             qreal dx = abs(pos().x() - m_pitch->ball()->pos().x());
             qreal dy = abs(pos().y() - m_pitch->ball()->pos().y());
-            if ( m_pitch->ball()->ballOwner() && ( dx < 15) && (dy < 15) )
+            if ( (m_pitch->ball()->ballOwner() != this) && ( dx < 15) && (dy < 15) ) {
+                qDebug() << "gkAdvanceWithoutBall tackle";
                 action = MWindow::Tackle;
+            }
             else
+#endif
                 action = calculateAction(pos(), m_pitch->ball()->pos());
         } else {
             QPointF ownGoal;

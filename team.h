@@ -16,7 +16,9 @@ public:
     Direction getDirection() { return m_direction; }
     void setHasBall(bool hasBall);
     bool scoredLastGoal() { return m_scoredLastGoal; }
-    void newGame() { m_goals = 0; m_scoredLastGoal = false; m_teamHasBall = false; }
+    void setShots(int newValue) { m_shotCount = newValue; }
+    inline int shots() { return m_shotCount; }
+    void newGame() { m_goals = 0; m_scoredLastGoal = false; m_teamHasBall = false; m_shotCount = 0; }
     inline bool teamHasBall() { return m_teamHasBall; }
 
 public slots:
@@ -27,11 +29,13 @@ public:
     QColor m_shortColor;
     Direction m_direction;
     int m_goals;
-    // this team scored the last goal
-    bool m_scoredLastGoal;
+
 private:
     QString m_name;
     bool m_teamHasBall;
+    // this team scored the last goal
+    bool m_scoredLastGoal;
+    int m_shotCount;
 };
 
 

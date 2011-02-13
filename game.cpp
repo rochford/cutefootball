@@ -46,6 +46,7 @@ Game::Game(Pitch* p,
     connect(this, SIGNAL(halfOver()), m_pitch, SLOT(showHalfStatisticsFrame()));
     connect(m_timeLineLeavePitch, SIGNAL(finished()), m_pitch, SLOT(hideHalfStatisticsFrame()));
 
+    connect(m_timeLineTakePositions, SIGNAL(finished()), m_pitch, SLOT(centerOnBall()));
     connect(m_timeLineTakePositions, SIGNAL(finished()), this, SLOT(kickOff()));
     connect(m_timeLineTakePositions, SIGNAL(frameChanged(int)), this, SLOT(playFrame(int)));
     connect(m_timeLineLeavePitch, SIGNAL(frameChanged(int)), this, SLOT(playFrame(int)));
@@ -81,6 +82,7 @@ void Game::startPlayersLeavePitchAnim()
 {
     createPlayerAnimationItems(HalfOver);
     m_timeLineLeavePitch->start();
+    m_pitch->centerOnBall(false);
     m_1second->stop();
 }
 
@@ -171,17 +173,16 @@ void Game::onEntry(QEvent * /* event */)
 
         m_pitch->awayTeam()->setDirection(Team::SouthToNorth);
         m_pitch->setPlayerStartPositions(m_pitch->awayTeam());
-        createPlayerAnimationItems(TakePositions);
-        m_timeLineTakePositions->start();
     } else { // if (m_stateName == QString(tr("Second half"))) {
         m_pitch->awayTeam()->setDirection(Team::NorthToSouth);
         m_pitch->setPlayerStartPositions(m_pitch->awayTeam());
 
         m_pitch->homeTeam()->setDirection(Team::SouthToNorth);
         m_pitch->setPlayerStartPositions(m_pitch->homeTeam());
-        createPlayerAnimationItems(TakePositions);
-        m_timeLineTakePositions->start();
     }
+    createPlayerAnimationItems(TakePositions);
+    m_timeLineTakePositions->start();
+    m_pitch->centerOnBall(false);
 }
 
 void Game::onExit(QEvent * /* event */)

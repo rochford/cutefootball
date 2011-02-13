@@ -15,7 +15,7 @@ Ball::Ball(Pitch* pitch)
     start_(m_pitch->m_scene->sceneRect().center()),
     step_(0),
     animation_(NULL),
-    animationTimer_(NULL),
+    m_animationTimer(NULL),
     m_ballOwner(NULL),
     m_lastPlayerToTouchBall(NULL),
     m_positionLocked(false)
@@ -32,12 +32,12 @@ Ball::Ball(Pitch* pitch)
     setZValue(Pitch::ZBall);
 
     animation_ = new QGraphicsItemAnimation(this);
-    animationTimer_ = new QTimeLine(1000, this);
-    animationTimer_->setFrameRange(0, 40);
+    m_animationTimer = new QTimeLine(1000, this);
+    m_animationTimer->setFrameRange(0, 40);
 
     animation_->setItem(this);
-    animation_->setTimeLine(animationTimer_);
-    connect(animationTimer_, SIGNAL(frameChanged(int)), this, SLOT(updateBall(int)));
+    animation_->setTimeLine(m_animationTimer);
+    connect(m_animationTimer, SIGNAL(frameChanged(int)), this, SLOT(updateBall(int)));
     connect(m_ballOwnerTimer, SIGNAL(timeout()), this, SLOT(updateBallOwner()));
 }
 
@@ -46,7 +46,7 @@ Ball::~Ball()
     m_ballOwnerTimer->stop();
     delete m_ballOwnerTimer;
     delete animation_;
-    delete animationTimer_;
+    delete m_animationTimer;
 }
 
 void Ball::updateBallOwner()
@@ -148,9 +148,13 @@ void Ball::kickBall(MWindow::Action action, QPointF destination)
     if (m_positionLocked)
         return;
 
-    if ( m_ballOwner )
+    Team* team(NULL);
+    if ( m_ballOwner ) {
         m_ballOwner->setHasBall(false);
+        team = m_ballOwner->team();
+    }
     setNoBallOwner();
+
     // calculate the difference between present and destination
     QPointF tmp = pos();
 
@@ -165,19 +169,21 @@ void Ball::kickBall(MWindow::Action action, QPointF destination)
         tmp.setX(tmp.x() + stepX);
         tmp.setY(tmp.y() + stepY);
     }
-    animationTimer_->stop();
-    animationTimer_->start();
+    m_animationTimer->stop();
+    m_animationTimer->start();
 
     if (action == MWindow::Shot)
-        emit shot(destination);
+        emit shot(team, destination);
     emit soundEvent(SoundEffects::BallKick);
 }
 
 void Ball::updateBall(int frame)
 {
+    qDebug() << "Ball::updateBall" << frame;
     // animation may no longer be running due to a goal
-    if ( animationTimer_->state() == QTimeLine::Running ) {
-        setPos(animation_->posAt(frame/40.0));
+    if ( (m_animationTimer->state() == QTimeLine::Running) && !m_positionLocked ) {
+        QPointF newPos = animation_->posAt(frame/40.0);
+        setPos(newPos);
         // Rotation in animations does not seem to work
         // setRotation(animation_->rotationAt(frame/40.0));
     }
@@ -185,7 +191,10 @@ void Ball::updateBall(int frame)
 
 QVariant Ball::itemChange(GraphicsItemChange change, const QVariant &value)
  {
-     if (change == ItemPositionChange && scene() && !m_positionLocked) {
+     if (change == ItemPositionChange && scene() ) {
+         if (m_positionLocked)
+             return m_lastPos;
+
          step_++;
 
          // Ball is either on the pitch or in a goal, otherwise return last position
@@ -199,22 +208,22 @@ QVariant Ball::itemChange(GraphicsItemChange change, const QVariant &value)
              setFlag(QGraphicsItem::ItemSendsGeometryChanges, false);
              m_positionLocked = true;
              qDebug() << "Ball::itemChange goal scored";
-             animationTimer_->stop();
              emit goalScored(m_pitch->m_topGoal->contains(newPos));
              setBallOwner(NULL);
+             m_animationTimer->stop();
              m_lastPos = newPos;
              return newPos;
          }
 
-         if (!pitchRect.contains(newPos)) {
-             qDebug() << "Ball::itemChange not in pitch";
-             return m_lastPos;
-         }
-         else {
-             // qDebug() << "Ball::itemChange else";
-             m_lastPos = newPos;
-             return newPos;
-         }
-     }
-     return QGraphicsItem::itemChange(change, value);
+        if (!pitchRect.contains(newPos) && !(m_pitch->m_topGoal->contains(newPos)
+                                             || m_pitch->m_bottomGoal->contains(newPos))) {
+            qDebug() << "Ball::itemChange not in pitch";
+            m_animationTimer->stop();
+            return m_lastPos;
+        } else {
+            m_lastPos = newPos;
+            return newPos;
+        }
+    }
+    return QGraphicsItem::itemChange(change, value);
  }

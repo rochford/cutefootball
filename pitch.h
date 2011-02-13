@@ -28,6 +28,8 @@ class ScreenGraphics;
 class Game;
 class HalfStatisticsFrame;
 
+
+
 class Pitch : public QObject
 {
     Q_OBJECT
@@ -74,6 +76,8 @@ public:
     void setPenaltyShootOut(bool penalties) { m_isPenalties = penalties; }
     inline bool extraTime() const {
         return (homeTeam()->m_goals == awayTeam()->m_goals); }
+    void centerOnBall(bool centerOnBall) { m_centerOnBall = centerOnBall; }
+
 public slots:
     void newGame(int homeTeam, int awayTeam);
 
@@ -84,6 +88,9 @@ public slots:
 
     void showHalfStatisticsFrame();
     void hideHalfStatisticsFrame();
+
+    void centerOnBall() { m_centerOnBall = true; }
+    void countShots(Team* team, QPointF dest);
 
 signals:
    void gameInProgress(bool playing);
@@ -140,6 +147,9 @@ private:
 
     HalfStatisticsFrame* m_halfStatisticsFrame;
     QGraphicsProxyWidget *m_halfStatisticsProxy;
+
+    // true if the ball should in centered on
+    bool m_centerOnBall;
 };
 
 #endif // PITCH_H

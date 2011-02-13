@@ -100,7 +100,8 @@ Player::Player(QString name,
     m_pitch(pitch),
     m_speed(computerControlled ? KPlayerDefaultSpeed - 1 : KPlayerDefaultSpeed),
     m_step(0),
-    m_outOfAction(NULL)
+    m_outOfAction(NULL),
+    m_allowedOffPitch(true)
 {
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
     m_keyEventTimer = new QTimer(this);
@@ -114,10 +115,16 @@ Player::Player(QString name,
     m_outOfAction->setSingleShot(true);
 
     connect(m_keyEventTimer, SIGNAL(timeout()), this, SLOT(repeatKeyEvent()));
+    connect(m_pitch, SIGNAL(gameInProgress(bool)), this, SLOT(allowedOffPitch(bool)));
 
     createKeyboardActions();
     setRotation(0);
     setTransformOriginPoint(boundingRect().center());
+}
+
+void Player::allowedOffPitch(bool gameInProgress)
+{
+    m_allowedOffPitch = !gameInProgress;
 }
 
 Player::~Player()
@@ -264,7 +271,7 @@ bool Player::withinShootingDistance() const
     else
         dy = abs(m_pitch->m_topGoal->pos().y() - m_pitch->ball()->pos().y());
 
-    if ( ( m_pitch->m_footballPitch->rect().height() / 4 ) > dy)
+    if ( ( m_pitch->m_footballPitch->rect().height() / 3 ) > dy)
         return true;
     else
         return false;
@@ -676,6 +683,7 @@ QVariant Player::itemChange(GraphicsItemChange change, const QVariant &value)
              && ( m_pitch->m_bottomPenaltyArea->contains(newPos)
                 || m_pitch->m_topPenaltyArea->contains(newPos) ) ) {
              if ( m_hasBall ) {
+                 qDebug() << "Player::itemChange has ball";
                  m_pitch->ball()->setNoBallOwner();
                  m_hasBall = false;
              }
@@ -685,7 +693,7 @@ QVariant Player::itemChange(GraphicsItemChange change, const QVariant &value)
             return m_lastPos;
             }
 
-         if (!pitch.contains(newPos))
+         if (!pitch.contains(newPos) && !m_allowedOffPitch)
              return m_lastPos;
          else {
              m_lastPos = newPos;
