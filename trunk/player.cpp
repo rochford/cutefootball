@@ -651,7 +651,7 @@ void Player::stopKeyEvent()
 
 void Player::createKeyboardActions()
 {
-#ifdef Q_OS_SYMBIAN
+#if defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR)
     m_actions.insert( Qt::Key_2, MWindow::North );
     m_actions.insert( Qt::Key_3, MWindow::NorthEast );
     m_actions.insert( Qt::Key_9, MWindow::SouthEast );

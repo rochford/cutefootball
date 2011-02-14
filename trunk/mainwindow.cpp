@@ -30,6 +30,7 @@ MWindow::MWindow(QWidget *parent)
                         m_settingsFrame);
     m_teamSelectionFrame = new TeamSelectionFrame(this);
 
+    removeContextMenus();
 
     createConnections();
     setCentralWidget( uiMainWindow.m_graphicsView );

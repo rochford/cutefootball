@@ -4,11 +4,7 @@
 
 #include "pitch.h"
 
-#if defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR)
 const QFont KFont("Times", 6, QFont::Bold);
-#else
-const QFont KFont("Times", 18, QFont::Bold);
-#endif
 
 ScreenGraphics::ScreenGraphics(Pitch *p)
   :  m_pitch(p),
