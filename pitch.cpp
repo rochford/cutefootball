@@ -37,7 +37,11 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     m_halfStatisticsFrame(NULL),
     m_centerOnBall(false)
 {
+#if defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR)
     m_view->scale(1.6,1.6);
+#else
+    m_view->scale(7.0,7.0);
+#endif
     m_view->setScene(m_scene);
 
     m_scene->setBackgroundBrush(QBrush(Qt::green));
