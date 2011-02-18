@@ -10,7 +10,7 @@ class Team : public QObject {
 public:
     // the attacking direction
     enum Direction { SouthToNorth, NorthToSouth };
-    Team(QString teamName, QColor shirtColor, QColor shortColor);
+    Team(QString teamName, QColor shirtColor, QColor shortColor, int playerSpeed);
     QString name() { return m_name; }
     void setDirection(Direction dir) { m_direction = dir; }
     Direction getDirection() { return m_direction; }

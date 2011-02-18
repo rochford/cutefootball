@@ -1,15 +1,15 @@
 #include "team.h"
-#include "compileTimeSettings.h" // KPlayerDefaultSpeed
+// #include "compileTimeSettings.h" // KPlayerDefaultSpeed
 #include <QDebug>
 
-Team::Team(QString teamName, QColor shirtColor, QColor shortColor)
+Team::Team(QString teamName, QColor shirtColor, QColor shortColor, int playerSpeed)
     : m_name(teamName),
     m_shirtColor(shirtColor),
     m_shortColor(shortColor),
     m_teamHasBall(false),
     m_goals(0),
     m_scoredLastGoal(false),
-    m_speed(KPlayerDefaultSpeed)
+    m_speed(playerSpeed)
 {
 }
 

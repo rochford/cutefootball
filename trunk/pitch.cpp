@@ -265,9 +265,11 @@ void Pitch::layoutPitch()
     m_bottomGoal = m_scene->addRect((m_scene->width() / 2)-60, m_scene->height()-KPitchBoundaryWidth,120,KPitchBoundaryWidth/2,
                    KWhitePaintPen,
                    QBrush(Qt::white,Qt::Dense5Pattern) );
+    m_bottomGoal->setZValue(ZGoalObject);
     m_topGoal = m_scene->addRect((m_scene->width() / 2)-60,KPitchBoundaryWidth/2,120,KPitchBoundaryWidth/2,
                    KWhitePaintPen,
                    QBrush(Qt::white,Qt::Dense5Pattern) );
+    m_topGoal->setZValue(ZGoalObject);
 
     // penalty areas
     QPainterPath path;
@@ -314,10 +316,10 @@ void Pitch::layoutPitch()
 void Pitch::updateDisplayTime(int timeLeftMs)
 {
     if ( m_game->isRunning() ) {
-        QString homeTeam(m_homeTeam->name());
+        QString homeTeam(m_homeTeam->name().toUpper());
         homeTeam.truncate(3);
 
-        QString awayTeam(m_awayTeam->name());
+        QString awayTeam(m_awayTeam->name().toUpper());
         awayTeam.truncate(3);
         QTime tmp(0,0,0,0);
         tmp = tmp.addMSecs(timeLeftMs);
@@ -373,10 +375,13 @@ void Pitch::parseTeamList()
         QString shirtColorString = nameAndColor.at(1).simplified();
         QString shortColorString = nameAndColor.at(2).simplified();
 
+        qDebug() << nameAndColor.at(3);
+        const int playerSpeed = nameAndColor.at(3).simplified().toInt();
+
         QColor shirtColor(shirtColorString);
         QColor shortColor(shortColorString);
 
-        Team* t = new Team(name, shirtColor, shortColor);
+        Team* t = new Team(name, shirtColor, shortColor, playerSpeed);
         m_teams.append(t);
     }
     file.close();
