@@ -98,7 +98,7 @@ Player::Player(QString name,
     m_team(team),
     m_role(role),
     m_pitch(pitch),
-    m_speed(computerControlled ? KPlayerDefaultSpeed - 1 : KPlayerDefaultSpeed),
+    m_speed(team->speed()),
     m_step(0),
     m_outOfAction(NULL),
     m_allowedOffPitch(true)

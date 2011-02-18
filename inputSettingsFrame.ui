@@ -59,6 +59,9 @@
       <property name="standardButtons">
        <set>QDialogButtonBox::Ok</set>
       </property>
+      <property name="centerButtons">
+       <bool>true</bool>
+      </property>
      </widget>
     </item>
     <item>

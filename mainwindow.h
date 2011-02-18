@@ -76,6 +76,9 @@ public slots:
     void showFrame(Frame f);
     void newGame(int homeTeam, int awayTeam);
 
+protected:
+    void closeEvent(QCloseEvent *event);
+
 private slots:
     void showAboutFrame();
     void showHelpFrame();

@@ -16,7 +16,7 @@ class HalfStatisticsFrame : public QFrame
 public:
     explicit HalfStatisticsFrame(QWidget *parent = 0);
     ~HalfStatisticsFrame();
-    void setHalfName(QString s) { ui->m_halfNameLabel->setText(s); }
+    //void setHalfName(QString s) { ui->m_halfNameLabel->setText(s); }
     void setHomeTeamName(QString s) { ui->m_homeTeamName->setText(s); }
     void setAwayTeamName(QString s) { ui->m_awayTeamName->setText(s); }
     void setHomeTeamGoals(int n) { ui->m_homeGoals->setText(QString::number(n)); }

@@ -4,7 +4,7 @@
 #include <QtGui>
 
 const int KMajorVersion = 0;
-const int KMinorVersion = 3;
+const int KMinorVersion = 4;
 const QString versionNumber(QObject::tr("version %1.%2"));
 
 const int KHalfLength = 60*1000; // seconds
@@ -15,7 +15,6 @@ const int KLongPressValue = 600; // Ms
 const QPen KWhitePaintPen(QBrush(Qt::white),3);
 
 const int KGameRefreshRate = 1000 / 20; // ms
-const int KGameLength = KHalfLength*2;
 const int KColumn = 5; // Left, l-Centre, centre, r-centre, Right
 // goalkepper-defence-midfield-attack,attack-midfield-defence-goalkepper
 const int KRow = 8;

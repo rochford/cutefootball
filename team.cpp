@@ -1,4 +1,5 @@
 #include "team.h"
+#include "compileTimeSettings.h" // KPlayerDefaultSpeed
 #include <QDebug>
 
 Team::Team(QString teamName, QColor shirtColor, QColor shortColor)
@@ -7,7 +8,8 @@ Team::Team(QString teamName, QColor shirtColor, QColor shortColor)
     m_shortColor(shortColor),
     m_teamHasBall(false),
     m_goals(0),
-    m_scoredLastGoal(false)
+    m_scoredLastGoal(false),
+    m_speed(KPlayerDefaultSpeed)
 {
 }
 

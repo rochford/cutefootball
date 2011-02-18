@@ -20,6 +20,7 @@ public:
     inline int shots() { return m_shotCount; }
     void newGame() { m_goals = 0; m_scoredLastGoal = false; m_teamHasBall = false; m_shotCount = 0; }
     inline bool teamHasBall() { return m_teamHasBall; }
+    inline int speed() { return m_speed; }
 
 public slots:
     void goalScored(bool isNorthGoal);
@@ -36,6 +37,7 @@ private:
     // this team scored the last goal
     bool m_scoredLastGoal;
     int m_shotCount;
+    int m_speed;
 };
 
 
