@@ -124,21 +124,27 @@ void MWindow::showFrame(Frame f)
     m_settingsFrame->setVisible(false);
     m_inputSettingsFrame->setVisible(false);
     m_teamSelectionFrame->setVisible(false);
+    uiMainWindow.m_graphicsView->clearFocus();
 
     switch (f) {
     case MWindow::About:
+        m_aboutFrame->setFocus(Qt::ActiveWindowFocusReason);
         m_aboutFrame->setVisible(true);
         break;
     case MWindow::Help:
+        m_helpFrame->setFocus(Qt::ActiveWindowFocusReason);
         m_helpFrame->setVisible(true);
         break;
     case MWindow::InputSettings:
+        m_inputSettingsFrame->setFocus(Qt::ActiveWindowFocusReason);
         m_inputSettingsFrame->setVisible(true);
         break;
     case MWindow::Settings:
+        m_settingsFrame->setFocus(Qt::ActiveWindowFocusReason);
         m_settingsFrame->setVisible(true);
         break;
     case MWindow::MainMenu:
+        m_mainMenuFrame->setFocus(Qt::ActiveWindowFocusReason);
         m_mainMenuFrame->setVisible(true);
         break;
     case MWindow::GraphicsView:
@@ -153,6 +159,7 @@ void MWindow::showFrame(Frame f)
         uiMainWindow.m_graphicsView->setFocus();
         break;
     case MWindow::TeamSelection:
+        m_teamSelectionFrame->setFocus(Qt::ActiveWindowFocusReason);
         m_teamSelectionFrame->setVisible(true);
         break;
     default:
@@ -188,4 +195,11 @@ void MWindow::showAboutFrame()
     showFrame(MWindow::About);
 }
 
-
+void MWindow::closeEvent(QCloseEvent *event)
+{
+    qDebug() << "MWindow::closeEvent";
+    if (true)
+        event->accept();
+    else
+        event->ignore();
+}

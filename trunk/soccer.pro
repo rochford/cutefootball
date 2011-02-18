@@ -86,7 +86,14 @@ OTHER_FILES += \
     teams/Germany.txt \
     teams/France.txt \
     teams/Portugal.txt \
-    teams/Sweden.txt
+    teams/Sweden.txt \
+    teams/SanMarino.txt \
+    teams/Turkey.txt \
+    teams/Russia.txt \
+    teams/Netherlands.txt \
+    teams/Greece.txt \
+    teams/Estonia.txt \
+    teams/Andorra.txt
 
 # Please do not modify the following two lines. Required for deployment.
 include(deployment.pri)

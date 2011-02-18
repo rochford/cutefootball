@@ -364,6 +364,9 @@ void Pitch::parseTeamList()
 
     while (!file.atEnd()) {
         QByteArray line = file.readLine();
+        if (line.contains('#'))
+            continue;
+
         QList<QByteArray> nameAndColor = line.split(',');
         QString name = nameAndColor.at(0).simplified();
 

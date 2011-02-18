@@ -1,23 +1,37 @@
 <RCC>
     <qresource prefix="/">
-        <file>teams/England.txt</file>
-        <file>teams/Finland.txt</file>
-        <file>teams/Germany.txt</file>
-        <file>teams/Italy.txt</file>
-        <file>teams/Spain.txt</file>
-        <file>teams/Switzerland.txt</file>
-        <file>images/flags/England.png</file>
-        <file>images/flags/Finland.png</file>
-        <file>images/flags/Germany.png</file>
-        <file>images/flags/Italy.png</file>
-        <file>images/flags/Spain.png</file>
-        <file>images/flags/Switzerland.png</file>
-        <file>images/flags/France.png</file>
-        <file>teams/France.txt</file>
-        <file>teams/Portugal.txt</file>
-        <file>teams/Sweden.txt</file>
-        <file>images/flags/Sweden.png</file>
-        <file>images/flags/Portugal.png</file>
         <file>teams/teams.txt</file>
+        <file>teams/Andorra.txt</file>
+        <file>teams/England.txt</file>
+        <file>teams/Estonia.txt</file>
+        <file>teams/Finland.txt</file>
+        <file>teams/France.txt</file>
+        <file>teams/Germany.txt</file>
+        <file>teams/Greece.txt</file>
+        <file>teams/Italy.txt</file>
+        <file>teams/Netherlands.txt</file>
+        <file>teams/Portugal.txt</file>
+        <file>teams/Russia.txt</file>
+        <file>teams/SanMarino.txt</file>
+        <file>teams/Spain.txt</file>
+        <file>teams/Sweden.txt</file>
+        <file>teams/Switzerland.txt</file>
+        <file>teams/Turkey.txt</file>
+        <file>images/flags/England.png</file>
+        <file>images/flags/Andorra.png</file>
+        <file>images/flags/Turkey.png</file>
+        <file>images/flags/Switzerland.png</file>
+        <file>images/flags/Sweden.png</file>
+        <file>images/flags/Spain.png</file>
+        <file>images/flags/SanMarino.png</file>
+        <file>images/flags/Russia.png</file>
+        <file>images/flags/Portugal.png</file>
+        <file>images/flags/Netherlands.png</file>
+        <file>images/flags/Italy.png</file>
+        <file>images/flags/Greece.png</file>
+        <file>images/flags/Germany.png</file>
+        <file>images/flags/France.png</file>
+        <file>images/flags/Finland.png</file>
+        <file>images/flags/Estonia.png</file>
     </qresource>
 </RCC>

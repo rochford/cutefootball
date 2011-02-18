@@ -40,7 +40,7 @@ QComboBox:hover {
     color: gold;
 }
 
-HalfStatisticsFrame {
+QFrame#HalfStatisticsFrame {
     opacity: 50;
     background: transparent;
     border: grey;
