@@ -41,6 +41,18 @@ MWindow::MWindow(QWidget *parent)
     showFrame(MWindow::MainMenu);
 }
 
+MWindow::~MWindow()
+{
+    delete m_pitch;
+    delete m_soundEffects;
+    delete m_settingsFrame;
+    delete m_aboutFrame;
+    delete m_helpFrame;
+    delete m_teamSelectionFrame;
+    delete m_mainMenuFrame;
+    delete m_exitDialog;
+}
+
 void MWindow::removeContextMenus()
 {
     /* Remove context menu from the all widgets. */
@@ -50,9 +62,10 @@ void MWindow::removeContextMenus()
         w->setContextMenuPolicy(Qt::NoContextMenu);
     }
 }
-void MWindow::forceClose()
+void MWindow::checkClose(int result)
 {
-    m_closeEvent->accept();
+    if (QDialog::Accepted == result)
+        close();
 }
 
 void MWindow::createConnections()
@@ -62,16 +75,25 @@ void MWindow::createConnections()
     connect(uiMainWindow.actionInputSettings, SIGNAL(triggered()), this, SLOT(showInputSettingsFrame()));
     connect(uiMainWindow.actionAbout, SIGNAL(triggered()), this, SLOT(showAboutFrame()));
     connect(uiMainWindow.actionHelp, SIGNAL(triggered()), this, SLOT(showHelpFrame()));
-    connect(uiMainWindow.actionQuit, SIGNAL(triggered()), this, SLOT(close()));
 
-    connect(uiExitConfirmationDialog.buttonBox, SIGNAL(accepted()), this, SLOT(forceClose()));
-//    connect(uiExitConfirmationDialog.buttonBox, SIGNAL(rejected()), this, forceClose());
+    // this connection is created when a game is not in progress
+    connect(uiMainWindow.actionQuit, SIGNAL(triggered()), this, SLOT(close()));
+    // this connection is created when a game is in progress
+    //connect(uiMainWindow.actionQuit, SIGNAL(triggered()), m_exitDialog, SLOT(show()));
+    connect(m_exitDialog, SIGNAL(finished(int)), this, SLOT(checkClose(int)));
 
     connect(m_pitch, SIGNAL(gameInProgress(bool)), this, SLOT(enableActions(bool)));
 }
 
 void MWindow::enableActions(bool gameInProgress)
 {
+    if (gameInProgress) {
+        disconnect(uiMainWindow.actionQuit, SIGNAL(triggered()), this, SLOT(close()));
+        connect(uiMainWindow.actionQuit, SIGNAL(triggered()), m_exitDialog, SLOT(show()));
+    } else {
+        connect(uiMainWindow.actionQuit, SIGNAL(triggered()), this, SLOT(close()));
+        disconnect(uiMainWindow.actionQuit, SIGNAL(triggered()), m_exitDialog, SLOT(show()));
+    }
     m_gameInProgress = gameInProgress;
     uiMainWindow.actionNew_Game->setEnabled(!gameInProgress);
     uiMainWindow.actionSettings->setEnabled(!gameInProgress);
@@ -179,17 +201,6 @@ void MWindow::showFrame(Frame f)
     }
 }
 
-MWindow::~MWindow()
-{
-    delete m_pitch;
-    delete m_soundEffects;
-    delete m_settingsFrame;
-    delete m_aboutFrame;
-    delete m_helpFrame;
-    delete m_teamSelectionFrame;
-    delete m_mainMenuFrame;
-    delete m_exitDialog;
-}
 
 void MWindow::newGame(int homeTeam, int awayTeam)
 {
@@ -210,13 +221,8 @@ void MWindow::showAboutFrame()
 
 void MWindow::closeEvent(QCloseEvent *event)
 {
-    qDebug() << "MWindow::closeEvent";
-
-    if (m_gameInProgress) {
-        m_closeEvent = event;
-        m_exitDialog->show();
-
-    } else
-        event->accept();
+    qDebug() << "MWindow::closeEvent start";
+    event->accept();
+    qDebug() << "MWindow::closeEvent end";
 
 }
