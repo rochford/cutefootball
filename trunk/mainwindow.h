@@ -4,6 +4,7 @@
 #include <QtGui>
 #include <qmap.h>
 #include "ui_mainwindow.h"
+#include "ui_exitconfirmationdialog.h"
 
 class Pitch;
 class SoundEffects;
@@ -86,7 +87,7 @@ private slots:
     void showSettingsFrame();
     void showTeamSelectionFrame();
     void enableActions(bool gameInProgress);
-
+    void forceClose();
 
 private:
     Pitch *m_pitch;
@@ -97,8 +98,13 @@ private:
     TeamSelectionFrame* m_teamSelectionFrame;
     mainMenuFrame* m_mainMenuFrame;
     SoundEffects* m_soundEffects;
+    bool m_gameInProgress;
 
     Ui::MainWindow uiMainWindow;
+
+    Ui::ExitConfirmationDialog uiExitConfirmationDialog;
+    QDialog* m_exitDialog;
+    QCloseEvent* m_closeEvent;
     };
 
 #endif // MAINWINDOW_H

@@ -651,7 +651,7 @@ void Player::stopKeyEvent()
 
 void Player::createKeyboardActions()
 {
-#if defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR)
+#if defined(Q_OS_SYMBIAN)
     m_actions.insert( Qt::Key_2, MWindow::North );
     m_actions.insert( Qt::Key_3, MWindow::NorthEast );
     m_actions.insert( Qt::Key_9, MWindow::SouthEast );
@@ -670,6 +670,7 @@ void Player::createKeyboardActions()
     m_actions.insert( Qt::Key_6, MWindow::East );
 
     m_actions.insert( Qt::Key_5, MWindow::Button );
+    m_actions.insert( Qt::Key_Space, MWindow::Button );
 }
 
 QVariant Player::itemChange(GraphicsItemChange change, const QVariant &value)
