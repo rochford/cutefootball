@@ -108,7 +108,7 @@ void Ball::moveBall(MWindow::Action action, int speed)
     if (m_positionLocked) {
         return;
     }
-    qDebug() << "Ball::moveBall ";
+
     QMap<MWindow::Action,QPointF> moveDistance;
     moveDistance.insert(MWindow::North, QPointF(0,-speed));
     moveDistance.insert(MWindow::NorthEast, QPointF(speed,-speed));
@@ -145,7 +145,6 @@ void Ball::moveBall(MWindow::Action action, int speed)
 
 void Ball::kickBall(MWindow::Action action, QPointF destination)
 {
-    qDebug() << "Ball::kickBall ";
     if (m_positionLocked)
         return;
 
@@ -180,7 +179,7 @@ void Ball::kickBall(MWindow::Action action, QPointF destination)
 
 void Ball::updateBall(int frame)
 {
-    qDebug() << "Ball::updateBall" << frame;
+  //  qDebug() << "Ball::updateBall" << frame;
     // animation may no longer be running due to a goal
     if ( (m_animationTimer->state() == QTimeLine::Running) && !m_positionLocked ) {
         QPointF newPos = animation_->posAt(frame/40.0);

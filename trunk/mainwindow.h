@@ -87,7 +87,7 @@ private slots:
     void showSettingsFrame();
     void showTeamSelectionFrame();
     void enableActions(bool gameInProgress);
-    void forceClose();
+    void checkClose(int result);
 
 private:
     Pitch *m_pitch;

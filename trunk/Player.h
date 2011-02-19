@@ -58,8 +58,8 @@ public:
     bool ballCollisionCheck() const;
     bool playerCollisionCheck() const;
 
-    void move(MWindow::Action action);
-    void movePlayer(MWindow::Action action);
+    void move(MWindow::Action action, QPointF destination= QPointF(0.0,0.0));
+    void movePlayer(MWindow::Action action, QPointF destination= QPointF(0.0,0.0));
     Player* findAvailableTeamMate(QPointF myPos) const;
     void specialAction(MWindow::Action action);
     void setTackled();

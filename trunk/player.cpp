@@ -229,7 +229,7 @@ QPainterPath Player::shape() const
     return path;
 }
 
-void Player::movePlayer(MWindow::Action action)
+void Player::movePlayer(MWindow::Action action, QPointF destination)
 {
     // if the ball is not owned then take ownership
     if (ballCollisionCheck() && !m_pitch->ball()->ballOwner()) {
@@ -253,10 +253,21 @@ void Player::movePlayer(MWindow::Action action)
     case MWindow::SouthWest:
     case MWindow::West:
     case MWindow::NorthWest:
+    {
         setPixmap(m_images[action].at(m_step % 3));
         setRotation(0);
-        moveBy(m_moveDistance[action].x(), m_moveDistance[action].y());
+        // if the destination is less than move distance, only move that much
+        qreal dx = destination.x() - pos().x();
+        qreal dy = destination.y() - pos().y();
+        qreal x = m_moveDistance[action].x();
+        qreal y = m_moveDistance[action].y();
+        if ( qAbs(dx) < qAbs(x))
+            x = dx;
+        if ( qAbs(dy) < qAbs(y))
+            y = dy;
+        moveBy(x, y);
         m_lastAction = action;
+    }
         break;
     default:
         break;
@@ -415,7 +426,7 @@ void Player::setTackled()
     move(MWindow::FallenOver);
 }
 
-void Player::move(MWindow::Action action)
+void Player::move(MWindow::Action action, QPointF destination)
 {
     if (m_outOfAction->isActive())
         return;
@@ -436,7 +447,7 @@ void Player::move(MWindow::Action action)
         || action == MWindow::Pass)
         specialAction(action);
     else
-        movePlayer(action);
+        movePlayer(action, destination);
 }
 
 // same team
@@ -510,12 +521,13 @@ void Player::computerAdvanceWithoutBall()
         MWindow::Action action;
         int dx = abs(pos().x() - m_pitch->ball()->pos().x());
         int dy = abs(pos().y() - m_pitch->ball()->pos().y());
-        if ( m_pitch->ball()->ballOwner() && ( dx < 10) && (dy < 10) )
+        if ( m_pitch->ball()->ballOwner() && ( dx < 10) && (dy < 10) ) {
             action = MWindow::Tackle;
-        else
+            move(action);
+        } else {
             action = calculateAction(pos(), m_pitch->ball()->pos());
-
-        move(action);
+            move(action, m_pitch->ball()->pos());
+        }
     }
     else
        automove();
@@ -543,7 +555,7 @@ void Player::computerAdvanceWithBall()
             m_hasBall = false;
         }
         else
-            move(act);
+            move(act, destination);
         break;
     }
 }
@@ -557,12 +569,13 @@ void Player::automove()
     if (!m_team->teamHasBall()) {
         MWindow::Action act;
         // If the ball enters m_defendZone then move towards it
-        if ( m_defendZone.contains( m_pitch->ball()->pos() ) )
+        if ( m_defendZone.contains( m_pitch->ball()->pos() ) ) {
             act = calculateAction( pos(), m_pitch->ball()->pos() );
-        else
+            move(act, m_pitch->ball()->pos());
+        } else {
             act = calculateAction( pos(), m_startPositionRectF.center() );
-
-        move(act);
+            move(act, m_startPositionRectF.center());
+        }
     }
 }
 
