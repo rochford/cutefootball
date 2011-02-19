@@ -1,51 +1,57 @@
-QFrame {
-    background-color: "#677b09";
+QFrame,QDialog {
+    background-image: url(:/images/pitch3.png);
     border: none;
 }
 
 QPushButton, QCheckbox {
     border: none;
-    color: white;
-    background-color: black;
+    color: red;
+    background-color: yellow;
     font: bold large "Times";
     font-size: 18px;
 }
 
 QPushButton:pressed {
-    color: gold;
+    background-color: red;
+    color: yellow;
 }
 
 QPushButton:focus {
-    color: gold;
+    background-color: red;
+    color: yellow;
 }
 
 QPushButton:hover {
-    color: gold;
+    background-color: red;
+    color: yellow;
 }
 
-QSpinBox, QLabel {
-    color: white;
-    background-color: black;
+QSpinBox {
+    color: red;
+    background-color: yellow;
     font: bold large "Times";
     font-size: 18px;
 }
 
+QLabel {
+    color: red;
+    background-color: yellow;
+    font: bold large "Times";
+    font-size: 18px;
+}
 QComboBox {
-    color: black;
-    background-color: white;
+    color: red;
+    background-color: yellow;
     font: bold large "Times";
     font-size: 18px;
 }
+/*
 QComboBox:hover {
-    color: gold;
+    color: yellow;
+    background-color: red;
 }
-
-QFrame#HalfStatisticsFrame {
-    opacity: 50;
-    background: transparent;
-    border: grey;
-
-    color: gold;
-    font: bold large "Times";
-    font-size: 8px;
+QComboBox:focus {
+    background-color: red;
+    color: yellow;
 }
+*/

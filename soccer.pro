@@ -16,9 +16,13 @@ symbian:TARGET.UID3 = 0xEED6D15E
 
 # Add files and directories to ship with the application
 # by adapting the examples below.
+whistle.source = audio/Whistle.wav
+whistle.target = Whistle.wav
+crowd.source = audio/Crowd.wav
+crowd.target = Crowd.wav
 # file1.source = myfile
 # dir1.source = mydir
-DEPLOYMENTFOLDERS = # file1 dir1
+DEPLOYMENTFOLDERS = whistle crowd # file1 dir1
 
 SOURCES += main.cpp\
         mainwindow.cpp \
@@ -73,7 +77,8 @@ FORMS += \
     teamSelectionFrame.ui \
     helpFrame.ui \
     inputSettingsFrame.ui \
-    halfstatisticsframe.ui
+    halfstatisticsframe.ui \
+    exitconfirmationdialog.ui
 
 OTHER_FILES += \
     stylesheet.qss \

@@ -10,7 +10,8 @@
 #include "mainMenuFrame.h"
 
 MWindow::MWindow(QWidget *parent)
-    : QMainWindow(parent)
+    : QMainWindow(parent),
+      m_gameInProgress(false)
 {
     m_soundEffects = new SoundEffects(this);
 
@@ -22,6 +23,9 @@ MWindow::MWindow(QWidget *parent)
     m_mainMenuFrame = new mainMenuFrame(this);
 
     uiMainWindow.setupUi(this);
+
+    m_exitDialog = new QDialog();
+    uiExitConfirmationDialog.setupUi(m_exitDialog);
 
     QRectF footballGround(0,0,300,400);
     m_pitch = new Pitch(footballGround,
@@ -46,6 +50,10 @@ void MWindow::removeContextMenus()
         w->setContextMenuPolicy(Qt::NoContextMenu);
     }
 }
+void MWindow::forceClose()
+{
+    m_closeEvent->accept();
+}
 
 void MWindow::createConnections()
 {
@@ -56,11 +64,15 @@ void MWindow::createConnections()
     connect(uiMainWindow.actionHelp, SIGNAL(triggered()), this, SLOT(showHelpFrame()));
     connect(uiMainWindow.actionQuit, SIGNAL(triggered()), this, SLOT(close()));
 
+    connect(uiExitConfirmationDialog.buttonBox, SIGNAL(accepted()), this, SLOT(forceClose()));
+//    connect(uiExitConfirmationDialog.buttonBox, SIGNAL(rejected()), this, forceClose());
+
     connect(m_pitch, SIGNAL(gameInProgress(bool)), this, SLOT(enableActions(bool)));
 }
 
 void MWindow::enableActions(bool gameInProgress)
 {
+    m_gameInProgress = gameInProgress;
     uiMainWindow.actionNew_Game->setEnabled(!gameInProgress);
     uiMainWindow.actionSettings->setEnabled(!gameInProgress);
     uiMainWindow.actionInputSettings->setEnabled(!gameInProgress);
@@ -128,23 +140,23 @@ void MWindow::showFrame(Frame f)
 
     switch (f) {
     case MWindow::About:
-        m_aboutFrame->setFocus(Qt::ActiveWindowFocusReason);
+  //      m_aboutFrame->setFocus(Qt::ActiveWindowFocusReason);
         m_aboutFrame->setVisible(true);
         break;
     case MWindow::Help:
-        m_helpFrame->setFocus(Qt::ActiveWindowFocusReason);
+    //    m_helpFrame->setFocus(Qt::ActiveWindowFocusReason);
         m_helpFrame->setVisible(true);
         break;
     case MWindow::InputSettings:
-        m_inputSettingsFrame->setFocus(Qt::ActiveWindowFocusReason);
+//        m_inputSettingsFrame->setFocus(Qt::ActiveWindowFocusReason);
         m_inputSettingsFrame->setVisible(true);
         break;
     case MWindow::Settings:
-        m_settingsFrame->setFocus(Qt::ActiveWindowFocusReason);
+//        m_settingsFrame->setFocus(Qt::ActiveWindowFocusReason);
         m_settingsFrame->setVisible(true);
         break;
     case MWindow::MainMenu:
-        m_mainMenuFrame->setFocus(Qt::ActiveWindowFocusReason);
+//        m_mainMenuFrame->setFocus(Qt::ActiveWindowFocusReason);
         m_mainMenuFrame->setVisible(true);
         break;
     case MWindow::GraphicsView:
@@ -159,7 +171,7 @@ void MWindow::showFrame(Frame f)
         uiMainWindow.m_graphicsView->setFocus();
         break;
     case MWindow::TeamSelection:
-        m_teamSelectionFrame->setFocus(Qt::ActiveWindowFocusReason);
+//        m_teamSelectionFrame->setFocus(Qt::ActiveWindowFocusReason);
         m_teamSelectionFrame->setVisible(true);
         break;
     default:
@@ -176,6 +188,7 @@ MWindow::~MWindow()
     delete m_helpFrame;
     delete m_teamSelectionFrame;
     delete m_mainMenuFrame;
+    delete m_exitDialog;
 }
 
 void MWindow::newGame(int homeTeam, int awayTeam)
@@ -198,8 +211,12 @@ void MWindow::showAboutFrame()
 void MWindow::closeEvent(QCloseEvent *event)
 {
     qDebug() << "MWindow::closeEvent";
-    if (true)
+
+    if (m_gameInProgress) {
+        m_closeEvent = event;
+        m_exitDialog->show();
+
+    } else
         event->accept();
-    else
-        event->ignore();
+
 }
