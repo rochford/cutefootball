@@ -2,50 +2,45 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="fi_FI">
 <context>
-    <name>Game</name>
+    <name>ExitConfirmationDialog</name>
     <message>
-        <location filename="../game.cpp" line="190"/>
-        <source>extra time second half</source>
+        <location filename="../exitconfirmationdialog.ui" line="14"/>
+        <source>Exit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../game.cpp" line="195"/>
-        <source>penalty shoot out</source>
+        <location filename="../exitconfirmationdialog.ui" line="29"/>
+        <source>Are you sure you want to quit?</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>HalfStatisticsFrame</name>
     <message>
-        <location filename="../halfstatisticsframe.ui" line="41"/>
-        <source>Statistics</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../halfstatisticsframe.ui" line="53"/>
+        <location filename="../halfstatisticsframe.ui" line="43"/>
         <source>HomeTeam</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../halfstatisticsframe.ui" line="63"/>
+        <location filename="../halfstatisticsframe.ui" line="53"/>
         <source>Away Team</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../halfstatisticsframe.ui" line="92"/>
-        <location filename="../halfstatisticsframe.ui" line="99"/>
-        <location filename="../halfstatisticsframe.ui" line="134"/>
-        <location filename="../halfstatisticsframe.ui" line="141"/>
+        <location filename="../halfstatisticsframe.ui" line="82"/>
+        <location filename="../halfstatisticsframe.ui" line="89"/>
+        <location filename="../halfstatisticsframe.ui" line="124"/>
+        <location filename="../halfstatisticsframe.ui" line="131"/>
         <source>NNN</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../halfstatisticsframe.ui" line="110"/>
+        <location filename="../halfstatisticsframe.ui" line="100"/>
         <source>Goals</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../halfstatisticsframe.ui" line="120"/>
+        <location filename="../halfstatisticsframe.ui" line="110"/>
         <source>Shots</source>
         <translation type="unfinished"></translation>
     </message>
@@ -54,7 +49,7 @@
     <name>MainWindow</name>
     <message>
         <location filename="../mainwindow.ui" line="14"/>
-        <source>Cute Football</source>
+        <source>5-a side football</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -96,38 +91,40 @@
     </message>
 </context>
 <context>
-    <name>Pitch</name>
-    <message>
-        <location filename="../pitch.cpp" line="47"/>
-        <source>First half</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../pitch.cpp" line="48"/>
-        <source>Second half</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../pitch.cpp" line="49"/>
-        <source>extra time first half</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../pitch.cpp" line="50"/>
-        <source>extra time second half</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../pitch.cpp" line="51"/>
-        <source>penalty shoot out</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>QObject</name>
     <message>
         <location filename="../compileTimeSettings.h" line="8"/>
         <source>version %1.%2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../main.cpp" line="18"/>
+        <source>Loading...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../pitch.h" line="31"/>
+        <source>First half</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../pitch.h" line="32"/>
+        <source>Second half</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../pitch.h" line="33"/>
+        <source>Extra Time First half</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../pitch.h" line="34"/>
+        <source>Extra Time Second half</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../pitch.h" line="35"/>
+        <source>penalty shoot out</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

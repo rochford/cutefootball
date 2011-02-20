@@ -28,7 +28,11 @@ class ScreenGraphics;
 class Game;
 class HalfStatisticsFrame;
 
-
+const QString KFirstHalf(QObject::tr("First half"));
+const QString KSecondHalf(QObject::tr("Second half"));
+const QString KFirstHalfET(QObject::tr("Extra Time First half"));
+const QString KSecondHalfET(QObject::tr("Extra Time Second half"));
+const QString KPenaltyShootOut(QObject::tr("penalty shoot out"));
 
 class Pitch : public QObject
 {

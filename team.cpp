@@ -2,8 +2,10 @@
 // #include "compileTimeSettings.h" // KPlayerDefaultSpeed
 #include <QDebug>
 
-Team::Team(QString teamName, QColor shirtColor, QColor shortColor, int playerSpeed)
-    : m_name(teamName),
+Team::Team(QString briefName, QString teamName, QColor shirtColor, QColor shortColor, int playerSpeed)
+    :
+    m_briefName(briefName),
+    m_name(teamName),
     m_shirtColor(shirtColor),
     m_shortColor(shortColor),
     m_teamHasBall(false),

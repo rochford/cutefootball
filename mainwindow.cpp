@@ -221,8 +221,5 @@ void MWindow::showAboutFrame()
 
 void MWindow::closeEvent(QCloseEvent *event)
 {
-    qDebug() << "MWindow::closeEvent start";
     event->accept();
-    qDebug() << "MWindow::closeEvent end";
-
 }

@@ -10,17 +10,18 @@ class Team : public QObject {
 public:
     // the attacking direction
     enum Direction { SouthToNorth, NorthToSouth };
-    Team(QString teamName, QColor shirtColor, QColor shortColor, int playerSpeed);
-    QString name() { return m_name; }
+    Team(QString briefName, QString teamName, QColor shirtColor, QColor shortColor, int playerSpeed);
+    QString fullName() const { return m_name; }
     void setDirection(Direction dir) { m_direction = dir; }
-    Direction getDirection() { return m_direction; }
+    Direction getDirection() const { return m_direction; }
     void setHasBall(bool hasBall);
-    bool scoredLastGoal() { return m_scoredLastGoal; }
+    bool scoredLastGoal() const { return m_scoredLastGoal; }
     void setShots(int newValue) { m_shotCount = newValue; }
-    inline int shots() { return m_shotCount; }
+    inline int shots() const { return m_shotCount; }
     void newGame() { m_goals = 0; m_scoredLastGoal = false; m_teamHasBall = false; m_shotCount = 0; }
-    inline bool teamHasBall() { return m_teamHasBall; }
-    inline int speed() { return m_speed; }
+    inline bool teamHasBall() const { return m_teamHasBall; }
+    inline int speed() const { return m_speed; }
+    inline QString briefName() const { return m_briefName; }
 
 public slots:
     void goalScored(bool isNorthGoal);
@@ -32,6 +33,7 @@ public:
     int m_goals;
 
 private:
+    QString m_briefName;
     QString m_name;
     bool m_teamHasBall;
     // this team scored the last goal

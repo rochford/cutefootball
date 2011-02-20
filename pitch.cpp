@@ -52,11 +52,12 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     m_motionTimer->setInterval(KGameRefreshRate);
 
     m_game = new QStateMachine(this);
-    m_firstHalfState = new Game(this, tr("First half"), true, false);
-    m_secondHalfState = new Game(this, tr("Second half"), false, false);
-    m_extraTimeFirstHalfState = new Game(this, tr("extra time first half"), true, true);
-    m_extraTimeSecondHalfState = new Game(this, tr("extra time second half"), false, true);
-    m_penaltiesState = new Game(this, tr("penalty shoot out"), true, true);
+
+    m_firstHalfState = new Game(this, KFirstHalf, true, false);
+    m_secondHalfState = new Game(this, KSecondHalf, false, false);
+    m_extraTimeFirstHalfState = new Game(this, KFirstHalfET, true, true);
+    m_extraTimeSecondHalfState = new Game(this, KSecondHalfET, false, true);
+    m_penaltiesState = new Game(this, KPenaltyShootOut, true, true);
     m_allDone = new QFinalState();
 
     m_game->addState(m_firstHalfState);
@@ -82,7 +83,6 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     m_soundEffects->soundEnabled(m_settingsFrame->soundEnabled());
 
     createTeams();
-
 
     connect(m_motionTimer, SIGNAL(timeout()), m_scene, SLOT(advance()));
     connect(m_motionTimer, SIGNAL(timeout()), m_scene, SLOT(update()));
@@ -316,10 +316,10 @@ void Pitch::layoutPitch()
 void Pitch::updateDisplayTime(int timeLeftMs)
 {
     if ( m_game->isRunning() ) {
-        QString homeTeam(m_homeTeam->name().toUpper());
+        QString homeTeam(m_homeTeam->briefName().toUpper());
         homeTeam.truncate(3);
 
-        QString awayTeam(m_awayTeam->name().toUpper());
+        QString awayTeam(m_awayTeam->briefName().toUpper());
         awayTeam.truncate(3);
         QTime tmp(0,0,0,0);
         tmp = tmp.addMSecs(timeLeftMs);
@@ -370,18 +370,18 @@ void Pitch::parseTeamList()
             continue;
 
         QList<QByteArray> nameAndColor = line.split(',');
-        QString name = nameAndColor.at(0).simplified();
+        QString briefName = nameAndColor.at(0).simplified();
+        QString name = nameAndColor.at(1).simplified();
 
-        QString shirtColorString = nameAndColor.at(1).simplified();
-        QString shortColorString = nameAndColor.at(2).simplified();
+        QString shirtColorString = nameAndColor.at(2).simplified();
+        QString shortColorString = nameAndColor.at(3).simplified();
 
-        qDebug() << nameAndColor.at(3);
-        const int playerSpeed = nameAndColor.at(3).simplified().toInt();
+        const int playerSpeed = nameAndColor.at(4).simplified().toInt();
 
         QColor shirtColor(shirtColorString);
         QColor shortColor(shortColorString);
 
-        Team* t = new Team(name, shirtColor, shortColor, playerSpeed);
+        Team* t = new Team(briefName, name, shirtColor, shortColor, playerSpeed);
         m_teams.append(t);
     }
     file.close();
@@ -450,7 +450,7 @@ QStringList Pitch::parsePlayers(QString teamName)
 
 void Pitch::createTeamPlayers(Team *team)
 {
-    QStringList names = parsePlayers(team->name());
+    QStringList names = parsePlayers(team->fullName());
     bool isHomeTeam(false);
 
     if (team == m_homeTeam)
@@ -581,8 +581,8 @@ void Pitch::setPlayerStartPositions(Team *team)
 
 void Pitch::showHalfStatisticsFrame()
 {
-    m_halfStatisticsFrame->setHomeTeamName(m_homeTeam->name());
-    m_halfStatisticsFrame->setAwayTeamName(m_awayTeam->name());
+    m_halfStatisticsFrame->setHomeTeamName(m_homeTeam->fullName());
+    m_halfStatisticsFrame->setAwayTeamName(m_awayTeam->fullName());
 
     m_halfStatisticsFrame->setHomeTeamGoals(m_homeTeam->m_goals);
     m_halfStatisticsFrame->setAwayTeamGoals(m_awayTeam->m_goals);
