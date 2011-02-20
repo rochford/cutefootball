@@ -33,5 +33,6 @@
         <file>images/advertLeft.png</file>
         <file>images/advertRight.png</file>
         <file>stylesheet.qss</file>
+        <file>images/soccer.svg</file>
     </qresource>
 </RCC>

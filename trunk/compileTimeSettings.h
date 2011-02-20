@@ -4,7 +4,7 @@
 #include <QtGui>
 
 const int KMajorVersion = 0;
-const int KMinorVersion = 4;
+const int KMinorVersion = 5;
 const QString versionNumber(QObject::tr("version %1.%2"));
 
 const int KHalfLength = 60*1000; // seconds

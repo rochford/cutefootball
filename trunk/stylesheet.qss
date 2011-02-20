@@ -1,7 +1,9 @@
-QFrame,QDialog {
+QFrame, QDialog {
     background-image: url(:/images/pitch3.png);
     border: none;
 }
+
+
 
 QPushButton, QCheckbox {
     border: none;
@@ -45,6 +47,13 @@ QComboBox {
     font: bold large "Times";
     font-size: 18px;
 }
+
+#HalfStatisticsFrame {
+    background-color: grey;
+    color: gold;
+    font-size: 2px;
+}
+
 /*
 QComboBox:hover {
     color: yellow;

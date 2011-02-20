@@ -22,7 +22,11 @@ symbian {
     # dir1.source = mydir
     DEPLOYMENT += soundFiles # Crowd # file1 dir1
 
+    vendorinfo = "%{\"Tim Rochford-EN\"}" ":\"Tim Rochford\""
+    my_deployment.pkg_prerules = vendorinfo
+    DEPLOYMENT += my_deployment
 }
+
 SOURCES += main.cpp\
         mainwindow.cpp \
     pitch.cpp \

@@ -12,11 +12,11 @@ Game::Game(Pitch* p,
      bool isExtraTime)
     : QState(),
     m_pitch(p),
-    m_stateName(stateName),
     m_isFirstHalf(isFirstHalf),
     m_isExtraTime(isExtraTime),
     m_remainingTimeInHalfMs( KHalfLength )
 {
+    setObjectName(stateName);
     m_1second = new QTimer(this);
     m_1second->setInterval(1000);
 
@@ -167,13 +167,13 @@ void Game::createPlayerAnimationItems(GameState g)
 
 void Game::onEntry(QEvent * /* event */)
 {
-    if (  m_isFirstHalf ) { // m_stateName == QString(tr("First half")) ) {
+    if (  m_isFirstHalf ) {
         m_pitch->homeTeam()->setDirection(Team::NorthToSouth);
         m_pitch->setPlayerStartPositions(m_pitch->homeTeam());
 
         m_pitch->awayTeam()->setDirection(Team::SouthToNorth);
         m_pitch->setPlayerStartPositions(m_pitch->awayTeam());
-    } else { // if (m_stateName == QString(tr("Second half"))) {
+    } else {
         m_pitch->awayTeam()->setDirection(Team::NorthToSouth);
         m_pitch->setPlayerStartPositions(m_pitch->awayTeam());
 
@@ -187,13 +187,13 @@ void Game::onEntry(QEvent * /* event */)
 
 void Game::onExit(QEvent * /* event */)
 {
-    qDebug() << "Game::onExit() " << m_stateName;
-    if (m_stateName == QString(tr("extra time second half")) && m_pitch->extraTimeAllowed()) {
+    qDebug() << "Game::onExit() " << objectName();
+    if ((objectName() == KSecondHalfET) && m_pitch->extraTimeAllowed()) {
         if ( m_pitch->extraTime() )
             m_pitch->setPenaltyShootOut(true);
         else
             m_pitch->setPenaltyShootOut(false);
-    } else if (m_stateName == QString(tr("penalty shoot out")))
+    } else if (objectName() == KPenaltyShootOut)
         m_pitch->setPenaltyShootOut(false);
 
     m_pitch->m_scene->removeItem(m_pitch->ball());

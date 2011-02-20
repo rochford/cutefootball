@@ -13,9 +13,9 @@ TeamSelectionFrame::TeamSelectionFrame(MWindow *parent) :
     ui->setupUi(this);
 
     foreach( Team* t, m_parent->pitch()->teams()) {
-        QString flagFile(QString(":/images/flags/") + t->name() + QString(".png"));
-        ui->m_homeTeamComboBox->addItem(QIcon(QPixmap(flagFile)),t->name());
-        ui->m_awayTeamComboBox->addItem(QIcon(QPixmap(flagFile)),t->name());
+        QString flagFile(QString(":/images/flags/") + t->fullName() + QString(".png"));
+        ui->m_homeTeamComboBox->addItem(QIcon(QPixmap(flagFile)),t->briefName());
+        ui->m_awayTeamComboBox->addItem(QIcon(QPixmap(flagFile)),t->briefName());
     }
 
     ui->m_homeTeamComboBox->setCurrentIndex(0);

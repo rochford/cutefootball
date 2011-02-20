@@ -54,7 +54,6 @@ private:
 
 private:
     Pitch* m_pitch;
-    QString m_stateName;
     bool m_isFirstHalf;
     bool m_isExtraTime;
 
