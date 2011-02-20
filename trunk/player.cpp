@@ -211,7 +211,7 @@ void Player::paint(QPainter *painter,
     if ( hasFocus() ) {
         QBrush brush(Qt::white, Qt::Dense3Pattern);
         painter->setBrush(brush);
-        painter->drawEllipse(QPointF(0,0), 8*KScaleFactor, 8*KScaleFactor);
+        painter->drawEllipse(boundingRect().center(), 8*KScaleFactor, 8*KScaleFactor);
     }
 
     QSize pixmapSize = pixmap().size();
