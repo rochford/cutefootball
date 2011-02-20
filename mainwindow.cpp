@@ -223,3 +223,12 @@ void MWindow::closeEvent(QCloseEvent *event)
 {
     event->accept();
 }
+
+void MWindow::resizeEvent(QResizeEvent *e)
+{
+    QWidgetList widgets = QApplication::allWidgets();
+    QWidget* w=0;
+    foreach(w,widgets) {
+        w->resize(e->size());
+    }
+}

@@ -79,6 +79,7 @@ public slots:
 
 protected:
     void closeEvent(QCloseEvent *event);
+    void resizeEvent(QResizeEvent *e);
 
 private slots:
     void showAboutFrame();
