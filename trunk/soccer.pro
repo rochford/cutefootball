@@ -17,10 +17,10 @@ symbian {
 
     # Add files and directories to ship with the application
     # by adapting the examples below.
-    soundFiles.sources = audio\\whistle.wav
+    soundFiles.sources = audio\\*.wav
     # file1.source = myfile
     # dir1.source = mydir
-    DEPLOYMENT += soundFiles # Crowd # file1 dir1
+    DEPLOYMENT += soundFiles # file1 dir1
 
     vendorinfo = "%{\"Tim Rochford-EN\"}" ":\"Tim Rochford\""
     my_deployment.pkg_prerules = vendorinfo

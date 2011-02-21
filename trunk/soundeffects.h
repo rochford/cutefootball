@@ -12,6 +12,7 @@ public:
         CrowdNoise,
         BallKick,
         Whistle,
+        FinalWhistle,
         Goal,
         Foul
     };
@@ -28,6 +29,7 @@ private:
     bool m_soundEnabled;
     QSound* m_ballKick;
     QSound* m_whistle;
+    QSound* m_finalwhistle;
     QSound* m_crowd;
 };
 
