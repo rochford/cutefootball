@@ -80,27 +80,22 @@
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="checkBoxExtraTime">
-        <property name="font">
-         <font>
-          <family>MS Shell Dlg 2</family>
-          <pointsize>8</pointsize>
-          <weight>50</weight>
-          <bold>false</bold>
-         </font>
-        </property>
-        <property name="contextMenuPolicy">
-         <enum>Qt::NoContextMenu</enum>
-        </property>
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
+       <widget class="QComboBox" name="extraTimeComboBox">
+        <item>
+         <property name="text">
+          <string>No Extra Time</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Extra Time And Penalties</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Golden Goal</string>
+         </property>
+        </item>
        </widget>
       </item>
      </layout>
@@ -108,31 +103,12 @@
     <item>
      <widget class="QLabel" name="label">
       <property name="text">
-       <string>Game Length</string>
+       <string>Game Length (minutes)</string>
       </property>
      </widget>
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <widget class="QSlider" name="horizontalSlider">
-        <property name="minimum">
-         <number>2</number>
-        </property>
-        <property name="maximum">
-         <number>10</number>
-        </property>
-        <property name="singleStep">
-         <number>1</number>
-        </property>
-        <property name="value">
-         <number>2</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
       <item>
        <widget class="QSpinBox" name="spinBox">
         <property name="minimum">
@@ -148,6 +124,19 @@
          <number>2</number>
         </property>
        </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
      </layout>
     </item>
@@ -182,59 +171,9 @@
  </widget>
  <tabstops>
   <tabstop>checkBoxSound</tabstop>
-  <tabstop>horizontalSlider</tabstop>
   <tabstop>buttonBox</tabstop>
   <tabstop>spinBox</tabstop>
  </tabstops>
  <resources/>
- <connections>
-  <connection>
-   <sender>horizontalSlider</sender>
-   <signal>sliderMoved(int)</signal>
-   <receiver>spinBox</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>50</x>
-     <y>176</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>139</x>
-     <y>176</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>spinBox</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>horizontalSlider</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>139</x>
-     <y>176</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>50</x>
-     <y>176</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>horizontalSlider</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>spinBox</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>135</x>
-     <y>80</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>286</x>
-     <y>79</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

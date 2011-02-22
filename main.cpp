@@ -13,9 +13,6 @@ int main(int argc, char *argv[])
     splash->showFullScreen();
     splash->setPixmap(px.scaled(QSize(splash->width(),splash->height())));
 
-    Qt::Alignment topRight = Qt::AlignRight | Qt::AlignTop;
-    splash->showMessage(QObject::tr("Loading..."), topRight);
-
     loadTranslations(a);
     loadStyleSheet(a);
 

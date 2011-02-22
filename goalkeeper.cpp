@@ -62,26 +62,28 @@ void GoalKeeper::advance(int phase)
 
 void GoalKeeper::gkAdvanceWithoutBall()
 {
-        // if the ball enters the penalty area then go for it, otherwise return to goal line
-        Team::Direction dir = m_team->getDirection();
-        MWindow::Action action;
+    // if the ball enters the penalty area then go for it, otherwise return to goal line
+    Team::Direction dir = m_team->getDirection();
+    MWindow::Action action;
 
-            if ( (dir == Team::SouthToNorth
-                && m_pitch->m_bottomPenaltyArea->contains(m_pitch->ball()->pos()) )
-            || (dir == Team::NorthToSouth
-                && m_pitch->m_topPenaltyArea->contains(m_pitch->ball()->pos())) ) {
+    if ( (dir == Team::SouthToNorth
+        && m_pitch->m_bottomPenaltyArea->contains(m_pitch->ball()->pos()) )
+    || (dir == Team::NorthToSouth
+        && m_pitch->m_topPenaltyArea->contains(m_pitch->ball()->pos())) ) {
 
-                action = calculateAction(pos(), m_pitch->ball()->pos());
-                move(action, m_pitch->ball()->pos());
-        } else {
-            QPointF ownGoal;
-            action = calculateAction( pos(), m_startPositionRectF.center() );
-            move(action, m_startPositionRectF.center());
-        }
+        qDebug() << "GoalKeeper::gkAdvanceWithoutBall";
+        action = calculateAction(pos(), m_pitch->ball()->pos());
+        move(action, m_pitch->ball()->pos());
+    } else {
+        QPointF ownGoal;
+        action = calculateAction( pos(), m_startPositionRectF.center() );
+        move(action, m_startPositionRectF.center());
+    }
 }
 
 void GoalKeeper::gkAdvanceWithBall()
 {
+    qDebug() << "GoalKeeper::gkAdvanceWithBall";
     Team::Direction dir = m_team->getDirection();
     if ( dir == Team::SouthToNorth )
         m_lastAction = MWindow::North;

@@ -78,7 +78,6 @@ public slots:
     void newGame(int homeTeam, int awayTeam);
 
 protected:
-    void closeEvent(QCloseEvent *event);
     void resizeEvent(QResizeEvent *e);
 
 private slots:
@@ -105,7 +104,6 @@ private:
 
     Ui::ExitConfirmationDialog uiExitConfirmationDialog;
     QDialog* m_exitDialog;
-    QCloseEvent* m_closeEvent;
     };
 
 #endif // MAINWINDOW_H

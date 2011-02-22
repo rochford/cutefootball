@@ -13,11 +13,17 @@ class settingsFrame : public QFrame
     Q_OBJECT
 
 public:
+
+    enum ExtraTime {
+        NoExtraTime,
+        ExtraTimeAndPenalties,
+        GoldenGoal
+    };
     explicit settingsFrame(MWindow *parent = 0);
     ~settingsFrame();
     int gameLengthMinutes() const { return m_gameLengthMinutes; }
     bool soundEnabled() const { return m_soundEnabled; }
-    bool extraTimeAllowed() const { return m_extraTime; }
+    ExtraTime extraTimeAllowed() const { return m_extraTime; }
 signals:
     void soundChanged(bool enabled);
 
@@ -28,7 +34,7 @@ private:
     Ui::settingsFrame *ui;
     int m_gameLengthMinutes;
     bool m_soundEnabled;
-    bool m_extraTime;
+    ExtraTime m_extraTime;
 };
 
 #endif // SETTINGSDIALOG_H
