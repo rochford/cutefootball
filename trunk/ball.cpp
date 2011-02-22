@@ -211,6 +211,7 @@ QVariant Ball::itemChange(GraphicsItemChange change, const QVariant &value)
              m_positionLocked = true;
              qDebug() << "Ball::itemChange goal scored";
              emit goalScored(m_pitch->m_topGoal->contains(newPos));
+             emit soundEvent(SoundEffects::Goal);
              setBallOwner(NULL);
              m_animationTimer->stop();
              m_lastPos = newPos;

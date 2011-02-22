@@ -8,7 +8,7 @@ SoundEffects::SoundEffects(QObject *parent) :
  //   m_ballKick = new QSound("kick.wav", this);
     m_whistle = new QSound("whistle.wav", this);
     m_finalwhistle = new QSound("finalwhistle.wav", this);
- //   m_crowd = new QSound("Crowd.wav", this);
+    m_crowd = new QSound("Crowd.wav", this);
 }
 
 SoundEffects::~SoundEffects()
@@ -16,7 +16,7 @@ SoundEffects::~SoundEffects()
 //    delete m_ballKick;
     delete m_whistle;
     delete m_finalwhistle;
- //   delete m_crowd;
+    delete m_crowd;
 }
 
 void SoundEffects::soundEvent(QString fileName)
@@ -35,7 +35,7 @@ void SoundEffects::soundEvent(GameSound e)
 //        m_ballKick->play();
 //        break;
     case CrowdNoise:
- //       m_crowd->play();
+        m_crowd->play();
         break;
     case FinalWhistle:
         m_finalwhistle->play();

@@ -3,7 +3,9 @@ QFrame, QDialog {
     border: none;
 }
 
-
+QDialog {
+    background-color: yellow;
+}
 
 QPushButton, QCheckbox {
     border: none;

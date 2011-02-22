@@ -61,6 +61,7 @@
     <addaction name="actionSettings"/>
     <addaction name="actionInputSettings"/>
     <addaction name="actionQuit"/>
+    <addaction name="actionPause"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -103,6 +104,11 @@
   <action name="actionInputSettings">
    <property name="text">
     <string>Input Settings</string>
+   </property>
+  </action>
+  <action name="actionPause">
+   <property name="text">
+    <string>Pause</string>
    </property>
   </action>
  </widget>

@@ -101,6 +101,7 @@ void MWindow::enableActions(bool gameInProgress)
     uiMainWindow.actionAbout->setEnabled(!gameInProgress);
     uiMainWindow.actionHelp->setEnabled(!gameInProgress);
     uiMainWindow.actionQuit->setEnabled(true);
+    uiMainWindow.actionPause->setEnabled(!gameInProgress);
 
     uiMainWindow.menubar->setEnabled(true);
     uiMainWindow.menuAbout->setEnabled(!gameInProgress);
@@ -158,43 +159,37 @@ void MWindow::showFrame(Frame f)
     m_settingsFrame->setVisible(false);
     m_inputSettingsFrame->setVisible(false);
     m_teamSelectionFrame->setVisible(false);
-    uiMainWindow.m_graphicsView->clearFocus();
 
     switch (f) {
     case MWindow::About:
-  //      m_aboutFrame->setFocus(Qt::ActiveWindowFocusReason);
         m_aboutFrame->setVisible(true);
+        m_aboutFrame->setFocus();
         break;
     case MWindow::Help:
-    //    m_helpFrame->setFocus(Qt::ActiveWindowFocusReason);
         m_helpFrame->setVisible(true);
+        m_helpFrame->setFocus();
         break;
     case MWindow::InputSettings:
-//        m_inputSettingsFrame->setFocus(Qt::ActiveWindowFocusReason);
         m_inputSettingsFrame->setVisible(true);
+        m_inputSettingsFrame->setFocus();
         break;
     case MWindow::Settings:
-//        m_settingsFrame->setFocus(Qt::ActiveWindowFocusReason);
         m_settingsFrame->setVisible(true);
+        m_settingsFrame->setFocus();
         break;
     case MWindow::MainMenu:
-//        m_mainMenuFrame->setFocus(Qt::ActiveWindowFocusReason);
         m_mainMenuFrame->setVisible(true);
+        m_mainMenuFrame->setFocus();
         break;
     case MWindow::GraphicsView:
-#if defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR)
-        // Toggle softkey visibility
-        setWindowFlags( windowFlags() ^ Qt::WindowSoftkeysVisibleHint );
-        showFullScreen();
-#endif //
         uiMainWindow.menubar->setVisible(true);
         uiMainWindow.menuAbout->setVisible(false);
         uiMainWindow.m_graphicsView->setVisible(true);
         uiMainWindow.m_graphicsView->setFocus();
         break;
     case MWindow::TeamSelection:
-//        m_teamSelectionFrame->setFocus(Qt::ActiveWindowFocusReason);
         m_teamSelectionFrame->setVisible(true);
+        m_teamSelectionFrame->setFocus();
         break;
     default:
         break;
@@ -217,11 +212,6 @@ void MWindow::showHelpFrame()
 void MWindow::showAboutFrame()
 {
     showFrame(MWindow::About);
-}
-
-void MWindow::closeEvent(QCloseEvent *event)
-{
-    event->accept();
 }
 
 void MWindow::resizeEvent(QResizeEvent *e)

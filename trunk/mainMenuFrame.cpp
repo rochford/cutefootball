@@ -20,3 +20,4 @@ mainMenuFrame::~mainMenuFrame()
 {
     delete ui;
 }
+

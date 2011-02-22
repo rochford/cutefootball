@@ -18,8 +18,9 @@ TeamSelectionFrame::TeamSelectionFrame(MWindow *parent) :
         ui->m_awayTeamComboBox->addItem(QIcon(QPixmap(flagFile)),t->briefName());
     }
 
+    ui->teamSelectionErrorLabel->setVisible(false);
     ui->m_homeTeamComboBox->setCurrentIndex(0);
-    ui->m_awayTeamComboBox->setCurrentIndex(1);
+    ui->m_awayTeamComboBox->setCurrentIndex(12);
 
     connect(ui->buttonBox, SIGNAL(accepted()), parent, SLOT(hideTeamSelectionFrame()));
     connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(startGame()));
@@ -36,10 +37,13 @@ TeamSelectionFrame::~TeamSelectionFrame()
 
 void TeamSelectionFrame::checkSelectedTeams(const QString &)
 {
-    if ( ui->m_homeTeamComboBox->currentText() == ui->m_awayTeamComboBox->currentText() )
-        ui->buttonBox->button(QDialogButtonBox::Ok)->setVisible(false);
-    else
-        ui->buttonBox->button(QDialogButtonBox::Ok)->setVisible(true);
+    if ( ui->m_homeTeamComboBox->currentText() == ui->m_awayTeamComboBox->currentText() ) {
+        ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
+        ui->teamSelectionErrorLabel->setVisible(true);
+    } else {
+        ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
+        ui->teamSelectionErrorLabel->setVisible(false);
+    }
 }
 
 void TeamSelectionFrame::startGame()
