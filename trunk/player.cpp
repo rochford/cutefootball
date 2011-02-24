@@ -231,16 +231,25 @@ QPainterPath Player::shape() const
 
 void Player::movePlayer(MWindow::Action action, QPointF destination)
 {
+
+    if (this->m_role == Player::GoalKeeper) {
+        qDebug() << "Player::movePlayer GoalKeeper start";
+        if (m_pitch->ball()->ballOwner())
+            qDebug() << "Player::movePlayer m_pitch->ball()->ballOwner() name " << m_pitch->ball()->ballOwner()->m_name;
+    }
     // if the ball is not owned then take ownership
     if (ballCollisionCheck() && !m_pitch->ball()->ballOwner()) {
+        qDebug() << "Player::movePlayer taken ball";
         m_hasBall = true;
         m_pitch->ball()->setBallOwner(this);
-    } else if (!ballCollisionCheck())
+    } else if (!ballCollisionCheck()) {
         m_hasBall = false;
-
-    if (m_hasBall)
+        qDebug() << "Player::movePlayer no ball";
+    }
+    if (m_hasBall) {
+        qDebug() << "Player::movePlayer moving ball";
         m_pitch->ball()->moveBall(action, m_speed);
-
+    }
     m_step++;
     // make the move
     switch(action)
@@ -272,6 +281,8 @@ void Player::movePlayer(MWindow::Action action, QPointF destination)
     default:
         break;
     }
+    if (this->m_role == Player::GoalKeeper)
+        qDebug() << "Player::movePlayer GoalKeeper end";
 }
 
 bool Player::withinShootingDistance() const
@@ -664,7 +675,12 @@ void Player::stopKeyEvent()
 
 void Player::createKeyboardActions()
 {
+    m_actions.insert( Qt::Key_Up, MWindow::North );
+    m_actions.insert( Qt::Key_Down, MWindow::South );
+    m_actions.insert( Qt::Key_Left, MWindow::West );
+    m_actions.insert( Qt::Key_Right, MWindow::East );
 #if defined(Q_OS_SYMBIAN)
+
     m_actions.insert( Qt::Key_2, MWindow::North );
     m_actions.insert( Qt::Key_3, MWindow::NorthEast );
     m_actions.insert( Qt::Key_9, MWindow::SouthEast );

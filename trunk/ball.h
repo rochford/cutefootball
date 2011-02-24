@@ -41,7 +41,10 @@ public:
         m_lastPlayerToTouchBall = p;
     }
     Player* lastPlayerToTouchBall() const { return m_lastPlayerToTouchBall; }
-    inline void setNoBallOwner() { m_ballOwner = NULL; }
+    inline void setNoBallOwner() {
+        qDebug() << "setNoBallOwner";
+        m_ballOwner = NULL;
+    }
 
 signals:
     void goalScored(bool topGoal);

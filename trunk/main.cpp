@@ -9,9 +9,16 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     QSplashScreen* splash = new QSplashScreen;
-    QPixmap px(":/images/soccer.svg");
     splash->showFullScreen();
-    splash->setPixmap(px.scaled(QSize(splash->width(),splash->height())));
+
+    if (splash->size() == QSize(240,320)) {
+        splash->setPixmap(QPixmap(":/images/splash240x320.svg"));
+    } else if (splash->size() == QSize(320,240)) {
+        splash->setPixmap(QPixmap(":/images/splash320x240.svg"));
+    } else {
+        QPixmap px = QPixmap(":/images/splash100x100.svg");
+        splash->setPixmap(px.scaled(QSize(splash->width(),splash->height())));
+    }
 
     loadTranslations(a);
     loadStyleSheet(a);

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   width="100"
+   height="100"
+   id="svg2839"
+   inkscape:version="0.47 r22583"
+   sodipodi:docname="splash100x100.svg">
+  <metadata
+     id="metadata2826">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1402"
+     inkscape:window-height="858"
+     id="namedview2824"
+     showgrid="false"
+     inkscape:zoom="8.34386"
+     inkscape:cx="120"
+     inkscape:cy="100.91268"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg2839" />
+  <defs
+     id="defs2841">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 160 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="240 : 160 : 1"
+       inkscape:persp3d-origin="120 : 106.66667 : 1"
+       id="perspective2828" />
+  </defs>
+  <g
+     transform="matrix(2.6047893,0,0,2.5857461,-0.71230647,-0.07124363)"
+     id="layer1">
+    <rect
+       width="38.501213"
+       height="38.665859"
+       x="0.14285713"
+       y="0.060532894"
+       id="rect2849"
+       style="fill:#ffcc00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    <text
+       x="19.54925"
+       y="21.026747"
+       id="text3625"
+       xml:space="preserve"
+       style="font-size:24.60645103px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#eb1414;fill-opacity:0.88372091;stroke:none;font-family:Times New Roman;-inkscape-font-specification:Times New Roman Bold"
+       sodipodi:linespacing="100%"><tspan
+         x="19.54925"
+         y="21.026747"
+         id="tspan3627"
+         style="font-size:24.60645103px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#eb1414;fill-opacity:0.88372091;font-family:Times New Roman;-inkscape-font-specification:Times New Roman Bold">5</tspan></text>
+    <text
+       x="19.268456"
+       y="30.36385"
+       id="text3625-1"
+       xml:space="preserve"
+       style="font-size:8.45846748px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#d81616;fill-opacity:1;stroke:none;font-family:Verdana;-inkscape-font-specification:Verdana Bold"
+       sodipodi:linespacing="100%"><tspan
+         x="19.268456"
+         y="30.36385"
+         id="tspan3627-7"
+         style="font-size:8.45846748px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#d81616;fill-opacity:1;font-family:Verdana;-inkscape-font-specification:Verdana Bold">SOCCER</tspan></text>
+  </g>
+</svg>
