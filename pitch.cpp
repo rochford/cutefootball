@@ -98,12 +98,18 @@ Pitch::~Pitch()
     if (m_motionTimer->isActive())
         m_motionTimer->stop();
     delete m_motionTimer;
-    delete m_game;
+
     delete m_firstHalfState;
     delete m_secondHalfState;
     delete m_extraTimeFirstHalfState;
     delete m_extraTimeSecondHalfState;
+    delete m_penaltiesState;
     delete m_allDone;
+    delete m_game;
+
+    delete m_grass;
+    delete m_scoreText;
+    delete m_ball;
 }
 
 Player* Pitch::selectNearestPlayer(Team* team)
@@ -203,8 +209,9 @@ void Pitch::layoutPitch()
 
     const int KPitchBoundaryWidth = 40;
     QPixmap pitchUnscaled(QString(":/images/pitch3.png"));
+//    QPixmap pitchUnscaled(QString(":/images/pitch4.svg"));
     QPixmap pitchScaled = pitchUnscaled.scaled(QSize(m_scene->width(),m_scene->height()));
-    m_grass = new QGraphicsPixmapItem(pitchScaled);
+    m_grass = new QGraphicsPixmapItem(pitchUnscaled /* pitchScaled */);
     m_scene->addItem(m_grass);
 
     // create the pitch
@@ -260,6 +267,7 @@ void Pitch::layoutPitch()
     m_halfStatisticsFrame->setVisible(false);
     m_halfStatisticsProxy = m_scene->addWidget(m_halfStatisticsFrame);
     m_halfStatisticsProxy->setZValue(ZMenus);
+    m_halfStatisticsProxy->setPos(0,(m_scene->height()/2.0));
 
     // create the goals
     m_bottomGoal = m_scene->addRect((m_scene->width() / 2)-60, m_scene->height()-KPitchBoundaryWidth,120,KPitchBoundaryWidth/2,

@@ -16,7 +16,8 @@ public:
                         Pitch* pitch,
                         Team* team);
 
-    enum { Type = UserType + 3 };
+    // goal keepers are players too
+    enum { Type = UserType + 2 };
     int type() const
         { return Type;}
 

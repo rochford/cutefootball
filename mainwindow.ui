@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>5-a side football</string>
+   <string>5 soccer</string>
   </property>
   <property name="windowIcon">
    <iconset resource="soccer.qrc">
@@ -107,8 +107,14 @@
    </property>
   </action>
   <action name="actionPause">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Pause</string>
+   </property>
+   <property name="softKeyRole">
+    <enum>QAction::NegativeSoftKey</enum>
    </property>
   </action>
  </widget>

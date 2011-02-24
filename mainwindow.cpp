@@ -43,7 +43,6 @@ MWindow::MWindow(QWidget *parent)
 
 MWindow::~MWindow()
 {
-    delete m_pitch;
     delete m_soundEffects;
     delete m_settingsFrame;
     delete m_aboutFrame;
@@ -51,6 +50,7 @@ MWindow::~MWindow()
     delete m_teamSelectionFrame;
     delete m_mainMenuFrame;
     delete m_exitDialog;
+    //    delete m_pitch;
 }
 
 void MWindow::removeContextMenus()
