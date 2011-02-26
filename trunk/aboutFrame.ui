@@ -41,7 +41,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>Copyright 2011, Tim Rochford</string>
+       <string notr="true">Copyright 2011, Tim Rochford</string>
       </property>
       <property name="scaledContents">
        <bool>false</bool>

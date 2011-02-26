@@ -43,6 +43,7 @@ void SoundEffects::soundEvent(GameSound e)
     case Whistle:
         m_whistle->play();
         break;
+    case BallRebound:
     case Goal:
     case Foul:
     default:

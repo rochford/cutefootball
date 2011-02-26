@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>desktop.qss</file>
+        <file>mobile.qss</file>
+    </qresource>
+</RCC>

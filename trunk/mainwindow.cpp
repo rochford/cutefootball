@@ -151,6 +151,14 @@ void MWindow::showInputSettingsFrame()
 
 void MWindow::showFrame(Frame f)
 {
+    /* Remove context menu from the all widgets. */
+    QWidgetList widgets = QApplication::allWidgets();
+    QWidget* w=0;
+    foreach(w,widgets) {
+        if (w->hasFocus())
+            qDebug() << w->objectName() << "start has focus!!!";
+    }
+
     uiMainWindow.menubar->setVisible(false);
     m_mainMenuFrame->setVisible(false);
     m_aboutFrame->setVisible(false);
@@ -159,40 +167,41 @@ void MWindow::showFrame(Frame f)
     m_settingsFrame->setVisible(false);
     m_inputSettingsFrame->setVisible(false);
     m_teamSelectionFrame->setVisible(false);
+    uiMainWindow.m_graphicsView->clearFocus();
 
     switch (f) {
     case MWindow::About:
         m_aboutFrame->setVisible(true);
-        m_aboutFrame->setFocus();
         break;
     case MWindow::Help:
         m_helpFrame->setVisible(true);
-        m_helpFrame->setFocus();
         break;
     case MWindow::InputSettings:
         m_inputSettingsFrame->setVisible(true);
-        m_inputSettingsFrame->setFocus();
         break;
     case MWindow::Settings:
         m_settingsFrame->setVisible(true);
-        m_settingsFrame->setFocus();
         break;
     case MWindow::MainMenu:
-        m_mainMenuFrame->setVisible(true);
-        m_mainMenuFrame->setFocus();
+        m_mainMenuFrame->showMaximized();
         break;
     case MWindow::GraphicsView:
         uiMainWindow.menubar->setVisible(true);
         uiMainWindow.menuAbout->setVisible(false);
-        uiMainWindow.m_graphicsView->setVisible(true);
+        //uiMainWindow.m_graphicsView->setVisible(true);
+        uiMainWindow.m_graphicsView->showMaximized();
         uiMainWindow.m_graphicsView->setFocus();
         break;
     case MWindow::TeamSelection:
         m_teamSelectionFrame->setVisible(true);
-        m_teamSelectionFrame->setFocus();
         break;
     default:
         break;
+    }
+    w=0;
+    foreach(w,widgets) {
+        if (w->hasFocus())
+            qDebug() << w->objectName() << "end has focus!!!";
     }
 }
 

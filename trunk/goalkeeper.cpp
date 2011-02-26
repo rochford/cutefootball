@@ -10,7 +10,41 @@ GoalKeeper::GoalKeeper(QString name,
                        Team* team)
     : Player(name,true,pitch,team,Player::GoalKeeper)
 {
+
+    connect(pitch->ball(), SIGNAL(shot(Team*,QPointF)),
+            this,SLOT(goalAttempt(Team*,QPointF)));
 }
+
+void GoalKeeper::goalAttempt(Team* t, QPointF dest)
+{
+    qDebug() << "GoalKeeper::goalAttempt by "<< t->briefName();
+
+    // if the ball enters the penalty area then go for it, otherwise return to goal line
+    Team::Direction dir = m_team->getDirection();
+    MWindow::Action action;
+
+    if ( (dir == Team::SouthToNorth
+        && m_pitch->m_bottomPenaltyArea->contains(dest)
+    || (dir == Team::NorthToSouth
+        && m_pitch->m_topPenaltyArea->contains(dest)) ) ){
+
+        qDebug() << "need to save it";
+        action = calculateAction(pos(), dest);
+        if (action == MWindow::East)
+            qDebug() << "dive east";
+        else
+            qDebug() << "dive west";
+    }
+}
+
+void GoalKeeper::createMoves()
+{
+    Player::createMoves();
+
+    m_moveDistance.insert(MWindow::DiveEast, QPointF(m_speed,0));
+    m_moveDistance.insert(MWindow::DiveWest, QPointF(-m_speed,0));
+}
+
 
 void GoalKeeper::createPixmaps()
 {
@@ -25,6 +59,10 @@ void GoalKeeper::createPixmaps()
 
     pixmapInsert(MWindow::Tackle, "tackleN.PNG", "tackleN.PNG", "tackleN.PNG", KGoalKeeperShirtColor, KGoalKeeperShortColor); // TODO XXX TIM
     pixmapInsert(MWindow::FallenOver, "pNW.PNG", "pNW1.PNG", "pNW2.PNG", KGoalKeeperShirtColor, KGoalKeeperShortColor); // TODO XXX TIM
+
+    pixmapInsert(MWindow::DiveEast, "tackleN.PNG", "tackleN.PNG", "tackleN.PNG", KGoalKeeperShirtColor, KGoalKeeperShortColor); // TODO XXX TIM
+    pixmapInsert(MWindow::DiveWest, "tackleN.PNG", "tackleN.PNG", "tackleN.PNG", KGoalKeeperShirtColor, KGoalKeeperShortColor); // TODO XXX TIM
+
     // set default pixmap
     setPixmap(m_images[MWindow::North].at(0));
 }
@@ -52,7 +90,7 @@ void GoalKeeper::advance(int phase)
     if (m_outOfAction->isActive())
         return;
     if ( hasBall() ) {
-        qDebug() << "GoalKeeper::advance has ball";
+  //      qDebug() << "GoalKeeper::advance has ball";
         gkAdvanceWithBall();
     } else {
         // qDebug() << "GoalKeeper::advance without ball";
@@ -83,7 +121,7 @@ void GoalKeeper::gkAdvanceWithoutBall()
 
 void GoalKeeper::gkAdvanceWithBall()
 {
-    qDebug() << "GoalKeeper::gkAdvanceWithBall";
+//    qDebug() << "GoalKeeper::gkAdvanceWithBall";
     Team::Direction dir = m_team->getDirection();
     if ( dir == Team::SouthToNorth )
         m_lastAction = MWindow::North;

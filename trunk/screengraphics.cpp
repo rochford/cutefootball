@@ -11,6 +11,7 @@ ScreenGraphics::ScreenGraphics(Pitch *p)
     m_scoreText(NULL)
 {
     m_scoreText = m_pitch->m_scene->addSimpleText(QString("XXX"),KFont);
+    m_scoreText->setScale(1.0);
     m_scoreText->setVisible(false);
     m_scoreText->setZValue(Pitch::ZScoreText);
 

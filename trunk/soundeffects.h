@@ -14,7 +14,8 @@ public:
         Whistle,
         FinalWhistle,
         Goal,
-        Foul
+        Foul,
+        BallRebound
     };
 
     explicit SoundEffects(QObject *parent = 0);

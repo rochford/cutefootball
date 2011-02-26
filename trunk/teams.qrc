@@ -1,22 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>teams/teams.txt</file>
-        <file>teams/Andorra.txt</file>
-        <file>teams/England.txt</file>
-        <file>teams/Estonia.txt</file>
-        <file>teams/Finland.txt</file>
-        <file>teams/France.txt</file>
-        <file>teams/Germany.txt</file>
-        <file>teams/Greece.txt</file>
-        <file>teams/Italy.txt</file>
-        <file>teams/Netherlands.txt</file>
-        <file>teams/Portugal.txt</file>
-        <file>teams/Russia.txt</file>
-        <file>teams/SanMarino.txt</file>
-        <file>teams/Spain.txt</file>
-        <file>teams/Sweden.txt</file>
-        <file>teams/Switzerland.txt</file>
-        <file>teams/Turkey.txt</file>
         <file>images/flags/England.png</file>
         <file>images/flags/Andorra.png</file>
         <file>images/flags/Turkey.png</file>
@@ -33,5 +16,38 @@
         <file>images/flags/France.png</file>
         <file>images/flags/Finland.png</file>
         <file>images/flags/Estonia.png</file>
+        <file>teams/Andorra.txt</file>
+        <file>teams/Austria.txt</file>
+        <file>teams/Belguim.txt</file>
+        <file>teams/Croatia.txt</file>
+        <file>teams/Czech.txt</file>
+        <file>teams/Denmark.txt</file>
+        <file>teams/England.txt</file>
+        <file>teams/Estonia.txt</file>
+        <file>teams/Finland.txt</file>
+        <file>teams/France.txt</file>
+        <file>teams/Germany.txt</file>
+        <file>teams/Greece.txt</file>
+        <file>teams/Hungary.txt</file>
+        <file>teams/Iceland.txt</file>
+        <file>teams/Italy.txt</file>
+        <file>teams/Netherlands.txt</file>
+        <file>teams/NorthernIreland.txt</file>
+        <file>teams/Norway.txt</file>
+        <file>teams/Poland.txt</file>
+        <file>teams/Portugal.txt</file>
+        <file>teams/RepIreland.txt</file>
+        <file>teams/Romania.txt</file>
+        <file>teams/Russia.txt</file>
+        <file>teams/SanMarino.txt</file>
+        <file>teams/Scotland.txt</file>
+        <file>teams/Slovakia.txt</file>
+        <file>teams/Spain.txt</file>
+        <file>teams/Sweden.txt</file>
+        <file>teams/Switzerland.txt</file>
+        <file>teams/teams.txt</file>
+        <file>teams/Turkey.txt</file>
+        <file>teams/Ukraine.txt</file>
+        <file>teams/Wales.txt</file>
     </qresource>
 </RCC>

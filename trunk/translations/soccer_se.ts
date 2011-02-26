@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="en_US">
+<TS version="2.0" language="se_FI">
 <context>
     <name>ExitConfirmationDialog</name>
     <message>
@@ -250,6 +250,11 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>teamSelectionFrame</name>
     <message>
+        <location filename="../teamSelectionFrame.ui" line="84"/>
+        <source>Computer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../teamSelectionFrame.ui" line="71"/>
         <source>Away</source>
         <translation type="unfinished"></translation>
@@ -272,11 +277,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../teamSelectionFrame.ui" line="171"/>
         <source>MUST CHOOSE TWO DIFFERENT TEAMS!!!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../teamSelectionFrame.ui" line="84"/>
-        <source>Computer</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

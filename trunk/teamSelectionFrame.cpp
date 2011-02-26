@@ -11,6 +11,10 @@ TeamSelectionFrame::TeamSelectionFrame(MWindow *parent) :
     ui(new Ui::teamSelectionFrame)
 {
     ui->setupUi(this);
+    ui->buttonBox->button(QDialogButtonBox::Ok)
+            ->setText(tr("Play"));
+    ui->buttonBox->button(QDialogButtonBox::Cancel)
+            ->setText(tr("Main Menu"));
 
     foreach( Team* t, m_parent->pitch()->teams()) {
         QString flagFile(QString(":/images/flags/") + t->fullName() + QString(".png"));

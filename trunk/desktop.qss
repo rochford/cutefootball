@@ -12,7 +12,7 @@ QPushButton, QCheckbox {
     color: red;
     background-color: yellow;
     font: bold large "Times";
-    font-size: 18px;
+    font-size: 24px;
 }
 
 QPushButton:pressed {
@@ -34,35 +34,46 @@ QSpinBox {
     color: red;
     background-color: yellow;
     font: bold large "Times";
-    font-size: 18px;
+    font-size: 24px;
 }
 
 QLabel {
     color: red;
     background-color: yellow;
     font: bold large "Times";
-    font-size: 18px;
+    font-size: 24px;
 }
+
+QLabel#copyrightLabel,
+QLabel#versionLabel {
+    font-size: 16px;
+    color: white;
+}
+
 QComboBox {
     color: red;
     background-color: yellow;
     font: bold large "Times";
-    font-size: 18px;
+    font-size: 24px;
 }
 
-#HalfStatisticsFrame {
-    background-color: grey;
+QFrame#HalfStatisticsFrame {
+    background: transparent;
+    border: none;
     color: gold;
-    font-size: 2px;
+    font-size: 8px;
 }
 
-/*
-QComboBox:hover {
-    color: yellow;
-    background-color: red;
+QLabel#shotsLabel,
+QLabel#goalsLabel,
+QLabel#m_homeTeamName,
+QLabel#m_homeGoals,
+QLabel#m_homeShots,
+QLabel#m_awayTeamName,
+QLabel#m_awayGoals,
+QLabel#m_awayShots {
+    font: bold large "Times";
+    font-size: 18px;
+    color: gold;
 }
-QComboBox:focus {
-    background-color: red;
-    color: yellow;
-}
-*/
+

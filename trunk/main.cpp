@@ -2,7 +2,6 @@
 #include "mainwindow.h"
 
 void loadStyleSheet(QApplication& app);
-void loadTranslations(QApplication& app);
 
 int main(int argc, char *argv[])
 {
@@ -20,8 +19,13 @@ int main(int argc, char *argv[])
         splash->setPixmap(px.scaled(QSize(splash->width(),splash->height())));
     }
 
-    loadTranslations(a);
     loadStyleSheet(a);
+
+    QString locale(QString("soccer_") + QLocale::system().name());
+    QTranslator appTranslator;
+
+    appTranslator.load(locale, ":/translations/");
+    a.installTranslator(&appTranslator);
 
     MWindow window;
     window.showMaximized();
@@ -33,18 +37,14 @@ int main(int argc, char *argv[])
 
 void loadStyleSheet(QApplication& app)
 {
-    QFile f(":/stylesheet.qss");
+#if defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR)
+    QFile f(":/mobile.qss");
+#else
+    QFile f(":/desktop.qss");
+#endif
     f.open(QIODevice::ReadOnly | QIODevice::Text);
     QByteArray data = f.readAll();
     f.close();
 
     app.setStyleSheet(QString(data));
-}
-
-void loadTranslations(QApplication& app)
-{
-    QString locale("soccer_" + QLocale::system().name());
-    QTranslator appTranslator;
-    appTranslator.load(locale, ":/translations/");
-    app.installTranslator(&appTranslator);
 }

@@ -209,8 +209,7 @@ void Pitch::layoutPitch()
 
     const int KPitchBoundaryWidth = 40;
     QPixmap pitchUnscaled(QString(":/images/pitch3.png"));
-//    QPixmap pitchUnscaled(QString(":/images/pitch4.svg"));
-    QPixmap pitchScaled = pitchUnscaled.scaled(QSize(m_scene->width(),m_scene->height()));
+//    QPixmap pitchScaled = pitchUnscaled.scaled(QSize(m_scene->width(),m_scene->height()));
     m_grass = new QGraphicsPixmapItem(pitchUnscaled /* pitchScaled */);
     m_scene->addItem(m_grass);
 
@@ -267,7 +266,7 @@ void Pitch::layoutPitch()
     m_halfStatisticsFrame->setVisible(false);
     m_halfStatisticsProxy = m_scene->addWidget(m_halfStatisticsFrame);
     m_halfStatisticsProxy->setZValue(ZMenus);
-    m_halfStatisticsProxy->setPos(0,(m_scene->height()/2.0));
+    //m_halfStatisticsProxy->setPos(0,(m_scene->height()/2.0));
 
     // create the goals
     m_bottomGoal = m_scene->addRect((m_scene->width() / 2)-60, m_scene->height()-KPitchBoundaryWidth,120,KPitchBoundaryWidth/2,

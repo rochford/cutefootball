@@ -6,133 +6,136 @@
     <message>
         <location filename="../exitconfirmationdialog.ui" line="14"/>
         <source>Exit</source>
-        <translation type="unfinished"></translation>
+        <translation>Lopeta</translation>
     </message>
     <message>
         <location filename="../exitconfirmationdialog.ui" line="29"/>
         <source>Are you sure you want to quit?</source>
-        <translation type="unfinished"></translation>
+        <translation>Haluatko varmasti lopettaa?</translation>
     </message>
 </context>
 <context>
     <name>HalfStatisticsFrame</name>
     <message>
-        <location filename="../halfstatisticsframe.ui" line="43"/>
         <source>HomeTeam</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Kotijoukkue</translation>
     </message>
     <message>
-        <location filename="../halfstatisticsframe.ui" line="53"/>
         <source>Away Team</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../halfstatisticsframe.ui" line="82"/>
-        <location filename="../halfstatisticsframe.ui" line="89"/>
-        <location filename="../halfstatisticsframe.ui" line="124"/>
-        <location filename="../halfstatisticsframe.ui" line="131"/>
-        <source>NNN</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Vierasjoukkue</translation>
     </message>
     <message>
         <location filename="../halfstatisticsframe.ui" line="100"/>
         <source>Goals</source>
-        <translation type="unfinished"></translation>
+        <translation>Maalit</translation>
     </message>
     <message>
         <location filename="../halfstatisticsframe.ui" line="110"/>
         <source>Shots</source>
-        <translation type="unfinished"></translation>
+        <translation>Potkut</translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
         <location filename="../mainwindow.ui" line="14"/>
-        <source>5-a side football</source>
-        <translation type="unfinished"></translation>
+        <source>5 soccer</source>
+        <translation></translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="58"/>
         <source>File</source>
-        <translation type="unfinished"></translation>
+        <translation>Tiedosto</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="67"/>
-        <location filename="../mainwindow.ui" line="97"/>
-        <location filename="../mainwindow.ui" line="100"/>
+        <location filename="../mainwindow.ui" line="68"/>
+        <location filename="../mainwindow.ui" line="98"/>
+        <location filename="../mainwindow.ui" line="101"/>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation>Apua</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="77"/>
+        <location filename="../mainwindow.ui" line="78"/>
         <source>Play</source>
-        <translation type="unfinished"></translation>
+        <translation>Pelaa</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="82"/>
+        <location filename="../mainwindow.ui" line="83"/>
         <source>Quit</source>
-        <translation type="unfinished"></translation>
+        <translation>Lopeta</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="87"/>
+        <location filename="../mainwindow.ui" line="88"/>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>Lisätiedot</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="92"/>
+        <location filename="../mainwindow.ui" line="93"/>
         <source>Game Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Pelin asetukset</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="105"/>
+        <location filename="../mainwindow.ui" line="106"/>
         <source>Input Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Näppäinasetukset</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.ui" line="114"/>
+        <source>Pause</source>
+        <translation>Tauko</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../compileTimeSettings.h" line="8"/>
+        <location filename="../version.h" line="9"/>
         <source>version %1.%2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../main.cpp" line="18"/>
-        <source>Loading...</source>
-        <translation type="unfinished"></translation>
+        <translation>versio %1 %2</translation>
     </message>
     <message>
         <location filename="../pitch.h" line="31"/>
         <source>First half</source>
-        <translation type="unfinished"></translation>
+        <translation>Ensimmäinen puoliaika</translation>
     </message>
     <message>
         <location filename="../pitch.h" line="32"/>
         <source>Second half</source>
-        <translation type="unfinished"></translation>
+        <translation>Toinen puoliaika</translation>
     </message>
     <message>
         <location filename="../pitch.h" line="33"/>
         <source>Extra Time First half</source>
-        <translation type="unfinished"></translation>
+        <translation>Jatkoaika ensimmäinen puoliaika</translation>
     </message>
     <message>
         <location filename="../pitch.h" line="34"/>
         <source>Extra Time Second half</source>
-        <translation type="unfinished"></translation>
+        <translation>Jatkoaika toinen puoliaika</translation>
     </message>
     <message>
         <location filename="../pitch.h" line="35"/>
         <source>penalty shoot out</source>
+        <translation>Rangaistuspotkut</translation>
+    </message>
+</context>
+<context>
+    <name>TeamSelectionFrame</name>
+    <message>
+        <location filename="../teamSelectionFrame.cpp" line="15"/>
+        <source>Play</source>
+        <translation type="unfinished">Pelaa</translation>
+    </message>
+    <message>
+        <location filename="../teamSelectionFrame.cpp" line="17"/>
+        <source>Main Menu</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>aboutFrame</name>
     <message>
-        <location filename="../aboutFrame.ui" line="44"/>
-        <source>Copyright 2011, Tim Rochford</source>
+        <location filename="../aboutFrame.cpp" line="13"/>
+        <source>Main Menu</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -145,58 +148,68 @@
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Only goalkeepers are allowed in the penalty area. A foul will result if an outfield player enters the penalty area. Game starts with a drop ball in the centre circle. No sliding tackles are allowed.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../helpFrame.cpp" line="12"/>
+        <source>Main Menu</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>inputSettingsFrame</name>
     <message>
-        <location filename="../inputSettingsFrame.ui" line="41"/>
-        <source>Keyboard controls are 1,2,3,4,6,7,8,9, and 5 to tackle, pass and shoot. A shot requires a long press. Players automatically tackle if they dont have the ball.</source>
+        <location filename="../inputSettingsFrame.ui" line="156"/>
+        <source>5 to tackle if player does not have the ball. if player has ball, then short press to pass, long press to shoot</source>
+        <translation>5 näppäinlyöntiä jos pelaajalle ei palloa. Jos pelaajalla pallo, lyhyt lyönti syöttöön, pitkä lyönti potkuun</translation>
+    </message>
+    <message>
+        <location filename="../inputsettingsframe.cpp" line="13"/>
+        <source>Main Menu</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>mainMenuFrame</name>
     <message>
-        <location filename="../mainMenuFrame.ui" line="43"/>
-        <location filename="../mainMenuFrame.ui" line="140"/>
+        <location filename="../mainMenuFrame.ui" line="56"/>
+        <location filename="../mainMenuFrame.ui" line="184"/>
         <source>Play</source>
-        <translation type="unfinished"></translation>
+        <translation>Pelaa</translation>
     </message>
     <message>
-        <location filename="../mainMenuFrame.ui" line="50"/>
+        <location filename="../mainMenuFrame.ui" line="63"/>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Pelin asetukset</translation>
     </message>
     <message>
-        <location filename="../mainMenuFrame.ui" line="57"/>
-        <location filename="../mainMenuFrame.ui" line="160"/>
+        <location filename="../mainMenuFrame.ui" line="70"/>
+        <location filename="../mainMenuFrame.ui" line="204"/>
         <source>Keyboard settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Näppäinasetukset</translation>
     </message>
     <message>
-        <location filename="../mainMenuFrame.ui" line="64"/>
-        <location filename="../mainMenuFrame.ui" line="165"/>
+        <location filename="../mainMenuFrame.ui" line="77"/>
+        <location filename="../mainMenuFrame.ui" line="209"/>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation>Apua</translation>
     </message>
     <message>
-        <location filename="../mainMenuFrame.ui" line="71"/>
-        <location filename="../mainMenuFrame.ui" line="155"/>
+        <location filename="../mainMenuFrame.ui" line="84"/>
+        <location filename="../mainMenuFrame.ui" line="199"/>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>Lisätiedot</translation>
     </message>
     <message>
-        <location filename="../mainMenuFrame.ui" line="78"/>
-        <location filename="../mainMenuFrame.ui" line="150"/>
+        <location filename="../mainMenuFrame.ui" line="91"/>
+        <location filename="../mainMenuFrame.ui" line="194"/>
         <source>Quit</source>
-        <translation type="unfinished"></translation>
+        <translation>Lopeta</translation>
     </message>
     <message>
-        <location filename="../mainMenuFrame.ui" line="145"/>
+        <location filename="../mainMenuFrame.ui" line="189"/>
         <source>Game Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Pelin asetukset</translation>
     </message>
 </context>
 <context>
@@ -204,47 +217,87 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../settingsFrame.ui" line="40"/>
         <source>Sound</source>
-        <translation type="unfinished"></translation>
+        <translation>Äänet</translation>
     </message>
     <message>
-        <location filename="../settingsFrame.ui" line="78"/>
+        <location filename="../settingsFrame.ui" line="81"/>
         <source>Extra Time</source>
+        <translation>Jatkoaika</translation>
+    </message>
+    <message>
+        <location filename="../settingsFrame.ui" line="92"/>
+        <source>No Extra Time</source>
+        <translation>Ei jatkoaikaa</translation>
+    </message>
+    <message>
+        <location filename="../settingsFrame.ui" line="97"/>
+        <source>Extra Time And Penalties</source>
+        <translation>Jatkoaika ja rangaistuspotkut</translation>
+    </message>
+    <message>
+        <location filename="../settingsFrame.ui" line="102"/>
+        <source>Golden Goal</source>
+        <translation>Kultainen maali</translation>
+    </message>
+    <message>
+        <location filename="../settingsFrame.ui" line="112"/>
+        <source>Game Length (minutes)</source>
+        <translation>Pelin pituus (minuuttia)</translation>
+    </message>
+    <message>
+        <location filename="../settingsFrame.cpp" line="12"/>
+        <source>Save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settingsFrame.ui" line="111"/>
-        <source>Game Length</source>
+        <location filename="../settingsFrame.cpp" line="14"/>
+        <source>Main Menu</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>teamSelectionFrame</name>
     <message>
-        <location filename="../teamSelectionFrame.ui" line="38"/>
+        <source>Away Team</source>
+        <translation type="obsolete">Vierasjoukkue</translation>
+    </message>
+    <message>
+        <source>Home Team</source>
+        <translation type="obsolete">Kotijoukkue</translation>
+    </message>
+    <message>
+        <location filename="../teamSelectionFrame.ui" line="71"/>
+        <source>Away</source>
+        <translation>Vieras</translation>
+    </message>
+    <message>
+        <location filename="../teamSelectionFrame.ui" line="98"/>
+        <source>Home</source>
+        <translation>Koti</translation>
+    </message>
+    <message>
+        <location filename="../teamSelectionFrame.ui" line="137"/>
+        <source>Player</source>
+        <translation>Pelaaja</translation>
+    </message>
+    <message>
+        <location filename="../teamSelectionFrame.ui" line="156"/>
         <source>Team Selection</source>
-        <translation type="unfinished"></translation>
+        <translation>Joukkueen valinta</translation>
     </message>
     <message>
-        <location filename="../teamSelectionFrame.ui" line="49"/>
-        <source>Home
-Team</source>
-        <translation type="unfinished"></translation>
+        <source>DIFFICULTY:</source>
+        <translation type="obsolete">Vaikeusaste</translation>
     </message>
     <message>
-        <location filename="../teamSelectionFrame.ui" line="57"/>
-        <source>Player 1</source>
-        <translation type="unfinished"></translation>
+        <location filename="../teamSelectionFrame.ui" line="171"/>
+        <source>MUST CHOOSE TWO DIFFERENT TEAMS!!!</source>
+        <translation>TÄYTYY VALITA KAKSI ERI JOUKKUETTA</translation>
     </message>
     <message>
         <location filename="../teamSelectionFrame.ui" line="84"/>
-        <source>Away 
-team</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../teamSelectionFrame.ui" line="92"/>
         <source>Computer</source>
-        <translation type="unfinished"></translation>
+        <translation>Tietokone</translation>
     </message>
 </context>
 </TS>
