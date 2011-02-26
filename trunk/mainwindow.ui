@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>5 soccer</string>
+   <string notr="true">5 soccer</string>
   </property>
   <property name="windowIcon">
    <iconset resource="soccer.qrc">

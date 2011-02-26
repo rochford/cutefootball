@@ -6,12 +6,12 @@
     <message>
         <location filename="../exitconfirmationdialog.ui" line="14"/>
         <source>Exit</source>
-        <translation type="unfinished"></translation>
+        <translation>Exit</translation>
     </message>
     <message>
         <location filename="../exitconfirmationdialog.ui" line="29"/>
         <source>Are you sure you want to quit?</source>
-        <translation type="unfinished"></translation>
+        <translation>Etes-vous sûr de vouloir quitter?</translation>
     </message>
 </context>
 <context>
@@ -19,47 +19,42 @@
     <message>
         <location filename="../halfstatisticsframe.ui" line="100"/>
         <source>Goals</source>
-        <translation type="unfinished"></translation>
+        <translation>Objectifs</translation>
     </message>
     <message>
         <location filename="../halfstatisticsframe.ui" line="110"/>
         <source>Shots</source>
-        <translation type="unfinished"></translation>
+        <translation>Plans</translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../mainwindow.ui" line="14"/>
-        <source>5 soccer</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../mainwindow.ui" line="58"/>
         <source>File</source>
-        <translation type="unfinished"></translation>
+        <translation>Fichier</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="68"/>
         <location filename="../mainwindow.ui" line="98"/>
         <location filename="../mainwindow.ui" line="101"/>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation>Aide</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="78"/>
         <source>Play</source>
-        <translation type="unfinished"></translation>
+        <translation>Jouer</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="83"/>
         <source>Quit</source>
-        <translation type="unfinished"></translation>
+        <translation>Exit</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="88"/>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>A propos</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="93"/>
@@ -115,7 +110,7 @@
     <message>
         <location filename="../teamSelectionFrame.cpp" line="15"/>
         <source>Play</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Jouer</translation>
     </message>
     <message>
         <location filename="../teamSelectionFrame.cpp" line="17"/>
@@ -164,42 +159,42 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>mainMenuFrame</name>
     <message>
-        <location filename="../mainMenuFrame.ui" line="56"/>
-        <location filename="../mainMenuFrame.ui" line="184"/>
+        <location filename="../mainMenuFrame.ui" line="59"/>
+        <location filename="../mainMenuFrame.ui" line="180"/>
         <source>Play</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Jouer</translation>
     </message>
     <message>
-        <location filename="../mainMenuFrame.ui" line="63"/>
+        <location filename="../mainMenuFrame.ui" line="66"/>
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainMenuFrame.ui" line="70"/>
-        <location filename="../mainMenuFrame.ui" line="204"/>
-        <source>Keyboard settings</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mainMenuFrame.ui" line="77"/>
-        <location filename="../mainMenuFrame.ui" line="209"/>
+        <location filename="../mainMenuFrame.ui" line="80"/>
+        <location filename="../mainMenuFrame.ui" line="208"/>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Aide</translation>
     </message>
     <message>
-        <location filename="../mainMenuFrame.ui" line="84"/>
-        <location filename="../mainMenuFrame.ui" line="199"/>
+        <location filename="../mainMenuFrame.ui" line="195"/>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">A propos</translation>
     </message>
     <message>
-        <location filename="../mainMenuFrame.ui" line="91"/>
-        <location filename="../mainMenuFrame.ui" line="194"/>
+        <location filename="../mainMenuFrame.ui" line="87"/>
+        <location filename="../mainMenuFrame.ui" line="190"/>
         <source>Quit</source>
+        <translation type="unfinished">Exit</translation>
+    </message>
+    <message>
+        <location filename="../mainMenuFrame.ui" line="73"/>
+        <location filename="../mainMenuFrame.ui" line="200"/>
+        <location filename="../mainMenuFrame.ui" line="203"/>
+        <source>Keys</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainMenuFrame.ui" line="189"/>
+        <location filename="../mainMenuFrame.ui" line="185"/>
         <source>Game Settings</source>
         <translation type="unfinished"></translation>
     </message>
@@ -250,32 +245,32 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>teamSelectionFrame</name>
     <message>
-        <location filename="../teamSelectionFrame.ui" line="84"/>
+        <location filename="../teamSelectionFrame.ui" line="71"/>
         <source>Computer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../teamSelectionFrame.ui" line="71"/>
+        <location filename="../teamSelectionFrame.ui" line="58"/>
         <source>Away</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../teamSelectionFrame.ui" line="98"/>
+        <location filename="../teamSelectionFrame.ui" line="85"/>
         <source>Home</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../teamSelectionFrame.ui" line="137"/>
+        <location filename="../teamSelectionFrame.ui" line="111"/>
         <source>Player</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../teamSelectionFrame.ui" line="156"/>
+        <location filename="../teamSelectionFrame.ui" line="130"/>
         <source>Team Selection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../teamSelectionFrame.ui" line="171"/>
+        <location filename="../teamSelectionFrame.ui" line="145"/>
         <source>MUST CHOOSE TWO DIFFERENT TEAMS!!!</source>
         <translation type="unfinished"></translation>
     </message>

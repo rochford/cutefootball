@@ -14,7 +14,7 @@ Ball::Ball(Pitch* pitch)
     destination_(QPointF(0,0)),
     start_(m_pitch->m_scene->sceneRect().center()),
     step_(0),
-    animation_(NULL),
+    m_animation(NULL),
     m_animationTimer(NULL),
     m_ballOwner(NULL),
     m_lastPlayerToTouchBall(NULL),
@@ -24,6 +24,9 @@ Ball::Ball(Pitch* pitch)
     m_ballOwnerTimer->setInterval(250);
     m_ballOwnerTimer->start();
 
+    QSize pixmapSize = pixmap().size();
+    pixmapSize.scale(QSizeF(20,20).toSize(), Qt::KeepAspectRatio);
+
     QBitmap bitmap = pixmap().createMaskFromColor(KCuteFootballMaskColor);
     pixmap().setMask(bitmap);
 
@@ -31,12 +34,12 @@ Ball::Ball(Pitch* pitch)
     setStartingPosition();
     setZValue(Pitch::ZBall);
 
-    animation_ = new QGraphicsItemAnimation(this);
+    m_animation = new QGraphicsItemAnimation(this);
     m_animationTimer = new QTimeLine(1000, this);
     m_animationTimer->setFrameRange(0, 40);
 
-    animation_->setItem(this);
-    animation_->setTimeLine(m_animationTimer);
+    m_animation->setItem(this);
+    m_animation->setTimeLine(m_animationTimer);
     connect(m_animationTimer, SIGNAL(frameChanged(int)), this, SLOT(updateBall(int)));
     connect(m_ballOwnerTimer, SIGNAL(timeout()), this, SLOT(updateBallOwner()));
 }
@@ -45,7 +48,7 @@ Ball::~Ball()
 {
     m_ballOwnerTimer->stop();
     delete m_ballOwnerTimer;
-    delete animation_;
+    delete m_animation;
     delete m_animationTimer;
 }
 
@@ -82,8 +85,10 @@ void Ball::paint(QPainter *painter,
                  QWidget *widget)
 {
     // Scale QGraphicsPixmapItem to wanted 'size' and keep the aspect ratio
-    QSize pixmapSize = pixmap().size();
-    pixmapSize.scale(QSizeF(20,20).toSize(), Qt::KeepAspectRatio);
+
+//  Moved to ctor
+//    QSize pixmapSize = pixmap().size();
+//    pixmapSize.scale(QSizeF(20,20).toSize(), Qt::KeepAspectRatio);
 
     // Draw QGraphicsPixmapItem face
     painter->drawPixmap(boundingRect().toRect(), pixmap());
@@ -156,20 +161,22 @@ void Ball::kickBall(MWindow::Action action, QPointF destination)
     setNoBallOwner();
 
     // calculate the difference between present and destination
-    QPointF tmp = pos();
+    QPointF tmp(pos());
+
+    m_animationTimer->stop();
 
     qreal stepX = (destination.x() - tmp.x()) / 40.0;
     qreal stepY = (destination.y() - tmp.y()) / 40.0;
 
     for (int i = 0; i <= 40; ++i) {
-        QPointF newPos(tmp.x() + stepX,tmp.y() + stepY);
-        animation_->setPosAt(i / 40.0, newPos);
+//        QPointF newPos = tmp + QPointF(stepX,stepY);
+        QPointF diff(stepX,stepY);
+
+        m_animation->setPosAt(i / 40.0, tmp + diff);
         // Rotation in animations does not seem to work
         // animation_->setRotationAt(i / 40.0, i*90.0);
-        tmp.setX(tmp.x() + stepX);
-        tmp.setY(tmp.y() + stepY);
+        tmp = tmp + diff;
     }
-    m_animationTimer->stop();
     m_animationTimer->start();
 
     if (action == MWindow::Shot)
@@ -182,7 +189,7 @@ void Ball::updateBall(int frame)
   //  qDebug() << "Ball::updateBall" << frame;
     // animation may no longer be running due to a goal
     if ( (m_animationTimer->state() == QTimeLine::Running) && !m_positionLocked ) {
-        QPointF newPos = animation_->posAt(frame/40.0);
+        QPointF newPos = m_animation->posAt(frame/40.0);
         if (!m_pitch->m_footballPitch->contains(newPos))
             qDebug() << "Ball::updateBall XXX error" << frame;
         setPos(newPos);

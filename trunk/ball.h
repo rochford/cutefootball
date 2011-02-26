@@ -82,7 +82,7 @@ private:
     QPointF m_lastPos;
 
     // ball passing animation
-    QGraphicsItemAnimation *animation_;
+    QGraphicsItemAnimation *m_animation;
     QTimeLine *m_animationTimer;
 
     Player* m_lastPlayerToTouchBall; // can be null // NOT OWNED
