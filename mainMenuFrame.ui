@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>mainMenuFrame</class>
  <widget class="QFrame" name="mainMenuFrame">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -67,7 +70,7 @@
       <item>
        <widget class="QPushButton" name="m_inputBtn">
         <property name="text">
-         <string>Keyboard settings</string>
+         <string>Keys</string>
         </property>
        </widget>
       </item>
@@ -75,13 +78,6 @@
        <widget class="QPushButton" name="m_informationBtn">
         <property name="text">
          <string>Help</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="m_aboutBtn">
-        <property name="text">
-         <string>About</string>
         </property>
        </widget>
       </item>
@@ -201,7 +197,10 @@ Tim Rochford</string>
   </action>
   <action name="actionInputSettings">
    <property name="text">
-    <string>Keyboard settings</string>
+    <string>Keys</string>
+   </property>
+   <property name="toolTip">
+    <string>Keys</string>
    </property>
   </action>
   <action name="actionHelp">
@@ -237,22 +236,6 @@ Tim Rochford</string>
     <hint type="sourcelabel">
      <x>120</x>
      <y>100</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>m_aboutBtn</sender>
-   <signal>clicked()</signal>
-   <receiver>actionAbout</receiver>
-   <slot>trigger()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>120</x>
-     <y>158</y>
     </hint>
     <hint type="destinationlabel">
      <x>-1</x>

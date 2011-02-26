@@ -130,7 +130,9 @@ OTHER_FILES += \
     desktop.qss \
     mobile.qss \
     teams/Ireland.txt \
-    teams/Belgium.txt
+    teams/Belgium.txt \
+    teams/Serbia.txt \
+    teams/Malta.txt
 
 # Please do not modify the following two lines. Required for deployment.
 include(deployment.pri)

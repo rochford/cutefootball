@@ -67,5 +67,7 @@
         <file>teams/Turkey.txt</file>
         <file>teams/Ukraine.txt</file>
         <file>teams/Wales.txt</file>
+        <file>teams/Malta.txt</file>
+        <file>teams/Serbia.txt</file>
     </qresource>
 </RCC>
