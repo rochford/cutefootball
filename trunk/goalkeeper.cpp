@@ -8,7 +8,7 @@
 GoalKeeper::GoalKeeper(QString name,
                        Pitch *pitch,
                        Team* team)
-    : Player(name,true,pitch,team,Player::GoalKeeper)
+    : Player(name,true,pitch,team,5.0,Player::GoalKeeper)
 {
 
     connect(pitch->ball(), SIGNAL(shot(Team*,QPointF)),
@@ -41,8 +41,8 @@ void GoalKeeper::createMoves()
 {
     Player::createMoves();
 
-    m_moveDistance.insert(MWindow::DiveEast, QPointF(m_speed,0));
-    m_moveDistance.insert(MWindow::DiveWest, QPointF(-m_speed,0));
+    m_moveDistance.insert(MWindow::DiveEast, QPointF(m_speed,0.0));
+    m_moveDistance.insert(MWindow::DiveWest, QPointF(-m_speed,0.0));
 }
 
 

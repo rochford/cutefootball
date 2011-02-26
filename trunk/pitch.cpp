@@ -486,6 +486,7 @@ void Pitch::createTeamPlayers(Team *team)
                     !isHomeTeam,
                     this,
                     team,
+                    team->speed(),
                     r);
         }
         pl->createPixmaps();
@@ -518,23 +519,6 @@ void Pitch::setPlayerDefendZone(Player *p)
     QRectF zone;
     switch (p->m_role)
     {
-#if 0
-    case Player::RightAttack:
-    case Player::CentralAttack:
-    case Player::LeftAttack:
-        nToS ? zone = bottomHalf : zone = topHalf;
-        break;
-    case Player::LeftMidfield:
-        zone = leftHalf;
-        break;
-    case Player::RightMidfield:
-        zone = rightHalf;
-        break;
-    case Player::LeftCentralDefence:
-    case Player::RightCentralDefence:
-        nToS ? zone = topHalf : zone = bottomHalf;
-        break;
-#endif //
     case Player::GoalKeeper:
         // goal keepers dont have a defend zone
         break;

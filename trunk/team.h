@@ -20,7 +20,7 @@ public:
     inline int shots() const { return m_shotCount; }
     void newGame() { m_goals = 0; m_scoredLastGoal = false; m_teamHasBall = false; m_shotCount = 0; }
     inline bool teamHasBall() const { return m_teamHasBall; }
-    inline int speed() const { return m_speed; }
+    inline qreal speed() const { return m_speed; }
     inline QString briefName() const { return m_briefName; }
 
 public slots:
@@ -39,7 +39,7 @@ private:
     // this team scored the last goal
     bool m_scoredLastGoal;
     int m_shotCount;
-    int m_speed;
+    qreal m_speed;
 };
 
 

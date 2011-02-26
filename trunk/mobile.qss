@@ -46,7 +46,7 @@ QLabel {
 
 QLabel#copyrightLabel,
 QLabel#versionLabel {
-    font-size: 8px;
+    font-size: 10px;
     color: white;
 }
 

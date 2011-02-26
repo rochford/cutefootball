@@ -117,7 +117,6 @@ OTHER_FILES += \
     teams/Slovakia.txt \
     teams/Scotland.txt \
     teams/Romania.txt \
-    teams/RepIreland.txt \
     teams/Poland.txt \
     teams/Norway.txt \
     teams/NorthernIreland.txt \
@@ -126,11 +125,12 @@ OTHER_FILES += \
     teams/Denmark.txt \
     teams/Czech.txt \
     teams/Croatia.txt \
-    teams/Belguim.txt \
     teams/Austria.txt \
     teams/Bulgaria.txt \
     desktop.qss \
-    mobile.qss
+    mobile.qss \
+    teams/Ireland.txt \
+    teams/Belgium.txt
 
 # Please do not modify the following two lines. Required for deployment.
 include(deployment.pri)
