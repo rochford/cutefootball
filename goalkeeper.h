@@ -21,10 +21,13 @@ public:
     int type() const
         { return Type;}
 
+public slots:
+    void goalAttempt(Team* t, QPointF dest);
+
 public:
     void createPixmaps();
     void advance(int phase);
-//    void createMoves();
+    void createMoves();
     void pixmapInsert(MWindow::Action a, QString s1, QString s2, QString s3, QRgb goalKeeperShirtColor, QRgb goalKeeperShortColor);
 
 private:

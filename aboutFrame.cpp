@@ -1,7 +1,7 @@
 #include "aboutFrame.h"
 #include "ui_aboutFrame.h"
 #include "mainwindow.h"
-#include "compileTimeSettings.h"
+#include "version.h"
 
 aboutFrame::aboutFrame(MWindow *parent) :
     QFrame(parent),
@@ -9,6 +9,8 @@ aboutFrame::aboutFrame(MWindow *parent) :
 {
     uiAbout->setupUi(this);
     uiAbout->versionLabel->setText(versionNumber.arg(KMajorVersion).arg(KMinorVersion));
+    uiAbout->buttonBox->button(QDialogButtonBox::Ok)
+            ->setText(tr("Main Menu"));
 
     connect(uiAbout->buttonBox, SIGNAL(accepted()), parent, SLOT(hideAboutFrame()));
     connect(uiAbout->buttonBox, SIGNAL(rejected()), parent, SLOT(hideAboutFrame()));

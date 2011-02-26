@@ -50,8 +50,8 @@ public:
 // TODO        RedCard,
 
         // goal keeper moves
-// TODO       DiveLeft,
-// TODO        DiveRight
+      DiveEast,
+      DiveWest
     };
 
 private:

@@ -9,8 +9,14 @@ QT       += core gui
 TARGET = soccer
 TEMPLATE = app
 
-TRANSLATIONS = translations/soccer_fi.ts \
-    translations/soccer_en.ts
+TRANSLATIONS = \
+    translations/soccer_en.ts \
+    translations/soccer_fi.ts \
+    translations/soccer_de.ts \
+    translations/soccer_es.ts \
+    translations/soccer_pt.ts \
+    translations/soccer_se.ts \
+    translations/soccer_fr.ts
 
 symbian {
     symbian:TARGET.UID3 = 0xEED6D15E
@@ -27,8 +33,9 @@ symbian {
     DEPLOYMENT += my_deployment
 }
 
-SOURCES += main.cpp\
-        mainwindow.cpp \
+SOURCES += \
+    main.cpp\
+    mainwindow.cpp \
     pitch.cpp \
     player.cpp \
     ball.cpp \
@@ -47,7 +54,8 @@ SOURCES += main.cpp\
     inputsettingsframe.cpp \
     halfstatisticsframe.cpp
 
-HEADERS  += mainwindow.h \
+HEADERS  += \
+    mainwindow.h \
     pitch.h \
     Player.h \
     ball.h \
@@ -65,12 +73,15 @@ HEADERS  += mainwindow.h \
     teamSelectionFrame.h \
     helpFrame.h \
     inputsettingsframe.h \
-    halfstatisticsframe.h
+    halfstatisticsframe.h \
+    version.h
 
 RESOURCES += \
     soccer.qrc \
     teams.qrc \
-    languages.qrc
+    languages.qrc \
+    menugraphics.qrc \
+    stylesheets.qrc
 
 FORMS += \
     mainwindow.ui \
@@ -84,7 +95,6 @@ FORMS += \
     exitconfirmationdialog.ui
 
 OTHER_FILES += \
-    stylesheet.qss \
     teams/teams.txt \
     teams/England.txt \
     teams/Spain.txt \
@@ -101,7 +111,26 @@ OTHER_FILES += \
     teams/Netherlands.txt \
     teams/Greece.txt \
     teams/Estonia.txt \
-    teams/Andorra.txt
+    teams/Andorra.txt \
+    teams/Wales.txt \
+    teams/Ukraine.txt \
+    teams/Slovakia.txt \
+    teams/Scotland.txt \
+    teams/Romania.txt \
+    teams/RepIreland.txt \
+    teams/Poland.txt \
+    teams/Norway.txt \
+    teams/NorthernIreland.txt \
+    teams/Iceland.txt \
+    teams/Hungary.txt \
+    teams/Denmark.txt \
+    teams/Czech.txt \
+    teams/Croatia.txt \
+    teams/Belguim.txt \
+    teams/Austria.txt \
+    teams/Bulgaria.txt \
+    desktop.qss \
+    mobile.qss
 
 # Please do not modify the following two lines. Required for deployment.
 include(deployment.pri)

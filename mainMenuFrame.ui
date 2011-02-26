@@ -38,6 +38,19 @@
     <item row="1" column="1">
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
+       <spacer name="verticalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
        <widget class="QPushButton" name="m_newGameBtn">
         <property name="text">
          <string>Play</string>
@@ -78,6 +91,19 @@
          <string>Quit</string>
         </property>
        </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
       </item>
      </layout>
     </item>
@@ -120,8 +146,11 @@
       </property>
      </spacer>
     </item>
-    <item row="2" column="0">
-     <spacer name="verticalSpacer_2">
+    <item row="3" column="0">
+     <layout class="QVBoxLayout" name="verticalLayout_2"/>
+    </item>
+    <item row="2" column="2">
+     <spacer name="verticalSpacer_4">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
@@ -132,6 +161,21 @@
        </size>
       </property>
      </spacer>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="copyrightLabel">
+      <property name="text">
+       <string notr="true">Copyright 2011,
+Tim Rochford</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="2">
+     <widget class="QLabel" name="versionLabel">
+      <property name="text">
+       <string notr="true">XXX</string>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>

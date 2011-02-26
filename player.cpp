@@ -199,8 +199,8 @@ void Player::createPixmaps()
 
 QRectF Player::boundingRect() const
 {
-    return QRectF(-18*KScaleFactor, -18*KScaleFactor,
-                  18*KScaleFactor, 18*KScaleFactor);
+    return QRectF(-18, -18,
+                  18, 18);
 }
 
 void Player::paint(QPainter *painter,
@@ -211,11 +211,11 @@ void Player::paint(QPainter *painter,
     if ( hasFocus() ) {
         QBrush brush(Qt::white, Qt::Dense3Pattern);
         painter->setBrush(brush);
-        painter->drawEllipse(boundingRect().center(), 8*KScaleFactor, 8*KScaleFactor);
+        painter->drawEllipse(boundingRect().center(), 8, 8);
     }
 
     QSize pixmapSize = pixmap().size();
-    pixmapSize.scale(QSizeF(36*KScaleFactor,36*KScaleFactor).toSize(), Qt::KeepAspectRatio);
+    pixmapSize.scale(QSizeF(36,36).toSize(), Qt::KeepAspectRatio);
 
     // Draw QGraphicsPixmapItem face
     painter->drawPixmap(boundingRect().toRect(), pixmap());
@@ -224,30 +224,31 @@ void Player::paint(QPainter *painter,
 QPainterPath Player::shape() const
 {
     QPainterPath path;
-    path.addRect(-18*KScaleFactor, -18*KScaleFactor,
-                 18*KScaleFactor, 18*KScaleFactor);
+    path.addRect(-18, -18,
+                 18, 18);
     return path;
 }
 
 void Player::movePlayer(MWindow::Action action, QPointF destination)
 {
-
+#if 0
     if (this->m_role == Player::GoalKeeper) {
         qDebug() << "Player::movePlayer GoalKeeper start";
         if (m_pitch->ball()->ballOwner())
             qDebug() << "Player::movePlayer m_pitch->ball()->ballOwner() name " << m_pitch->ball()->ballOwner()->m_name;
     }
+#endif
     // if the ball is not owned then take ownership
     if (ballCollisionCheck() && !m_pitch->ball()->ballOwner()) {
-        qDebug() << "Player::movePlayer taken ball";
+//        qDebug() << "Player::movePlayer taken ball";
         m_hasBall = true;
         m_pitch->ball()->setBallOwner(this);
     } else if (!ballCollisionCheck()) {
         m_hasBall = false;
-        qDebug() << "Player::movePlayer no ball";
+//        qDebug() << "Player::movePlayer no ball";
     }
     if (m_hasBall) {
-        qDebug() << "Player::movePlayer moving ball";
+//        qDebug() << "Player::movePlayer moving ball";
         m_pitch->ball()->moveBall(action, m_speed);
     }
     m_step++;
@@ -281,8 +282,8 @@ void Player::movePlayer(MWindow::Action action, QPointF destination)
     default:
         break;
     }
-    if (this->m_role == Player::GoalKeeper)
-        qDebug() << "Player::movePlayer GoalKeeper end";
+//    if (this->m_role == Player::GoalKeeper)
+//        qDebug() << "Player::movePlayer GoalKeeper end";
 }
 
 bool Player::withinShootingDistance() const

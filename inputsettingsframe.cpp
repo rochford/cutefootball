@@ -9,6 +9,9 @@ inputSettingsFrame::inputSettingsFrame(MWindow *parent) :
     ui(new Ui::inputSettingsFrame)
 {
     ui->setupUi(this);
+    ui->buttonBox->button(QDialogButtonBox::Ok)
+            ->setText(tr("Main Menu"));
+
     connect(ui->buttonBox, SIGNAL(accepted()), parent, SLOT(hideHelpFrame()));
     connect(ui->buttonBox, SIGNAL(rejected()), parent, SLOT(hideHelpFrame()));
 }

@@ -1,0 +1,79 @@
+QFrame, QDialog {
+    background-image: url(:/images/pitch3.png);
+    border: none;
+}
+
+QDialog {
+    background-color: yellow;
+}
+
+QPushButton, QCheckbox {
+    border: none;
+    color: red;
+    background-color: yellow;
+    font: bold large "Times";
+    font-size: 18px;
+}
+
+QPushButton:pressed {
+    background-color: red;
+    color: yellow;
+}
+
+QPushButton:focus {
+    background-color: red;
+    color: yellow;
+}
+
+QPushButton:hover {
+    background-color: red;
+    color: yellow;
+}
+
+QSpinBox {
+    color: red;
+    background-color: yellow;
+    font: bold large "Times";
+    font-size: 18px;
+}
+
+QLabel {
+    color: red;
+    background-color: yellow;
+    font: bold large "Times";
+    font-size: 18px;
+}
+
+QLabel#copyrightLabel,
+QLabel#versionLabel {
+    font-size: 8px;
+    color: white;
+}
+
+QComboBox {
+    color: red;
+    background-color: yellow;
+    font: bold large "Times";
+    font-size: 18px;
+}
+
+QFrame#HalfStatisticsFrame {
+    background: transparent;
+    border: none;
+    color: gold;
+    font-size: 2px;
+}
+
+QLabel#shotsLabel,
+QLabel#goalsLabel,
+QLabel#m_homeTeamName,
+QLabel#m_homeGoals,
+QLabel#m_homeShots,
+QLabel#m_awayTeamName,
+QLabel#m_awayGoals,
+QLabel#m_awayShots {
+    font: bold large "Times";
+    font-size: 14px;
+    color: gold;
+}
+
