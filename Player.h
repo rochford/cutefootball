@@ -40,6 +40,7 @@ public:
            bool computerControlled,
            Pitch* pitch,
            Team* team,
+           qreal speed,
            Player::Role role);
     virtual ~Player();
 
@@ -54,7 +55,7 @@ public:
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
 
-    inline int speed() const { return m_speed; }
+    inline qreal speed() const { return m_speed; }
     bool ballCollisionCheck() const;
     bool playerCollisionCheck() const;
 
@@ -126,7 +127,7 @@ protected:
     int m_step;
     QTimer *m_outOfAction;
     bool m_allowedOffPitch;
-    int m_speed;
+    qreal m_speed;
 };
 
 #endif // PLAYER_H

@@ -1,24 +1,43 @@
 <RCC>
     <qresource prefix="/">
-        <file>images/flags/England.png</file>
+        <file>teams/teams.txt</file>
         <file>images/flags/Andorra.png</file>
-        <file>images/flags/Turkey.png</file>
-        <file>images/flags/Switzerland.png</file>
-        <file>images/flags/Sweden.png</file>
-        <file>images/flags/Spain.png</file>
-        <file>images/flags/SanMarino.png</file>
-        <file>images/flags/Russia.png</file>
-        <file>images/flags/Portugal.png</file>
-        <file>images/flags/Netherlands.png</file>
-        <file>images/flags/Italy.png</file>
-        <file>images/flags/Greece.png</file>
-        <file>images/flags/Germany.png</file>
-        <file>images/flags/France.png</file>
-        <file>images/flags/Finland.png</file>
+        <file>images/flags/Austria.png</file>
+        <file>images/flags/Belgium.png</file>
+        <file>images/flags/Bulgaria.png</file>
+        <file>images/flags/Croatia.png</file>
+        <file>images/flags/Czech.png</file>
+        <file>images/flags/Denmark.png</file>
+        <file>images/flags/England.png</file>
         <file>images/flags/Estonia.png</file>
+        <file>images/flags/Finland.png</file>
+        <file>images/flags/France.png</file>
+        <file>images/flags/Germany.png</file>
+        <file>images/flags/Greece.png</file>
+        <file>images/flags/Hungary.png</file>
+        <file>images/flags/Iceland.png</file>
+        <file>images/flags/Ireland.png</file>
+        <file>images/flags/Italy.png</file>
+        <file>images/flags/Malta.png</file>
+        <file>images/flags/Netherlands.png</file>
+        <file>images/flags/Norway.png</file>
+        <file>images/flags/Poland.png</file>
+        <file>images/flags/Portugal.png</file>
+        <file>images/flags/Romania.png</file>
+        <file>images/flags/Russia.png</file>
+        <file>images/flags/SanMarino.png</file>
+        <file>images/flags/Scotland.png</file>
+        <file>images/flags/Serbia.png</file>
+        <file>images/flags/Slovakia.png</file>
+        <file>images/flags/Spain.png</file>
+        <file>images/flags/Sweden.png</file>
+        <file>images/flags/Switzerland.png</file>
+        <file>images/flags/Turkey.png</file>
+        <file>images/flags/Ukraine.png</file>
         <file>teams/Andorra.txt</file>
         <file>teams/Austria.txt</file>
-        <file>teams/Belguim.txt</file>
+        <file>teams/Belgium.txt</file>
+        <file>teams/Bulgaria.txt</file>
         <file>teams/Croatia.txt</file>
         <file>teams/Czech.txt</file>
         <file>teams/Denmark.txt</file>
@@ -30,13 +49,13 @@
         <file>teams/Greece.txt</file>
         <file>teams/Hungary.txt</file>
         <file>teams/Iceland.txt</file>
+        <file>teams/Ireland.txt</file>
         <file>teams/Italy.txt</file>
         <file>teams/Netherlands.txt</file>
         <file>teams/NorthernIreland.txt</file>
         <file>teams/Norway.txt</file>
         <file>teams/Poland.txt</file>
         <file>teams/Portugal.txt</file>
-        <file>teams/RepIreland.txt</file>
         <file>teams/Romania.txt</file>
         <file>teams/Russia.txt</file>
         <file>teams/SanMarino.txt</file>
@@ -45,7 +64,6 @@
         <file>teams/Spain.txt</file>
         <file>teams/Sweden.txt</file>
         <file>teams/Switzerland.txt</file>
-        <file>teams/teams.txt</file>
         <file>teams/Turkey.txt</file>
         <file>teams/Ukraine.txt</file>
         <file>teams/Wales.txt</file>
