@@ -116,18 +116,22 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QSpinBox" name="spinBox">
+       <widget class="QLCDNumber" name="gameLengthLcdNumber">
+        <property name="value" stdset="0">
+         <double>2.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSlider" name="gameLengthSlider">
         <property name="minimum">
          <number>2</number>
         </property>
         <property name="maximum">
-         <number>10</number>
+         <number>8</number>
         </property>
-        <property name="singleStep">
-         <number>1</number>
-        </property>
-        <property name="value">
-         <number>2</number>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
         </property>
        </widget>
       </item>
@@ -178,8 +182,24 @@
  <tabstops>
   <tabstop>checkBoxSound</tabstop>
   <tabstop>buttonBox</tabstop>
-  <tabstop>spinBox</tabstop>
  </tabstops>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>gameLengthSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>gameLengthLcdNumber</receiver>
+   <slot>display(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>172</x>
+     <y>128</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>90</x>
+     <y>128</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

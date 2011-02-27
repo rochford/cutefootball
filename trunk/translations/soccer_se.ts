@@ -17,12 +17,12 @@
 <context>
     <name>HalfStatisticsFrame</name>
     <message>
-        <location filename="../halfstatisticsframe.ui" line="100"/>
+        <location filename="../halfstatisticsframe.ui" line="87"/>
         <source>Goals</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../halfstatisticsframe.ui" line="110"/>
+        <location filename="../halfstatisticsframe.ui" line="97"/>
         <source>Shots</source>
         <translation type="unfinished"></translation>
     </message>
@@ -114,14 +114,6 @@
     </message>
     <message>
         <location filename="../teamSelectionFrame.cpp" line="17"/>
-        <source>Main Menu</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>aboutFrame</name>
-    <message>
-        <location filename="../aboutFrame.cpp" line="13"/>
         <source>Main Menu</source>
         <translation type="unfinished"></translation>
     </message>
