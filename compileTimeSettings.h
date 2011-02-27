@@ -13,6 +13,8 @@ const QPen KWhitePaintPen(QBrush(Qt::white),3);
 const QBrush KFocusPlayerBrush(Qt::white, Qt::Dense3Pattern);
 
 const int KGameRefreshRate = 1000 / 40; // ms
+const int KKeyPressRefreshRate = 1000 / 40; // ms
+
 const int KColumn = 5; // Left, l-Centre, centre, r-centre, Right
 // goalkepper-defence-midfield-attack,attack-midfield-defence-goalkepper
 const int KRow = 8;

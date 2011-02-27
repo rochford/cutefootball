@@ -37,11 +37,11 @@ public:
     inline int remainingTimeInHalfMs() { return m_remainingTimeInHalfMs; }
 
 signals:
-    void halfOver();
+    void halfOver(QString halfName);
 
 public slots:
     void playFrame(int frame);
-    void startPlayersLeavePitchAnim();
+    void startPlayersLeavePitchAnim(QString halfName);
     void kickOff();
     void decrementGameTime();
 

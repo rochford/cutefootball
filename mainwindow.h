@@ -9,7 +9,7 @@
 class Pitch;
 class SoundEffects;
 class settingsFrame;
-class aboutFrame;
+// class aboutFrame;
 class helpFrame;
 class inputSettingsFrame;
 class mainMenuFrame;
@@ -58,7 +58,7 @@ private:
     enum Frame {
         MainMenu,
         Settings,
-        About,
+//        About,
         Help,
         InputSettings,
         TeamSelection,
@@ -71,7 +71,7 @@ private:
 public slots:
     void hideTeamSelectionFrame();
     void hideSettingsFrame();
-    void hideAboutFrame();
+//    void hideAboutFrame();
     void hideHelpFrame();
     void hideInputSettingsFrame();
     void showFrame(Frame f);
@@ -81,7 +81,7 @@ protected:
     void resizeEvent(QResizeEvent *e);
 
 private slots:
-    void showAboutFrame();
+//    void showAboutFrame();
     void showHelpFrame();
     void showInputSettingsFrame();
     void showSettingsFrame();
@@ -93,7 +93,7 @@ private:
     Pitch *m_pitch;
     settingsFrame* m_settingsFrame;
     inputSettingsFrame* m_inputSettingsFrame;
-    aboutFrame* m_aboutFrame;
+//    aboutFrame* m_aboutFrame;
     helpFrame* m_helpFrame;
     TeamSelectionFrame* m_teamSelectionFrame;
     mainMenuFrame* m_mainMenuFrame;

@@ -106,7 +106,7 @@ Player::Player(QString name,
 {
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
     m_keyEventTimer = new QTimer(this);
-    m_keyEventTimer->setInterval(KGameRefreshRate);
+    m_keyEventTimer->setInterval(KKeyPressRefreshRate);
 
     if (!computerControlled)
         setFlag(QGraphicsItem::ItemIsFocusable);
@@ -210,13 +210,13 @@ void Player::paint(QPainter *painter,
 {
     // the player that is focused get red circle around them
     if ( hasFocus() ) {
-        QBrush brush(Qt::white, Qt::Dense3Pattern);
-        painter->setBrush(brush);
+        painter->setBrush(KFocusPlayerBrush);
         painter->drawEllipse(boundingRect().center(), 8, 8);
     }
 
-    QSize pixmapSize = pixmap().size();
-    pixmapSize.scale(QSizeF(36,36).toSize(), Qt::KeepAspectRatio);
+ // XXX what do these lines do?
+ //   QSize pixmapSize = pixmap().size();
+ //   pixmapSize.scale(QSizeF(36,36).toSize(), Qt::KeepAspectRatio);
 
     // Draw QGraphicsPixmapItem face
     painter->drawPixmap(boundingRect().toRect(), pixmap());
@@ -268,14 +268,15 @@ void Player::movePlayer(MWindow::Action action, QPointF destination)
         setPixmap(m_images[action].at(m_step % 3));
         setRotation(0);
         // if the destination is less than move distance, only move that much
-        qreal dx = destination.x() - pos().x();
-        qreal dy = destination.y() - pos().y();
+        QPointF diff = destination - pos();
+    //    qreal dx = destination.x() - pos().x();
+    //    qreal dy = destination.y() - pos().y();
         qreal x = m_moveDistance[action].x();
         qreal y = m_moveDistance[action].y();
-        if ( qAbs(dx) < qAbs(x))
-            x = dx;
-        if ( qAbs(dy) < qAbs(y))
-            y = dy;
+        if ( qAbs(diff.x()) < qAbs(x))
+            x = diff.x();
+        if ( qAbs(diff.y()) < qAbs(y))
+            y = diff.y();
         moveBy(x, y);
         m_lastAction = action;
     }
@@ -289,13 +290,15 @@ void Player::movePlayer(MWindow::Action action, QPointF destination)
 
 bool Player::withinShootingDistance() const
 {
-    int dy = 0;
-    if (m_team->getDirection() == Team::NorthToSouth)
-        dy = abs(m_pitch->m_bottomGoal->pos().y() - m_pitch->ball()->pos().y());
-    else
-        dy = abs(m_pitch->m_topGoal->pos().y() - m_pitch->ball()->pos().y());
+    QPointF diff;
 
-    if ( ( m_pitch->m_footballPitch->rect().height() / 3 ) > dy)
+    if (m_team->getDirection() == Team::NorthToSouth) {
+        diff = m_pitch->m_bottomGoal->pos() - m_pitch->ball()->pos();
+    } else {
+        diff = m_pitch->ball()->pos() - m_pitch->m_topGoal->pos();
+    }
+    qDebug() << "withinShootingDistance manhattanLength = " << diff.manhattanLength();
+    if ( ( (m_pitch->m_footballPitch->rect().height() / 5.0 )*2.0) > diff.manhattanLength())
         return true;
     else
         return false;
@@ -304,8 +307,8 @@ bool Player::withinShootingDistance() const
 QPointF Player::calculateDestination(MWindow::Action act)
 {
     const QPointF p(pos());
-    const int KShotPower = m_pitch->m_scene->sceneRect().width() / 2;
-    const int KPassPower = m_pitch->m_scene->sceneRect().width() / 5;
+    const int KShotPower = m_pitch->m_scene->sceneRect().height() / 4;
+    const int KPassPower = m_pitch->m_scene->sceneRect().height() / 5;
     QPointF shotDest(p);
     QPointF passDest(p);
     switch(m_lastAction)
@@ -478,10 +481,12 @@ Player* Player::findAvailableTeamMate(QPointF myPos) const
         if (p == this)
             continue;        
 
-        const int dx = p->pos().x() - myPos.x();
-        const int dy = p->pos().y() - myPos.y();
+        QPointF diff(p->pos() - myPos);
+//        const int dx = p->pos().x() - myPos.x();
+//        const int dy = p->pos().y() - myPos.y();
 
-        if (qAbs(dx) < 50 && qAbs(dy) < 50)
+//        if (qAbs(dx) < 50 && qAbs(dy) < 50)
+        if (diff.manhattanLength() < (m_pitch->m_footballPitch->rect().height() / 3.0))
             bestPlayer = p;
     }
     return bestPlayer;
@@ -532,14 +537,17 @@ void Player::computerAdvanceWithoutBall()
         // if close to the ball then tackle
 
         MWindow::Action action;
+        const QPointF ballPos(m_pitch->ball()->pos());
+
+        QPointF diff(pos() - ballPos);
         int dx = abs(pos().x() - m_pitch->ball()->pos().x());
         int dy = abs(pos().y() - m_pitch->ball()->pos().y());
-        if ( m_pitch->ball()->ballOwner() && ( dx < 10) && (dy < 10) ) {
+        if ( m_pitch->ball()->ballOwner() && ( (dx < 10) && (dy < 10)) ) {
             action = MWindow::Tackle;
             move(action);
         } else {
-            action = calculateAction(pos(), m_pitch->ball()->pos());
-            move(action, m_pitch->ball()->pos());
+            action = calculateAction(pos(), ballPos);
+            move(action, ballPos);
         }
     }
     else

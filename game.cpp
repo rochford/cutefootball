@@ -37,13 +37,13 @@ Game::Game(Pitch* p,
     setInitialState(m_startState);
 
     m_startState->addTransition(m_timeLineTakePositions, SIGNAL(finished()), m_playingState);
-    m_playingState->addTransition(this, SIGNAL(halfOver()), m_halfEndState);
+    m_playingState->addTransition(this, SIGNAL(halfOver(QString)), m_halfEndState);
     m_goalScoredState->addTransition(m_goalScoredState, SIGNAL(finished()), m_playingState);
     m_foulState->addTransition(m_foulState, SIGNAL(finished()), m_playingState);
     m_halfEndState->addTransition(m_timeLineLeavePitch, SIGNAL(finished()), m_allDoneState);
 
-    connect(this, SIGNAL(halfOver()), this, SLOT(startPlayersLeavePitchAnim()));
-    connect(this, SIGNAL(halfOver()), m_pitch, SLOT(showHalfStatisticsFrame()));
+    connect(this, SIGNAL(halfOver(QString)), this, SLOT(startPlayersLeavePitchAnim(QString)));
+    connect(this, SIGNAL(halfOver(QString)), m_pitch, SLOT(showHalfStatisticsFrame(QString)));
     connect(m_timeLineLeavePitch, SIGNAL(finished()), m_pitch, SLOT(hideHalfStatisticsFrame()));
 
     connect(m_timeLineTakePositions, SIGNAL(finished()), m_pitch, SLOT(centerOnBall()));
@@ -75,10 +75,10 @@ void Game::decrementGameTime()
     m_remainingTimeInHalfMs = m_remainingTimeInHalfMs - 1000;
     m_pitch->updateDisplayTime(m_remainingTimeInHalfMs);
     if (m_remainingTimeInHalfMs == 0)
-        emit halfOver();
+        emit halfOver(objectName());
 }
 
-void Game::startPlayersLeavePitchAnim()
+void Game::startPlayersLeavePitchAnim(QString /* halfName */)
 {
     createPlayerAnimationItems(HalfOver);
     m_timeLineLeavePitch->start();
