@@ -116,16 +116,10 @@ Player::Player(QString name,
     m_outOfAction->setSingleShot(true);
 
     connect(m_keyEventTimer, SIGNAL(timeout()), this, SLOT(repeatKeyEvent()));
-    connect(m_pitch, SIGNAL(gameInProgress(bool)), this, SLOT(allowedOffPitch(bool)));
 
     createKeyboardActions();
     setRotation(0);
     setTransformOriginPoint(boundingRect().center());
-}
-
-void Player::allowedOffPitch(bool gameInProgress)
-{
-    m_allowedOffPitch = !gameInProgress;
 }
 
 Player::~Player()
@@ -297,7 +291,6 @@ bool Player::withinShootingDistance() const
     } else {
         diff = m_pitch->ball()->pos() - m_pitch->m_topGoal->pos();
     }
-    qDebug() << "withinShootingDistance manhattanLength = " << diff.manhattanLength();
     if ( ( (m_pitch->m_footballPitch->rect().height() / 5.0 )*2.0) > diff.manhattanLength())
         return true;
     else
@@ -392,10 +385,12 @@ void Player::specialAction(MWindow::Action action)
                     p->setTackled();
                 QPointF ballDest = calculateDestination(MWindow::Pass);
                 m_pitch->ball()->kickBall(MWindow::Pass, ballDest);
+                m_hasBall = false;
             }
             else if ( !playerCollision && ballCollision ) {
                 QPointF ballDest = calculateDestination(MWindow::Pass);
                 m_pitch->ball()->kickBall(MWindow::Pass, ballDest);
+                m_hasBall = false;
             }
 
             return;

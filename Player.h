@@ -70,10 +70,10 @@ public:
     inline void setHasBall(bool hasBall) { m_hasBall = hasBall; }
     inline bool hasBall() const { return m_hasBall; }
     Team* team() const { return m_team; }
+    inline void setAllowedOffPitch(bool isAllowed) { m_allowedOffPitch = isAllowed; }
 
 private slots:
     void repeatKeyEvent();
-    void allowedOffPitch(bool allowedOffPitch);
 
 protected:
     QRectF boundingRect() const;

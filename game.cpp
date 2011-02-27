@@ -74,8 +74,13 @@ void Game::decrementGameTime()
 {
     m_remainingTimeInHalfMs = m_remainingTimeInHalfMs - 1000;
     m_pitch->updateDisplayTime(m_remainingTimeInHalfMs);
-    if (m_remainingTimeInHalfMs == 0)
+    if (m_remainingTimeInHalfMs == 0) {
+        // players are now allowed off the pitch
+        foreach (Player *p, m_pitch->m_players) {
+            p->setAllowedOffPitch(true);
+        }
         emit halfOver(objectName());
+    }
 }
 
 void Game::startPlayersLeavePitchAnim(QString /* halfName */)
@@ -94,7 +99,10 @@ void Game::stopGameClock()
 
 void Game::kickOff()
 {
-    qDebug() << "Game::kickOff()";
+    foreach (Player *p, m_pitch->m_players) {
+        p->setAllowedOffPitch(false);
+    }
+
     m_pitch->setPiece(m_pitch->homeTeam(), Pitch::KickOff);
 
     m_playingState->addTransition(m_pitch, SIGNAL(foul()), m_foulState);
@@ -148,6 +156,7 @@ void Game::createPlayerAnimationItems(GameState g)
             stepX = ( m_pitch->pitchEntrancePoint().x() - tmp.x() ) / 100.0;
             stepY = ( m_pitch->pitchEntrancePoint().y() - tmp.y() ) / 100.0;
             MWindow::Action a = calculateAction(tmp, m_pitch->pitchEntrancePoint());
+            p->setAllowedOffPitch(true);
             p->movePlayer(a);
             }
             break;
