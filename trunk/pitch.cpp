@@ -570,8 +570,9 @@ void Pitch::setPlayerStartPositions(Team *team)
     }
 }
 
-void Pitch::showHalfStatisticsFrame()
+void Pitch::showHalfStatisticsFrame(QString halfName)
 {
+    m_halfStatisticsFrame->setHalfName(halfName);
     m_halfStatisticsFrame->setHomeTeamName(m_homeTeam->fullName());
     m_halfStatisticsFrame->setAwayTeamName(m_awayTeam->fullName());
 

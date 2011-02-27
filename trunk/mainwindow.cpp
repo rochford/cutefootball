@@ -3,7 +3,7 @@
 #include "mainwindow.h"
 #include "pitch.h"
 #include "settingsFrame.h"
-#include "aboutFrame.h"
+//#include "aboutFrame.h"
 #include "inputSettingsFrame.h"
 #include "helpFrame.h"
 #include "teamSelectionFrame.h"
@@ -15,7 +15,7 @@ MWindow::MWindow(QWidget *parent)
 {
     m_soundEffects = new SoundEffects(this);
 
-    m_aboutFrame = new aboutFrame(this);
+//    m_aboutFrame = new aboutFrame(this);
     m_helpFrame = new helpFrame(this);
     m_inputSettingsFrame = new inputSettingsFrame(this);
 
@@ -37,6 +37,9 @@ MWindow::MWindow(QWidget *parent)
     removeContextMenus();
 
     createConnections();
+
+    m_soundEffects->startSound(SoundEffects::GameThemeTune);
+
     setCentralWidget( uiMainWindow.m_graphicsView );
     showFrame(MWindow::MainMenu);
 }
@@ -45,7 +48,7 @@ MWindow::~MWindow()
 {
     delete m_soundEffects;
     delete m_settingsFrame;
-    delete m_aboutFrame;
+//    delete m_aboutFrame;
     delete m_helpFrame;
     delete m_teamSelectionFrame;
     delete m_mainMenuFrame;
@@ -109,11 +112,12 @@ void MWindow::enableActions(bool gameInProgress)
     if (!gameInProgress)
         showFrame(MWindow::MainMenu);
 }
-
+/*
 void MWindow::hideAboutFrame()
 {
     showFrame(MWindow::MainMenu);
 }
+*/
 void MWindow::hideInputSettingsFrame()
 {
     showFrame(MWindow::MainMenu);
@@ -161,7 +165,7 @@ void MWindow::showFrame(Frame f)
 
     uiMainWindow.menubar->setVisible(false);
     m_mainMenuFrame->setVisible(false);
-    m_aboutFrame->setVisible(false);
+//    m_aboutFrame->setVisible(false);
     m_helpFrame->setVisible(false);
     uiMainWindow.m_graphicsView->setVisible(false);
     m_settingsFrame->setVisible(false);
@@ -170,9 +174,11 @@ void MWindow::showFrame(Frame f)
     uiMainWindow.m_graphicsView->clearFocus();
 
     switch (f) {
+#if 0
     case MWindow::About:
         m_aboutFrame->setVisible(true);
         break;
+#endif
     case MWindow::Help:
         m_helpFrame->setVisible(true);
         break;
@@ -186,6 +192,7 @@ void MWindow::showFrame(Frame f)
         m_mainMenuFrame->showMaximized();
         break;
     case MWindow::GraphicsView:
+        m_soundEffects->stopSound(SoundEffects::GameThemeTune);
         uiMainWindow.menubar->setVisible(true);
         uiMainWindow.menuAbout->setVisible(false);
         //uiMainWindow.m_graphicsView->setVisible(true);
@@ -218,11 +225,12 @@ void MWindow::showHelpFrame()
     showFrame(MWindow::Help);
 }
 
+/*
 void MWindow::showAboutFrame()
 {
     showFrame(MWindow::About);
 }
-
+*/
 void MWindow::resizeEvent(QResizeEvent *e)
 {
     QWidgetList widgets = QApplication::allWidgets();

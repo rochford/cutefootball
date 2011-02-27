@@ -45,7 +45,6 @@ SOURCES += \
     game.cpp \
     soundeffects.cpp \
     settingsFrame.cpp \
-    aboutFrame.cpp \
     mainMenuFrame.cpp \
     goalscoredstate.cpp \
     foulstate.cpp \
@@ -53,6 +52,7 @@ SOURCES += \
     helpFrame.cpp \
     inputsettingsframe.cpp \
     halfstatisticsframe.cpp
+#    aboutFrame.cpp \
 
 HEADERS  += \
     mainwindow.h \
@@ -66,7 +66,6 @@ HEADERS  += \
     compileTimeSettings.h \
     soundeffects.h \
     settingsFrame.h \
-    aboutFrame.h \
     mainMenuFrame.h \
     goalscoredstate.h \
     foulstate.h \
@@ -75,6 +74,7 @@ HEADERS  += \
     inputsettingsframe.h \
     halfstatisticsframe.h \
     version.h
+#    aboutFrame.h \
 
 RESOURCES += \
     soccer.qrc \
@@ -86,13 +86,14 @@ RESOURCES += \
 FORMS += \
     mainwindow.ui \
     settingsFrame.ui \
-    aboutFrame.ui \
     mainMenuFrame.ui \
     teamSelectionFrame.ui \
     helpFrame.ui \
     inputSettingsFrame.ui \
     halfstatisticsframe.ui \
-    exitconfirmationdialog.ui
+    exitconfirmationdialog.ui \
+    screengraphicsframe.ui
+#    aboutFrame.ui \
 
 OTHER_FILES += \
     teams/teams.txt \

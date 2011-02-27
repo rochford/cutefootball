@@ -10,13 +10,20 @@ int main(int argc, char *argv[])
     QSplashScreen* splash = new QSplashScreen;
     splash->showFullScreen();
 
-    if (splash->size() == QSize(240,320)) {
+    QSize screenSize(splash->size());
+    if (screenSize == QSize(240,320)) {
         splash->setPixmap(QPixmap(":/images/splash240x320.svg"));
-    } else if (splash->size() == QSize(320,240)) {
+    } else if (screenSize == QSize(320,240)) {
         splash->setPixmap(QPixmap(":/images/splash320x240.svg"));
+    } else if (screenSize.width() > screenSize.height()) {
+        QPixmap px = QPixmap(":/images/splash320x240.svg");
+        splash->setPixmap(px.scaled(QSize(splash->width(),splash->height())));
+    } else if (screenSize.width() < screenSize.height()) {
+        QPixmap px = QPixmap(":/images/splash240x320.svg");
+        splash->setPixmap(px.scaled(screenSize));
     } else {
         QPixmap px = QPixmap(":/images/splash100x100.svg");
-        splash->setPixmap(px.scaled(QSize(splash->width(),splash->height())));
+        splash->setPixmap(px.scaled(screenSize));
     }
 
     loadStyleSheet(a);
@@ -28,7 +35,8 @@ int main(int argc, char *argv[])
     a.installTranslator(&appTranslator);
 
     MWindow window;
-    window.showMaximized();
+//    window.showMaximized();
+    window.showFullScreen();
     splash->finish(&window);
     delete splash;
 

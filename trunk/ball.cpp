@@ -219,6 +219,7 @@ QVariant Ball::itemChange(GraphicsItemChange change, const QVariant &value)
              qDebug() << "Ball::itemChange goal scored";
              emit goalScored(m_pitch->m_topGoal->contains(newPos));
              emit soundEvent(SoundEffects::Goal);
+             emit soundEvent(SoundEffects::Whistle);
              setBallOwner(NULL);
              m_animationTimer->stop();
              m_lastPos = newPos;
@@ -231,6 +232,7 @@ QVariant Ball::itemChange(GraphicsItemChange change, const QVariant &value)
             qreal dy = newPos.y() - m_lastPos.y();
             qDebug() << "Ball::itemChange not in pitch, dx" << dx << "," << dy;
             m_animationTimer->stop();
+            emit soundEvent(SoundEffects::BallRebound);
             return QPointF(m_lastPos.x() - dx*1.5,m_lastPos.y()-dy*1.5);
         } else {
             m_lastPos = newPos;

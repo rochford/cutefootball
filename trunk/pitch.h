@@ -90,7 +90,7 @@ public slots:
     void gameStarted();
     void gameStopped();
 
-    void showHalfStatisticsFrame();
+    void showHalfStatisticsFrame(QString halfName);
     void hideHalfStatisticsFrame();
 
     void centerOnBall() { m_centerOnBall = true; }
