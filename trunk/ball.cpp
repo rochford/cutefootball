@@ -4,6 +4,7 @@
 #include "team.h"
 #include "soundeffects.h"
 #include "Player.h"
+#include <cassert> // assert
 
 #include <QDebug>
 
@@ -46,6 +47,7 @@ Ball::Ball(Pitch* pitch)
 
 Ball::~Ball()
 {
+    m_moveDistance.clear();
     m_ballOwnerTimer->stop();
     delete m_ballOwnerTimer;
     delete m_animation;
@@ -64,11 +66,12 @@ void Ball::updateBallOwner()
         if (p) {
             if ( p == m_ballOwner ) {
                 p->setHasBall(true);
+                setBallOwner(p);
                 break;
             }
             if ( m_ballOwner )
                  m_ballOwner->setHasBall(false);
-            m_ballOwner = p;
+            setBallOwner(p);
             p->setHasBall(true);
         }
     }
@@ -84,12 +87,6 @@ void Ball::paint(QPainter *painter,
                  const QStyleOptionGraphicsItem *option,
                  QWidget *widget)
 {
-    // Scale QGraphicsPixmapItem to wanted 'size' and keep the aspect ratio
-
-//  Moved to ctor
-//    QSize pixmapSize = pixmap().size();
-//    pixmapSize.scale(QSizeF(20,20).toSize(), Qt::KeepAspectRatio);
-
     // Draw QGraphicsPixmapItem face
     painter->drawPixmap(boundingRect().toRect(), pixmap());
 }
@@ -102,27 +99,18 @@ QPainterPath Ball::shape() const
     return path;
 }
 
-void Ball::advance(int phase)
-{
-    if (!phase)
-        return;
-}
-
 void Ball::moveBall(MWindow::Action action, int speed)
 {
     if (m_positionLocked) {
+        qDebug() << "moveBall positionLocked";
+        return;
+    }
+    if (!m_ballOwner) {
+        qDebug() << "moveBall no ball owner";
+        assert(0);
         return;
     }
 
-    QMap<MWindow::Action,QPointF> moveDistance;
-    moveDistance.insert(MWindow::North, QPointF(0,-speed));
-    moveDistance.insert(MWindow::NorthEast, QPointF(speed,-speed));
-    moveDistance.insert(MWindow::East, QPointF(speed,0));
-    moveDistance.insert(MWindow::SouthEast, QPointF(speed,speed));
-    moveDistance.insert(MWindow::South, QPointF(0,speed));
-    moveDistance.insert(MWindow::SouthWest, QPointF(-speed,speed));
-    moveDistance.insert(MWindow::West, QPointF(-speed,0));
-    moveDistance.insert(MWindow::NorthWest, QPointF(-speed,-speed));
 
     // old position
     QPointF oldPos=pos();
@@ -138,7 +126,7 @@ void Ball::moveBall(MWindow::Action action, int speed)
     case MWindow::West:
     case MWindow::NorthWest:
         setRotation((step_%4)*90.0);
-        moveBy(moveDistance[action].x(), moveDistance[action].y());
+        moveBy(m_moveDistance[action].x(), m_moveDistance[action].y());
         break;
     case MWindow::Shot:
         // TODO shootBall(speed);
@@ -220,7 +208,7 @@ QVariant Ball::itemChange(GraphicsItemChange change, const QVariant &value)
              emit goalScored(m_pitch->m_topGoal->contains(newPos));
              emit soundEvent(SoundEffects::Goal);
              emit soundEvent(SoundEffects::Whistle);
-             setBallOwner(NULL);
+             setNoBallOwner();
              m_animationTimer->stop();
              m_lastPos = newPos;
              return newPos;
@@ -241,3 +229,22 @@ QVariant Ball::itemChange(GraphicsItemChange change, const QVariant &value)
     }
     return QGraphicsItem::itemChange(change, value);
  }
+
+void Ball::setBallOwner(Player* p)
+{
+    if (p) {
+        m_ballOwner = p;
+        m_lastPlayerToTouchBall = p;
+
+        const qreal speed = p->speed();
+        m_moveDistance.clear();
+        m_moveDistance.insert(MWindow::North, QPointF(0,-speed));
+        m_moveDistance.insert(MWindow::NorthEast, QPointF(speed,-speed));
+        m_moveDistance.insert(MWindow::East, QPointF(speed,0));
+        m_moveDistance.insert(MWindow::SouthEast, QPointF(speed,speed));
+        m_moveDistance.insert(MWindow::South, QPointF(0,speed));
+        m_moveDistance.insert(MWindow::SouthWest, QPointF(-speed,speed));
+        m_moveDistance.insert(MWindow::West, QPointF(-speed,0));
+        m_moveDistance.insert(MWindow::NorthWest, QPointF(-speed,-speed));
+    }
+}

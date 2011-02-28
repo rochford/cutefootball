@@ -29,17 +29,13 @@ public:
         m_positionLocked = false;
         setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
     }
-    void advance(int phase);
     void moveBall(MWindow::Action action, int speed);
     enum { Type = UserType + 1 };
     int type() const { return Type; }
 
     void kickBall(MWindow::Action action, QPointF destination);
     inline Player* ballOwner() const { return m_ballOwner; }
-    inline void setBallOwner(Player* p) {
-        m_ballOwner = p;
-        m_lastPlayerToTouchBall = p;
-    }
+    void setBallOwner(Player* p);
     Player* lastPlayerToTouchBall() const { return m_lastPlayerToTouchBall; }
     inline void setNoBallOwner() {
         qDebug() << "setNoBallOwner";
@@ -86,6 +82,8 @@ private:
     QTimeLine *m_animationTimer;
 
     Player* m_lastPlayerToTouchBall; // can be null // NOT OWNED
+
+    QMap<MWindow::Action,QPointF> m_moveDistance;
 };
 
 #endif // BALL_H
