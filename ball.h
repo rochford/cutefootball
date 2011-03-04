@@ -24,8 +24,8 @@ public:
     Ball(Pitch* pitch);
     ~Ball();
 
-    void setStartingPosition() {
-        setPos(start_.x(),start_.y());
+    void setPos(const QPointF pos) {
+        QGraphicsPixmapItem::setPos(pos);
         m_positionLocked = false;
         setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
     }
@@ -36,11 +36,14 @@ public:
     void kickBall(MWindow::Action action, QPointF destination);
     inline Player* ballOwner() const { return m_ballOwner; }
     void setBallOwner(Player* p);
-    Player* lastPlayerToTouchBall() const { return m_lastPlayerToTouchBall; }
+    inline Player* lastPlayerToTouchBall() const { return m_lastPlayerToTouchBall; }
     inline void setNoBallOwner() {
         qDebug() << "setNoBallOwner";
         m_ballOwner = NULL;
     }
+    // the next actions on the ball must be "a", performed by player "p".
+    // "p" may be null, Team must be a valid value
+    void setnextActionMustBe(MWindow::Action a, Team* t, Player* p);
 
 signals:
     void goalScored(bool topGoal);
@@ -71,8 +74,6 @@ private:
     QPointF currentPosition_;
     Player *m_ballOwner; // NOT OWNED
 
-    // starting position of ball at kick off
-    QPointF start_;
     int step_;
     // last position of the ball
     QPointF m_lastPos;
@@ -84,6 +85,8 @@ private:
     Player* m_lastPlayerToTouchBall; // can be null // NOT OWNED
 
     QMap<MWindow::Action,QPointF> m_moveDistance;
+
+    MWindow::Action m_requiredNextAction;
 };
 
 #endif // BALL_H

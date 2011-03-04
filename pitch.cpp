@@ -166,19 +166,19 @@ void Pitch::gameStopped()
     }
 }
 
-void Pitch::setPiece(Team* t, SetPiece s)
+void Pitch::setPiece(Team* originatingTeam, SetPiece s, QPointF foulLocation)
 {
     m_soundEffects->soundEvent(SoundEffects::Whistle);
     switch(s) {
     case Pitch::Foul: // TODO foul logic
-        // emit foul();
+// TODO        emit foul(originatingTeam, foulLocation);
         break;
     case Pitch::KickOff:
         foreach (Player *p, m_players) {
                 p->setHasBall(false);
                 p->setPos(p->m_startPositionRectF.center());
             }
-        if (t == m_awayTeam) {
+        if (originatingTeam == m_awayTeam) {
             m_awayTeam->setHasBall(true);
             m_homeTeam->setHasBall(false);
         } else {
@@ -186,7 +186,7 @@ void Pitch::setPiece(Team* t, SetPiece s)
             m_homeTeam->setHasBall(true);
         }
         m_scene->addItem(ball());
-        ball()->setStartingPosition();
+        ball()->setPos(m_scene->sceneRect().center());
         break;
     default:
         break;
@@ -448,7 +448,6 @@ QStringList Pitch::parsePlayers(QString teamName)
         QByteArray line = file.readLine();
 
         QString name(line.simplified());
-        qDebug() << name;
         names.append(name);
     }
     file.close();
@@ -474,6 +473,7 @@ void Pitch::createTeamPlayers(Team *team)
     int i = 0;
     foreach( Player::Role r, formation ) {
         Player *pl(NULL);
+
         if (r == Player::GoalKeeper) {
            pl = new GoalKeeper(
                     names.at(i),
@@ -492,6 +492,8 @@ void Pitch::createTeamPlayers(Team *team)
         pl->createPixmaps();
         pl->createMoves();
         pl->setPos(startPos);
+        if (i==1)
+            pl->setCaptain();
         m_players.append(pl);
         m_scene->addItem(pl);
         i++;

@@ -4,6 +4,7 @@
 #include "pitch.h"
 #include "ball.h"
 #include "Player.h"
+#include "team.h"
 #include "screengraphics.h"
 
 Game::Game(Pitch* p,
@@ -54,21 +55,27 @@ Game::Game(Pitch* p,
     connect(m_1second, SIGNAL(timeout()), this, SLOT(decrementGameTime()));
 
     connect(m_playingState, SIGNAL(entered()), m_pitch, SLOT(gameStarted()));
+    connect(m_pitch, SIGNAL(foul(Team*,QPointF)), this, SLOT(foulCaused(Team*,QPointF)));
+}
+
+void Game::foulCaused(Team* orig, QPointF location)
+{
+    qDebug() << "Game::foulCaused";
+    m_foulingTeam = orig;
+    m_foulingLocation = location;
+    m_pitch->ball()->setPos(m_foulingLocation);
 }
 
 Game::~Game()
 {
-    m_1second->stop();
+    stopGameClock();
     delete m_1second;
 
     delete m_timeLineTakePositions;
     delete m_timeLineLeavePitch;
 }
 
-void Game::setGameLength(int totalGameInMinutes)
-{
-     m_remainingTimeInHalfMs = (totalGameInMinutes * 60 *1000)/2.0;
-}
+
 
 void Game::decrementGameTime()
 {
@@ -88,7 +95,7 @@ void Game::startPlayersLeavePitchAnim(QString /* halfName */)
     createPlayerAnimationItems(HalfOver);
     m_timeLineLeavePitch->start();
     m_pitch->centerOnBall(false);
-    m_1second->stop();
+    stopGameClock();
 }
 
 void Game::stopGameClock()
@@ -99,13 +106,12 @@ void Game::stopGameClock()
 
 void Game::kickOff()
 {
-    foreach (Player *p, m_pitch->m_players) {
+    foreach (Player *p, m_pitch->m_players)
         p->setAllowedOffPitch(false);
-    }
 
     m_pitch->setPiece(m_pitch->homeTeam(), Pitch::KickOff);
 
-    m_playingState->addTransition(m_pitch, SIGNAL(foul()), m_foulState);
+    m_playingState->addTransition(m_pitch, SIGNAL(foul(Team*,QPointF)), m_foulState);
     m_playingState->addTransition(m_pitch->ball(), SIGNAL(goalScored(bool)), m_goalScoredState);
 
     m_1second->start();
@@ -132,7 +138,7 @@ void Game::createPlayerAnimationItems(GameState g)
         anim->setItem(p);
         m_playerAnimationItems.append(anim);
 
-        QPointF tmp;
+        QPointF tmp(p->pos());
         qreal stepX;
         qreal stepY;
 
@@ -141,7 +147,6 @@ void Game::createPlayerAnimationItems(GameState g)
         case TakePositions:
             {
             anim->setTimeLine(m_timeLineTakePositions);
-            tmp = p->pos();
             stepX = ( p->m_startPositionRectF.center().x() - tmp.x()) / 100.0;
             stepY = ( p->m_startPositionRectF.center().y() - tmp.y()) / 100.0;
             MWindow::Action a = calculateAction(tmp, p->m_startPositionRectF.center());
@@ -152,7 +157,6 @@ void Game::createPlayerAnimationItems(GameState g)
         case HalfOver:
             {
             anim->setTimeLine(m_timeLineLeavePitch);
-            tmp = p->pos();
             stepX = ( m_pitch->pitchEntrancePoint().x() - tmp.x() ) / 100.0;
             stepY = ( m_pitch->pitchEntrancePoint().y() - tmp.y() ) / 100.0;
             MWindow::Action a = calculateAction(tmp, m_pitch->pitchEntrancePoint());
@@ -166,10 +170,9 @@ void Game::createPlayerAnimationItems(GameState g)
         }
 
         for (int i = 0; i < 100; ++i) {
-            anim->setPosAt(i / 100.0, QPointF(tmp.x() + stepX,
-                                              tmp.y() + stepY));
-            tmp.setX(tmp.x() + stepX);
-            tmp.setY(tmp.y() + stepY);
+            QPointF newPos(tmp.x() + stepX,tmp.y() + stepY);
+            anim->setPosAt(i / 100.0, newPos);
+            tmp = newPos;
         }
     }
 }
@@ -207,7 +210,7 @@ void Game::onExit(QEvent * /* event */)
 
     m_pitch->m_scene->removeItem(m_pitch->ball());
 
-    m_1second->stop();
+    stopGameClock();
 }
 
 

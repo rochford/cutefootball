@@ -8,7 +8,11 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     QSplashScreen* splash = new QSplashScreen;
+#if defined(Q_OS_SYMBIAN)
     splash->showFullScreen();
+#else
+    splash->show();
+#endif
 
     QSize screenSize(splash->size());
     if (screenSize == QSize(240,320)) {
@@ -35,8 +39,11 @@ int main(int argc, char *argv[])
     a.installTranslator(&appTranslator);
 
     MWindow window;
-//    window.showMaximized();
+#if defined(Q_OS_SYMBIAN)
     window.showFullScreen();
+#else
+    window.show();
+#endif
     splash->finish(&window);
     delete splash;
 

@@ -18,6 +18,7 @@ class Pitch;
 class Game;
 class GoalScoredState;
 class FoulState;
+class Team;
 
 class Game : public QState
 {
@@ -33,9 +34,9 @@ public:
     };
     // stops the gameClock
     void stopGameClock();
-    void setGameLength(int totalGameInMinutes);
     inline int remainingTimeInHalfMs() { return m_remainingTimeInHalfMs; }
-
+    inline void setGameLength(int totalGameInMinutes)
+        { m_remainingTimeInHalfMs = (totalGameInMinutes * 60 *1000)/2.0; }
 signals:
     void halfOver(QString halfName);
 
@@ -44,6 +45,7 @@ public slots:
     void startPlayersLeavePitchAnim(QString halfName);
     void kickOff();
     void decrementGameTime();
+    void foulCaused(Team* orig, QPointF location);
 
 protected:
     void onEntry ( QEvent * event );
@@ -71,6 +73,11 @@ private:
     QTimeLine *m_timeLineTakePositions;
     QTimeLine *m_timeLineLeavePitch;
     QList<QGraphicsItemAnimation*> m_playerAnimationItems;
+
+public:
+    Team* m_foulingTeam;
+    QPointF m_foulingLocation;
+
 };
 
 #endif // GAME_H

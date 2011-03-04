@@ -1,6 +1,5 @@
-adam
-bob
-charlie
-dave
-eddie
-frank
+spanishGoalie
+spanishDefence
+spanishMidLeft
+spanishMidRight
+spanishAttack

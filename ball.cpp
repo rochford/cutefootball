@@ -13,13 +13,13 @@ Ball::Ball(Pitch* pitch)
     QGraphicsPixmapItem(QPixmap(QString(":/images/ball.png")),NULL),
     m_pitch(pitch),
     destination_(QPointF(0,0)),
-    start_(m_pitch->m_scene->sceneRect().center()),
     step_(0),
     m_animation(NULL),
     m_animationTimer(NULL),
     m_ballOwner(NULL),
     m_lastPlayerToTouchBall(NULL),
-    m_positionLocked(false)
+    m_positionLocked(false),
+    m_requiredNextAction(MWindow::NoAction)
 {
     m_ballOwnerTimer = new QTimer(this);
     m_ballOwnerTimer->setInterval(250);
@@ -32,7 +32,7 @@ Ball::Ball(Pitch* pitch)
     pixmap().setMask(bitmap);
 
     setTransformOriginPoint(boundingRect().center());
-    setStartingPosition();
+//    QGraphicsPixmapItem::setPos();
     setZValue(Pitch::ZBall);
 
     m_animation = new QGraphicsItemAnimation(this);
@@ -105,12 +105,16 @@ void Ball::moveBall(MWindow::Action action, int speed)
         qDebug() << "moveBall positionLocked";
         return;
     }
+    if (m_requiredNextAction != MWindow::NoAction &&
+        action != m_requiredNextAction ) {
+        qDebug() << "moveBall specialAction required -> return";
+        return;
+    }
     if (!m_ballOwner) {
         qDebug() << "moveBall no ball owner";
         assert(0);
         return;
     }
-
 
     // old position
     QPointF oldPos=pos();
@@ -155,11 +159,10 @@ void Ball::kickBall(MWindow::Action action, QPointF destination)
 
     qreal stepX = (destination.x() - tmp.x()) / 40.0;
     qreal stepY = (destination.y() - tmp.y()) / 40.0;
+    QPointF diff(stepX,stepY);
 
     for (int i = 0; i <= 40; ++i) {
 //        QPointF newPos = tmp + QPointF(stepX,stepY);
-        QPointF diff(stepX,stepY);
-
         m_animation->setPosAt(i / 40.0, tmp + diff);
         // Rotation in animations does not seem to work
         // animation_->setRotationAt(i / 40.0, i*90.0);
@@ -167,7 +170,7 @@ void Ball::kickBall(MWindow::Action action, QPointF destination)
     }
     m_animationTimer->start();
 
-    if (action == MWindow::Shot)
+    if (action == MWindow::Shot )
         emit shot(team, destination);
     emit soundEvent(SoundEffects::BallKick);
 }
@@ -247,4 +250,10 @@ void Ball::setBallOwner(Player* p)
         m_moveDistance.insert(MWindow::West, QPointF(-speed,0));
         m_moveDistance.insert(MWindow::NorthWest, QPointF(-speed,-speed));
     }
+}
+
+void Ball::setnextActionMustBe(MWindow::Action a, Team* t, Player* p)
+{
+    qDebug() << "Ball::setnextActionMustBe";
+
 }

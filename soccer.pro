@@ -51,7 +51,8 @@ SOURCES += \
     teamSelectionFrame.cpp \
     helpFrame.cpp \
     inputsettingsframe.cpp \
-    halfstatisticsframe.cpp
+    halfstatisticsframe.cpp \
+    soccerutils.cpp
 #    aboutFrame.cpp \
 
 HEADERS  += \
@@ -73,7 +74,8 @@ HEADERS  += \
     helpFrame.h \
     inputsettingsframe.h \
     halfstatisticsframe.h \
-    version.h
+    version.h \
+    soccerutils.h
 #    aboutFrame.h \
 
 RESOURCES += \
