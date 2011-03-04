@@ -26,7 +26,7 @@ public:
     ~FoulState() {}
 
     enum GameState {
-        TakePositions
+        MoveAwayFromBall
     };
 public slots:
     void playFrame(int frame);
@@ -39,6 +39,7 @@ private:
 
 private:
     QState *m_takePositions;
+    QState *m_takeFreeKick;
     QFinalState *m_allDone;
     Game *m_game;
     Pitch* m_pitch;

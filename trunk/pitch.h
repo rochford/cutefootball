@@ -68,7 +68,7 @@ public:
     Player* selectNearestPlayer(Team* team);
 
     void setPlayerStartPositions(Team *team);
-    void setPiece(Team* t, SetPiece s);
+    void setPiece(Team* t, SetPiece s, QPointF foulLocation = QPointF(-1.0,-1.0));
 
     QList<Team*> teams() { return m_teams; }
     inline Team* homeTeam() const { return m_homeTeam; }
@@ -76,11 +76,11 @@ public:
 
     void updateDisplayTime(int timeLeftMs);
     inline QPointF pitchEntrancePoint() const { return m_entrancePoint; }
-    bool extraTimeAllowed() const { return m_settingsFrame->extraTimeAllowed(); }
-    void setPenaltyShootOut(bool penalties) { m_isPenalties = penalties; }
+    inline bool extraTimeAllowed() const { return m_settingsFrame->extraTimeAllowed(); }
+    inline void setPenaltyShootOut(bool penalties) { m_isPenalties = penalties; }
     inline bool extraTime() const {
         return (homeTeam()->m_goals == awayTeam()->m_goals); }
-    void centerOnBall(bool centerOnBall) { m_centerOnBall = centerOnBall; }
+    inline void centerOnBall(bool centerOnBall) { m_centerOnBall = centerOnBall; }
 
 public slots:
     void newGame(int homeTeam, int awayTeam);
@@ -93,12 +93,12 @@ public slots:
     void showHalfStatisticsFrame(QString halfName);
     void hideHalfStatisticsFrame();
 
-    void centerOnBall() { m_centerOnBall = true; }
+    inline void centerOnBall() { m_centerOnBall = true; }
     void countShots(Team* team, QPointF dest);
 
 signals:
    void gameInProgress(bool playing);
-   void foul();
+   void foul(Team* originatingTeam, QPointF foulLocation);
 
 private:
     void createTeamPlayers(Team *team);

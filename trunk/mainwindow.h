@@ -26,14 +26,14 @@ public:
     Pitch* pitch() { return m_pitch; }
 
     enum Action {
-        West = 0,
-        NorthWest,
-        NorthEast,
-        SouthEast,
-        SouthWest,
-        East,
-        North,
-        South,
+        East = 0,
+        SouthEast = 45,
+        South = 90,
+        SouthWest = 135,
+        West = 180,
+        NorthWest = 225,
+        North = 270,
+        NorthEast = 315,
 
         Button,
         ButtonShortPress,
@@ -51,7 +51,9 @@ public:
 
         // goal keeper moves
       DiveEast,
-      DiveWest
+      DiveWest,
+
+      NoAction
     };
 
 private:

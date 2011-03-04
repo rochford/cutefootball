@@ -24,7 +24,7 @@ TeamSelectionFrame::TeamSelectionFrame(MWindow *parent) :
 
     ui->teamSelectionErrorLabel->setVisible(false);
     ui->m_homeTeamComboBox->setCurrentIndex(0);
-    ui->m_awayTeamComboBox->setCurrentIndex(12);
+    ui->m_awayTeamComboBox->setCurrentIndex(1);
 
     connect(ui->buttonBox, SIGNAL(accepted()), parent, SLOT(hideTeamSelectionFrame()));
     connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(startGame()));

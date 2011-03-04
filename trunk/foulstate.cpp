@@ -12,6 +12,7 @@ FoulState::FoulState(Game *g, Pitch *p)
       m_pitch(p)
 {
     m_takePositions = new QState(this);
+    m_takeFreeKick = new QState(this);
     m_allDone = new QFinalState(this);
     setInitialState(m_takePositions);
 
@@ -19,17 +20,19 @@ FoulState::FoulState(Game *g, Pitch *p)
     m_timeLineTakePositions->setCurveShape(QTimeLine::LinearCurve);
     m_timeLineTakePositions->setFrameRange(0, 100);
 
-    m_takePositions->addTransition(m_takePositions, SIGNAL(finished()), m_allDone);
+    m_takePositions->addTransition(m_takePositions, SIGNAL(finished()), m_takeFreeKick);
+
 
     connect(m_timeLineTakePositions, SIGNAL(frameChanged(int)), this, SLOT(playFrame(int)));
-    connect(m_timeLineTakePositions, SIGNAL(finished()), m_game, SLOT(kickOff()));
 }
 
 void FoulState::onEntry(QEvent * /* event */)
 {
     qDebug() << "FoulState::onEntry";
+    m_takeFreeKick->addTransition(m_pitch->ball(), SIGNAL(shot(Team*,QPointF)), m_allDone);
+
     m_game->stopGameClock();
-    createPlayerAnimationItems(TakePositions);
+    createPlayerAnimationItems(MoveAwayFromBall);
     m_timeLineTakePositions->start();
 }
 
@@ -38,23 +41,30 @@ void FoulState::createPlayerAnimationItems(GameState g)
 {
     m_playerAnimationItems.clear(); // TODO XXX TIM delete all
 
+    qDebug() << "FoulState::createPlayerAnimationItems start";
+    qDebug() << m_game->m_foulingTeam->briefName() << m_game->m_foulingLocation;
+
+    // move the captain to take the freekick near the m_foulingLocation
+    // add a second delay prior to able to kick ball
+
     foreach (Player *p, m_pitch->m_players) {
         QGraphicsItemAnimation* anim = new QGraphicsItemAnimation(this);
         anim->setItem(p);
         m_playerAnimationItems.append(anim);
 
         QPointF tmp;
-        qreal stepX;
-        qreal stepY;
+        qreal stepX = 1.0 / 100;
+        qreal stepY = 1.0 / 100;
 
+        qDebug() << "FoulState::createPlayerAnimationItems name " << p->name() << " pos=" << p->pos();
         switch( g )
         {
-        case TakePositions:
+        case MoveAwayFromBall:
         {
             anim->setTimeLine(m_timeLineTakePositions);
             tmp = p->pos();
-            stepX = ( m_pitch->ball()->pos().x() - tmp.x()) / 100.0;
-            stepY = ( m_pitch->ball()->pos().y() - tmp.y()) / 100.0;
+            // stepX = ( m_pitch->ball()->pos().x() - tmp.x()) / 100.0;
+            // stepY = ( m_pitch->ball()->pos().y() - tmp.y()) / 100.0;
             MWindow::Action a = calculateAction(tmp, p->m_startPositionRectF.center());
             p->movePlayer(a);
         }

@@ -71,6 +71,9 @@ public:
     inline bool hasBall() const { return m_hasBall; }
     Team* team() const { return m_team; }
     inline void setAllowedOffPitch(bool isAllowed) { m_allowedOffPitch = isAllowed; }
+    inline QString name() const { return m_name; }
+    inline void setCaptain(bool isCaptain = true) { m_captain = isCaptain; }
+    inline bool isCaptain() const { return m_captain; }
 
 private slots:
     void repeatKeyEvent();
@@ -128,6 +131,9 @@ protected:
     QTimer *m_outOfAction;
     bool m_allowedOffPitch;
     qreal m_speed;
+
+    // is this player the captain of the team?
+    bool m_captain;
 };
 
 #endif // PLAYER_H
