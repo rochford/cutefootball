@@ -48,7 +48,6 @@ Player::Player(QString name,
 
 Player::~Player()
 {
-    m_moveDistance.clear();
     m_images.clear();
     m_actions.clear();
 
@@ -78,18 +77,6 @@ void Player::standupPlayer()
 {
     setRotation(0);
     setPixmap(m_images[m_lastAction].at(0));
-}
-
-void Player::createMoves()
-{
-    m_moveDistance.insert(MWindow::North, QPointF(0,-m_speed));
-    m_moveDistance.insert(MWindow::NorthEast, QPointF(m_speed,-m_speed));
-    m_moveDistance.insert(MWindow::East, QPointF(m_speed,0));
-    m_moveDistance.insert(MWindow::SouthEast, QPointF(m_speed,m_speed));
-    m_moveDistance.insert(MWindow::South, QPointF(0,m_speed));
-    m_moveDistance.insert(MWindow::SouthWest, QPointF(-m_speed,m_speed));
-    m_moveDistance.insert(MWindow::West, QPointF(-m_speed,0));
-    m_moveDistance.insert(MWindow::NorthWest, QPointF(-m_speed,-m_speed));
 }
 
 void Player::pixmapInsert(MWindow::Action a, QString s1, QString s2, QString s3, QRgb shirtColor, QRgb shortColor)
@@ -203,19 +190,22 @@ void Player::movePlayer(MWindow::Action action, QPointF destination)
     case MWindow::West:
     case MWindow::NorthWest:
     {
+        QLineF tragectory;
+        tragectory.setP1(pos());
+        tragectory.setAngle((qreal)action);
+        tragectory.setLength(m_speed);
+
+//        qDebug() << "Player::movePlayer " << (qreal)action << " deg, speed=" << m_speed;
+//        qDebug() << "Player::movePlayer start " << tragectory.p1() << " end " << tragectory.p2();
+//        qDebug() << "Player::movePlayer dx " << tragectory.dx() << " dy " << tragectory.dy();
+
         setPixmap(m_images[action].at(m_step % 3));
         setRotation(0);
         // if the destination is less than move distance, only move that much
-        QPointF diff = destination - pos();
-    //    qreal dx = destination.x() - pos().x();
-    //    qreal dy = destination.y() - pos().y();
-        qreal x = m_moveDistance[action].x();
-        qreal y = m_moveDistance[action].y();
-        if ( qAbs(diff.x()) < qAbs(x))
-            x = diff.x();
-        if ( qAbs(diff.y()) < qAbs(y))
-            y = diff.y();
-        moveBy(x, y);
+        QLineF diff(pos(), destination);
+        if (diff.length() < tragectory.length())
+            tragectory.setLength(diff.length());
+        moveBy(tragectory.dx(), tragectory.dy());
         m_lastAction = action;
     }
         break;
@@ -304,8 +294,13 @@ void Player::specialAction(MWindow::Action action)
             int rotation = calculateTackleRotationFromLastAction(m_lastAction);
 
             setPixmap(m_images[MWindow::Tackle].at(0));
+            QLineF tragectory;
+            tragectory.setP1(pos());
+            tragectory.setAngle((qreal)m_lastAction);
+            tragectory.setLength(m_speed);
+
             setRotation(rotation);
-            moveBy(m_moveDistance[m_lastAction].x(), m_moveDistance[m_lastAction].y());
+            moveBy(tragectory.dx(), tragectory.dy());
             m_outOfAction->stop();
             m_outOfAction->start(500);
 

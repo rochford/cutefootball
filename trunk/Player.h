@@ -11,11 +11,7 @@
 #include "pitch.h"
 
 typedef QList<QPixmap> PixmapList;
-/*
-MWindow::Action calculateAction(QPointF source,
-                                QPointF destination);
-void teamColorTransform(QPixmap &pixmap, QString pix, QRgb colorFrom, QRgb shirtColor, QRgb shortColor);
-*/
+
 class Player : public QObject,
                public QGraphicsPixmapItem
 {
@@ -51,10 +47,8 @@ public:
 
     virtual void advance(int phase);
     virtual void createPixmaps();
-    virtual void createMoves();
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
-
 
     bool ballCollisionCheck() const;
     bool playerCollisionCheck() const;
@@ -129,7 +123,6 @@ protected:
     MWindow::Action m_lastAction;
     QMap<MWindow::Action,PixmapList> m_images;
     Pitch *m_pitch;
-    QMap<MWindow::Action,QPointF> m_moveDistance;
     int m_step;
     QTimer *m_outOfAction;
     bool m_allowedOffPitch;

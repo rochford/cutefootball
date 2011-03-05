@@ -456,7 +456,6 @@ void Pitch::createTeamPlayers(Team *team)
                     r);
         }
         pl->createPixmaps();
-        pl->createMoves();
         pl->setPos(startPos);
         if (i==1)
             pl->setCaptain();
