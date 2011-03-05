@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "team.h"
 #include "screengraphics.h"
+#include "soccerutils.h"
 
 Game::Game(Pitch* p,
      QString stateName,
@@ -68,7 +69,7 @@ void Game::foulCaused(Team* orig, QPointF location)
 
 Game::~Game()
 {
-    stopGameClock();
+    pauseGameClock();
     delete m_1second;
 
     delete m_timeLineTakePositions;
@@ -95,13 +96,19 @@ void Game::startPlayersLeavePitchAnim(QString /* halfName */)
     createPlayerAnimationItems(HalfOver);
     m_timeLineLeavePitch->start();
     m_pitch->centerOnBall(false);
-    stopGameClock();
+    pauseGameClock();
 }
 
-void Game::stopGameClock()
+void Game::pauseGameClock()
 {
     if (m_1second->isActive())
         m_1second->stop();
+}
+
+void Game::continueGameClock()
+{
+    if (!m_1second->isActive())
+        m_1second->start();
 }
 
 void Game::kickOff()
@@ -210,7 +217,7 @@ void Game::onExit(QEvent * /* event */)
 
     m_pitch->m_scene->removeItem(m_pitch->ball());
 
-    stopGameClock();
+    pauseGameClock();
 }
 
 

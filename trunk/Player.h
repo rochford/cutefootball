@@ -11,11 +11,11 @@
 #include "pitch.h"
 
 typedef QList<QPixmap> PixmapList;
-
+/*
 MWindow::Action calculateAction(QPointF source,
                                 QPointF destination);
 void teamColorTransform(QPixmap &pixmap, QString pix, QRgb colorFrom, QRgb shirtColor, QRgb shortColor);
-
+*/
 class Player : public QObject,
                public QGraphicsPixmapItem
 {
@@ -55,7 +55,7 @@ public:
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
 
-    inline qreal speed() const { return m_speed; }
+
     bool ballCollisionCheck() const;
     bool playerCollisionCheck() const;
 
@@ -67,9 +67,10 @@ public:
 
     bool withinShootingDistance() const;
 
+    inline qreal speed() const { return m_speed; }
     inline void setHasBall(bool hasBall) { m_hasBall = hasBall; }
     inline bool hasBall() const { return m_hasBall; }
-    Team* team() const { return m_team; }
+    inline Team* team() const { return m_team; }
     inline void setAllowedOffPitch(bool isAllowed) { m_allowedOffPitch = isAllowed; }
     inline QString name() const { return m_name; }
     inline void setCaptain(bool isCaptain = true) { m_captain = isCaptain; }
@@ -77,6 +78,8 @@ public:
 
 private slots:
     void repeatKeyEvent();
+    void standupPlayer();
+    void foulEventStart(Team* t, QPointF foulLocation);
 
 protected:
     QRectF boundingRect() const;

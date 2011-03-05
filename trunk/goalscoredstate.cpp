@@ -4,6 +4,7 @@
 #include "pitch.h"
 #include "ball.h"
 #include "Player.h"
+#include "soccerutils.h"
 
 GoalScoredState::GoalScoredState(Game *g, Pitch *p)
     : QState(g),
@@ -41,7 +42,7 @@ void GoalScoredState::createTakePositionAnimation()
 void GoalScoredState::onEntry(QEvent * /* event */)
 {
     m_pitch->updateDisplayTime(m_game->remainingTimeInHalfMs());
-    m_game->stopGameClock();
+    m_game->pauseGameClock();
     createPlayerAnimationItems(Celebrate);
     m_timeLineCelebrate->start();
 }

@@ -24,7 +24,6 @@ Player::Player(QString name,
     m_pitch(pitch),
     m_speed(speed),
     m_step(0),
-    m_outOfAction(NULL),
     m_allowedOffPitch(true)
 {
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
@@ -38,7 +37,9 @@ Player::Player(QString name,
     m_outOfAction = new QTimer(this);
     m_outOfAction->setSingleShot(true);
 
+    connect(m_outOfAction, SIGNAL(timeout()), this, SLOT(standupPlayer()));
     connect(m_keyEventTimer, SIGNAL(timeout()), this, SLOT(repeatKeyEvent()));
+    connect(m_pitch, SIGNAL(foul(Team*,QPointF)), this, SLOT(foulEventStart(Team*,QPointF)));
 
     createKeyboardActions();
     setRotation(0);
@@ -53,6 +54,30 @@ Player::~Player()
 
     delete m_keyEventTimer;
     delete m_outOfAction;
+}
+
+void Player::foulEventStart(Team* t, QPointF foulLocation)
+{
+    qDebug() << "Player::foulEvent";
+    if (t && t == this->m_team) {
+        // not allowed within certain distance of foulLocation
+        QPainterPath path;
+        path.addEllipse(foulLocation, KFoulDistance, KFoulDistance);
+        QList<QGraphicsItem *> list = m_pitch->m_scene->items ( path,
+                                                             Qt::IntersectsItemShape,
+                                                             Qt::AscendingOrder);
+        foreach (QGraphicsItem *item, list) {
+            if (item == this) {
+                qDebug() << this->name() << " needs to move away from ball";
+            }
+        }
+    }
+}
+
+void Player::standupPlayer()
+{
+    setRotation(0);
+    setPixmap(m_images[m_lastAction].at(0));
 }
 
 void Player::createMoves()
@@ -131,10 +156,6 @@ void Player::paint(QPainter *painter,
         painter->drawEllipse(boundingRect().center(), 8, 8);
     }
 
- // XXX what do these lines do?
- //   QSize pixmapSize = pixmap().size();
- //   pixmapSize.scale(QSizeF(36,36).toSize(), Qt::KeepAspectRatio);
-
     // Draw QGraphicsPixmapItem face
     painter->drawPixmap(boundingRect().toRect(), pixmap());
 }
@@ -201,8 +222,6 @@ void Player::movePlayer(MWindow::Action action, QPointF destination)
     default:
         break;
     }
-//    if (this->m_role == Player::GoalKeeper)
-//        qDebug() << "Player::movePlayer GoalKeeper end";
 }
 
 bool Player::withinShootingDistance() const
@@ -299,7 +318,7 @@ void Player::specialAction(MWindow::Action action)
                 if (p)
                     p->setTackled();
                 // TODO foul logic here...
-                m_pitch->setPiece( team(), Pitch::Foul, p->pos());
+                m_pitch->setPiece( team(), Pitch::Foul, pos());
             }
             // if tackle causes contact with the ball then transfer the ownership
             else if ( playerCollision && ballCollision  ) {

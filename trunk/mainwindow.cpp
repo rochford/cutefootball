@@ -101,7 +101,7 @@ void MWindow::enableActions(bool gameInProgress)
     uiMainWindow.actionNew_Game->setEnabled(!gameInProgress);
     uiMainWindow.actionSettings->setEnabled(!gameInProgress);
     uiMainWindow.actionInputSettings->setEnabled(!gameInProgress);
-    uiMainWindow.actionAbout->setEnabled(!gameInProgress);
+//    uiMainWindow.actionAbout->setEnabled(!gameInProgress);
     uiMainWindow.actionHelp->setEnabled(!gameInProgress);
     uiMainWindow.actionQuit->setEnabled(true);
     uiMainWindow.actionPause->setEnabled(!gameInProgress);
@@ -111,46 +111,6 @@ void MWindow::enableActions(bool gameInProgress)
 
     if (!gameInProgress)
         showFrame(MWindow::MainMenu);
-}
-/*
-void MWindow::hideAboutFrame()
-{
-    showFrame(MWindow::MainMenu);
-}
-*/
-void MWindow::hideInputSettingsFrame()
-{
-    showFrame(MWindow::MainMenu);
-}
-
-void MWindow::hideHelpFrame()
-{
-    showFrame(MWindow::MainMenu);
-}
-
-void MWindow::hideSettingsFrame()
-{
-    showFrame(MWindow::MainMenu);
-}
-
-void MWindow::showSettingsFrame()
-{
-    showFrame(MWindow::Settings);
-}
-
-void MWindow::hideTeamSelectionFrame()
-{
-    showFrame(MWindow::MainMenu);
-}
-
-void MWindow::showTeamSelectionFrame()
-{
-    showFrame(MWindow::TeamSelection);
-}
-
-void MWindow::showInputSettingsFrame()
-{
-    showFrame(MWindow::InputSettings);
 }
 
 void MWindow::showFrame(Frame f)
@@ -220,17 +180,6 @@ void MWindow::newGame(int homeTeam, int awayTeam)
     m_pitch->newGame(homeTeam, awayTeam);
 }
 
-void MWindow::showHelpFrame()
-{
-    showFrame(MWindow::Help);
-}
-
-/*
-void MWindow::showAboutFrame()
-{
-    showFrame(MWindow::About);
-}
-*/
 void MWindow::resizeEvent(QResizeEvent *e)
 {
     QWidgetList widgets = QApplication::allWidgets();

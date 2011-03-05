@@ -71,23 +71,23 @@ private:
     void removeContextMenus();
 
 public slots:
-    void hideTeamSelectionFrame();
-    void hideSettingsFrame();
-//    void hideAboutFrame();
-    void hideHelpFrame();
-    void hideInputSettingsFrame();
     void showFrame(Frame f);
     void newGame(int homeTeam, int awayTeam);
+//    void hideAboutFrame(){showFrame(MWindow::MainMenu);}
+    void hideInputSettingsFrame(){showFrame(MWindow::MainMenu);}
+    void hideHelpFrame(){showFrame(MWindow::MainMenu);}
+    void hideSettingsFrame(){ showFrame(MWindow::MainMenu);}
+    void showSettingsFrame(){ showFrame(MWindow::Settings);}
+    void hideTeamSelectionFrame(){ showFrame(MWindow::MainMenu);}
+    void showTeamSelectionFrame(){ showFrame(MWindow::TeamSelection);}
+    void showInputSettingsFrame() { showFrame(MWindow::InputSettings);}
+    void showHelpFrame(){showFrame(MWindow::Help);}
+    // void showAboutFrame(){showFrame(MWindow::About);}
 
 protected:
     void resizeEvent(QResizeEvent *e);
 
 private slots:
-//    void showAboutFrame();
-    void showHelpFrame();
-    void showInputSettingsFrame();
-    void showSettingsFrame();
-    void showTeamSelectionFrame();
     void enableActions(bool gameInProgress);
     void checkClose(int result);
 

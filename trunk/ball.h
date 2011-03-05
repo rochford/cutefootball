@@ -43,7 +43,7 @@ public:
     }
     // the next actions on the ball must be "a", performed by player "p".
     // "p" may be null, Team must be a valid value
-    void setnextActionMustBe(MWindow::Action a, Team* t, Player* p);
+    void setRequiredNextAction(MWindow::Action a, Team* t, Player* p);
 
 signals:
     void goalScored(bool topGoal);
@@ -87,6 +87,7 @@ private:
     QMap<MWindow::Action,QPointF> m_moveDistance;
 
     MWindow::Action m_requiredNextAction;
+    Player* m_requiredNextActionPlayer; // can be null // NOT OWNED
 };
 
 #endif // BALL_H
