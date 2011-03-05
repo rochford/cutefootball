@@ -24,6 +24,7 @@ class QTimeLine;
 class Ball;
 class Player;
 class Team;
+class TeamManager;
 class ScreenGraphics;
 class Game;
 class HalfStatisticsFrame;
@@ -70,7 +71,7 @@ public:
     void setPlayerStartPositions(Team *team);
     void setPiece(Team* t, SetPiece s, QPointF foulLocation = QPointF(-1.0,-1.0));
 
-    QList<Team*> teams() { return m_teams; }
+    QList<Team*> teams() { return m_teamMgr->teams(); }
     inline Team* homeTeam() const { return m_homeTeam; }
     inline Team* awayTeam() const { return m_awayTeam; }
 
@@ -103,9 +104,9 @@ signals:
 private:
     void createTeamPlayers(Team *team);
     void layoutPitch();
-    void createTeams();
+//    void createTeams();
     void setPlayerDefendZone(Player *p);
-    void parseTeamList();
+//    void parseTeamList();
     QStringList parsePlayers(QString teamName);
 
     inline bool penalties() const {  return m_isPenalties; }
@@ -129,7 +130,8 @@ public:
     SoundEffects* m_soundEffects;  // NOT OWNED
 
 private:
-    QList<Team*> m_teams;
+//    QList<Team*> m_teams;
+    TeamManager* m_teamMgr;
 
     Team *m_homeTeam;
     Team *m_awayTeam;

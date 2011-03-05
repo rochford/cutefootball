@@ -37,10 +37,8 @@ public:
     inline Player* ballOwner() const { return m_ballOwner; }
     void setBallOwner(Player* p);
     inline Player* lastPlayerToTouchBall() const { return m_lastPlayerToTouchBall; }
-    inline void setNoBallOwner() {
-        qDebug() << "setNoBallOwner";
-        m_ballOwner = NULL;
-    }
+    inline void setNoBallOwner() { m_ballOwner = NULL; }
+
     // the next actions on the ball must be "a", performed by player "p".
     // "p" may be null, Team must be a valid value
     void setRequiredNextAction(MWindow::Action a, Team* t, Player* p);
@@ -63,28 +61,28 @@ protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
 private:
-    QTimer* m_ballOwnerTimer;
+    // present speed of ball
+    qreal m_velocity;
+    // angle of direction of travel
+    qreal m_angle;
+    // last position of the ball
+    QPointF m_lastPos;
 
     // ball position fixed until this is false
     bool m_positionLocked;
 
     Pitch *m_pitch; // NOT OWNED
-    MWindow::Action previousAction;
-    QPointF destination_;
-    QPointF currentPosition_;
+    QPointF m_destination;
     Player *m_ballOwner; // NOT OWNED
+    QTimer* m_ballOwnerTimer;
 
     int step_;
-    // last position of the ball
-    QPointF m_lastPos;
 
     // ball passing animation
     QGraphicsItemAnimation *m_animation;
     QTimeLine *m_animationTimer;
 
     Player* m_lastPlayerToTouchBall; // can be null // NOT OWNED
-
-    QMap<MWindow::Action,QPointF> m_moveDistance;
 
     MWindow::Action m_requiredNextAction;
     Player* m_requiredNextActionPlayer; // can be null // NOT OWNED

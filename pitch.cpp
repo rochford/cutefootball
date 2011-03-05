@@ -35,7 +35,8 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     m_settingsFrame(settingsFrame),
     m_soundEffects(se),
     m_halfStatisticsFrame(NULL),
-    m_centerOnBall(false)
+    m_centerOnBall(false),
+    m_teamMgr(new TeamManager)
 {
 #if defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR)
     m_view->scale(1.6,1.6);
@@ -82,7 +83,7 @@ Pitch::Pitch(const QRectF& footballGroundRect,
 
     m_soundEffects->soundEnabled(m_settingsFrame->soundEnabled());
 
-    createTeams();
+    m_teamMgr->createTeams();
 
     connect(m_motionTimer, SIGNAL(timeout()), m_scene, SLOT(advance()));
     connect(m_motionTimer, SIGNAL(timeout()), m_scene, SLOT(update()));
@@ -110,6 +111,7 @@ Pitch::~Pitch()
     delete m_grass;
     delete m_scoreText;
     delete m_ball;
+    delete m_teamMgr;
 }
 
 Player* Pitch::selectNearestPlayer(Team* team)
@@ -171,7 +173,7 @@ void Pitch::setPiece(Team* originatingTeam, SetPiece s, QPointF foulLocation)
     m_soundEffects->soundEvent(SoundEffects::Whistle);
     switch(s) {
     case Pitch::Foul: // TODO foul logic
-        emit foul(originatingTeam, foulLocation);
+//        emit foul(originatingTeam, foulLocation);
         break;
     case Pitch::KickOff:
         foreach (Player *p, m_players) {
@@ -362,42 +364,6 @@ void Pitch::hasBallCheck()
     }
 }
 
-void Pitch::parseTeamList()
-{
-    QStringList colorNames(QColor::colorNames());
-
-    // for each team in the directory
-    QFile file(":/teams/teams.txt");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-        return;
-
-    while (!file.atEnd()) {
-        QByteArray line = file.readLine();
-        if (line.contains('#'))
-            continue;
-
-        QList<QByteArray> nameAndColor = line.split(',');
-        QString briefName = nameAndColor.at(0).simplified();
-        QString name = nameAndColor.at(1).simplified();
-
-        QString shirtColorString = nameAndColor.at(2).simplified();
-        QString shortColorString = nameAndColor.at(3).simplified();
-
-        const int playerSpeed = nameAndColor.at(4).simplified().toInt();
-
-        QColor shirtColor(shirtColorString);
-        QColor shortColor(shortColorString);
-
-        Team* t = new Team(briefName, name, shirtColor, shortColor, playerSpeed);
-        m_teams.append(t);
-    }
-    file.close();
-}
-
-void Pitch::createTeams()
-{
-    parseTeamList();
-}
 
 void Pitch::countShots(Team* team, QPointF /* dest */)
 {
@@ -415,9 +381,9 @@ void Pitch::newGame(int homeTeam, int awayTeam)
     m_ball = new Ball(this);
     m_scene->addItem(m_ball);
 
-    m_homeTeam = m_teams.at(homeTeam);
+    m_homeTeam = m_teamMgr->at(homeTeam);
     m_homeTeam->newGame();
-    m_awayTeam = m_teams.at(awayTeam);
+    m_awayTeam = m_teamMgr->at(awayTeam);
     m_awayTeam->newGame();
 
     createTeamPlayers(m_homeTeam);

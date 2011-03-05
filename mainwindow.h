@@ -27,13 +27,13 @@ public:
 
     enum Action {
         East = 0,
-        SouthEast = 45,
-        South = 90,
-        SouthWest = 135,
-        West = 180,
-        NorthWest = 225,
-        North = 270,
-        NorthEast = 315,
+        SouthEast = -45,
+        South = -90,
+        SouthWest = -135,
+        West = -180,
+        NorthWest = -225,
+        North = -270,
+        NorthEast = -315,
 
         Button,
         ButtonShortPress,
