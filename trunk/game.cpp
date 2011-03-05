@@ -45,8 +45,8 @@ Game::Game(Pitch* p,
     m_halfEndState->addTransition(m_timeLineLeavePitch, SIGNAL(finished()), m_allDoneState);
 
     connect(this, SIGNAL(halfOver(QString)), this, SLOT(startPlayersLeavePitchAnim(QString)));
-    connect(this, SIGNAL(halfOver(QString)), m_pitch, SLOT(showHalfStatisticsFrame(QString)));
-    connect(m_timeLineLeavePitch, SIGNAL(finished()), m_pitch, SLOT(hideHalfStatisticsFrame()));
+    connect(m_timeLineLeavePitch, SIGNAL(finished()), m_pitch, SLOT(showHalfStatisticsFrame()));
+ //   connect(m_timeLineLeavePitch, SIGNAL(finished()), m_pitch, SLOT(hideHalfStatisticsFrame()));
 
     connect(m_timeLineTakePositions, SIGNAL(finished()), m_pitch, SLOT(centerOnBall()));
     connect(m_timeLineTakePositions, SIGNAL(finished()), this, SLOT(kickOff()));
@@ -186,6 +186,8 @@ void Game::createPlayerAnimationItems(GameState g)
 
 void Game::onEntry(QEvent * /* event */)
 {
+    qDebug() << "Game::onEntry " << objectName();
+    m_pitch->updateDisplayTime(remainingTimeInHalfMs());
     if (  m_isFirstHalf ) {
         m_pitch->homeTeam()->setDirection(Team::NorthToSouth);
         m_pitch->setPlayerStartPositions(m_pitch->homeTeam());

@@ -27,7 +27,7 @@ class Team;
 class TeamManager;
 class ScreenGraphics;
 class Game;
-class HalfStatisticsFrame;
+//class HalfStatisticsFrame;
 
 const QString KFirstHalf(QObject::tr("First half"));
 const QString KSecondHalf(QObject::tr("Second half"));
@@ -39,6 +39,11 @@ class Pitch : public QObject
 {
     Q_OBJECT
 public:
+    enum State {
+        Pause,
+        Continue
+    };
+
     enum SetPiece {
         KickOff,
         Penalty,
@@ -85,13 +90,14 @@ public:
 
 public slots:
     void newGame(int homeTeam, int awayTeam);
+    void setState(Pitch::State s) { m_state = s; emit stateChanged(m_state);}
 
     void hasBallCheck();
     void selectNearestPlayer();
     void gameStarted();
     void gameStopped();
 
-    void showHalfStatisticsFrame(QString halfName);
+    void showHalfStatisticsFrame();
     void hideHalfStatisticsFrame();
 
     inline void centerOnBall() { m_centerOnBall = true; }
@@ -100,13 +106,13 @@ public slots:
 signals:
    void gameInProgress(bool playing);
    void foul(Team* originatingTeam, QPointF foulLocation);
+   void displayHalfTimeStatistics(bool);
+   void stateChanged(State);
 
 private:
     void createTeamPlayers(Team *team);
     void layoutPitch();
-//    void createTeams();
     void setPlayerDefendZone(Player *p);
-//    void parseTeamList();
     QStringList parsePlayers(QString teamName);
 
     inline bool penalties() const {  return m_isPenalties; }
@@ -130,7 +136,6 @@ public:
     SoundEffects* m_soundEffects;  // NOT OWNED
 
 private:
-//    QList<Team*> m_teams;
     TeamManager* m_teamMgr;
 
     Team *m_homeTeam;
@@ -138,6 +143,7 @@ private:
     Ball *m_ball;
     QTimer *m_motionTimer;
 
+    State m_state;
     QStateMachine *m_game;
     Game *m_firstHalfState;
     Game *m_secondHalfState;
@@ -151,8 +157,8 @@ private:
 
     settingsFrame *m_settingsFrame;
 
-    HalfStatisticsFrame* m_halfStatisticsFrame;
-    QGraphicsProxyWidget *m_halfStatisticsProxy;
+//    HalfStatisticsFrame* m_halfStatisticsFrame;
+//    QGraphicsProxyWidget *m_halfStatisticsProxy;
 
     // true if the ball should in centered on
     bool m_centerOnBall;

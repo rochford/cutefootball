@@ -16,8 +16,8 @@ mainMenuFrame::mainMenuFrame(MWindow *parent) :
             parent, SLOT(showSettingsFrame()));
     connect(ui->actionInputSettings, SIGNAL(triggered()),
             parent, SLOT(showInputSettingsFrame()));
-    connect(ui->actionAbout, SIGNAL(triggered()),
-            parent, SLOT(showAboutFrame()));
+//    connect(ui->actionAbout, SIGNAL(triggered()),
+//            parent, SLOT(showAboutFrame()));
     connect(ui->actionHelp, SIGNAL(triggered()),
             parent,SLOT(showHelpFrame()));
     connect(ui->actionQuit, SIGNAL(triggered()),

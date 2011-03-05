@@ -80,27 +80,27 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pitch.h" line="31"/>
+        <location filename="../pitch.h" line="32"/>
         <source>First half</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pitch.h" line="32"/>
+        <location filename="../pitch.h" line="33"/>
         <source>Second half</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pitch.h" line="33"/>
+        <location filename="../pitch.h" line="34"/>
         <source>Extra Time First half</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pitch.h" line="34"/>
+        <location filename="../pitch.h" line="35"/>
         <source>Extra Time Second half</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pitch.h" line="35"/>
+        <location filename="../pitch.h" line="36"/>
         <source>penalty shoot out</source>
         <translation type="unfinished"></translation>
     </message>
@@ -224,12 +224,12 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settingsFrame.cpp" line="12"/>
+        <location filename="../settingsFrame.cpp" line="13"/>
         <source>Save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settingsFrame.cpp" line="14"/>
+        <location filename="../settingsFrame.cpp" line="15"/>
         <source>Main Menu</source>
         <translation type="unfinished"></translation>
     </message>

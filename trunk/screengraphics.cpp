@@ -4,7 +4,7 @@
 
 #include "pitch.h"
 
-const QFont KFont("Times", 6, QFont::Bold);
+const QFont KFont("Times", 12, QFont::Bold);
 
 ScreenGraphics::ScreenGraphics(Pitch *p)
   :  m_pitch(p),

@@ -10,9 +10,7 @@ TARGET = soccer
 TEMPLATE = app
 
 TRANSLATIONS = \
-    translations/soccer_fi.ts \
-    translations/soccer_de.ts \
-    translations/soccer_fr.ts
+    translations/soccer_fi.ts
 
 symbian {
     symbian:TARGET.UID3 = 0xEED6D15E

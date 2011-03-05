@@ -4,6 +4,7 @@
 #include "pitch.h"
 #include "settingsFrame.h"
 //#include "aboutFrame.h"
+#include "halfstatisticsframe.h"
 #include "inputSettingsFrame.h"
 #include "helpFrame.h"
 #include "teamSelectionFrame.h"
@@ -16,6 +17,7 @@ MWindow::MWindow(QWidget *parent)
     m_soundEffects = new SoundEffects(this);
 
 //    m_aboutFrame = new aboutFrame(this);
+    m_halfStatisticsFrame = new HalfStatisticsFrame(this);
     m_helpFrame = new helpFrame(this);
     m_inputSettingsFrame = new inputSettingsFrame(this);
 
@@ -48,6 +50,7 @@ MWindow::~MWindow()
 {
     delete m_soundEffects;
     delete m_settingsFrame;
+    delete m_halfStatisticsFrame;
 //    delete m_aboutFrame;
     delete m_helpFrame;
     delete m_teamSelectionFrame;
@@ -86,10 +89,33 @@ void MWindow::createConnections()
     connect(m_exitDialog, SIGNAL(finished(int)), this, SLOT(checkClose(int)));
 
     connect(m_pitch, SIGNAL(gameInProgress(bool)), this, SLOT(enableActions(bool)));
+    connect(m_pitch, SIGNAL(displayHalfTimeStatistics(bool)), this, SLOT(displayHalfTimeStatistics(bool)));
+}
+
+void MWindow::displayHalfTimeStatistics(bool display)
+{
+    qDebug() << "MWindow::displayHalfTimeStatistics";
+    if (display) {
+        // m_halfStatisticsFrame->setHalfName(halfName);
+        m_halfStatisticsFrame->setHomeTeamName(m_pitch->homeTeam()->fullName());
+        m_halfStatisticsFrame->setHomeTeamFlag(QString(":/images/flags/") + m_pitch->homeTeam()->fullName() + ".png");
+        m_halfStatisticsFrame->setAwayTeamName(m_pitch->awayTeam()->fullName());
+        m_halfStatisticsFrame->setAwayTeamFlag(QString(":/images/flags/") + m_pitch->awayTeam()->fullName() + ".png");
+
+        m_halfStatisticsFrame->setHomeTeamGoals(m_pitch->homeTeam()->m_goals);
+        m_halfStatisticsFrame->setAwayTeamGoals(m_pitch->awayTeam()->m_goals);
+
+        m_halfStatisticsFrame->setHomeTeamShots(m_pitch->homeTeam()->shots());
+        m_halfStatisticsFrame->setAwayTeamShots(m_pitch->awayTeam()->shots());
+
+        showStatisticsFrame();
+    } else
+        hideStatisticsFrame();
 }
 
 void MWindow::enableActions(bool gameInProgress)
 {
+    qDebug() << "MWindow::enableActions" << gameInProgress;
     if (gameInProgress) {
         disconnect(uiMainWindow.actionQuit, SIGNAL(triggered()), this, SLOT(close()));
         connect(uiMainWindow.actionQuit, SIGNAL(triggered()), m_exitDialog, SLOT(show()));
@@ -110,7 +136,7 @@ void MWindow::enableActions(bool gameInProgress)
     uiMainWindow.menuAbout->setEnabled(!gameInProgress);
 
     if (!gameInProgress)
-        showFrame(MWindow::MainMenu);
+        showFrame(MWindow::HalfTimeStatistics);
 }
 
 void MWindow::showFrame(Frame f)
@@ -131,6 +157,7 @@ void MWindow::showFrame(Frame f)
     m_settingsFrame->setVisible(false);
     m_inputSettingsFrame->setVisible(false);
     m_teamSelectionFrame->setVisible(false);
+    m_halfStatisticsFrame->setVisible(false);
     uiMainWindow.m_graphicsView->clearFocus();
 
     switch (f) {
@@ -139,6 +166,9 @@ void MWindow::showFrame(Frame f)
         m_aboutFrame->setVisible(true);
         break;
 #endif
+    case MWindow::HalfTimeStatistics:
+        m_halfStatisticsFrame->setVisible(true);
+        break;
     case MWindow::Help:
         m_helpFrame->setVisible(true);
         break;
@@ -172,6 +202,15 @@ void MWindow::showFrame(Frame f)
     }
 }
 
+void MWindow::hideStatisticsFrame()
+{
+    qDebug() << "MWindow::hideStatisticsFrame";
+    if (m_gameInProgress) {
+        m_pitch->setState(Pitch::Continue);
+        showFrame(MWindow::GraphicsView);
+    } else
+        showFrame(MWindow::MainMenu);
+}
 
 void MWindow::newGame(int homeTeam, int awayTeam)
 {
