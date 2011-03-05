@@ -19,7 +19,8 @@ Ball::Ball(Pitch* pitch)
     m_ballOwner(NULL),
     m_lastPlayerToTouchBall(NULL),
     m_positionLocked(false),
-    m_requiredNextAction(MWindow::NoAction)
+    m_requiredNextAction(MWindow::NoAction),
+    m_requiredNextActionPlayer(NULL)
 {
     m_ballOwnerTimer = new QTimer(this);
     m_ballOwnerTimer->setInterval(250);
@@ -110,6 +111,7 @@ void Ball::moveBall(MWindow::Action action, int speed)
         qDebug() << "moveBall specialAction required -> return";
         return;
     }
+
     if (!m_ballOwner) {
         qDebug() << "moveBall no ball owner";
         assert(0);
@@ -144,6 +146,14 @@ void Ball::kickBall(MWindow::Action action, QPointF destination)
 {
     if (m_positionLocked)
         return;
+    if ( m_requiredNextAction != MWindow::NoAction) {
+        qDebug() << "Ball::kickBall m_requiredNextAction case";
+        if (action ==  MWindow::Pass || action ==  MWindow::Shot) {
+            qDebug() << "action accepted";
+            setRequiredNextAction(MWindow::NoAction,NULL,NULL);
+        } else
+            return;
+    }
 
     Team* team(NULL);
     if ( m_ballOwner ) {
@@ -170,7 +180,7 @@ void Ball::kickBall(MWindow::Action action, QPointF destination)
     }
     m_animationTimer->start();
 
-    if (action == MWindow::Shot )
+    if (action == MWindow::Shot ||  action == MWindow::Pass)
         emit shot(team, destination);
     emit soundEvent(SoundEffects::BallKick);
 }
@@ -236,6 +246,14 @@ QVariant Ball::itemChange(GraphicsItemChange change, const QVariant &value)
 void Ball::setBallOwner(Player* p)
 {
     if (p) {
+
+        if (m_requiredNextActionPlayer != NULL &&
+            p != m_requiredNextActionPlayer ) {
+            qDebug() << "not allowed to be ball owner";
+            return;
+        }
+
+
         m_ballOwner = p;
         m_lastPlayerToTouchBall = p;
 
@@ -252,8 +270,10 @@ void Ball::setBallOwner(Player* p)
     }
 }
 
-void Ball::setnextActionMustBe(MWindow::Action a, Team* t, Player* p)
+void Ball::setRequiredNextAction(MWindow::Action a, Team* t, Player* p)
 {
-    qDebug() << "Ball::setnextActionMustBe";
+    qDebug() << "Ball::setRequiredNextAction";
+    m_requiredNextAction = a;
+    m_requiredNextActionPlayer = p;
 
 }

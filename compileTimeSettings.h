@@ -24,4 +24,7 @@ const int KRow = 8;
 
 const QColor KCuteFootballMaskColor(103,123,9);
 
+// distance opposing team needs to be away from ball when foul
+const qreal KFoulDistance = 25.0;
+
 #endif // COMPILETIMESETTINGS_H

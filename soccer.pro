@@ -10,12 +10,8 @@ TARGET = soccer
 TEMPLATE = app
 
 TRANSLATIONS = \
-    translations/soccer_en.ts \
     translations/soccer_fi.ts \
     translations/soccer_de.ts \
-    translations/soccer_es.ts \
-    translations/soccer_pt.ts \
-    translations/soccer_se.ts \
     translations/soccer_fr.ts
 
 symbian {

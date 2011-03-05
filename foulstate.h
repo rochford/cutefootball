@@ -23,11 +23,8 @@ class FoulState : public QState
     Q_OBJECT
 public:
     FoulState(Game *g, Pitch *p);
-    ~FoulState() {}
+    ~FoulState();
 
-    enum GameState {
-        MoveAwayFromBall
-    };
 public slots:
     void playFrame(int frame);
 
@@ -35,7 +32,7 @@ protected:
     void onEntry (QEvent * event );
 
 private:
-    void createPlayerAnimationItems(GameState g);
+    void createPlayerAnimationItems();
 
 private:
     QState *m_takePositions;

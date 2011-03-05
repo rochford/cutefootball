@@ -5,6 +5,7 @@
 #include "ball.h"
 #include "Player.h"
 #include "screengraphics.h"
+#include "soccerutils.h"
 
 FoulState::FoulState(Game *g, Pitch *p)
     : QState(g),
@@ -16,28 +17,34 @@ FoulState::FoulState(Game *g, Pitch *p)
     m_allDone = new QFinalState(this);
     setInitialState(m_takePositions);
 
-    m_timeLineTakePositions = new QTimeLine(1000*3, this);
+    m_timeLineTakePositions = new QTimeLine(1000*2, this);
     m_timeLineTakePositions->setCurveShape(QTimeLine::LinearCurve);
     m_timeLineTakePositions->setFrameRange(0, 100);
 
-    m_takePositions->addTransition(m_takePositions, SIGNAL(finished()), m_takeFreeKick);
-
-
+    m_takePositions->addTransition(m_timeLineTakePositions, SIGNAL(finished()), m_takeFreeKick);
     connect(m_timeLineTakePositions, SIGNAL(frameChanged(int)), this, SLOT(playFrame(int)));
+}
+FoulState::~FoulState()
+{
+    delete m_timeLineTakePositions;
+    delete m_takePositions;
+    delete m_takeFreeKick;
+    delete m_allDone;
 }
 
 void FoulState::onEntry(QEvent * /* event */)
 {
     qDebug() << "FoulState::onEntry";
     m_takeFreeKick->addTransition(m_pitch->ball(), SIGNAL(shot(Team*,QPointF)), m_allDone);
+    connect(m_pitch->ball(), SIGNAL(shot(Team*,QPointF)),m_game, SLOT(continueGameClock()));
 
-    m_game->stopGameClock();
-    createPlayerAnimationItems(MoveAwayFromBall);
+    m_game->pauseGameClock();
+    createPlayerAnimationItems();
     m_timeLineTakePositions->start();
 }
 
 // animate from present player position to another point.
-void FoulState::createPlayerAnimationItems(GameState g)
+void FoulState::createPlayerAnimationItems()
 {
     m_playerAnimationItems.clear(); // TODO XXX TIM delete all
 
@@ -52,27 +59,25 @@ void FoulState::createPlayerAnimationItems(GameState g)
         anim->setItem(p);
         m_playerAnimationItems.append(anim);
 
-        QPointF tmp;
-        qreal stepX = 1.0 / 100;
-        qreal stepY = 1.0 / 100;
-
         qDebug() << "FoulState::createPlayerAnimationItems name " << p->name() << " pos=" << p->pos();
-        switch( g )
-        {
-        case MoveAwayFromBall:
-        {
-            anim->setTimeLine(m_timeLineTakePositions);
-            tmp = p->pos();
-            // stepX = ( m_pitch->ball()->pos().x() - tmp.x()) / 100.0;
-            // stepY = ( m_pitch->ball()->pos().y() - tmp.y()) / 100.0;
-            MWindow::Action a = calculateAction(tmp, p->m_startPositionRectF.center());
-            p->movePlayer(a);
-        }
-            break;
+        QPointF tmp(p->pos());
+        qreal stepX(1.0);
+        qreal stepY(1.0);
+        anim->setTimeLine(m_timeLineTakePositions);
+        if (p->team() == m_game->m_foulingTeam) {
+            // move player away from ball
+            qDebug() << "move away from ball";
+            stepX = (p->pos().x() - m_pitch->m_centerMark->rect().center().x() ) / 100;
+            stepY = (p->pos().y() - m_pitch->m_centerMark->rect().center().y()) / 100;
 
-        default:
-            break;
+        } else if (p == m_pitch->selectNearestPlayer(p->team())) {
+            stepX = (p->pos().x() - m_game->m_foulingLocation.x()) / 100;
+            stepY = (p->pos().y() - m_game->m_foulingLocation.y()) / 100;
+
+            m_pitch->ball()->setRequiredNextAction(MWindow::Shot, p->team(), p);
         }
+        MWindow::Action a = calculateAction(tmp, m_game->m_foulingLocation);
+        p->movePlayer(a);
 
         for (int i = 0; i < 100; ++i) {
             anim->setPosAt(i / 100.0, QPointF(tmp.x() + stepX,

@@ -1,5 +1,6 @@
 
 #include "goalkeeper.h"
+#include "soccerutils.h"
 
 #include "pitch.h"
 #include "ball.h"
@@ -17,8 +18,6 @@ GoalKeeper::GoalKeeper(QString name,
 
 void GoalKeeper::goalAttempt(Team* t, QPointF dest)
 {
-    qDebug() << "GoalKeeper::goalAttempt by "<< t->briefName();
-
     // if the ball enters the penalty area then go for it, otherwise return to goal line
     Team::Direction dir = m_team->getDirection();
     MWindow::Action action;

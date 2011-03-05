@@ -171,7 +171,7 @@ void Pitch::setPiece(Team* originatingTeam, SetPiece s, QPointF foulLocation)
     m_soundEffects->soundEvent(SoundEffects::Whistle);
     switch(s) {
     case Pitch::Foul: // TODO foul logic
-// TODO        emit foul(originatingTeam, foulLocation);
+        emit foul(originatingTeam, foulLocation);
         break;
     case Pitch::KickOff:
         foreach (Player *p, m_players) {
