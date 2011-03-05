@@ -57,23 +57,3 @@ QComboBox {
     font-size: 24px;
 }
 
-QFrame#HalfStatisticsFrame {
-    background: transparent;
-    border: none;
-    color: gold;
-    font-size: 8px;
-}
-
-QLabel#shotsLabel,
-QLabel#goalsLabel,
-QLabel#m_homeTeamName,
-QLabel#m_homeGoals,
-QLabel#m_homeShots,
-QLabel#m_awayTeamName,
-QLabel#m_awayGoals,
-QLabel#m_awayShots {
-    font: bold large "Times";
-    font-size: 18px;
-    color: gold;
-}
-

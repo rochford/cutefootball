@@ -16,7 +16,7 @@
 #include "game.h"
 #include "soundEffects.h"
 #include "settingsFrame.h"
-#include "halfstatisticsframe.h"
+//#include "halfstatisticsframe.h"
 
 Pitch::Pitch(const QRectF& footballGroundRect,
              QGraphicsView* view,
@@ -34,12 +34,12 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     m_centerMark(NULL),
     m_settingsFrame(settingsFrame),
     m_soundEffects(se),
-    m_halfStatisticsFrame(NULL),
+//    m_halfStatisticsFrame(NULL),
     m_centerOnBall(false),
     m_teamMgr(new TeamManager)
 {
 #if defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR)
-    m_view->scale(1.6,1.6);
+//    m_view->scale(1.6,1.6);
 #else
     m_view->scale(7.0,7.0);
 #endif
@@ -69,11 +69,14 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     m_game->addState(m_allDone);
     m_game->setInitialState(m_firstHalfState);
 
-    m_firstHalfState->addTransition(m_firstHalfState, SIGNAL(finished()),m_secondHalfState);
+    m_firstHalfState->addTransition(this, SIGNAL(stateChanged(State)),m_secondHalfState);
+//    m_firstHalfState->addTransition(m_firstHalfState, SIGNAL(finished()),m_secondHalfState);
 
     m_secondHalfState->addTransition(m_secondHalfState, SIGNAL(finished()), m_allDone);
-    m_extraTimeFirstHalfState->addTransition(m_extraTimeFirstHalfState, SIGNAL(finished()), m_extraTimeSecondHalfState);
-    m_extraTimeSecondHalfState->addTransition(m_extraTimeSecondHalfState, SIGNAL(finished()), m_allDone);
+    m_extraTimeFirstHalfState->addTransition(this, SIGNAL(stateChanged(State)), m_extraTimeSecondHalfState);
+//    m_extraTimeFirstHalfState->addTransition(m_extraTimeFirstHalfState, SIGNAL(finished()), m_extraTimeSecondHalfState);
+    m_extraTimeSecondHalfState->addTransition(this, SIGNAL(stateChanged(State)), m_allDone);
+//    m_extraTimeSecondHalfState->addTransition(m_extraTimeSecondHalfState, SIGNAL(finished()), m_allDone);
     m_penaltiesState->addTransition(m_penaltiesState, SIGNAL(finished()), m_allDone);
 
     connect(m_game, SIGNAL(finished()), this, SLOT(gameStopped()));
@@ -262,14 +265,14 @@ void Pitch::layoutPitch()
                       4.0, 4.0, KWhitePaintPen);
     // simple text
     m_scoreText = new ScreenGraphics(this);
-
+#if 0
     // half statistics frame
     m_halfStatisticsFrame = new HalfStatisticsFrame();
     m_halfStatisticsFrame->setVisible(false);
     m_halfStatisticsProxy = m_scene->addWidget(m_halfStatisticsFrame);
     m_halfStatisticsProxy->setZValue(ZMenus);
     //m_halfStatisticsProxy->setPos(0,(m_scene->height()/2.0));
-
+#endif
     // create the goals
     m_bottomGoal = m_scene->addRect((m_scene->width() / 2)-60, m_scene->height()-KPitchBoundaryWidth,120,KPitchBoundaryWidth/2,
                    KWhitePaintPen,
@@ -353,8 +356,6 @@ void Pitch::hasBallCheck()
     if (m_centerOnBall)
         m_view->centerOn(m_ball->pos());
     m_scoreText->updatePosition();
-    m_halfStatisticsProxy->setPos(
-                m_view->mapToScene(m_view->rect().topLeft()));
 
     // which team has the ball?
     Player* p = m_ball->lastPlayerToTouchBall();
@@ -457,6 +458,7 @@ void Pitch::createTeamPlayers(Team *team)
         }
         pl->createPixmaps();
         pl->setPos(startPos);
+
         if (i==1)
             pl->setCaptain();
         m_players.append(pl);
@@ -537,22 +539,14 @@ void Pitch::setPlayerStartPositions(Team *team)
     }
 }
 
-void Pitch::showHalfStatisticsFrame(QString halfName)
+
+void Pitch::showHalfStatisticsFrame()
 {
-    m_halfStatisticsFrame->setHalfName(halfName);
-    m_halfStatisticsFrame->setHomeTeamName(m_homeTeam->fullName());
-    m_halfStatisticsFrame->setAwayTeamName(m_awayTeam->fullName());
-
-    m_halfStatisticsFrame->setHomeTeamGoals(m_homeTeam->m_goals);
-    m_halfStatisticsFrame->setAwayTeamGoals(m_awayTeam->m_goals);
-
-    m_halfStatisticsFrame->setHomeTeamShots(m_homeTeam->shots());
-    m_halfStatisticsFrame->setAwayTeamShots(m_awayTeam->shots());
-
-    m_halfStatisticsFrame->setVisible(true);
+    qDebug() << "Pitch::showHalfStatisticsFrame";
+    emit displayHalfTimeStatistics(true);
 }
 
 void Pitch::hideHalfStatisticsFrame()
 {
-    m_halfStatisticsFrame->setVisible(false);
+    emit displayHalfTimeStatistics(false);
 }

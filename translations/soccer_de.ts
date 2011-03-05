@@ -80,27 +80,27 @@
         <translation>version %1 %2</translation>
     </message>
     <message>
-        <location filename="../pitch.h" line="31"/>
+        <location filename="../pitch.h" line="32"/>
         <source>First half</source>
         <translation>Erstes Halbjahr</translation>
     </message>
     <message>
-        <location filename="../pitch.h" line="32"/>
+        <location filename="../pitch.h" line="33"/>
         <source>Second half</source>
         <translation>Zweite Hälfte</translation>
     </message>
     <message>
-        <location filename="../pitch.h" line="33"/>
+        <location filename="../pitch.h" line="34"/>
         <source>Extra Time First half</source>
         <translation>Extra Time Erstes Halbjahr</translation>
     </message>
     <message>
-        <location filename="../pitch.h" line="34"/>
+        <location filename="../pitch.h" line="35"/>
         <source>Extra Time Second half</source>
         <translation>Extra Time Zweite Hälfte</translation>
     </message>
     <message>
-        <location filename="../pitch.h" line="35"/>
+        <location filename="../pitch.h" line="36"/>
         <source>penalty shoot out</source>
         <translation>Elfmeterschießen</translation>
     </message>
@@ -235,12 +235,12 @@ p, li { white-space: pre-wrap; }
         <translation>Dauer des Spiels (Minuten)</translation>
     </message>
     <message>
-        <location filename="../settingsFrame.cpp" line="12"/>
+        <location filename="../settingsFrame.cpp" line="13"/>
         <source>Save</source>
         <translation>Speichern</translation>
     </message>
     <message>
-        <location filename="../settingsFrame.cpp" line="14"/>
+        <location filename="../settingsFrame.cpp" line="15"/>
         <source>Main Menu</source>
         <translation>Hauptmenü</translation>
     </message>

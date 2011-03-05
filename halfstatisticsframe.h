@@ -4,17 +4,15 @@
 #include <QFrame>
 
 #include "ui_halfstatisticsframe.h"
-#if 0
-namespace Ui {
-    class HalfStatisticsFrame;
-}
-#endif
+
+class MWindow;
+
 class HalfStatisticsFrame : public QFrame
 {
     Q_OBJECT
 
 public:
-    explicit HalfStatisticsFrame(QWidget *parent = 0);
+    explicit HalfStatisticsFrame(MWindow *parent);
     ~HalfStatisticsFrame();
     void setHalfName(QString s) { ui->m_halfNameLabel->setText(s); }
     void setHomeTeamName(QString s) { ui->m_homeTeamName->setText(s); }
@@ -23,6 +21,8 @@ public:
     void setAwayTeamGoals(int n) { ui->m_awayGoals->setText(QString::number(n)); }
     void setHomeTeamShots(int n) { ui->m_homeShots->setText(QString::number(n)); }
     void setAwayTeamShots(int n) { ui->m_awayShots->setText(QString::number(n)); }
+    void setHomeTeamFlag(QString flag) { ui->homeFlag->setPixmap(flag);}
+    void setAwayTeamFlag(QString flag) { ui->awayFlag->setPixmap(flag);}
 
 private:
     Ui::HalfStatisticsFrame *ui;

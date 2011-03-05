@@ -14,6 +14,7 @@ class helpFrame;
 class inputSettingsFrame;
 class mainMenuFrame;
 class TeamSelectionFrame;
+class HalfStatisticsFrame;
 
 class MWindow : public QMainWindow
 {
@@ -64,6 +65,7 @@ private:
         Help,
         InputSettings,
         TeamSelection,
+        HalfTimeStatistics,
         GraphicsView
     };
 
@@ -73,7 +75,6 @@ private:
 public slots:
     void showFrame(Frame f);
     void newGame(int homeTeam, int awayTeam);
-//    void hideAboutFrame(){showFrame(MWindow::MainMenu);}
     void hideInputSettingsFrame(){showFrame(MWindow::MainMenu);}
     void hideHelpFrame(){showFrame(MWindow::MainMenu);}
     void hideSettingsFrame(){ showFrame(MWindow::MainMenu);}
@@ -82,7 +83,12 @@ public slots:
     void showTeamSelectionFrame(){ showFrame(MWindow::TeamSelection);}
     void showInputSettingsFrame() { showFrame(MWindow::InputSettings);}
     void showHelpFrame(){showFrame(MWindow::Help);}
+    void showStatisticsFrame(){showFrame(MWindow::HalfTimeStatistics);}
+    void hideStatisticsFrame();
+
+    //    void hideAboutFrame(){showFrame(MWindow::MainMenu);}
     // void showAboutFrame(){showFrame(MWindow::About);}
+    void displayHalfTimeStatistics(bool display);
 
 protected:
     void resizeEvent(QResizeEvent *e);
@@ -96,6 +102,7 @@ private:
     settingsFrame* m_settingsFrame;
     inputSettingsFrame* m_inputSettingsFrame;
 //    aboutFrame* m_aboutFrame;
+    HalfStatisticsFrame* m_halfStatisticsFrame;
     helpFrame* m_helpFrame;
     TeamSelectionFrame* m_teamSelectionFrame;
     mainMenuFrame* m_mainMenuFrame;
