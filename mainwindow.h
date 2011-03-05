@@ -50,8 +50,8 @@ public:
 // TODO        RedCard,
 
         // goal keeper moves
-      DiveEast,
-      DiveWest,
+      DiveEast = 1,
+      DiveWest = -179,
 
       NoAction
     };

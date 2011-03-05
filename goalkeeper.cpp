@@ -36,15 +36,6 @@ void GoalKeeper::goalAttempt(Team* t, QPointF dest)
     }
 }
 
-void GoalKeeper::createMoves()
-{
-    Player::createMoves();
-
-    m_moveDistance.insert(MWindow::DiveEast, QPointF(m_speed,0.0));
-    m_moveDistance.insert(MWindow::DiveWest, QPointF(-m_speed,0.0));
-}
-
-
 void GoalKeeper::createPixmaps()
 {
     pixmapInsert(MWindow::North, "pN.PNG", "pN1.PNG", "pN2.PNG", KGoalKeeperShirtColor, KGoalKeeperShortColor);
