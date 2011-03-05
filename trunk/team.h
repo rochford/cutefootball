@@ -4,6 +4,20 @@
 #include <QObject>
 #include <QColor>
 #include <QString>
+#include <QList>
+
+class Team;
+
+class TeamManager {
+public:
+    TeamManager() {};
+    ~TeamManager() {};
+    QList<Team*> teams() { return m_teams; }
+    Team* at(int index) { return m_teams.at(index); }
+    void createTeams();
+private:
+   QList<Team*> m_teams;
+};
 
 class Team : public QObject {
     Q_OBJECT;

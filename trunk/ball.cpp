@@ -12,10 +12,8 @@ Ball::Ball(Pitch* pitch)
     : QObject(),
     QGraphicsPixmapItem(QPixmap(QString(":/images/ball.png")),NULL),
     m_pitch(pitch),
-    destination_(QPointF(0,0)),
+    m_destination(QPointF(0,0)),
     step_(0),
-    m_animation(NULL),
-    m_animationTimer(NULL),
     m_ballOwner(NULL),
     m_lastPlayerToTouchBall(NULL),
     m_positionLocked(false),
@@ -33,7 +31,6 @@ Ball::Ball(Pitch* pitch)
     pixmap().setMask(bitmap);
 
     setTransformOriginPoint(boundingRect().center());
-//    QGraphicsPixmapItem::setPos();
     setZValue(Pitch::ZBall);
 
     m_animation = new QGraphicsItemAnimation(this);
@@ -48,7 +45,6 @@ Ball::Ball(Pitch* pitch)
 
 Ball::~Ball()
 {
-    m_moveDistance.clear();
     m_ballOwnerTimer->stop();
     delete m_ballOwnerTimer;
     delete m_animation;
@@ -80,8 +76,7 @@ void Ball::updateBallOwner()
 
 QRectF Ball::boundingRect() const
 {
-    return QRectF(-9, -9,
-                  9, 9);
+    return QRectF(-9, -9, 9, 9);
 }
 
 void Ball::paint(QPainter *painter,
@@ -118,8 +113,6 @@ void Ball::moveBall(MWindow::Action action, int speed)
         return;
     }
 
-    // old position
-    QPointF oldPos=pos();
     // make the move
     switch(action)
     {
@@ -131,15 +124,25 @@ void Ball::moveBall(MWindow::Action action, int speed)
     case MWindow::SouthWest:
     case MWindow::West:
     case MWindow::NorthWest:
+        {
+        m_angle = (qreal)action;
+        QLineF ballTrajectory;
+        ballTrajectory.setP1(pos());
+        ballTrajectory.setAngle(m_angle);
+        ballTrajectory.setLength(m_ballOwner->speed());
+
+//        qDebug() << "Ball::moveBall " << m_angle << " deg, speed=" << m_ballOwner->speed();
+//        qDebug() << "Ball::moveBall start " << ballTrajectory.p1() << " end " << ballTrajectory.p2();
+//        qDebug() << "Ball::moveBall dx " << ballTrajectory.dx() << " dy " << ballTrajectory.dy();
+
         setRotation((step_%4)*90.0);
-        moveBy(m_moveDistance[action].x(), m_moveDistance[action].y());
+        moveBy(ballTrajectory.dx(), ballTrajectory.dy());
+        }
         break;
     case MWindow::Shot:
         // TODO shootBall(speed);
         break;
     }
-
-    previousAction = action;
 }
 
 void Ball::kickBall(MWindow::Action action, QPointF destination)
@@ -231,7 +234,7 @@ QVariant Ball::itemChange(GraphicsItemChange change, const QVariant &value)
                                              || m_pitch->m_bottomGoal->contains(newPos))) {
             qreal dx = newPos.x() - m_lastPos.x();
             qreal dy = newPos.y() - m_lastPos.y();
-            qDebug() << "Ball::itemChange not in pitch, dx" << dx << "," << dy;
+            //qDebug() << "Ball::itemChange not in pitch, dx" << dx << "," << dy;
             m_animationTimer->stop();
             emit soundEvent(SoundEffects::BallRebound);
             return QPointF(m_lastPos.x() - dx*1.5,m_lastPos.y()-dy*1.5);
@@ -249,30 +252,20 @@ void Ball::setBallOwner(Player* p)
 
         if (m_requiredNextActionPlayer != NULL &&
             p != m_requiredNextActionPlayer ) {
-            qDebug() << "not allowed to be ball owner";
+            //qDebug() << "not allowed to be ball owner";
             return;
         }
-
 
         m_ballOwner = p;
         m_lastPlayerToTouchBall = p;
 
-        const qreal speed = p->speed();
-        m_moveDistance.clear();
-        m_moveDistance.insert(MWindow::North, QPointF(0,-speed));
-        m_moveDistance.insert(MWindow::NorthEast, QPointF(speed,-speed));
-        m_moveDistance.insert(MWindow::East, QPointF(speed,0));
-        m_moveDistance.insert(MWindow::SouthEast, QPointF(speed,speed));
-        m_moveDistance.insert(MWindow::South, QPointF(0,speed));
-        m_moveDistance.insert(MWindow::SouthWest, QPointF(-speed,speed));
-        m_moveDistance.insert(MWindow::West, QPointF(-speed,0));
-        m_moveDistance.insert(MWindow::NorthWest, QPointF(-speed,-speed));
+        m_velocity = p->speed();
     }
 }
 
 void Ball::setRequiredNextAction(MWindow::Action a, Team* t, Player* p)
 {
-    qDebug() << "Ball::setRequiredNextAction";
+//    qDebug() << "Ball::setRequiredNextAction";
     m_requiredNextAction = a;
     m_requiredNextActionPlayer = p;
 

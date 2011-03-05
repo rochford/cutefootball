@@ -1,6 +1,41 @@
 #include "team.h"
+#include <QtGui>
+#include <QtGlobal>
 // #include "compileTimeSettings.h" // KPlayerDefaultSpeed
 #include <QDebug>
+
+void TeamManager::createTeams()
+{
+    QStringList colorNames(QColor::colorNames());
+
+    // for each team in the directory
+    QFile file(":/teams/teams.txt");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return;
+
+    while (!file.atEnd()) {
+        QByteArray line = file.readLine();
+        if (line.contains('#'))
+            continue;
+
+        QList<QByteArray> nameAndColor = line.split(',');
+        QString briefName = nameAndColor.at(0).simplified();
+        QString name = nameAndColor.at(1).simplified();
+
+        QString shirtColorString = nameAndColor.at(2).simplified();
+        QString shortColorString = nameAndColor.at(3).simplified();
+
+        const int playerSpeed = nameAndColor.at(4).simplified().toInt();
+
+        QColor shirtColor(shirtColorString);
+        QColor shortColor(shortColorString);
+
+        Team* t = new Team(briefName, name, shirtColor, shortColor, playerSpeed);
+        m_teams.append(t);
+    }
+    file.close();
+}
+
 
 Team::Team(QString briefName, QString teamName, QColor shirtColor, QColor shortColor, int playerSpeed)
     :
