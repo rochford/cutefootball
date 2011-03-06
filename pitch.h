@@ -38,7 +38,7 @@ class Pitch : public QObject
 {
     Q_OBJECT
 public:
-    enum State {
+    enum State{
         Pause,
         Continue
     };
@@ -88,6 +88,7 @@ public:
     inline void centerOnBall(bool centerOnBall) { m_centerOnBall = centerOnBall; }
 
 public slots:
+    void pause();
     void newGame(int homeTeam, int awayTeam);
     void setState(Pitch::State s) { m_state = s; emit stateChanged(m_state);}
 
@@ -103,6 +104,7 @@ public slots:
     void countShots(Team* team, QPointF dest);
 
 signals:
+    void pauseGame();
    void gameInProgress(bool playing);
    void foul(Team* originatingTeam, QPointF foulLocation);
    void displayHalfTimeStatistics(bool);

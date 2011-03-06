@@ -10,8 +10,30 @@
     </message>
     <message>
         <location filename="../exitconfirmationdialog.ui" line="29"/>
+        <location filename="../exitconfirmationdialog.ui" line="116"/>
+        <source>Continue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../exitconfirmationdialog.ui" line="36"/>
+        <location filename="../exitconfirmationdialog.ui" line="121"/>
+        <source>Main Menu</source>
+        <translation type="unfinished">Päävalikko</translation>
+    </message>
+    <message>
+        <location filename="../exitconfirmationdialog.ui" line="43"/>
+        <location filename="../exitconfirmationdialog.ui" line="126"/>
+        <source>Quit</source>
+        <translation type="unfinished">Lopeta</translation>
+    </message>
+    <message>
+        <location filename="../exitconfirmationdialog.ui" line="102"/>
+        <source>Paused</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Are you sure you want to quit?</source>
-        <translation>Haluatko varmasti lopettaa?</translation>
+        <translation type="obsolete">Haluatko varmasti lopettaa?</translation>
     </message>
 </context>
 <context>
@@ -25,19 +47,29 @@
         <translation type="obsolete">Vierasjoukkue</translation>
     </message>
     <message>
-        <location filename="../halfstatisticsframe.ui" line="109"/>
+        <location filename="../halfstatisticsframe.ui" line="119"/>
         <source>Goals</source>
         <translation>Maalit</translation>
     </message>
     <message>
-        <location filename="../halfstatisticsframe.ui" line="119"/>
+        <location filename="../halfstatisticsframe.ui" line="129"/>
         <source>Shots</source>
         <translation>Potkut</translation>
     </message>
     <message>
-        <location filename="../halfstatisticsframe.ui" line="187"/>
+        <location filename="../halfstatisticsframe.ui" line="139"/>
+        <source>Fouls</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../halfstatisticsframe.ui" line="214"/>
         <source>Statistics</source>
         <translation>Tilastot</translation>
+    </message>
+    <message>
+        <location filename="../halfstatisticsframe.cpp" line="10"/>
+        <source>Ok</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -161,7 +193,7 @@
     <name>mainMenuFrame</name>
     <message>
         <location filename="../mainMenuFrame.ui" line="59"/>
-        <location filename="../mainMenuFrame.ui" line="180"/>
+        <location filename="../mainMenuFrame.ui" line="214"/>
         <source>Play</source>
         <translation>Pelaa</translation>
     </message>
@@ -176,30 +208,30 @@
     </message>
     <message>
         <location filename="../mainMenuFrame.ui" line="80"/>
-        <location filename="../mainMenuFrame.ui" line="208"/>
+        <location filename="../mainMenuFrame.ui" line="242"/>
         <source>Help</source>
         <translation>Apua</translation>
     </message>
     <message>
-        <location filename="../mainMenuFrame.ui" line="195"/>
+        <location filename="../mainMenuFrame.ui" line="229"/>
         <source>About</source>
         <translation>Lisätiedot</translation>
     </message>
     <message>
         <location filename="../mainMenuFrame.ui" line="87"/>
-        <location filename="../mainMenuFrame.ui" line="190"/>
+        <location filename="../mainMenuFrame.ui" line="224"/>
         <source>Quit</source>
         <translation>Lopeta</translation>
     </message>
     <message>
         <location filename="../mainMenuFrame.ui" line="73"/>
-        <location filename="../mainMenuFrame.ui" line="200"/>
-        <location filename="../mainMenuFrame.ui" line="203"/>
+        <location filename="../mainMenuFrame.ui" line="234"/>
+        <location filename="../mainMenuFrame.ui" line="237"/>
         <source>Keys</source>
         <translation>Näppäimet</translation>
     </message>
     <message>
-        <location filename="../mainMenuFrame.ui" line="185"/>
+        <location filename="../mainMenuFrame.ui" line="219"/>
         <source>Game Settings</source>
         <translation>Pelin asetukset</translation>
     </message>

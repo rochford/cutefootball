@@ -68,14 +68,14 @@ QLabel#SGFawayGoals,
 QLabel#SGFhomeGoals,
 QLabel#SGFBlank {
     font: bold large "Times";
-    font-size: 10px;
+    font-size: 7px;
     color: black;
     background: white;
 }
 
 QLabel#scoreTextLabel {
     font: bold large "Times";
-    font-size: 12px;
+    font-size: 8px;
     color: black;
     background: white;
 }

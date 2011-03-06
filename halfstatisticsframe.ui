@@ -99,6 +99,16 @@
           </property>
          </widget>
         </item>
+        <item>
+         <widget class="QLabel" name="m_homeTeamFouls">
+          <property name="text">
+           <string notr="true">0</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
        </layout>
       </item>
       <item>
@@ -123,6 +133,16 @@
           </property>
          </widget>
         </item>
+        <item>
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Fouls</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
        </layout>
       </item>
       <item>
@@ -138,6 +158,13 @@
          <widget class="QLabel" name="m_awayShots">
           <property name="text">
            <string notr="true">NNN</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="m_awayTeamFouls">
+          <property name="text">
+           <string notr="true">0</string>
           </property>
          </widget>
         </item>

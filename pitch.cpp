@@ -37,7 +37,7 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     m_teamMgr(new TeamManager)
 {
 #if defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR)
-//    m_view->scale(1.6,1.6);
+    m_view->scale(1.6,1.6);
 #else
     m_view->scale(7.0,7.0);
 #endif
@@ -320,12 +320,18 @@ void Pitch::layoutPitch()
     }
 }
 
+void Pitch::pause()
+{
+    qDebug() << "pause";
+    emit pauseGame();
+}
+
 void Pitch::updateDisplayTime(int timeLeftMs)
 {
     if ( m_game->isRunning() ) {
         QTime tmp(0,0,0,0);
         tmp = tmp.addMSecs(timeLeftMs);
-        m_screenGraphicsLabel->update(tmp.toString(QString("mm:ss")));
+        m_screenGraphicsLabel->update(tmp.toString(QString("m:ss")));
     }
 }
 
