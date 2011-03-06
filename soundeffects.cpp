@@ -13,7 +13,7 @@ SoundEffects::SoundEffects(QObject *parent) :
     m_goal = new QSound("goalCelebration.wav", this);
     m_rebound = new QSound("rebound.wav", this);
 
-    m_gameThemeTune->setLoops(1000);
+//    m_gameThemeTune->setLoops(1000);
     m_crowd->setLoops(1000);
 }
 

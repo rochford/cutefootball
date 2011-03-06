@@ -1,37 +1,36 @@
 #include "screengraphics.h"
 
-#include <QGraphicsSimpleTextItem>
-
 #include "pitch.h"
-
-const QFont KFont("Times", 12, QFont::Bold);
+#include "team.h"
 
 ScreenGraphics::ScreenGraphics(Pitch *p)
-  :  m_pitch(p),
-    m_scoreText(NULL)
+  :  QFrame(NULL),
+    m_pitch(p),
+    ui(new Ui::ScreenGraphicsFrame)
 {
-    m_scoreText = m_pitch->m_scene->addSimpleText(QString("XXX"),KFont);
-    m_scoreText->setScale(1.0);
-    m_scoreText->setVisible(false);
-    m_scoreText->setZValue(Pitch::ZScoreText);
-
-    updatePosition();
+    ui->setupUi(this);
 }
 
 ScreenGraphics::~ScreenGraphics()
 {
-    delete m_scoreText;
+//    delete m_scoreText;
 }
 
-void ScreenGraphics::updatePosition()
+void ScreenGraphics::update(QString s)
 {
-    m_scoreText->setPos(m_pitch->m_view->mapToScene(
-            m_pitch->m_view->rect().topLeft()));
+    resize(160,50);
+    ui->scoreTextLabel->setVisible(true);
+
+    ui->scoreTextLabel->setText(s);
+    ui->SGFhomeGoals->setText(QString::number(m_pitch->homeTeam()->m_goals));
+    ui->SGFawayGoals->setText(QString::number(m_pitch->awayTeam()->m_goals));
 }
 
-void ScreenGraphics::setText(QString s)
+void ScreenGraphics::setTeams(Team* home, Team* away)
 {
-    m_scoreText->setVisible(true);
-    m_scoreText->setText(s);
+    ui->SGFhomeTeamFlag->setPixmap(QPixmap(QString(":/images/flags/")+home->fullName()+".png").scaledToWidth(15));
+    ui->SGFhomeTeamName->setText(home->briefName());
+    ui->SGFawayTeamFlag->setPixmap(QPixmap(QString(":/images/flags/")+away->fullName()+".png").scaledToWidth(15));
+    ui->SGFawayTeamName->setText(away->briefName());
 }
 

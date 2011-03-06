@@ -46,6 +46,7 @@ QLabel {
 
 QLabel#copyrightLabel,
 QLabel#versionLabel {
+    font: bold large "Times";
     font-size: 10px;
     color: white;
 }
@@ -55,6 +56,28 @@ QComboBox {
     background-color: yellow;
     font: bold large "Times";
     font-size: 18px;
+}
+
+QFrame#ScreenGraphicsFrame {
+    background : transparent;
+}
+
+QLabel#SGFawayTeamName,
+QLabel#SGFhomeTeamName,
+QLabel#SGFawayGoals,
+QLabel#SGFhomeGoals,
+QLabel#SGFBlank {
+    font: bold large "Times";
+    font-size: 10px;
+    color: black;
+    background: white;
+}
+
+QLabel#scoreTextLabel {
+    font: bold large "Times";
+    font-size: 12px;
+    color: black;
+    background: white;
 }
 
 

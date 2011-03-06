@@ -25,14 +25,19 @@
         <translation type="obsolete">Vierasjoukkue</translation>
     </message>
     <message>
-        <location filename="../halfstatisticsframe.ui" line="87"/>
+        <location filename="../halfstatisticsframe.ui" line="109"/>
         <source>Goals</source>
         <translation>Maalit</translation>
     </message>
     <message>
-        <location filename="../halfstatisticsframe.ui" line="97"/>
+        <location filename="../halfstatisticsframe.ui" line="119"/>
         <source>Shots</source>
         <translation>Potkut</translation>
+    </message>
+    <message>
+        <location filename="../halfstatisticsframe.ui" line="187"/>
+        <source>Statistics</source>
+        <translation>Tilastot</translation>
     </message>
 </context>
 <context>
@@ -88,27 +93,27 @@
         <translation>versio %1 %2</translation>
     </message>
     <message>
-        <location filename="../pitch.h" line="32"/>
+        <location filename="../pitch.h" line="31"/>
         <source>First half</source>
         <translation>Ensimmäinen puoliaika</translation>
     </message>
     <message>
-        <location filename="../pitch.h" line="33"/>
+        <location filename="../pitch.h" line="32"/>
         <source>Second half</source>
         <translation>Toinen puoliaika</translation>
     </message>
     <message>
-        <location filename="../pitch.h" line="34"/>
+        <location filename="../pitch.h" line="33"/>
         <source>Extra Time First half</source>
         <translation>Jatkoaika ensimmäinen puoliaika</translation>
     </message>
     <message>
-        <location filename="../pitch.h" line="35"/>
+        <location filename="../pitch.h" line="34"/>
         <source>Extra Time Second half</source>
         <translation>Jatkoaika toinen puoliaika</translation>
     </message>
     <message>
-        <location filename="../pitch.h" line="36"/>
+        <location filename="../pitch.h" line="35"/>
         <source>penalty shoot out</source>
         <translation>Rangaistuspotkut</translation>
     </message>
@@ -118,29 +123,25 @@
     <message>
         <location filename="../teamSelectionFrame.cpp" line="15"/>
         <source>Play</source>
-        <translation type="unfinished">Pelaa</translation>
+        <translation>Pelaa</translation>
     </message>
     <message>
         <location filename="../teamSelectionFrame.cpp" line="17"/>
         <source>Main Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Päävalikko</translation>
     </message>
 </context>
 <context>
     <name>helpFrame</name>
     <message>
-        <location filename="../helpFrame.ui" line="41"/>
-        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Only goalkeepers are allowed in the penalty area. A foul will result if an outfield player enters the penalty area. Game starts with a drop ball in the centre circle. No sliding tackles are allowed.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation></translation>
-    </message>
-    <message>
         <location filename="../helpFrame.cpp" line="12"/>
         <source>Main Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Päävalikko</translation>
+    </message>
+    <message>
+        <location filename="../helpFrame.ui" line="35"/>
+        <source>Only goalkeepers are allowed in the penalty area. A foul will result if an outfield player enters the penalty area.</source>
+        <translation>Vain maalivahdit ovat sallittuja rangaistusalueella. Kenttäpelaajan astuminen rangaistusalueelle johtaa virheeseen.</translation>
     </message>
 </context>
 <context>
@@ -153,7 +154,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../inputsettingsframe.cpp" line="13"/>
         <source>Main Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Päävalikko</translation>
     </message>
 </context>
 <context>
@@ -167,7 +168,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../mainMenuFrame.ui" line="66"/>
         <source>Settings</source>
-        <translation>Pelin asetukset</translation>
+        <translation>Asetukset</translation>
     </message>
     <message>
         <source>Keyboard settings</source>
@@ -195,7 +196,7 @@ p, li { white-space: pre-wrap; }
         <location filename="../mainMenuFrame.ui" line="200"/>
         <location filename="../mainMenuFrame.ui" line="203"/>
         <source>Keys</source>
-        <translation type="unfinished"></translation>
+        <translation>Näppäimet</translation>
     </message>
     <message>
         <location filename="../mainMenuFrame.ui" line="185"/>
@@ -238,12 +239,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../settingsFrame.cpp" line="13"/>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Tallenna</translation>
     </message>
     <message>
         <location filename="../settingsFrame.cpp" line="15"/>
         <source>Main Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Päävalikko</translation>
     </message>
 </context>
 <context>

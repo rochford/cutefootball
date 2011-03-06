@@ -19,6 +19,9 @@
   <property name="windowTitle">
    <string notr="true"/>
   </property>
+  <property name="windowOpacity">
+   <double>0.000000000000000</double>
+  </property>
   <property name="frameShape">
    <enum>QFrame::StyledPanel</enum>
   </property>
@@ -181,7 +184,7 @@
     <item row="1" column="0">
      <widget class="QLabel" name="m_halfNameLabel">
       <property name="text">
-       <string notr="true">Statistics</string>
+       <string>Statistics</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
