@@ -27,7 +27,6 @@ class Team;
 class TeamManager;
 class ScreenGraphics;
 class Game;
-//class HalfStatisticsFrame;
 
 const QString KFirstHalf(QObject::tr("First half"));
 const QString KSecondHalf(QObject::tr("Second half"));
@@ -134,6 +133,7 @@ public:
     ScreenGraphics *m_scoreText;
     QRectF m_pitchArea[KRow][KColumn];
     SoundEffects* m_soundEffects;  // NOT OWNED
+    QGraphicsProxyWidget *m_screenGraphicsFrameProxy;
 
 private:
     TeamManager* m_teamMgr;
@@ -157,8 +157,7 @@ private:
 
     settingsFrame *m_settingsFrame;
 
-//    HalfStatisticsFrame* m_halfStatisticsFrame;
-//    QGraphicsProxyWidget *m_halfStatisticsProxy;
+    ScreenGraphics* m_screenGraphicsLabel;
 
     // true if the ball should in centered on
     bool m_centerOnBall;

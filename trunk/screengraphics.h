@@ -1,23 +1,29 @@
 #ifndef SCREENGRAPHICS_H
 #define SCREENGRAPHICS_H
 
-#include <QObject>
+#include <QFrame>
 
-class QGraphicsSimpleTextItem;
+#include "ui_screengraphicsframe.h"
 
+namespace Ui {
+    class ScreenGraphicsFrame;
+}
+
+
+class Team;
 class Pitch;
 
-class ScreenGraphics
+class ScreenGraphics : public QFrame
 {
 public:
     ScreenGraphics(Pitch *p);
     virtual ~ScreenGraphics();
-    void updatePosition();
-    void setText(QString s);
+    void update(QString s);
+    void setTeams(Team* home, Team* away);
 
 private:
+    Ui::ScreenGraphicsFrame *ui;
     Pitch *m_pitch;
-    QGraphicsSimpleTextItem *m_scoreText;
 };
 
 #endif // SCREENGRAPHICS_H

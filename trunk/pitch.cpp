@@ -16,7 +16,6 @@
 #include "game.h"
 #include "soundEffects.h"
 #include "settingsFrame.h"
-//#include "halfstatisticsframe.h"
 
 Pitch::Pitch(const QRectF& footballGroundRect,
              QGraphicsView* view,
@@ -34,7 +33,6 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     m_centerMark(NULL),
     m_settingsFrame(settingsFrame),
     m_soundEffects(se),
-//    m_halfStatisticsFrame(NULL),
     m_centerOnBall(false),
     m_teamMgr(new TeamManager)
 {
@@ -112,7 +110,6 @@ Pitch::~Pitch()
     delete m_game;
 
     delete m_grass;
-    delete m_scoreText;
     delete m_ball;
     delete m_teamMgr;
 }
@@ -263,16 +260,14 @@ void Pitch::layoutPitch()
     // center mark
     m_centerMark = m_scene->addEllipse((m_scene->width()/2.0)-4,(m_scene->height()/2.0)-4,
                       4.0, 4.0, KWhitePaintPen);
+
     // simple text
-    m_scoreText = new ScreenGraphics(this);
-#if 0
+
     // half statistics frame
-    m_halfStatisticsFrame = new HalfStatisticsFrame();
-    m_halfStatisticsFrame->setVisible(false);
-    m_halfStatisticsProxy = m_scene->addWidget(m_halfStatisticsFrame);
-    m_halfStatisticsProxy->setZValue(ZMenus);
-    //m_halfStatisticsProxy->setPos(0,(m_scene->height()/2.0));
-#endif
+    m_screenGraphicsLabel = new ScreenGraphics(this);
+    m_screenGraphicsFrameProxy = m_scene->addWidget(m_screenGraphicsLabel);
+    m_screenGraphicsFrameProxy->setZValue(ZScoreText);
+
     // create the goals
     m_bottomGoal = m_scene->addRect((m_scene->width() / 2)-60, m_scene->height()-KPitchBoundaryWidth,120,KPitchBoundaryWidth/2,
                    KWhitePaintPen,
@@ -328,26 +323,9 @@ void Pitch::layoutPitch()
 void Pitch::updateDisplayTime(int timeLeftMs)
 {
     if ( m_game->isRunning() ) {
-        QString homeTeam(m_homeTeam->briefName().toUpper());
-        homeTeam.truncate(3);
-
-        QString awayTeam(m_awayTeam->briefName().toUpper());
-        awayTeam.truncate(3);
         QTime tmp(0,0,0,0);
         tmp = tmp.addMSecs(timeLeftMs);
-
-        QString str(tmp.toString(QString("mm:ss")));
-        str.append(" ");
-
-        str.append(homeTeam);
-        str.append(" ");
-        str.append(QString::number(m_homeTeam->m_goals));
-        str.append(" - ");
-
-        str.append(awayTeam);
-        str.append(" ");
-        str.append(QString::number(m_awayTeam->m_goals));
-        m_scoreText->setText(str);
+        m_screenGraphicsLabel->update(tmp.toString(QString("mm:ss")));
     }
 }
 
@@ -355,7 +333,8 @@ void Pitch::hasBallCheck()
 {
     if (m_centerOnBall)
         m_view->centerOn(m_ball->pos());
-    m_scoreText->updatePosition();
+    m_screenGraphicsFrameProxy->setPos(m_view->mapToScene(
+                                       m_view->rect().topLeft()));
 
     // which team has the ball?
     Player* p = m_ball->lastPlayerToTouchBall();
@@ -386,6 +365,8 @@ void Pitch::newGame(int homeTeam, int awayTeam)
     m_homeTeam->newGame();
     m_awayTeam = m_teamMgr->at(awayTeam);
     m_awayTeam->newGame();
+
+    m_screenGraphicsLabel->setTeams(m_homeTeam, m_awayTeam);
 
     createTeamPlayers(m_homeTeam);
     createTeamPlayers(m_awayTeam);
