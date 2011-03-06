@@ -57,3 +57,20 @@ QComboBox {
     font-size: 24px;
 }
 
+QLabel#SGFawayTeamName,
+QLabel#SGFhomeTeamName,
+QLabel#SGFawayGoals,
+QLabel#SGFhomeGoals,
+QLabel#SGFBlank {
+    font: bold large "Times";
+    font-size: 9px;
+    color: black;
+    background: white;
+}
+
+QLabel#scoreTextLabel {
+    font: bold large "Times";
+    font-size: 10px;
+    color: black;
+    background: white;
+}

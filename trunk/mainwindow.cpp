@@ -86,10 +86,15 @@ void MWindow::createConnections()
     connect(uiMainWindow.actionQuit, SIGNAL(triggered()), this, SLOT(close()));
     // this connection is created when a game is in progress
     //connect(uiMainWindow.actionQuit, SIGNAL(triggered()), m_exitDialog, SLOT(show()));
-    connect(m_exitDialog, SIGNAL(finished(int)), this, SLOT(checkClose(int)));
+
+    connect(uiExitConfirmationDialog.actionContinue, SIGNAL(triggered()), this, SLOT(close()));
+    connect(uiExitConfirmationDialog.actionMainMenu, SIGNAL(triggered()), this, SLOT(close()));
+    connect(uiExitConfirmationDialog.actionQuit, SIGNAL(triggered()), this, SLOT(close()));
 
     connect(m_pitch, SIGNAL(gameInProgress(bool)), this, SLOT(enableActions(bool)));
     connect(m_pitch, SIGNAL(displayHalfTimeStatistics(bool)), this, SLOT(displayHalfTimeStatistics(bool)));
+
+    connect(m_pitch, SIGNAL(pauseGame()), m_exitDialog, SLOT(show()));
 }
 
 void MWindow::displayHalfTimeStatistics(bool display)

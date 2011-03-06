@@ -54,6 +54,7 @@ public:
       DiveEast = 1,
       DiveWest = -179,
 
+      Pause,
       NoAction
     };
 

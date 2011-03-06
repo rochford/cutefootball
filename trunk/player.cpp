@@ -576,6 +576,9 @@ void Player::keyPressEvent(QKeyEvent *event)
         // start a timer
         m_keyEventTimer->start();
         break;
+    case MWindow::Pause:
+        m_pitch->pause();
+        break;
     default:
         break;
     }
@@ -617,6 +620,8 @@ void Player::stopKeyEvent()
 
 void Player::createKeyboardActions()
 {
+    m_actions.insert( Qt::Key_P, MWindow::Pause );
+
     m_actions.insert( Qt::Key_Up, MWindow::North );
     m_actions.insert( Qt::Key_Down, MWindow::South );
     m_actions.insert( Qt::Key_Left, MWindow::West );

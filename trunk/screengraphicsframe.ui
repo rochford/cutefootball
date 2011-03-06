@@ -29,7 +29,7 @@
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="7">
+    <item row="0" column="5">
      <spacer name="horizontalSpacer">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
@@ -47,24 +47,12 @@
       <property name="text">
        <string notr="true"/>
       </property>
-      <property name="pixmap">
-       <pixmap resource="teams.qrc">:/images/flags/Andorra.png</pixmap>
-      </property>
-      <property name="scaledContents">
-       <bool>true</bool>
-      </property>
      </widget>
     </item>
-    <item row="0" column="3">
+    <item row="0" column="2">
      <widget class="QLabel" name="SGFawayTeamFlag">
       <property name="text">
        <string notr="true"/>
-      </property>
-      <property name="pixmap">
-       <pixmap resource="teams.qrc">:/images/flags/Austria.png</pixmap>
-      </property>
-      <property name="scaledContents">
-       <bool>true</bool>
       </property>
      </widget>
     </item>
@@ -74,17 +62,17 @@
        <string notr="true">hme</string>
       </property>
       <property name="scaledContents">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
      </widget>
     </item>
-    <item row="0" column="4">
+    <item row="0" column="3">
      <widget class="QLabel" name="SGFawayTeamName">
       <property name="text">
        <string notr="true">awy</string>
       </property>
       <property name="scaledContents">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
      </widget>
     </item>
@@ -108,31 +96,9 @@
       </property>
      </spacer>
     </item>
-    <item row="0" column="2">
-     <widget class="QLabel" name="SGFhomeGoals">
-      <property name="text">
-       <string notr="true">hmeGoals</string>
-      </property>
-      <property name="scaledContents">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="5">
-     <widget class="QLabel" name="SGFawayGoals">
-      <property name="text">
-       <string notr="true">awyGoals</string>
-      </property>
-      <property name="scaledContents">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
    </layout>
   </widget>
  </widget>
- <resources>
-  <include location="teams.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

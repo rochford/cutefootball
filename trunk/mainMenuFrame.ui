@@ -158,20 +158,54 @@
       </property>
      </spacer>
     </item>
-    <item row="2" column="0">
-     <widget class="QLabel" name="copyrightLabel">
-      <property name="text">
-       <string notr="true">Copyright 2011,
-Tim Rochford</string>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="2">
-     <widget class="QLabel" name="versionLabel">
-      <property name="text">
-       <string notr="true">XXX</string>
-      </property>
-     </widget>
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <item>
+       <widget class="QLabel" name="versionLabel">
+        <property name="text">
+         <string notr="true">XXX</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer_5">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
+    <item row="2" column="0">
+     <layout class="QVBoxLayout" name="verticalLayout_4">
+      <item>
+       <spacer name="verticalSpacer_6">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="copyrightLabel">
+        <property name="text">
+         <string notr="true">Copyright 2011,
+Tim Rochford</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>
