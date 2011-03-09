@@ -7,9 +7,10 @@
 #include <QDebug>
 
 GoalKeeper::GoalKeeper(QString name,
+                       int number,
                        Pitch *pitch,
                        Team* team)
-    : Player(name,true,pitch,team,5.0,Player::GoalKeeper)
+    : Player(name,number,true,pitch,team,5.0,Player::GoalKeeper)
 {
 
     connect(pitch->ball(), SIGNAL(shot(Team*,QPointF)),
@@ -47,7 +48,14 @@ void GoalKeeper::createPixmaps()
     pixmapInsert(MWindow::West, "pW.PNG", "pW1.PNG", "pW2.PNG", KGoalKeeperShirtColor, KGoalKeeperShortColor);
     pixmapInsert(MWindow::NorthWest, "pNW.PNG", "pNW1.PNG", "pNW2.PNG", KGoalKeeperShirtColor, KGoalKeeperShortColor);
 
-    pixmapInsert(MWindow::Tackle, "tackleN.PNG", "tackleN.PNG", "tackleN.PNG", KGoalKeeperShirtColor, KGoalKeeperShortColor); // TODO XXX TIM
+    pixmapInsert(MWindow::TackleN, "tackleN.PNG", "tackleN.PNG", "tackleN.PNG", KGoalKeeperShirtColor, KGoalKeeperShirtColor);
+    pixmapInsert(MWindow::TackleNE, "tackleNE.PNG", "tackleNE.PNG", "tackleNE.PNG", KGoalKeeperShirtColor, KGoalKeeperShirtColor);
+    pixmapInsert(MWindow::TackleNW, "tackleNW.PNG", "tackleNW.PNG", "tackleNW.PNG", KGoalKeeperShirtColor, KGoalKeeperShirtColor);
+    pixmapInsert(MWindow::TackleE, "tackleE.PNG", "tackleE.PNG", "tackleE.PNG", KGoalKeeperShirtColor, KGoalKeeperShirtColor);
+    pixmapInsert(MWindow::TackleSE, "tackleSE.PNG", "tackleSE.PNG", "tackleSE.PNG", KGoalKeeperShirtColor, KGoalKeeperShirtColor);
+    pixmapInsert(MWindow::TackleS, "tackleS.PNG", "tackleS.PNG", "tackleS.PNG", KGoalKeeperShirtColor, KGoalKeeperShirtColor);
+    pixmapInsert(MWindow::TackleSW, "tackleSW.PNG", "tackleSW.PNG", "tackleSW.PNG", KGoalKeeperShirtColor, KGoalKeeperShirtColor);
+    pixmapInsert(MWindow::TackleW, "tackleW.PNG", "tackleW.PNG", "tackleW.PNG", KGoalKeeperShirtColor, KGoalKeeperShirtColor);
     pixmapInsert(MWindow::FallenOver, "pNW.PNG", "pNW1.PNG", "pNW2.PNG", KGoalKeeperShirtColor, KGoalKeeperShortColor); // TODO XXX TIM
 
     pixmapInsert(MWindow::DiveEast, "tackleN.PNG", "tackleN.PNG", "tackleN.PNG", KGoalKeeperShirtColor, KGoalKeeperShortColor); // TODO XXX TIM

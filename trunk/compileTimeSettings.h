@@ -9,11 +9,15 @@ const QRgb KGoalKeeperShortColor = QColor(Qt::black).rgb();
 const int KOneSecondMs = 1000; // ms
 const int KLongPressValue = 400; // Ms
 
+const QFont KPlayerToolTipFont("Times",7, QFont::Bold);
+const QPen KPlayerNameFocused(QBrush(Qt::yellow),4);
+const QPen KPlayerNameUnfocused(QBrush(Qt::white),4);
+
 const QPen KWhitePaintPen(QBrush(Qt::white),3);
 const QBrush KFocusPlayerBrush(Qt::white, Qt::Dense3Pattern);
 
-const int KGameRefreshRate = 1000 / 40; // ms
-const int KKeyPressRefreshRate = 1000 / 40; // ms
+const int KGameRefreshRate = 1000 / 25; // ms
+const int KKeyPressRefreshRate = 1000 / 25; // ms
 
 const int KColumn = 5; // Left, l-Centre, centre, r-centre, Right
 // goalkepper-defence-midfield-attack,attack-midfield-defence-goalkepper

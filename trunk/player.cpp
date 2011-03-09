@@ -10,6 +10,7 @@
 #include <QToolTip>
 
 Player::Player(QString name,
+               int number,
                bool computerControlled,
                Pitch *pitch,
                Team* team,
@@ -18,6 +19,7 @@ Player::Player(QString name,
     : QObject(),
     QGraphicsPixmapItem(NULL,NULL),
     m_name(name),
+    m_number(number),
     m_hasBall(false),
     m_team(team),
     m_role(role),
@@ -34,6 +36,7 @@ Player::Player(QString name,
         setFlag(QGraphicsItem::ItemIsFocusable);
 
     setToolTip(m_name);
+
     m_outOfAction = new QTimer(this);
     m_outOfAction->setSingleShot(true);
 
@@ -42,8 +45,8 @@ Player::Player(QString name,
     connect(m_pitch, SIGNAL(foul(Team*,QPointF)), this, SLOT(foulEventStart(Team*,QPointF)));
 
     createKeyboardActions();
-    setRotation(0);
     setTransformOriginPoint(boundingRect().center());
+
 }
 
 Player::~Player()
@@ -75,7 +78,6 @@ void Player::foulEventStart(Team* t, QPointF foulLocation)
 
 void Player::standupPlayer()
 {
-    setRotation(0);
     setPixmap(m_images[m_lastAction].at(0));
 }
 
@@ -121,7 +123,15 @@ void Player::createPixmaps()
     pixmapInsert(MWindow::West, "pW.PNG", "pW1.PNG", "pW2.PNG", m_team->m_shirtColor.rgb(), m_team->m_shortColor.rgb());
     pixmapInsert(MWindow::NorthWest, "pNW.PNG", "pNW1.PNG", "pNW2.PNG", m_team->m_shirtColor.rgb(), m_team->m_shortColor.rgb());
 
-    pixmapInsert(MWindow::Tackle, "tackleN.PNG", "tackleN.PNG", "tackleN.PNG", m_team->m_shirtColor.rgb(), m_team->m_shortColor.rgb());
+    pixmapInsert(MWindow::TackleN, "tackleN.PNG", "tackleN.PNG", "tackleN.PNG", m_team->m_shirtColor.rgb(), m_team->m_shortColor.rgb());
+    pixmapInsert(MWindow::TackleNE, "tackleNE.PNG", "tackleNE.PNG", "tackleNE.PNG", m_team->m_shirtColor.rgb(), m_team->m_shortColor.rgb());
+    pixmapInsert(MWindow::TackleNW, "tackleNW.PNG", "tackleNW.PNG", "tackleNW.PNG", m_team->m_shirtColor.rgb(), m_team->m_shortColor.rgb());
+    pixmapInsert(MWindow::TackleE, "tackleE.PNG", "tackleE.PNG", "tackleE.PNG", m_team->m_shirtColor.rgb(), m_team->m_shortColor.rgb());
+    pixmapInsert(MWindow::TackleSE, "tackleSE.PNG", "tackleSE.PNG", "tackleSE.PNG", m_team->m_shirtColor.rgb(), m_team->m_shortColor.rgb());
+    pixmapInsert(MWindow::TackleS, "tackleS.PNG", "tackleS.PNG", "tackleS.PNG", m_team->m_shirtColor.rgb(), m_team->m_shortColor.rgb());
+    pixmapInsert(MWindow::TackleSW, "tackleSW.PNG", "tackleSW.PNG", "tackleSW.PNG", m_team->m_shirtColor.rgb(), m_team->m_shortColor.rgb());
+    pixmapInsert(MWindow::TackleW, "tackleW.PNG", "tackleW.PNG", "tackleW.PNG", m_team->m_shirtColor.rgb(), m_team->m_shortColor.rgb());
+
     pixmapInsert(MWindow::FallenOver, "pTackled.PNG", "pTackled.PNG", "pTackled.PNG", m_team->m_shirtColor.rgb(), m_team->m_shortColor.rgb()); // TODO XXX TIM
     // set default pixmap
     setPixmap(m_images[MWindow::North].at(0));
@@ -137,10 +147,19 @@ void Player::paint(QPainter *painter,
                    const QStyleOptionGraphicsItem *option,
                    QWidget *widget)
 {
-    // the player that is focused get red circle around them
+//    KPlayerToolTipFont.setStyleStrategy(QFont::NoAntialias);
+
     if ( hasFocus() ) {
-        painter->setBrush(KFocusPlayerBrush);
-        painter->drawEllipse(boundingRect().center(), 8, 8);
+        QPointF textPos(boundingRect().topLeft().x()-2,boundingRect().y()-5);
+
+        painter->setFont(KPlayerToolTipFont);
+        painter->setPen(KPlayerNameFocused);
+        painter->drawText(textPos, m_name);
+    } else {
+        QPointF textPos(boundingRect().center().x()-2,boundingRect().y()-5);
+        painter->setFont(KPlayerToolTipFont);
+        painter->setPen(KPlayerNameUnfocused);
+        painter->drawText(textPos, QString::number(m_number));
     }
 
     // Draw QGraphicsPixmapItem face
@@ -200,7 +219,6 @@ void Player::movePlayer(MWindow::Action action, QPointF destination)
 //        qDebug() << "Player::movePlayer dx " << tragectory.dx() << " dy " << tragectory.dy();
 
         setPixmap(m_images[action].at(m_step % 3));
-        setRotation(0);
         // if the destination is less than move distance, only move that much
         QLineF diff(pos(), destination);
         if (diff.length() < tragectory.length())
@@ -291,15 +309,14 @@ void Player::specialAction(MWindow::Action action)
         case MWindow::Tackle:
             {
             // perform tackle here...
-            int rotation = calculateTackleRotationFromLastAction(m_lastAction);
+            MWindow::Action tackleAction = calculateTackleActionFromLastAction(m_lastAction);
 
-            setPixmap(m_images[MWindow::Tackle].at(0));
+            setPixmap(m_images[tackleAction].at(0));
             QLineF tragectory;
             tragectory.setP1(pos());
             tragectory.setAngle((qreal)m_lastAction);
             tragectory.setLength(m_speed);
 
-            setRotation(rotation);
             moveBy(tragectory.dx(), tragectory.dy());
             m_outOfAction->stop();
             m_outOfAction->start(500);

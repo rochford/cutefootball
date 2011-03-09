@@ -13,6 +13,7 @@ class GoalKeeper : public Player
     Q_OBJECT
 public:
     explicit GoalKeeper(QString name,
+                        int number,
                         Pitch* pitch,
                         Team* team);
 

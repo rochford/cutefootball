@@ -33,6 +33,7 @@ public:
                LastDummy };
 
     Player(QString name,
+           int number,
            bool computerControlled,
            Pitch* pitch,
            Team* team,
@@ -110,6 +111,7 @@ public:
 
 private:
     QString m_name;
+    int m_number;
 
     QTime m_elapsedTime;
     QMap<int,MWindow::Action> m_actions;
