@@ -51,6 +51,7 @@
         <file>teams/Iceland.txt</file>
         <file>teams/Ireland.txt</file>
         <file>teams/Italy.txt</file>
+        <file>teams/Malta.txt</file>
         <file>teams/Netherlands.txt</file>
         <file>teams/NorthernIreland.txt</file>
         <file>teams/Norway.txt</file>
@@ -60,6 +61,7 @@
         <file>teams/Russia.txt</file>
         <file>teams/SanMarino.txt</file>
         <file>teams/Scotland.txt</file>
+        <file>teams/Serbia.txt</file>
         <file>teams/Slovakia.txt</file>
         <file>teams/Spain.txt</file>
         <file>teams/Sweden.txt</file>
@@ -67,7 +69,5 @@
         <file>teams/Turkey.txt</file>
         <file>teams/Ukraine.txt</file>
         <file>teams/Wales.txt</file>
-        <file>teams/Malta.txt</file>
-        <file>teams/Serbia.txt</file>
     </qresource>
 </RCC>

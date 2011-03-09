@@ -1,6 +1,5 @@
-adam
-bob
-charlie
-dave
-eddie
-frank
+adam,1
+bob,2
+charlie,3
+dave,7
+eddie,10

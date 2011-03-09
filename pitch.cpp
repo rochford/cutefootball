@@ -385,59 +385,47 @@ void Pitch::newGame(int homeTeam, int awayTeam)
     m_game->start();
 }
 
-QStringList Pitch::parsePlayers(QString teamName)
+void Pitch::createTeamPlayers(Team *team)
 {
     QStringList names;
 
+    bool isHomeTeam(false);
+    if (team == m_homeTeam)
+        isHomeTeam = true;
+
+    QPointF startPos(0, m_scene->sceneRect().height()/2);
+
     // for each team in the directory
     QString f(":/teams/");
-    f.append(teamName);
+    f.append(team->fullName());
     f.append(".txt");
 
     QFile file(f);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-        return names;
+        return;
 
+    int i = 0;
     while (!file.atEnd()) {
         QByteArray line = file.readLine();
+        if (line.contains('#'))
+            continue;
 
-        QString name(line.simplified());
-        names.append(name);
-    }
-    file.close();
-    return names;
-}
+        QList<QByteArray> nameAndPosition = line.split(',');
+        QString name = nameAndPosition.at(0).simplified();
+        Player::Role r = static_cast<Player::Role>(nameAndPosition.at(1).simplified().toInt());
 
-void Pitch::createTeamPlayers(Team *team)
-{
-    QStringList names = parsePlayers(team->fullName());
-    bool isHomeTeam(false);
-
-    if (team == m_homeTeam)
-        isHomeTeam = true;
-
-    QList<Player::Role> formation;
-    formation << Player::GoalKeeper
-              << Player::CentralDefence
-              << Player::LeftMidfield
-              << Player::RightMidfield
-              << Player::CentralAttack;
-
-    QPointF startPos(0, m_scene->sceneRect().height()/2);
-    int i = 0;
-    foreach( Player::Role r, formation ) {
         Player *pl(NULL);
 
         if (r == Player::GoalKeeper) {
            pl = new GoalKeeper(
-                    names.at(i),
+                    name,
                     i+1,
                     this,
                     team);
 
         } else {
             pl = new Player(
-                    names.at(i),
+                    name,
                     i+1,
                     !isHomeTeam,
                     this,
@@ -454,6 +442,7 @@ void Pitch::createTeamPlayers(Team *team)
         m_scene->addItem(pl);
         i++;
     }
+    file.close();
 }
 
 void Pitch::setPlayerDefendZone(Player *p)
