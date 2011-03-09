@@ -32,5 +32,12 @@
         <file>images/advertTop.png</file>
         <file>images/advertLeft.png</file>
         <file>images/advertRight.png</file>
+        <file>images/red/tackleS.PNG</file>
+        <file>images/red/tackleW.PNG</file>
+        <file>images/red/tackleE.PNG</file>
+        <file>images/red/tackleSE.PNG</file>
+        <file>images/red/tackleSW.PNG</file>
+        <file>images/red/tackleNW.PNG</file>
+        <file>images/red/tackleNE.PNG</file>
     </qresource>
 </RCC>

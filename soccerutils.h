@@ -4,6 +4,8 @@
 #include "mainwindow.h"
 
 int calculateTackleRotationFromLastAction(MWindow::Action lastAction);
+MWindow::Action calculateTackleActionFromLastAction(MWindow::Action lastAction);
+
 void teamColorTransform(QPixmap &pixmap, QString pix, QRgb colorFrom, QRgb shirtColor, QRgb shortColor);
 MWindow::Action calculateAction(QPointF source,
                                 QPointF destination);

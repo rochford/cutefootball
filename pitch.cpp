@@ -431,12 +431,14 @@ void Pitch::createTeamPlayers(Team *team)
         if (r == Player::GoalKeeper) {
            pl = new GoalKeeper(
                     names.at(i),
+                    i+1,
                     this,
                     team);
 
         } else {
             pl = new Player(
                     names.at(i),
+                    i+1,
                     !isHomeTeam,
                     this,
                     team,

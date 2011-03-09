@@ -24,7 +24,7 @@ public:
     void soundEvent(QString fileName);
 
 public slots:
-    void soundEnabled(bool enabled) { m_soundEnabled = enabled; }
+    inline void soundEnabled(bool enabled) { m_soundEnabled = enabled; }
     void soundEvent(SoundEffects::GameSound e);
     void startSound(SoundEffects::GameSound e);
     void stopSound(SoundEffects::GameSound e);

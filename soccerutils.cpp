@@ -87,3 +87,37 @@ int calculateTackleRotationFromLastAction(MWindow::Action lastAction)
     return action;
 }
 
+MWindow::Action calculateTackleActionFromLastAction(MWindow::Action lastAction)
+{
+    MWindow::Action action;
+
+    switch(lastAction) {
+    case MWindow::North:
+        action = MWindow::TackleN;
+        break;
+    case MWindow::NorthEast:
+        action = MWindow::TackleNE;
+        break;
+    case MWindow::East:
+        action = MWindow::TackleE;
+        break;
+    case MWindow::SouthEast:
+        action = MWindow::TackleSE;
+        break;
+    case MWindow::South:
+        action = MWindow::TackleS;
+        break;
+    case MWindow::SouthWest:
+        action = MWindow::TackleSW;
+        break;
+    case MWindow::West:
+        action = MWindow::TackleW;
+        break;
+    case MWindow::NorthWest:
+        action = MWindow::TackleNW;
+        break;
+    default:
+        break;
+    }
+    return action;
+}

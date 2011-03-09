@@ -44,6 +44,15 @@ public:
         Pass,
         Tackle,
 
+        TackleN,
+        TackleNE,
+        TackleE,
+        TackleSE,
+        TackleS,
+        TackleSW,
+        TackleW,
+        TackleNW,
+
         // Due to loosing a tackle
         FallenOver,
 
