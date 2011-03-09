@@ -114,7 +114,6 @@ private:
     void createTeamPlayers(Team *team);
     void layoutPitch();
     void setPlayerDefendZone(Player *p);
-    QStringList parsePlayers(QString teamName);
 
     inline bool penalties() const {  return m_isPenalties; }
 

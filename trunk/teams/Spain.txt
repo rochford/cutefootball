@@ -1,5 +1,5 @@
-spanishGoalie
-spanishDefence
-spanishMidLeft
-spanishMidRight
-spanishAttack
+spanishGoalie,1
+spanishDefence,2
+spanishMidLeft,3
+spanishMidRight,7
+spanishAttack,10
