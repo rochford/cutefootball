@@ -38,7 +38,8 @@ public:
            Pitch* pitch,
            Team* team,
            qreal speed,
-           Player::Role role);
+           Player::Role role,
+           QColor hairColor);
     virtual ~Player();
 
     enum { Type = UserType + 2 };
@@ -132,6 +133,8 @@ protected:
 
     // is this player the captain of the team?
     bool m_captain;
+
+    QColor m_hairColor;
 };
 
 #endif // PLAYER_H

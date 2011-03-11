@@ -413,6 +413,8 @@ void Pitch::createTeamPlayers(Team *team)
         QList<QByteArray> nameAndPosition = line.split(',');
         QString name = nameAndPosition.at(0).simplified();
         Player::Role r = static_cast<Player::Role>(nameAndPosition.at(1).simplified().toInt());
+        QString hairColorString = nameAndPosition.at(2).simplified();
+        QColor hairColor(hairColorString);
 
         Player *pl(NULL);
 
@@ -421,7 +423,8 @@ void Pitch::createTeamPlayers(Team *team)
                     name,
                     i+1,
                     this,
-                    team);
+                    team,
+                    hairColor);
 
         } else {
             pl = new Player(
@@ -431,7 +434,8 @@ void Pitch::createTeamPlayers(Team *team)
                     this,
                     team,
                     team->speed(),
-                    r);
+                    r,
+                    hairColor);
         }
         pl->createPixmaps();
         pl->setPos(startPos);
