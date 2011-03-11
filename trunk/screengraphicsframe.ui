@@ -47,12 +47,18 @@
       <property name="text">
        <string notr="true"/>
       </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+      </property>
      </widget>
     </item>
     <item row="0" column="2">
      <widget class="QLabel" name="SGFawayTeamFlag">
       <property name="text">
        <string notr="true"/>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
       </property>
      </widget>
     </item>
@@ -64,6 +70,9 @@
       <property name="scaledContents">
        <bool>false</bool>
       </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+      </property>
      </widget>
     </item>
     <item row="0" column="3">
@@ -73,6 +82,9 @@
       </property>
       <property name="scaledContents">
        <bool>false</bool>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
       </property>
      </widget>
     </item>

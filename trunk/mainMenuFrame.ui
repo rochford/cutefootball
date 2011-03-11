@@ -165,6 +165,9 @@
         <property name="text">
          <string notr="true">XXX</string>
         </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+        </property>
        </widget>
       </item>
       <item>
@@ -202,6 +205,9 @@
         <property name="text">
          <string notr="true">Copyright 2011,
 Tim Rochford</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
         </property>
        </widget>
       </item>

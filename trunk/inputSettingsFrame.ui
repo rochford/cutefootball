@@ -25,7 +25,7 @@
      <x>0</x>
      <y>0</y>
      <width>316</width>
-     <height>231</height>
+     <height>236</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -37,7 +37,7 @@
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap resource="soccer.qrc">:/images/keyboard/1.png</pixmap>
+         <pixmap resource="menugraphics.qrc">:/images/keyboard/1.png</pixmap>
         </property>
         <property name="scaledContents">
          <bool>true</bool>
@@ -50,7 +50,7 @@
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap resource="soccer.qrc">:/images/keyboard/2.png</pixmap>
+         <pixmap resource="menugraphics.qrc">:/images/keyboard/2.png</pixmap>
         </property>
         <property name="scaledContents">
          <bool>true</bool>
@@ -63,7 +63,7 @@
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap resource="soccer.qrc">:/images/keyboard/3.png</pixmap>
+         <pixmap resource="menugraphics.qrc">:/images/keyboard/3.png</pixmap>
         </property>
         <property name="scaledContents">
          <bool>true</bool>
@@ -76,7 +76,7 @@
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap resource="soccer.qrc">:/images/keyboard/4.png</pixmap>
+         <pixmap resource="menugraphics.qrc">:/images/keyboard/4.png</pixmap>
         </property>
         <property name="scaledContents">
          <bool>true</bool>
@@ -89,7 +89,7 @@
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap resource="soccer.qrc">:/images/keyboard/5.png</pixmap>
+         <pixmap resource="menugraphics.qrc">:/images/keyboard/5.png</pixmap>
         </property>
         <property name="scaledContents">
          <bool>true</bool>
@@ -102,7 +102,7 @@
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap resource="soccer.qrc">:/images/keyboard/6.png</pixmap>
+         <pixmap resource="menugraphics.qrc">:/images/keyboard/6.png</pixmap>
         </property>
         <property name="scaledContents">
          <bool>true</bool>
@@ -115,7 +115,7 @@
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap resource="soccer.qrc">:/images/keyboard/7.png</pixmap>
+         <pixmap resource="menugraphics.qrc">:/images/keyboard/7.png</pixmap>
         </property>
         <property name="scaledContents">
          <bool>true</bool>
@@ -128,7 +128,7 @@
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap resource="soccer.qrc">:/images/keyboard/8.png</pixmap>
+         <pixmap resource="menugraphics.qrc">:/images/keyboard/8.png</pixmap>
         </property>
         <property name="scaledContents">
          <bool>true</bool>
@@ -141,7 +141,33 @@
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap resource="soccer.qrc">:/images/keyboard/9.png</pixmap>
+         <pixmap resource="menugraphics.qrc">:/images/keyboard/9.png</pixmap>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2">
+       <widget class="QLabel" name="label_10">
+        <property name="text">
+         <string notr="true"/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="menugraphics.qrc">:/images/keyboard/hash.png</pixmap>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_11">
+        <property name="text">
+         <string notr="true"/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="menugraphics.qrc">:/images/keyboard/star.png</pixmap>
         </property>
         <property name="scaledContents">
          <bool>true</bool>
@@ -193,7 +219,7 @@
   </widget>
  </widget>
  <resources>
-  <include location="soccer.qrc"/>
+  <include location="menugraphics.qrc"/>
  </resources>
  <connections/>
 </ui>

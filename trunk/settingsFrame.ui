@@ -71,42 +71,6 @@
      </layout>
     </item>
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout_4">
-      <item>
-       <widget class="QLabel" name="label_3">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>Extra Time</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QComboBox" name="extraTimeComboBox">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <item>
-         <property name="text">
-          <string>No Extra Time</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Extra Time And Penalties</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Golden Goal</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item>
      <widget class="QLabel" name="label">
       <property name="text">
        <string>Game Length (minutes)</string>
