@@ -7,7 +7,7 @@ HalfStatisticsFrame::HalfStatisticsFrame(MWindow *parent) :
 {
     ui->setupUi(this);
     ui->buttonBox->button(QDialogButtonBox::Ok)
-            ->setText(tr("Ok"));
+            ->setText(tr("Continue"));
     connect(ui->buttonBox, SIGNAL(accepted()),
             parent, SLOT(hideStatisticsFrame()));
     connect(ui->buttonBox, SIGNAL(rejected()),

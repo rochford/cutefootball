@@ -31,7 +31,7 @@ void settingsFrame::updateSettings()
 {
     m_gameLengthMinutes = ui->gameLengthLcdNumber->value();
     m_soundEnabled = ui->checkBoxSound->isChecked();
-    m_extraTime = (ExtraTime) ui->extraTimeComboBox->currentIndex();
+//    m_extraTime = (ExtraTime) ui->extraTimeComboBox->currentIndex();
     emit soundChanged(m_soundEnabled);
 }
 

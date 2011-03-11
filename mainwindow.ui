@@ -54,6 +54,9 @@
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="title">
      <string>File</string>
     </property>
@@ -64,6 +67,9 @@
     <addaction name="actionPause"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="title">
      <string>Help</string>
     </property>
