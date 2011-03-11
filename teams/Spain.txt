@@ -1,5 +1,5 @@
-spanishGoalie,1
-spanishDefence,2
-spanishMidLeft,3
-spanishMidRight,7
-spanishAttack,10
+spanishGoalie,1,black
+spanishDefence,2,black
+spanishMidLeft,3,black
+spanishMidRight,7,brown
+spanishAttack,10,grey

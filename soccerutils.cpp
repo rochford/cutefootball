@@ -5,7 +5,7 @@
 
 
 
-void teamColorTransform(QPixmap &pixmap, QString pix, QRgb colorFrom, QRgb shirtColor, QRgb shortColor)
+void teamColorTransform(QPixmap &pixmap, QString pix, QRgb colorFrom, QRgb shirtColor, QRgb shortColor, QRgb hairColor)
 {
     QImage img(pix);
     QRect rect = img.rect();
@@ -16,6 +16,8 @@ void teamColorTransform(QPixmap &pixmap, QString pix, QRgb colorFrom, QRgb shirt
                 img.setPixel(QPoint(w,h), shirtColor);
             else if (qRed(rgb) < 8 && qBlue(rgb) < 8 && qGreen(rgb) > 250)
                 img.setPixel(QPoint(w,h), shortColor);
+            else if (qRed(rgb) == 195 && qBlue(rgb) == 74 && qGreen(rgb) == 74)
+                img.setPixel(QPoint(w,h), hairColor);
         }
     }
     pixmap = QPixmap::fromImage(img);

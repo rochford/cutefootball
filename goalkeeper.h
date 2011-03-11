@@ -15,7 +15,8 @@ public:
     explicit GoalKeeper(QString name,
                         int number,
                         Pitch* pitch,
-                        Team* team);
+                        Team* team,
+                        QColor hairColor);
 
     // goal keepers are players too
     enum { Type = UserType + 2 };

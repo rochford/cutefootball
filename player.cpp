@@ -15,7 +15,8 @@ Player::Player(QString name,
                Pitch *pitch,
                Team* team,
                qreal speed,
-               Role role)
+               Role role,
+               QColor hairColor)
     : QObject(),
     QGraphicsPixmapItem(NULL,NULL),
     m_name(name),
@@ -26,7 +27,8 @@ Player::Player(QString name,
     m_pitch(pitch),
     m_speed(speed),
     m_step(0),
-    m_allowedOffPitch(true)
+    m_allowedOffPitch(true),
+    m_hairColor(hairColor)
 {
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
     m_keyEventTimer = new QTimer(this);
@@ -85,7 +87,9 @@ void Player::pixmapInsert(MWindow::Action a, QString s1, QString s2, QString s3,
 {
     QString s(":/images/red/");
 
-    QString key1(m_team->briefName()), key2(m_team->briefName()), key3(m_team->briefName());
+    QString key1(m_team->briefName()+m_hairColor.name()),
+            key2(m_team->briefName()+m_hairColor.name()),
+            key3(m_team->briefName()+m_hairColor.name());
     key1.append(s1);
     key2.append(s2);
     key3.append(s3);
@@ -94,16 +98,16 @@ void Player::pixmapInsert(MWindow::Action a, QString s1, QString s2, QString s3,
     QPixmap p1, p2, p3;
 
     if (!QPixmapCache::find(key1, &p1)) {
-        teamColorTransform(p1, n1.append(s1), qRgb(255, 0, 0), shirtColor, shortColor);
+        teamColorTransform(p1, n1.append(s1), qRgb(255, 0, 0), shirtColor, shortColor, m_hairColor.rgb());
         QPixmapCache::insert(key1, p1);
     }
 
     if (!QPixmapCache::find(key2, &p2)) {
-        teamColorTransform(p2, n2.append(s2), qRgb(255, 0, 0), shirtColor, shortColor);
+        teamColorTransform(p2, n2.append(s2), qRgb(255, 0, 0), shirtColor, shortColor, m_hairColor.rgb());
         QPixmapCache::insert(key2, p2);
     }
     if (!QPixmapCache::find(key3, &p3)) {
-        teamColorTransform(p3, n3.append(s3), qRgb(255, 0, 0), shirtColor, shortColor);
+        teamColorTransform(p3, n3.append(s3), qRgb(255, 0, 0), shirtColor, shortColor, m_hairColor.rgb());
         QPixmapCache::insert(key3, p3);
     }
 
