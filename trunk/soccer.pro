@@ -46,7 +46,8 @@ SOURCES += \
     helpFrame.cpp \
     inputsettingsframe.cpp \
     halfstatisticsframe.cpp \
-    soccerutils.cpp
+    soccerutils.cpp \
+    cameraview.cpp
 #    aboutFrame.cpp \
 
 HEADERS  += \
@@ -69,7 +70,8 @@ HEADERS  += \
     inputsettingsframe.h \
     halfstatisticsframe.h \
     version.h \
-    soccerutils.h
+    soccerutils.h \
+    cameraview.h
 #    aboutFrame.h \
 
 RESOURCES += \

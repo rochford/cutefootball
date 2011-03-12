@@ -16,6 +16,7 @@
 #include "game.h"
 #include "soundEffects.h"
 #include "settingsFrame.h"
+#include "cameraview.h"
 
 Pitch::Pitch(const QRectF& footballGroundRect,
              QGraphicsView* view,
@@ -33,7 +34,6 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     m_centerMark(NULL),
     m_settingsFrame(settingsFrame),
     m_soundEffects(se),
-    m_centerOnBall(false),
     m_teamMgr(new TeamManager)
 {
 #if defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR)
@@ -42,6 +42,7 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     m_view->scale(7.0,7.0);
 #endif
     m_view->setScene(m_scene);
+    m_cameraView = new CameraView(*m_view, this);
 
     m_scene->setBackgroundBrush(QBrush(Qt::green));
     // disable focus selection by user pressing scene items
@@ -112,6 +113,18 @@ Pitch::~Pitch()
     delete m_grass;
     delete m_ball;
     delete m_teamMgr;
+    delete m_cameraView;
+}
+
+void Pitch::centerOn(QPointF point)
+{
+    m_cameraView->centerOn(point);
+}
+
+
+void Pitch::centerOn(QGraphicsItem *item)
+{
+    m_cameraView->centerOn(item);
 }
 
 Player* Pitch::selectNearestPlayer(Team* team)
@@ -337,10 +350,10 @@ void Pitch::updateDisplayTime(int timeLeftMs)
 
 void Pitch::hasBallCheck()
 {
-    if (m_centerOnBall)
-        m_view->centerOn(m_ball->pos());
-    m_screenGraphicsFrameProxy->setPos(m_view->mapToScene(
-                                       m_view->rect().topLeft()));
+    if (m_cameraView->centeredItem() == m_ball) {
+        m_cameraView->centerOn(m_ball);
+    }
+    m_screenGraphicsFrameProxy->setPos(m_cameraView->topLeft());
 
     // which team has the ball?
     Player* p = m_ball->lastPlayerToTouchBall();

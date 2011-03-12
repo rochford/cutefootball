@@ -24,7 +24,8 @@ public:
         Celebrate,
     };
 public slots:
-    void playFrame(int frame);
+    void playFrameCelebrate(int frame);
+    void playFramePositions(int frame);
     void createTakePositionAnimation();
 
 protected:

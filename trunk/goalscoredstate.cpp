@@ -27,9 +27,9 @@ GoalScoredState::GoalScoredState(Game *g, Pitch *p)
     m_celebrate->addTransition(m_timeLineCelebrate, SIGNAL(finished()), m_returnToPosition);
     m_returnToPosition->addTransition(m_timeLineReturnStartPositions, SIGNAL(finished()), m_allDone);
 
-    connect(m_timeLineCelebrate, SIGNAL(frameChanged(int)), this, SLOT(playFrame(int)));
+    connect(m_timeLineCelebrate, SIGNAL(frameChanged(int)), this, SLOT(playFrameCelebrate(int)));
     connect(m_timeLineCelebrate, SIGNAL(finished()), this, SLOT(createTakePositionAnimation()));
-    connect(m_timeLineReturnStartPositions, SIGNAL(frameChanged(int)), this, SLOT(playFrame(int)));
+    connect(m_timeLineReturnStartPositions, SIGNAL(frameChanged(int)), this, SLOT(playFramePositions(int)));
     connect(m_timeLineReturnStartPositions, SIGNAL(finished()), m_game, SLOT(kickOff()));
 }
 
@@ -97,19 +97,29 @@ void GoalScoredState::createPlayerAnimationItems(GameState g)
     }
 }
 
-void GoalScoredState::playFrame(int frame)
+void GoalScoredState::playFrameCelebrate(int frame)
 {
-    qDebug() << "playFrame" << frame;
+    qDebug() << "playFrameCelebrate" << frame;
     qreal f = frame/ 100.00;
 
-    if ( frame > 50 ) {
-        m_pitch->centerOnBall(false);
-        m_pitch->m_view->centerOn( m_pitch->ball()->lastPlayerToTouchBall() );
-    }
+    if ( frame > 30 )
+        m_pitch->centerOn( m_pitch->ball()->lastPlayerToTouchBall() );
 
     foreach (QGraphicsItemAnimation *anim, m_playerAnimationItems)
         anim->item()->setPos(anim->posAt(f));
     m_pitch->m_scene->update();
 }
 
+void GoalScoredState::playFramePositions(int frame)
+{
+    qDebug() << "playFramePositions" << frame;
+    qreal f = frame/ 100.00;
+
+//    if ( frame > 80 )
+//        m_pitch->centerOn( m_pitch->m_centerMark->pos() );
+
+    foreach (QGraphicsItemAnimation *anim, m_playerAnimationItems)
+        anim->item()->setPos(anim->posAt(f));
+    m_pitch->m_scene->update();
+}
 
