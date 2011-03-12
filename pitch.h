@@ -13,6 +13,7 @@
 #include "team.h" // Team::Direction
 #include "soundeffects.h"
 #include "settingsFrame.h"
+#include "cameraview.h"
 #include <QStateMachine>
 
 class QGraphicsEllipseItem;
@@ -85,7 +86,10 @@ public:
     inline void setPenaltyShootOut(bool penalties) { m_isPenalties = penalties; }
     inline bool extraTime() const {
         return (homeTeam()->m_goals == awayTeam()->m_goals); }
-    inline void centerOnBall(bool centerOnBall) { m_centerOnBall = centerOnBall; }
+
+    void centerOn(QGraphicsItem* item);
+    void centerOn(QPointF point);
+    inline QPointF camerTopLeft() const { return m_cameraView->topLeft(); }
 
 public slots:
     void pause();
@@ -100,7 +104,6 @@ public slots:
     void showHalfStatisticsFrame();
     void hideHalfStatisticsFrame();
 
-    inline void centerOnBall() { m_centerOnBall = true; }
     void countShots(Team* team, QPointF dest);
 
 signals:
@@ -120,7 +123,6 @@ private:
 public:
     QList<Player*> m_players;
     QGraphicsScene *m_scene;
-    QGraphicsView *m_view;  // NOT OWNED
     QGraphicsRectItem *m_footballPitch;
 
     QGraphicsPixmapItem* m_grass;
@@ -134,9 +136,9 @@ public:
     ScreenGraphics *m_scoreText;
     QRectF m_pitchArea[KRow][KColumn];
     SoundEffects* m_soundEffects;  // NOT OWNED
-    QGraphicsProxyWidget *m_screenGraphicsFrameProxy;
 
 private:
+    QGraphicsView *m_view;  // NOT OWNED
     TeamManager* m_teamMgr;
 
     Team *m_homeTeam;
@@ -160,8 +162,8 @@ private:
 
     ScreenGraphics* m_screenGraphicsLabel;
 
-    // true if the ball should in centered on
-    bool m_centerOnBall;
+    CameraView* m_cameraView;
+    QGraphicsProxyWidget *m_screenGraphicsFrameProxy;
 };
 
 #endif // PITCH_H

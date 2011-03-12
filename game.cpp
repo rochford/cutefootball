@@ -46,16 +46,14 @@ Game::Game(Pitch* p,
 
     connect(this, SIGNAL(halfOver(QString)), this, SLOT(startPlayersLeavePitchAnim(QString)));
     connect(m_timeLineLeavePitch, SIGNAL(finished()), m_pitch, SLOT(showHalfStatisticsFrame()));
- //   connect(m_timeLineLeavePitch, SIGNAL(finished()), m_pitch, SLOT(hideHalfStatisticsFrame()));
 
-    connect(m_timeLineTakePositions, SIGNAL(finished()), m_pitch, SLOT(centerOnBall()));
     connect(m_timeLineTakePositions, SIGNAL(finished()), this, SLOT(kickOff()));
     connect(m_timeLineTakePositions, SIGNAL(frameChanged(int)), this, SLOT(playFrame(int)));
     connect(m_timeLineLeavePitch, SIGNAL(frameChanged(int)), this, SLOT(playFrame(int)));
 
     connect(m_1second, SIGNAL(timeout()), this, SLOT(decrementGameTime()));
 
-    connect(m_playingState, SIGNAL(entered()), m_pitch, SLOT(gameStarted()));
+//    connect(m_playingState, SIGNAL(entered()), m_pitch, SLOT(gameStarted()));
     connect(m_pitch, SIGNAL(foul(Team*,QPointF)), this, SLOT(foulCaused(Team*,QPointF)));
 }
 
@@ -95,7 +93,6 @@ void Game::startPlayersLeavePitchAnim(QString /* halfName */)
 {
     createPlayerAnimationItems(HalfOver);
     m_timeLineLeavePitch->start();
-    m_pitch->centerOnBall(false);
     pauseGameClock();
 }
 
@@ -115,7 +112,7 @@ void Game::kickOff()
 {
     foreach (Player *p, m_pitch->m_players)
         p->setAllowedOffPitch(false);
-    m_pitch->centerOnBall();
+    m_pitch->centerOn(m_pitch->ball());
 
     m_pitch->setPiece(m_pitch->homeTeam(), Pitch::KickOff);
 
@@ -127,10 +124,8 @@ void Game::kickOff()
 
 void Game::playFrame(int frame)
 {
-    m_pitch->m_view->centerOn(m_playerAnimationItems.last()->item());
-    m_pitch->m_screenGraphicsFrameProxy->setPos(
-                m_pitch->m_view->mapToScene(
-                                       m_pitch->m_view->rect().topLeft()));
+    m_pitch->centerOn(m_playerAnimationItems.last()->item());
+
     qreal f = frame/ 100.00;
     foreach (QGraphicsItemAnimation *anim, m_playerAnimationItems)
         anim->item()->setPos(anim->posAt(f));
@@ -206,7 +201,6 @@ void Game::onEntry(QEvent * /* event */)
     }
     createPlayerAnimationItems(TakePositions);
     m_timeLineTakePositions->start();
-    m_pitch->centerOnBall(false);
 }
 
 void Game::onExit(QEvent * /* event */)

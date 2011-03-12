@@ -1,5 +1,5 @@
-spanishGoalie,1,black
-spanishDefence,2,black
-spanishMidLeft,3,black
-spanishMidRight,7,brown
-spanishAttack,10,grey
+jose,1,black
+alfonso,4,black
+juan,7,black
+miguel,9,brown
+dan,11,grey
