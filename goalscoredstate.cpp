@@ -99,7 +99,14 @@ void GoalScoredState::createPlayerAnimationItems(GameState g)
 
 void GoalScoredState::playFrame(int frame)
 {
+    qDebug() << "playFrame" << frame;
     qreal f = frame/ 100.00;
+
+    if ( frame > 50 ) {
+        m_pitch->centerOnBall(false);
+        m_pitch->m_view->centerOn( m_pitch->ball()->lastPlayerToTouchBall() );
+    }
+
     foreach (QGraphicsItemAnimation *anim, m_playerAnimationItems)
         anim->item()->setPos(anim->posAt(f));
     m_pitch->m_scene->update();

@@ -4,7 +4,7 @@
 #include <QtGui>
 
 const int KHalfLength = 60*1000; // seconds
-const QRgb KDefaultHairColor = QColor(195,74,74).rgb();
+//const QRgb KDefaultHairColor = QColor(195,74,74).rgb();
 const QRgb KGoalKeeperShirtColor = QColor(Qt::green).rgb();
 const QRgb KGoalKeeperShortColor = QColor(Qt::black).rgb();
 const int KOneSecondMs = 1000; // ms

@@ -238,6 +238,9 @@
         <property name="pixmap">
          <pixmap resource="teams.qrc">:/images/flags/Austria.png</pixmap>
         </property>
+        <property name="scaledContents">
+         <bool>true</bool>
+        </property>
        </widget>
       </item>
       <item>
@@ -260,6 +263,9 @@
         </property>
         <property name="pixmap">
          <pixmap resource="teams.qrc">:/images/flags/Andorra.png</pixmap>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
