@@ -63,7 +63,13 @@ QFrame#ScreenGraphicsFrame {
 }
 
 QLabel#SGFawayTeamName,
-QLabel#SGFhomeTeamName,
+QLabel#SGFhomeTeamName {
+    font: bold large "Times";
+    font-size: 7px;
+    color: white;
+    background: transparent;
+}
+
 QLabel#SGFawayGoals,
 QLabel#SGFhomeGoals,
 QLabel#SGFBlank {

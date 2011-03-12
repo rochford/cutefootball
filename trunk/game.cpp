@@ -115,6 +115,7 @@ void Game::kickOff()
 {
     foreach (Player *p, m_pitch->m_players)
         p->setAllowedOffPitch(false);
+    m_pitch->centerOnBall();
 
     m_pitch->setPiece(m_pitch->homeTeam(), Pitch::KickOff);
 

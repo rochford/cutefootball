@@ -37,7 +37,7 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     m_teamMgr(new TeamManager)
 {
 #if defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR)
-    m_view->scale(1.6,1.6);
+    m_view->scale(1.4,1.4);
 #else
     m_view->scale(7.0,7.0);
 #endif
