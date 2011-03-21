@@ -90,6 +90,8 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     connect(m_motionTimer, SIGNAL(timeout()), m_scene, SLOT(advance()));
     connect(m_motionTimer, SIGNAL(timeout()), m_scene, SLOT(update()));
     connect(m_motionTimer, SIGNAL(timeout()), this, SLOT(hasBallCheck()));
+    connect(m_motionTimer, SIGNAL(timeout()), m_cameraView, SLOT(update()));
+
     connect(m_motionTimer, SIGNAL(timeout()), this, SLOT(selectNearestPlayer()));
     connect(m_settingsFrame, SIGNAL(soundChanged(bool)), m_soundEffects, SLOT(soundEnabled(bool)));
 }
@@ -280,6 +282,7 @@ void Pitch::layoutPitch()
     m_screenGraphicsLabel = new ScreenGraphics(this);
     m_screenGraphicsFrameProxy = m_scene->addWidget(m_screenGraphicsLabel);
     m_screenGraphicsFrameProxy->setZValue(ZScoreText);
+    m_cameraView->appendProxyWidget(m_screenGraphicsFrameProxy, m_cameraView->topLeft());
 
     // create the goals
     m_bottomGoal = m_scene->addRect((m_scene->width() / 2)-60, m_scene->height()-KPitchBoundaryWidth,120,KPitchBoundaryWidth/2,
@@ -350,10 +353,10 @@ void Pitch::updateDisplayTime(int timeLeftMs)
 
 void Pitch::hasBallCheck()
 {
-    if (m_cameraView->centeredItem() == m_ball) {
-        m_cameraView->centerOn(m_ball);
-    }
-    m_screenGraphicsFrameProxy->setPos(m_cameraView->topLeft());
+//    if (m_cameraView->centeredItem() == m_ball) {
+//        m_cameraView->centerOn(m_ball);
+//    }
+//    m_screenGraphicsFrameProxy->setPos(m_cameraView->topLeft());
 
     // which team has the ball?
     Player* p = m_ball->lastPlayerToTouchBall();
