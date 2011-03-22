@@ -18,6 +18,28 @@
 #include "settingsFrame.h"
 #include "cameraview.h"
 
+Player::Role mapPositionStringToRole(QString positionString)
+{
+    QMap<QString, Player::Role> map;
+    map.insert( "GK", Player::GoalKeeper );
+
+    map.insert( "LB", Player::LeftDefence );
+    map.insert( "LD", Player::LeftCentralDefence );
+    map.insert( "CD", Player::CentralDefence );
+    map.insert( "RD", Player::RightCentralDefence );
+    map.insert( "RB", Player::RightDefence );
+
+    map.insert( "LM", Player::LeftMidfield );
+    map.insert( "CM", Player::CentralMidfield );
+    map.insert( "RM", Player::RightMidfield );
+
+    map.insert( "LF", Player::LeftAttack );
+    map.insert( "CF", Player::CentralAttack );
+    map.insert( "RF", Player::RightAttack );
+
+    return map[positionString];
+}
+
 Pitch::Pitch(const QRectF& footballGroundRect,
              QGraphicsView* view,
              SoundEffects* se,
@@ -68,13 +90,13 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     m_game->addState(m_allDone);
     m_game->setInitialState(m_firstHalfState);
 
-    m_firstHalfState->addTransition(this, SIGNAL(stateChanged(State)),m_secondHalfState);
+    m_firstHalfState->addTransition(this, SIGNAL(triggerNextHalf()),m_secondHalfState);
 //    m_firstHalfState->addTransition(m_firstHalfState, SIGNAL(finished()),m_secondHalfState);
 
     m_secondHalfState->addTransition(m_secondHalfState, SIGNAL(finished()), m_allDone);
-    m_extraTimeFirstHalfState->addTransition(this, SIGNAL(stateChanged(State)), m_extraTimeSecondHalfState);
+    m_extraTimeFirstHalfState->addTransition(this, SIGNAL(triggerNextHalf()), m_extraTimeSecondHalfState);
 //    m_extraTimeFirstHalfState->addTransition(m_extraTimeFirstHalfState, SIGNAL(finished()), m_extraTimeSecondHalfState);
-    m_extraTimeSecondHalfState->addTransition(this, SIGNAL(stateChanged(State)), m_allDone);
+    m_extraTimeSecondHalfState->addTransition(this, SIGNAL(triggerNextHalf()), m_allDone);
 //    m_extraTimeSecondHalfState->addTransition(m_extraTimeSecondHalfState, SIGNAL(finished()), m_allDone);
     m_penaltiesState->addTransition(m_penaltiesState, SIGNAL(finished()), m_allDone);
 
@@ -129,6 +151,13 @@ void Pitch::centerOn(QGraphicsItem *item)
     m_cameraView->centerOn(item);
 }
 
+void Pitch::selectNearestPlayer()
+{
+    Player *p = selectNearestPlayer(m_homeTeam);
+    if (p)
+        m_scene->setFocusItem(p);
+}
+
 Player* Pitch::selectNearestPlayer(Team* team)
 {
     qreal nearest = 0xffff;
@@ -156,16 +185,12 @@ Player* Pitch::selectNearestPlayer(Team* team)
 
 void Pitch::gameStarted()
 {
-    qDebug() << "Pitch::gameStarted()";
     m_motionTimer->start();
     emit gameInProgress(true);
 }
 
-
 void Pitch::gameStopped()
 {
-    qDebug() << "Pitch::gameStopped()";
-
     if (m_game->initialState() == m_firstHalfState && extraTimeAllowed() && extraTime() ) {
         m_game->setInitialState(m_extraTimeFirstHalfState);
         m_game->start();
@@ -210,13 +235,6 @@ void Pitch::setPiece(Team* originatingTeam, SetPiece s, QPointF foulLocation)
     }
 }
 
-void Pitch::selectNearestPlayer()
-{
-    Player *p = selectNearestPlayer(m_homeTeam);
-    if (p)
-        m_scene->setFocusItem(p);
-}
-
 void Pitch::layoutPitch()
 {
     QPixmap advertTop(":/images/advertTop.png");
@@ -226,7 +244,6 @@ void Pitch::layoutPitch()
 
     const int KPitchBoundaryWidth = 40;
     QPixmap pitchUnscaled(QString(":/images/pitch3.png"));
-//    QPixmap pitchScaled = pitchUnscaled.scaled(QSize(m_scene->width(),m_scene->height()));
     m_grass = new QGraphicsPixmapItem(pitchUnscaled /* pitchScaled */);
     m_scene->addItem(m_grass);
 
@@ -282,7 +299,7 @@ void Pitch::layoutPitch()
     m_screenGraphicsLabel = new ScreenGraphics(this);
     m_screenGraphicsFrameProxy = m_scene->addWidget(m_screenGraphicsLabel);
     m_screenGraphicsFrameProxy->setZValue(ZScoreText);
-    m_cameraView->appendProxyWidget(m_screenGraphicsFrameProxy, m_cameraView->topLeft());
+    m_cameraView->appendProxyWidget(m_screenGraphicsFrameProxy, CameraView::TopLeft );
 
     // create the goals
     m_bottomGoal = m_scene->addRect((m_scene->width() / 2)-60, m_scene->height()-KPitchBoundaryWidth,120,KPitchBoundaryWidth/2,
@@ -339,8 +356,17 @@ void Pitch::layoutPitch()
 void Pitch::pause()
 {
     qDebug() << "pause";
-    emit pauseGame();
+    m_motionTimer->stop();
+    emit pauseGameClock();
 }
+
+void Pitch::continueGame()
+{
+    qDebug() << "continueGame";
+    m_motionTimer->start();
+//    emit continueGameClock();
+}
+
 
 void Pitch::updateDisplayTime(int timeLeftMs)
 {
@@ -353,11 +379,6 @@ void Pitch::updateDisplayTime(int timeLeftMs)
 
 void Pitch::hasBallCheck()
 {
-//    if (m_cameraView->centeredItem() == m_ball) {
-//        m_cameraView->centerOn(m_ball);
-//    }
-//    m_screenGraphicsFrameProxy->setPos(m_cameraView->topLeft());
-
     // which team has the ball?
     Player* p = m_ball->lastPlayerToTouchBall();
     if ( p ) {
@@ -428,7 +449,7 @@ void Pitch::createTeamPlayers(Team *team)
 
         QList<QByteArray> nameAndPosition = line.split(',');
         QString name = nameAndPosition.at(0).simplified();
-        Player::Role r = static_cast<Player::Role>(nameAndPosition.at(1).simplified().toInt());
+        Player::Role r = mapPositionStringToRole(nameAndPosition.at(1).simplified());
         QString hairColorString = nameAndPosition.at(2).simplified();
         QColor hairColor(hairColorString);
 
@@ -470,18 +491,6 @@ void Pitch::setPlayerDefendZone(Player *p)
     bool nToS(false);
     if (p->team()->getDirection() == Team::NorthToSouth)
         nToS = true;
-
-    QPointF tlTopHalf = m_footballPitch->rect().topLeft();
-    QPointF brBottomHalf = m_footballPitch->rect().bottomRight();
-    QPointF brTopHalf = brBottomHalf - QPointF(m_footballPitch->rect().height()/2,0);
-    QPointF tlBottomHalf = tlTopHalf + QPointF(m_footballPitch->rect().height()/2,0);
-    QPointF midTop(m_footballPitch->rect().width()/2,m_footballPitch->rect().top());
-    QPointF midBottom(m_footballPitch->rect().width()/2,m_footballPitch->rect().height());
-
-    QRectF topHalf(tlTopHalf, brTopHalf);
-    QRectF bottomHalf(tlBottomHalf, brBottomHalf);
-    QRectF leftHalf(tlTopHalf,midBottom);
-    QRectF rightHalf(midTop,brBottomHalf);
 
     QRectF zone;
     switch (p->m_role)
@@ -540,11 +549,24 @@ void Pitch::setPlayerStartPositions(Team *team)
 
 void Pitch::showHalfStatisticsFrame()
 {
-    qDebug() << "Pitch::showHalfStatisticsFrame";
     emit displayHalfTimeStatistics(true);
 }
 
 void Pitch::hideHalfStatisticsFrame()
 {
     emit displayHalfTimeStatistics(false);
+}
+
+void Pitch::setState(Pitch::State s)
+{
+    m_state = s;
+    switch(s) {
+    case Pitch::ReadyForNextHalf:
+        emit triggerNextHalf();
+        break;
+    case Pitch::Pause:
+        break;
+    default:
+        break;
+    }
 }

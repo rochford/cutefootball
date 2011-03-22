@@ -55,6 +55,8 @@ Game::Game(Pitch* p,
 
 //    connect(m_playingState, SIGNAL(entered()), m_pitch, SLOT(gameStarted()));
     connect(m_pitch, SIGNAL(foul(Team*,QPointF)), this, SLOT(foulCaused(Team*,QPointF)));
+    connect(m_pitch, SIGNAL(pauseGameClock()), this, SLOT(pauseGameClock()));
+    connect(m_pitch, SIGNAL(continueGameClock()), this, SLOT(continueGameClock()));
 }
 
 void Game::foulCaused(Team* orig, QPointF location)
@@ -98,12 +100,14 @@ void Game::startPlayersLeavePitchAnim(QString /* halfName */)
 
 void Game::pauseGameClock()
 {
+    qDebug() << "Game::pauseGameClock() " << objectName();
     if (m_1second->isActive())
         m_1second->stop();
 }
 
 void Game::continueGameClock()
 {
+    qDebug() << "Game::continueGameClock() "<< objectName();
     if (!m_1second->isActive())
         m_1second->start();
 }

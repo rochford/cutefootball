@@ -123,6 +123,11 @@
     <enum>QAction::NegativeSoftKey</enum>
    </property>
   </action>
+  <action name="actionContinue">
+   <property name="text">
+    <string>Continue</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="soccer.qrc"/>

@@ -1,5 +1,5 @@
-adam,1,brown
-bob,4,black
-charlie,7,black
-dave,9,black
-eddie,11,black
+claudio,GK,brown
+roberto,CD,black
+mario,LM,black
+lugi,RM,black
+pablo,CF,black

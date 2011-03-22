@@ -1,5 +1,5 @@
-adam,1,black
-bob,4,yellow
-charlie,7,yellow
-dave,9,yellow
-eddie,11,black
+adam,GK,black
+bob,CD,yellow
+charlie,LM,yellow
+dave,RM,yellow
+eddie,CF,black

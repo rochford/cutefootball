@@ -32,8 +32,6 @@ public:
         TakePositions,
         HalfOver
     };
-    // stops the gameClock
-    void pauseGameClock();
     inline int remainingTimeInHalfMs() { return m_remainingTimeInHalfMs; }
     inline void setGameLength(int totalGameInMinutes)
         { m_remainingTimeInHalfMs = (totalGameInMinutes * 60 *1000)/2.0; }
@@ -46,6 +44,8 @@ public slots:
     void kickOff();
     void decrementGameTime();
     void foulCaused(Team* orig, QPointF location);
+    // stops the gameClock
+    void pauseGameClock();
     void continueGameClock();
 
 protected:
