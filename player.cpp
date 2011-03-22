@@ -576,6 +576,7 @@ void Player::keyPressEvent(QKeyEvent *event)
         event->ignore();
         return;
     }
+    qDebug() << "keyPressEvent";
 
     MWindow::Action a = m_actions[ event->key() ];
 
@@ -641,7 +642,7 @@ void Player::stopKeyEvent()
 
 void Player::createKeyboardActions()
 {
-    m_actions.insert( Qt::Key_P, MWindow::Pause );
+    m_actions.insert( Qt::Key_0, MWindow::Pause );
 
     m_actions.insert( Qt::Key_Up, MWindow::North );
     m_actions.insert( Qt::Key_Down, MWindow::South );

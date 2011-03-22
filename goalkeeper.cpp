@@ -108,7 +108,7 @@ void GoalKeeper::gkAdvanceWithoutBall()
     || (dir == Team::NorthToSouth
         && m_pitch->m_topPenaltyArea->contains(m_pitch->ball()->pos())) ) {
 
-        qDebug() << "GoalKeeper::gkAdvanceWithoutBall";
+        //qDebug() << "GoalKeeper::gkAdvanceWithoutBall";
         action = calculateAction(pos(), m_pitch->ball()->pos());
         move(action, m_pitch->ball()->pos());
     } else {

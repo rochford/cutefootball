@@ -4,17 +4,16 @@
 #include <QtGui>
 #include <qmap.h>
 #include "ui_mainwindow.h"
-#include "ui_exitconfirmationdialog.h"
 
 class Pitch;
 class SoundEffects;
 class settingsFrame;
-// class aboutFrame;
 class helpFrame;
 class inputSettingsFrame;
 class mainMenuFrame;
 class TeamSelectionFrame;
 class HalfStatisticsFrame;
+class InGameMenuFrame;
 
 class MWindow : public QMainWindow
 {
@@ -71,12 +70,12 @@ private:
     enum Frame {
         MainMenu,
         Settings,
-//        About,
         Help,
         InputSettings,
         TeamSelection,
         HalfTimeStatistics,
-        GraphicsView
+        GraphicsView,
+        InGameMenu
     };
 
     void createConnections();
@@ -89,15 +88,16 @@ public slots:
     void hideHelpFrame(){showFrame(MWindow::MainMenu);}
     void hideSettingsFrame(){ showFrame(MWindow::MainMenu);}
     void showSettingsFrame(){ showFrame(MWindow::Settings);}
+    void showMainMenuFrame(){ showFrame(MWindow::MainMenu);}
     void hideTeamSelectionFrame(){ showFrame(MWindow::MainMenu);}
     void showTeamSelectionFrame(){ showFrame(MWindow::TeamSelection);}
     void showInputSettingsFrame() { showFrame(MWindow::InputSettings);}
     void showHelpFrame(){showFrame(MWindow::Help);}
     void showStatisticsFrame(){showFrame(MWindow::HalfTimeStatistics);}
     void hideStatisticsFrame();
+    void showInGameMenu() { showFrame(MWindow::InGameMenu); }
+    void hideInGameMenu();
 
-    //    void hideAboutFrame(){showFrame(MWindow::MainMenu);}
-    // void showAboutFrame(){showFrame(MWindow::About);}
     void displayHalfTimeStatistics(bool display);
 
 protected:
@@ -105,24 +105,20 @@ protected:
 
 private slots:
     void enableActions(bool gameInProgress);
-    void checkClose(int result);
 
 private:
     Pitch *m_pitch;
     settingsFrame* m_settingsFrame;
     inputSettingsFrame* m_inputSettingsFrame;
-//    aboutFrame* m_aboutFrame;
     HalfStatisticsFrame* m_halfStatisticsFrame;
     helpFrame* m_helpFrame;
     TeamSelectionFrame* m_teamSelectionFrame;
+    InGameMenuFrame* m_inGameMenuFrame;
     mainMenuFrame* m_mainMenuFrame;
     SoundEffects* m_soundEffects;
     bool m_gameInProgress;
-
+public:
     Ui::MainWindow uiMainWindow;
-
-    Ui::ExitConfirmationDialog uiExitConfirmationDialog;
-    QDialog* m_exitDialog;
     };
 
 #endif // MAINWINDOW_H

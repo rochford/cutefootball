@@ -15,7 +15,7 @@ CameraView::CameraView(QGraphicsView& v,
 
 void CameraView::centerOn(QGraphicsItem *object)
 {
-    qDebug() << "CameraView::centerOn(QGraphicsItem *object)";
+//    qDebug() << "CameraView::centerOn(QGraphicsItem *object)";
     m_object = object;
     m_position = QPointF();
     m_view.centerOn(object);
@@ -23,7 +23,7 @@ void CameraView::centerOn(QGraphicsItem *object)
 
 void CameraView::centerOn(QPointF position)
 {
-    qDebug() << "CameraView::centerOn(QPointF position)";
+//    qDebug() << "CameraView::centerOn(QPointF position)";
     m_position = position;
     m_object = NULL;
     m_view.centerOn(position);
@@ -37,10 +37,10 @@ QPointF CameraView::topLeft() const
 void CameraView::update()
 {
     if (m_object) {
-        qDebug() << "CameraView::update - object";
+//        qDebug() << "CameraView::update - object";
         m_view.centerOn(m_object);
     } else  {
-        qDebug() << "CameraView::update - pos";
+//        qDebug() << "CameraView::update - pos";
         m_view.centerOn(m_position);
     }
 
@@ -49,13 +49,27 @@ void CameraView::update()
     //    }
     //    m_screenGraphicsFrameProxy->setPos(m_cameraView->topLeft());
 
-    foreach(QGraphicsProxyWidget *item, m_widgets) {
-        item->setPos(topLeft());
+    QPointF point;
+    foreach(PositionedProxyWidget item, m_widgets) {
+        switch (item.viewPos) {
+        case TopLeft:
+            point = topLeft();
+            break;
+        default:
+            point = topLeft();
+            break;
+        }
+
+        item.widget->setPos(point);
     }
 }
 
-void CameraView::appendProxyWidget(QGraphicsProxyWidget *item, QPointF /* viewPosition */)
+void CameraView::appendProxyWidget(QGraphicsProxyWidget *item, ViewPosition viewPos )
 {
-    m_widgets.append(item);
+      PositionedProxyWidget pw;
+      pw.viewPos = viewPos;
+      pw.widget = item;
+
+      m_widgets.append(pw);
 }
 

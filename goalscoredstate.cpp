@@ -99,7 +99,7 @@ void GoalScoredState::createPlayerAnimationItems(GameState g)
 
 void GoalScoredState::playFrameCelebrate(int frame)
 {
-    qDebug() << "playFrameCelebrate" << frame;
+    //qDebug() << "playFrameCelebrate" << frame;
     qreal f = frame/ 100.00;
 
     if ( frame > 30 )
@@ -112,7 +112,7 @@ void GoalScoredState::playFrameCelebrate(int frame)
 
 void GoalScoredState::playFramePositions(int frame)
 {
-    qDebug() << "playFramePositions" << frame;
+    //qDebug() << "playFramePositions" << frame;
     qreal f = frame/ 100.00;
 
 //    if ( frame > 80 )

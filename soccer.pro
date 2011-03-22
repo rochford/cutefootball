@@ -47,7 +47,8 @@ SOURCES += \
     inputsettingsframe.cpp \
     halfstatisticsframe.cpp \
     soccerutils.cpp \
-    cameraview.cpp
+    cameraview.cpp \
+    ingamemenuframe.cpp
 #    aboutFrame.cpp \
 
 HEADERS  += \
@@ -71,7 +72,8 @@ HEADERS  += \
     halfstatisticsframe.h \
     version.h \
     soccerutils.h \
-    cameraview.h
+    cameraview.h \
+    ingamemenuframe.h
 #    aboutFrame.h \
 
 RESOURCES += \
@@ -89,8 +91,8 @@ FORMS += \
     helpFrame.ui \
     inputSettingsFrame.ui \
     halfstatisticsframe.ui \
-    exitconfirmationdialog.ui \
-    screengraphicsframe.ui
+    screengraphicsframe.ui \
+    ingamemenuframe.ui
 #    aboutFrame.ui \
 
 OTHER_FILES += \
