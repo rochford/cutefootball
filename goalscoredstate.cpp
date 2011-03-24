@@ -1,3 +1,4 @@
+#include <QFinalState>
 
 #include "goalscoredstate.h"
 #include "game.h"
@@ -6,7 +7,7 @@
 #include "Player.h"
 #include "soccerutils.h"
 
-GoalScoredState::GoalScoredState(Game *g, Pitch *p)
+GoalScoredState::GoalScoredState(GameHalf *g, Pitch *p)
     : QState(g),
       m_game(g),
       m_pitch(p)
@@ -31,6 +32,22 @@ GoalScoredState::GoalScoredState(Game *g, Pitch *p)
     connect(m_timeLineCelebrate, SIGNAL(finished()), this, SLOT(createTakePositionAnimation()));
     connect(m_timeLineReturnStartPositions, SIGNAL(frameChanged(int)), this, SLOT(playFramePositions(int)));
     connect(m_timeLineReturnStartPositions, SIGNAL(finished()), m_game, SLOT(kickOff()));
+    connect(m_pitch, SIGNAL(pauseGameClock()), this, SLOT(pauseGameClock()));
+    connect(m_pitch, SIGNAL(continueGameClock()), this, SLOT(continueGameClock()));
+}
+
+void GoalScoredState::pauseGameClock()
+{
+    qDebug() << "GoalScoredState::pauseGameClock";
+//    m_timeLineCelebrate->setPaused(true);
+//    m_timeLineReturnStartPositions->setPaused(true);
+}
+
+void GoalScoredState::continueGameClock()
+{
+    qDebug() << "GoalScoredState::continueGameClock";
+//    m_timeLineCelebrate->setPaused(false);
+//    m_timeLineReturnStartPositions->setPaused(false);
 }
 
 void GoalScoredState::createTakePositionAnimation()
@@ -41,6 +58,7 @@ void GoalScoredState::createTakePositionAnimation()
 
 void GoalScoredState::onEntry(QEvent * /* event */)
 {
+    qDebug() << "GoalScoredState::onEntry parent " << parent()->objectName();
     m_pitch->updateDisplayTime(m_game->remainingTimeInHalfMs());
     m_game->pauseGameClock();
     createPlayerAnimationItems(Celebrate);

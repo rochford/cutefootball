@@ -4,19 +4,19 @@
 #include <QList>
 #include <QtGlobal>
 #include <QStateMachine>
-#include <QFinalState>
 #include <QGraphicsItemAnimation>
 
 class QTimeLine;
+class QFinalState;
 
-class Game;
+class GameHalf;
 class Pitch;
 
 class GoalScoredState : public QState
 {
     Q_OBJECT
 public:
-    GoalScoredState(Game *g, Pitch *p);
+    GoalScoredState(GameHalf *g, Pitch *p);
     ~GoalScoredState() {}
 
     enum GameState {
@@ -28,6 +28,9 @@ public slots:
     void playFramePositions(int frame);
     void createTakePositionAnimation();
 
+    void pauseGameClock();
+    void continueGameClock();
+
 protected:
     void onEntry ( QEvent * event );
 
@@ -38,7 +41,7 @@ private:
     QState *m_celebrate;
     QState *m_returnToPosition;
     QFinalState *m_allDone;
-    Game *m_game;
+    GameHalf *m_game;
     Pitch* m_pitch;
     QTimeLine *m_timeLineCelebrate;
     QTimeLine *m_timeLineReturnStartPositions;

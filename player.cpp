@@ -576,7 +576,6 @@ void Player::keyPressEvent(QKeyEvent *event)
         event->ignore();
         return;
     }
-    qDebug() << "keyPressEvent";
 
     MWindow::Action a = m_actions[ event->key() ];
 

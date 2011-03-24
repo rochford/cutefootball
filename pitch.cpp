@@ -73,35 +73,10 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     m_motionTimer = new QTimer(this);
     m_motionTimer->setInterval(KGameRefreshRate);
 
-    m_game = new QStateMachine(this);
-
-    m_firstHalfState = new Game(this, KFirstHalf, true, false);
-    m_secondHalfState = new Game(this, KSecondHalf, false, false);
-    m_extraTimeFirstHalfState = new Game(this, KFirstHalfET, true, true);
-    m_extraTimeSecondHalfState = new Game(this, KSecondHalfET, false, true);
-    m_penaltiesState = new Game(this, KPenaltyShootOut, true, true);
-    m_allDone = new QFinalState();
-
-    m_game->addState(m_firstHalfState);
-    m_game->addState(m_secondHalfState);
-    m_game->addState(m_extraTimeFirstHalfState);
-    m_game->addState(m_extraTimeSecondHalfState);
-    m_game->addState(m_penaltiesState);
-    m_game->addState(m_allDone);
-    m_game->setInitialState(m_firstHalfState);
-
-    m_firstHalfState->addTransition(this, SIGNAL(triggerNextHalf()),m_secondHalfState);
-//    m_firstHalfState->addTransition(m_firstHalfState, SIGNAL(finished()),m_secondHalfState);
-
-    m_secondHalfState->addTransition(m_secondHalfState, SIGNAL(finished()), m_allDone);
-    m_extraTimeFirstHalfState->addTransition(this, SIGNAL(triggerNextHalf()), m_extraTimeSecondHalfState);
-//    m_extraTimeFirstHalfState->addTransition(m_extraTimeFirstHalfState, SIGNAL(finished()), m_extraTimeSecondHalfState);
-    m_extraTimeSecondHalfState->addTransition(this, SIGNAL(triggerNextHalf()), m_allDone);
-//    m_extraTimeSecondHalfState->addTransition(m_extraTimeSecondHalfState, SIGNAL(finished()), m_allDone);
-    m_penaltiesState->addTransition(m_penaltiesState, SIGNAL(finished()), m_allDone);
-
-    connect(m_game, SIGNAL(finished()), this, SLOT(gameStopped()));
-    connect(m_game, SIGNAL(started()), this, SLOT(gameStarted()));
+    m_gameFSM = new QStateMachine(this);
+    m_game = new Game(*m_gameFSM, *this);
+    connect(m_gameFSM, SIGNAL(finished()), this, SLOT(gameStopped()));
+    connect(m_gameFSM, SIGNAL(started()), this, SLOT(gameStarted()));
 
     layoutPitch();
 
@@ -125,14 +100,7 @@ Pitch::~Pitch()
     if (m_motionTimer->isActive())
         m_motionTimer->stop();
     delete m_motionTimer;
-
-    delete m_firstHalfState;
-    delete m_secondHalfState;
-    delete m_extraTimeFirstHalfState;
-    delete m_extraTimeSecondHalfState;
-    delete m_penaltiesState;
-    delete m_allDone;
-    delete m_game;
+    delete m_gameFSM;
 
     delete m_grass;
     delete m_ball;
@@ -191,12 +159,12 @@ void Pitch::gameStarted()
 
 void Pitch::gameStopped()
 {
-    if (m_game->initialState() == m_firstHalfState && extraTimeAllowed() && extraTime() ) {
-        m_game->setInitialState(m_extraTimeFirstHalfState);
-        m_game->start();
-    } else if (m_game->initialState() == m_extraTimeFirstHalfState && extraTime() ) {
-        m_game->setInitialState(m_penaltiesState);
-        m_game->start();
+    if (m_gameFSM->initialState() == m_game->firstHalfState() && extraTimeAllowed() && extraTime() ) {
+        m_gameFSM->setInitialState(m_game->extraTimeFirstHalfState());
+        m_gameFSM->start();
+    } else if (m_gameFSM->initialState() == m_game->extraTimeFirstHalfState() && extraTime() ) {
+        m_gameFSM->setInitialState(m_game->penaltiesState());
+        m_gameFSM->start();
     } else {
         foreach(Player *p, m_players)
             m_scene->removeItem(p);
@@ -358,19 +326,23 @@ void Pitch::pause()
     qDebug() << "pause";
     m_motionTimer->stop();
     emit pauseGameClock();
+    if ( m_game->currentState() )
+        m_game->currentState()->pauseGameClock();
 }
 
 void Pitch::continueGame()
 {
     qDebug() << "continueGame";
     m_motionTimer->start();
-//    emit continueGameClock();
+    // emit continueGameClock();
+    if ( m_game->currentState() )
+        m_game->currentState()->continueGameClock();
 }
 
 
 void Pitch::updateDisplayTime(int timeLeftMs)
 {
-    if ( m_game->isRunning() ) {
+    if ( m_gameFSM->isRunning() ) {
         QTime tmp(0,0,0,0);
         tmp = tmp.addMSecs(timeLeftMs);
         m_screenGraphicsLabel->update(tmp.toString(QString("m:ss")));
@@ -396,10 +368,7 @@ void Pitch::countShots(Team* team, QPointF /* dest */)
 
 void Pitch::newGame(int homeTeam, int awayTeam)
 {
-    m_firstHalfState->setGameLength(m_settingsFrame->gameLengthMinutes());
-    m_secondHalfState->setGameLength(m_settingsFrame->gameLengthMinutes());
-    m_extraTimeFirstHalfState->setGameLength(1);
-    m_extraTimeSecondHalfState->setGameLength(1);
+    m_game->setHalfLength(m_settingsFrame->gameLengthMinutes());
 
     m_ball = new Ball(this);
     m_scene->addItem(m_ball);
@@ -419,7 +388,7 @@ void Pitch::newGame(int homeTeam, int awayTeam)
     connect(m_ball, SIGNAL(soundEvent(SoundEffects::GameSound)),
             m_soundEffects, SLOT(soundEvent(SoundEffects::GameSound)));
     m_soundEffects->soundEvent(SoundEffects::CrowdNoise);
-    m_game->start();
+    m_gameFSM->start();
 }
 
 void Pitch::createTeamPlayers(Team *team)
