@@ -43,7 +43,7 @@
     <message>
         <location filename="../halfstatisticsframe.ui" line="139"/>
         <source>Fouls</source>
-        <translation type="unfinished"></translation>
+        <translation>Rangaistuspotku</translation>
     </message>
     <message>
         <location filename="../halfstatisticsframe.ui" line="214"/>
@@ -53,30 +53,25 @@
     <message>
         <location filename="../halfstatisticsframe.cpp" line="10"/>
         <source>Continue</source>
-        <translation type="unfinished"></translation>
+        <translation>Jatka</translation>
     </message>
 </context>
 <context>
     <name>InGameMenuFrame</name>
     <message>
-        <location filename="../ingamemenuframe.ui" line="14"/>
-        <source>Frame</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../ingamemenuframe.ui" line="35"/>
         <source>Continue</source>
-        <translation type="unfinished"></translation>
+        <translation>Jatka</translation>
     </message>
     <message>
         <location filename="../ingamemenuframe.ui" line="94"/>
         <source>Paused</source>
-        <translation type="unfinished"></translation>
+        <translation>Tauko</translation>
     </message>
     <message>
         <location filename="../ingamemenuframe.ui" line="107"/>
         <source>Quit</source>
-        <translation type="unfinished">Lopeta</translation>
+        <translation>Lopeta</translation>
     </message>
 </context>
 <context>
@@ -126,7 +121,7 @@
     <message>
         <location filename="../mainwindow.ui" line="128"/>
         <source>Continue</source>
-        <translation type="unfinished"></translation>
+        <translation>Jatka</translation>
     </message>
 </context>
 <context>
@@ -137,27 +132,27 @@
         <translation>versio %1 %2</translation>
     </message>
     <message>
-        <location filename="../pitch.h" line="32"/>
+        <location filename="../game.cpp" line="15"/>
         <source>First half</source>
         <translation>Ensimmäinen puoliaika</translation>
     </message>
     <message>
-        <location filename="../pitch.h" line="33"/>
+        <location filename="../game.cpp" line="16"/>
         <source>Second half</source>
         <translation>Toinen puoliaika</translation>
     </message>
     <message>
-        <location filename="../pitch.h" line="34"/>
+        <location filename="../game.cpp" line="17"/>
         <source>Extra Time First half</source>
         <translation>Jatkoaika ensimmäinen puoliaika</translation>
     </message>
     <message>
-        <location filename="../pitch.h" line="35"/>
+        <location filename="../game.cpp" line="18"/>
         <source>Extra Time Second half</source>
         <translation>Jatkoaika toinen puoliaika</translation>
     </message>
     <message>
-        <location filename="../pitch.h" line="36"/>
+        <location filename="../game.cpp" line="19"/>
         <source>penalty shoot out</source>
         <translation>Rangaistuspotkut</translation>
     </message>
@@ -191,7 +186,7 @@
 <context>
     <name>inputSettingsFrame</name>
     <message>
-        <location filename="../inputSettingsFrame.ui" line="182"/>
+        <location filename="../inputSettingsFrame.ui" line="195"/>
         <source>5 to tackle if player does not have the ball. if player has ball, then short press to pass, long press to shoot</source>
         <translation>5 näppäinlyöntiä jos pelaajalle ei palloa. Jos pelaajalla pallo, lyhyt lyönti syöttöön, pitkä lyönti potkuun</translation>
     </message>

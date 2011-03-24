@@ -15,14 +15,14 @@
 class QTimeLine;
 
 class Pitch;
-class Game;
+class GameHalf;
 class GoalScoredState;
 
 class FoulState : public QState
 {
     Q_OBJECT
 public:
-    FoulState(Game *g, Pitch *p);
+    FoulState(GameHalf *g, Pitch *p);
     ~FoulState();
 
 public slots:
@@ -38,7 +38,7 @@ private:
     QState *m_takePositions;
     QState *m_takeFreeKick;
     QFinalState *m_allDone;
-    Game *m_game;
+    GameHalf *m_game;
     Pitch* m_pitch;
     QTimeLine *m_timeLineTakePositions;
     QList<QGraphicsItemAnimation*> m_playerAnimationItems;

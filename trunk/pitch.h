@@ -21,6 +21,7 @@ class QGraphicsLineItem;
 class QGraphicsView;
 class QGraphicsScene;
 class QTimeLine;
+//class QHistoryState;
 
 class Ball;
 class Player;
@@ -28,12 +29,7 @@ class Team;
 class TeamManager;
 class ScreenGraphics;
 class Game;
-
-const QString KFirstHalf(QObject::tr("First half"));
-const QString KSecondHalf(QObject::tr("Second half"));
-const QString KFirstHalfET(QObject::tr("Extra Time First half"));
-const QString KSecondHalfET(QObject::tr("Extra Time Second half"));
-const QString KPenaltyShootOut(QObject::tr("penalty shoot out"));
+class GameHalf;
 
 class Pitch : public QObject
 {
@@ -150,13 +146,9 @@ private:
     QTimer *m_motionTimer;
 
     State m_state;
-    QStateMachine *m_game;
-    Game *m_firstHalfState;
-    Game *m_secondHalfState;
-    QFinalState *m_allDone;
-    Game *m_extraTimeFirstHalfState;
-    Game *m_extraTimeSecondHalfState;
-    Game *m_penaltiesState;
+    QStateMachine *m_gameFSM;
+    // top level state, contains gameHalfs
+    Game* m_game;
     bool m_isPenalties;
 
     QPointF m_entrancePoint;

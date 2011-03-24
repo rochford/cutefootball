@@ -5,7 +5,7 @@
 #include <QObject>
 
 const int KMajorVersion = 0;
-const int KMinorVersion = 9;
+const int KMinorVersion = 10;
 const QString versionNumber(QObject::tr("version %1.%2"));
 
 #endif // VERSION_H

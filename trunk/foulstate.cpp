@@ -7,7 +7,7 @@
 #include "screengraphics.h"
 #include "soccerutils.h"
 
-FoulState::FoulState(Game *g, Pitch *p)
+FoulState::FoulState(GameHalf *g, Pitch *p)
     : QState(g),
       m_game(g),
       m_pitch(p)
