@@ -1,20 +1,34 @@
 #include "halfstatisticsframe.h"
-#include "mainwindow.h"
 
 HalfStatisticsFrame::HalfStatisticsFrame(MWindow *parent) :
     QFrame(parent),
     ui(new Ui::HalfStatisticsFrame)
 {
     ui->setupUi(this);
-    ui->buttonBox->button(QDialogButtonBox::Ok)
-            ->setText(tr("Continue"));
-    connect(ui->buttonBox, SIGNAL(accepted()),
-            parent, SLOT(hideStatisticsFrame()));
-    connect(ui->buttonBox, SIGNAL(rejected()),
-            parent, SLOT(hideStatisticsFrame()));
+
+    connect(parent, SIGNAL(setFrame(MWindow::Frame)),
+            this, SLOT(showFrame(MWindow::Frame)));
+
+    connect(ui->continueBtn,
+            SIGNAL(clicked()),
+            parent->uiMainWindow.actionContinue,
+            SLOT(trigger()));
+    connect(ui->mainMenuBtn,
+            SIGNAL(clicked()),
+            parent->uiMainWindow.actionMainMenu,
+            SLOT(trigger()));
 }
 
 HalfStatisticsFrame::~HalfStatisticsFrame()
 {
     delete ui;
+}
+
+void HalfStatisticsFrame::showFrame(MWindow::Frame f)
+{
+    qDebug() << "HalfStatisticsFrame::showFrame" << f;
+    if ( f == MWindow::HalfTimeStatistics )
+        showMaximized();
+    else
+        setVisible(false);
 }

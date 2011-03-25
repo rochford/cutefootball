@@ -13,17 +13,33 @@ TRANSLATIONS = \
     translations/soccer_fi.ts
 
 symbian {
-    symbian:TARGET.UID3 = 0xEED6D15E
+#    symbian:TARGET.UID3 = 0xEED6D15E
+    symbian:TARGET.UID3 = 0x2003AE9C
 
     # Add files and directories to ship with the application
     # by adapting the examples below.
     soundFiles.sources = audio\\*.wav
-    # file1.source = myfile
+    #file1.source = audio\\Crowd.wav
+    #file2.source = audio\\whistle.wav
+    #file3.source = audio\\theme.wav
+    #file4.source = audio\\finalwhistle.wav
     # dir1.source = mydir
     DEPLOYMENT += soundFiles # file1 dir1
+#    DEPLOYMENT += file1 file2 file3 file4
 
-    vendorinfo = "%{\"Tim Rochford-EN\"}" ":\"Tim Rochford\""
-    my_deployment.pkg_prerules = vendorinfo
+    # qt ovi products
+    # S60 3rd Edition: E72, E71, E66, E63, and E52
+    supported_platforms = \
+        "; This application only supports certain phones" \
+        "[0x20024100], 0, 0, 0, {\"Nokia E5-00\"}" \ #E5
+        "[0x20014DD0], 0, 0, 0, {\"Nokia E72\"}" \ #E72
+        "[0x2000249B], 0, 0, 0, {\"Nokia E71\"}" \ #E71
+        "[0x2000249C], 0, 0, 0, {\"Nokia E66\"}" \ #E66
+        "[0x200025C3], 0, 0, 0, {\"Nokia E63\"}" \ #E63
+        "[0x20014DCC], 0, 0, 0, {\"Nokia E52\"}"  #E52
+
+    default_deployment.pkg_prerules -= pkg_platform_dependencies
+    my_deployment.pkg_prerules += supported_platforms
     DEPLOYMENT += my_deployment
 }
 
@@ -133,7 +149,8 @@ OTHER_FILES += \
     teams/Ireland.txt \
     teams/Belgium.txt \
     teams/Serbia.txt \
-    teams/Malta.txt
+    teams/Malta.txt \
+    soccer_package.pkg
 
 # Please do not modify the following two lines. Required for deployment.
 include(deployment.pri)

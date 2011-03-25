@@ -13,6 +13,8 @@ settingsFrame::settingsFrame(MWindow *parent) :
             ->setText(tr("Save"));
     ui->buttonBox->button(QDialogButtonBox::Cancel)
             ->setText(tr("Main Menu"));
+    connect(parent, SIGNAL(setFrame(MWindow::Frame)),
+            this, SLOT(showFrame(MWindow::Frame)));
 
 //    connect(ui->gameLengthSlider, SIGNAL(sliderMoved(int)),ui->buttonBox->button(QDialogButtonBox::Save),SLOT(setEnabled(bool)));
 //    connect(ui->checkBoxSound, SIGNAL(stateChanged(int)),ui->buttonBox->button(QDialogButtonBox::Save),SLOT(setEnabled(bool)));
@@ -35,3 +37,11 @@ void settingsFrame::updateSettings()
     emit soundChanged(m_soundEnabled);
 }
 
+void settingsFrame::showFrame(MWindow::Frame f)
+{
+    qDebug() << "settingsFrame::showFrame" << f;
+    if ( f == MWindow::Settings )
+        showMaximized();
+    else
+        setVisible(false);
+}

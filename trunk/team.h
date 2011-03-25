@@ -16,6 +16,15 @@ public:
     Team* at(int index) { return m_teams.at(index); }
     void createTeams();
 private:
+    enum TeamFileFormat {
+        Ranking = 0,
+        BriefName,
+        FullName,
+        ShirtColor,
+        ShortColor,
+        PlayerSpeed
+    };
+
    QList<Team*> m_teams;
 };
 
@@ -24,7 +33,12 @@ class Team : public QObject {
 public:
     // the attacking direction
     enum Direction { SouthToNorth, NorthToSouth };
-    Team(QString briefName, QString teamName, QColor shirtColor, QColor shortColor, int playerSpeed);
+    Team(int ranking,
+         QString briefName,
+         QString teamName,
+         QColor shirtColor,
+         QColor shortColor,
+         int playerSpeed);
     QString fullName() const { return m_name; }
     void setDirection(Direction dir) { m_direction = dir; }
     Direction getDirection() const { return m_direction; }
@@ -36,6 +50,7 @@ public:
     inline bool teamHasBall() const { return m_teamHasBall; }
     inline qreal speed() const { return m_speed; }
     inline QString briefName() const { return m_briefName; }
+    inline int ranking() const { return m_rank; }
 
 public slots:
     void goalScored(bool isNorthGoal);
@@ -54,6 +69,8 @@ private:
     bool m_scoredLastGoal;
     int m_shotCount;
     qreal m_speed;
+    // the teams ranking
+    int m_rank;
 };
 
 

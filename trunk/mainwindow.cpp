@@ -16,7 +16,6 @@ MWindow::MWindow(QWidget *parent)
 {
     m_soundEffects = new SoundEffects(this);
 
-    m_halfStatisticsFrame = new HalfStatisticsFrame(this);
     m_helpFrame = new helpFrame(this);
     m_inputSettingsFrame = new inputSettingsFrame(this);
 
@@ -24,6 +23,9 @@ MWindow::MWindow(QWidget *parent)
     m_mainMenuFrame = new mainMenuFrame(this);
 
     uiMainWindow.setupUi(this);
+    // these frames are dependent on uiMainWindow actions, construct
+    // after uiMainWindow
+    m_halfStatisticsFrame = new HalfStatisticsFrame(this);
     m_inGameMenuFrame = new InGameMenuFrame(this);
 
     QRectF footballGround(0,0,300,400);
@@ -40,7 +42,8 @@ MWindow::MWindow(QWidget *parent)
     m_soundEffects->startSound(SoundEffects::GameThemeTune);
 
     setCentralWidget( uiMainWindow.m_graphicsView );
-    showFrame(MWindow::MainMenu);
+    // showFrame(MWindow::MainMenu);
+    emit setFrame(MWindow::MainMenu);
 }
 
 MWindow::~MWindow()
@@ -66,22 +69,40 @@ void MWindow::removeContextMenus()
 
 void MWindow::createConnections()
 {
-    connect(uiMainWindow.actionNew_Game, SIGNAL(triggered()), this, SLOT(showTeamSelectionFrame()));
-    connect(uiMainWindow.actionSettings, SIGNAL(triggered()), this, SLOT(showSettingsFrame()));
-    connect(uiMainWindow.actionInputSettings, SIGNAL(triggered()), this, SLOT(showInputSettingsFrame()));
-    connect(uiMainWindow.actionHelp, SIGNAL(triggered()), this, SLOT(showHelpFrame()));
+    connect(this, SIGNAL(setFrame(MWindow::Frame)),
+            this, SLOT(showFrame(MWindow::Frame)));
 
-    connect(uiMainWindow.actionQuit, SIGNAL(triggered()), this, SLOT(close()));
-    connect(m_pitch, SIGNAL(gameInProgress(bool)), this, SLOT(enableActions(bool)));
-    connect(m_pitch, SIGNAL(displayHalfTimeStatistics(bool)), this, SLOT(displayHalfTimeStatistics(bool)));
+    connect(uiMainWindow.actionNew_Game, SIGNAL(triggered()),
+            this, SLOT(showTeamSelectionFrame()));
+    connect(uiMainWindow.actionSettings, SIGNAL(triggered()),
+            this, SLOT(showSettingsFrame()));
+    connect(uiMainWindow.actionInputSettings, SIGNAL(triggered()),
+            this, SLOT(showInputSettingsFrame()));
+    connect(uiMainWindow.actionHelp, SIGNAL(triggered()),
+            this, SLOT(showHelpFrame()));
+    connect(uiMainWindow.actionMainMenu, SIGNAL(triggered()),
+            this, SLOT(showMainMenuFrame()));
+    connect(uiMainWindow.actionMainMenu, SIGNAL(triggered()),
+            m_pitch, SLOT(gameStop()));
+
+    connect(uiMainWindow.actionContinue, SIGNAL(triggered()),
+            this, SLOT(hideInGameMenu()));
+    connect(uiMainWindow.actionContinue, SIGNAL(triggered()),
+            this, SLOT(hideStatisticsFrame()));
+    connect(uiMainWindow.actionQuit, SIGNAL(triggered()),
+            this, SLOT(close()));
+
+    connect(m_pitch, SIGNAL(gameInProgress(bool)),
+            this, SLOT(enableActions(bool)));
+    connect(m_pitch, SIGNAL(displayHalfTimeStatistics(bool)),
+            this, SLOT(displayHalfTimeStatistics(bool)));
 
     connect(m_pitch, SIGNAL(pauseGameClock()), this, SLOT(showInGameMenu()));
-    connect(uiMainWindow.actionContinue, SIGNAL(triggered()), this, SLOT(hideInGameMenu()));
 }
 
 void MWindow::hideInGameMenu()
 {
-    showFrame(MWindow::GraphicsView);
+    emit setFrame(MWindow::GraphicsView);
     m_pitch->continueGame();
 }
 
@@ -123,81 +144,36 @@ void MWindow::enableActions(bool gameInProgress)
     uiMainWindow.actionInputSettings->setEnabled(!gameInProgress);
     uiMainWindow.actionHelp->setEnabled(!gameInProgress);
     uiMainWindow.actionQuit->setEnabled(true);
-    uiMainWindow.actionPause->setEnabled(!gameInProgress);
-// TODO    uiMainWindow.actionContinue->setEnabled(!gameInProgress);
+    uiMainWindow.actionPause->setEnabled(gameInProgress);
+    uiMainWindow.actionContinue->setEnabled(gameInProgress);
 
-    uiMainWindow.menubar->setEnabled(true);
-    uiMainWindow.menuAbout->setEnabled(!gameInProgress);
-
-    if (!gameInProgress)
-        showFrame(MWindow::HalfTimeStatistics);
+//    if (!gameInProgress)
+//        showFrame(MWindow::HalfTimeStatistics);
 }
 
 void MWindow::showFrame(Frame f)
 {
-    QWidget* w = QApplication::focusWidget();
-    if (w)
-        qDebug() << w->objectName() << "start has focus!!!";
-
-
-    uiMainWindow.menubar->setVisible(false);
-    m_mainMenuFrame->setVisible(false);
-    m_helpFrame->setVisible(false);
-    uiMainWindow.m_graphicsView->setVisible(false);
-    m_settingsFrame->setVisible(false);
-    m_inputSettingsFrame->setVisible(false);
-    m_teamSelectionFrame->setVisible(false);
-    m_halfStatisticsFrame->setVisible(false);
-    m_inGameMenuFrame->setVisible(false);
-    uiMainWindow.m_graphicsView->clearFocus();
-
-    switch (f) {
-    case MWindow::InGameMenu:
-        m_inGameMenuFrame->setVisible(true);
-        break;
-    case MWindow::HalfTimeStatistics:
-        m_halfStatisticsFrame->setVisible(true);
-        break;
-    case MWindow::Help:
-        m_helpFrame->setVisible(true);
-        break;
-    case MWindow::InputSettings:
-        m_inputSettingsFrame->setVisible(true);
-        break;
-    case MWindow::Settings:
-        m_settingsFrame->setVisible(true);
-        break;
-    case MWindow::MainMenu:
-        m_mainMenuFrame->showMaximized();
-        break;
-    case MWindow::GraphicsView:
+    qDebug() << "MWindow::showFrame " << f;
+    if ( f == GraphicsView) {
         uiMainWindow.m_graphicsView->activateWindow();
         m_soundEffects->stopSound(SoundEffects::GameThemeTune);
-        uiMainWindow.menubar->setVisible(true);
-        uiMainWindow.menuAbout->setVisible(false);
-        //uiMainWindow.m_graphicsView->setVisible(true);
         uiMainWindow.m_graphicsView->showMaximized();
         uiMainWindow.m_graphicsView->setFocus();
-        break;
-    case MWindow::TeamSelection:
-        m_teamSelectionFrame->setVisible(true);
-        break;
-    default:
-        break;
+    } else {
+        if ( f == MainMenu )
+            enableActions(false);
+        uiMainWindow.m_graphicsView->setVisible(false);
+        uiMainWindow.m_graphicsView->clearFocus();
     }
-    w=0;
-    w = QApplication::focusWidget();
-    if (w)
-            qDebug() << w->objectName() << "end has focus!!!";
 }
 
 void MWindow::hideStatisticsFrame()
 {
     if (m_gameInProgress) {
         m_pitch->setState(Pitch::ReadyForNextHalf);
-        showFrame(MWindow::GraphicsView);
+        emit setFrame(MWindow::GraphicsView);
     } else
-        showFrame(MWindow::MainMenu);
+        emit setFrame(MWindow::MainMenu);
 }
 
 void MWindow::newGame(int homeTeam, int awayTeam)

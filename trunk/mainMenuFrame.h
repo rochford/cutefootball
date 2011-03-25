@@ -3,7 +3,7 @@
 
 #include <QFrame>
 
-class MWindow;
+#include "mainwindow.h"
 
 namespace Ui {
     class mainMenuFrame;
@@ -16,6 +16,8 @@ class mainMenuFrame : public QFrame
 public:
     explicit mainMenuFrame(MWindow *parent = 0);
     ~mainMenuFrame();
+public slots:
+    void showFrame(MWindow::Frame f);
 
 private:
     Ui::mainMenuFrame *ui;

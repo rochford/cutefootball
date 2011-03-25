@@ -148,32 +148,6 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="2">
-       <widget class="QLabel" name="label_10">
-        <property name="text">
-         <string notr="true"/>
-        </property>
-        <property name="pixmap">
-         <pixmap resource="menugraphics.qrc">:/images/keyboard/hash.png</pixmap>
-        </property>
-        <property name="scaledContents">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_11">
-        <property name="text">
-         <string notr="true"/>
-        </property>
-        <property name="pixmap">
-         <pixmap resource="menugraphics.qrc">:/images/keyboard/star.png</pixmap>
-        </property>
-        <property name="scaledContents">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
       <item row="3" column="1">
        <widget class="QLabel" name="label_12">
         <property name="text">
@@ -192,7 +166,7 @@
     <item>
      <widget class="QLabel" name="label_13">
       <property name="text">
-       <string>5 to tackle if player does not have the ball. if player has ball, then short press to pass, long press to shoot</string>
+       <string>Press 5 to tackle if player does not have the ball. if player has ball, then short press 5 to pass, long press 5 to shoot. Press 0 to display in-game options.</string>
       </property>
       <property name="wordWrap">
        <bool>true</bool>

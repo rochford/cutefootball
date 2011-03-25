@@ -5,7 +5,7 @@
 
 #include "ui_halfstatisticsframe.h"
 
-class MWindow;
+#include "mainwindow.h"
 
 class HalfStatisticsFrame : public QFrame
 {
@@ -23,6 +23,8 @@ public:
     void setAwayTeamShots(int n) { ui->m_awayShots->setText(QString::number(n)); }
     void setHomeTeamFlag(QString flag) { ui->homeFlag->setPixmap(flag);}
     void setAwayTeamFlag(QString flag) { ui->awayFlag->setPixmap(flag);}
+public slots:
+    void showFrame(MWindow::Frame f);
 
 private:
     Ui::HalfStatisticsFrame *ui;

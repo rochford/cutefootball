@@ -39,15 +39,19 @@ GoalScoredState::GoalScoredState(GameHalf *g, Pitch *p)
 void GoalScoredState::pauseGameClock()
 {
     qDebug() << "GoalScoredState::pauseGameClock";
-//    m_timeLineCelebrate->setPaused(true);
-//    m_timeLineReturnStartPositions->setPaused(true);
+    if (m_timeLineCelebrate->state() == QTimeLine::Running)
+        m_timeLineCelebrate->setPaused(true);
+    else if (m_timeLineReturnStartPositions->state() == QTimeLine::Running)
+        m_timeLineReturnStartPositions->setPaused(true);
 }
 
 void GoalScoredState::continueGameClock()
 {
     qDebug() << "GoalScoredState::continueGameClock";
-//    m_timeLineCelebrate->setPaused(false);
-//    m_timeLineReturnStartPositions->setPaused(false);
+    if (m_timeLineCelebrate->state() == QTimeLine::Paused)
+        m_timeLineCelebrate->setPaused(false);
+    else if (m_timeLineReturnStartPositions->state() == QTimeLine::Paused)
+        m_timeLineReturnStartPositions->setPaused(false);
 }
 
 void GoalScoredState::createTakePositionAnimation()
@@ -117,7 +121,7 @@ void GoalScoredState::createPlayerAnimationItems(GameState g)
 
 void GoalScoredState::playFrameCelebrate(int frame)
 {
-    //qDebug() << "playFrameCelebrate" << frame;
+    qDebug() << "playFrameCelebrate" << frame;
     qreal f = frame/ 100.00;
 
     if ( frame > 30 )
@@ -130,7 +134,7 @@ void GoalScoredState::playFrameCelebrate(int frame)
 
 void GoalScoredState::playFramePositions(int frame)
 {
-    //qDebug() << "playFramePositions" << frame;
+    qDebug() << "playFramePositions" << frame;
     qreal f = frame/ 100.00;
 
 //    if ( frame > 80 )

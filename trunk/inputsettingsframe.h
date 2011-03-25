@@ -3,7 +3,7 @@
 
 #include <QFrame>
 
-class MWindow;
+#include "mainwindow.h"
 
 namespace Ui {
     class inputSettingsFrame;
@@ -16,7 +16,8 @@ class inputSettingsFrame : public QFrame
 public:
     explicit inputSettingsFrame(MWindow *parent = 0);
     ~inputSettingsFrame();
-
+public slots:
+    void showFrame(MWindow::Frame f);
 private:
     Ui::inputSettingsFrame *ui;
 };

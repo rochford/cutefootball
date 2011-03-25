@@ -1,6 +1,5 @@
 #include "mainMenuFrame.h"
 #include "ui_mainMenuFrame.h"
-#include "mainwindow.h"
 #include "version.h"
 
 mainMenuFrame::mainMenuFrame(MWindow *parent) :
@@ -8,7 +7,10 @@ mainMenuFrame::mainMenuFrame(MWindow *parent) :
     ui(new Ui::mainMenuFrame)
 {
     ui->setupUi(this);
-    ui->versionLabel->setText(versionNumber.arg(KMajorVersion).arg(KMinorVersion));
+    ui->versionLabel->setText(versionNumber.arg(KBuildNumber));
+
+    connect(parent, SIGNAL(setFrame(MWindow::Frame)),
+            this, SLOT(showFrame(MWindow::Frame)));
 
     connect(ui->actionNewGame, SIGNAL(triggered()),
             parent, SLOT(showTeamSelectionFrame()));
@@ -16,8 +18,6 @@ mainMenuFrame::mainMenuFrame(MWindow *parent) :
             parent, SLOT(showSettingsFrame()));
     connect(ui->actionInputSettings, SIGNAL(triggered()),
             parent, SLOT(showInputSettingsFrame()));
-//    connect(ui->actionAbout, SIGNAL(triggered()),
-//            parent, SLOT(showAboutFrame()));
     connect(ui->actionHelp, SIGNAL(triggered()),
             parent,SLOT(showHelpFrame()));
     connect(ui->actionQuit, SIGNAL(triggered()),
@@ -27,5 +27,14 @@ mainMenuFrame::mainMenuFrame(MWindow *parent) :
 mainMenuFrame::~mainMenuFrame()
 {
     delete ui;
+}
+
+void mainMenuFrame::showFrame(MWindow::Frame f)
+{
+    qDebug() << "mainMenuFrame::showFrame" << f;
+    if ( f == MWindow::MainMenu )
+        showMaximized();
+    else
+        setVisible(false);
 }
 

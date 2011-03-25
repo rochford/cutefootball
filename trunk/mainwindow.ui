@@ -53,31 +53,6 @@
      <height>20</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuFile">
-    <property name="enabled">
-     <bool>false</bool>
-    </property>
-    <property name="title">
-     <string>File</string>
-    </property>
-    <addaction name="actionNew_Game"/>
-    <addaction name="actionSettings"/>
-    <addaction name="actionInputSettings"/>
-    <addaction name="actionQuit"/>
-    <addaction name="actionPause"/>
-   </widget>
-   <widget class="QMenu" name="menuAbout">
-    <property name="enabled">
-     <bool>false</bool>
-    </property>
-    <property name="title">
-     <string>Help</string>
-    </property>
-    <addaction name="actionHelp"/>
-    <addaction name="actionAbout"/>
-   </widget>
-   <addaction name="menuFile"/>
-   <addaction name="menuAbout"/>
   </widget>
   <action name="actionNew_Game">
    <property name="text">
@@ -126,6 +101,11 @@
   <action name="actionContinue">
    <property name="text">
     <string>Continue</string>
+   </property>
+  </action>
+  <action name="actionMainMenu">
+   <property name="text">
+    <string>MainMenu</string>
    </property>
   </action>
  </widget>

@@ -96,7 +96,10 @@ public slots:
 
     void hasBallCheck();
     void selectNearestPlayer();
+    // causes the game to be stopped
+    void gameStop();
     void gameStarted();
+    // called when game FSM has been stopped
     void gameStopped();
 
     void showHalfStatisticsFrame();
