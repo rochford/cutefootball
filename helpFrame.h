@@ -2,8 +2,7 @@
 #define HELPFRAME_H
 
 #include <QFrame>
-
-class MWindow;
+#include "mainwindow.h"
 
 namespace Ui {
     class helpFrame;
@@ -16,6 +15,8 @@ class helpFrame : public QFrame
 public:
     explicit helpFrame(MWindow *parent = 0);
     ~helpFrame();
+public slots:
+    void showFrame(MWindow::Frame f);
 
 private:
     Ui::helpFrame *uiHelp;

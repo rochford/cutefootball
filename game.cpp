@@ -137,13 +137,13 @@ GameHalf::GameHalf(Game* parent,
 
 //    connect(m_playingState, SIGNAL(entered()), m_pitch, SLOT(gameStarted()));
     connect(&m_pitch, SIGNAL(foul(Team*,QPointF)), this, SLOT(foulCaused(Team*,QPointF)));
-//    connect(m_pitch, SIGNAL(pauseGameClock()), this, SLOT(pauseGameClock()));
-//    connect(m_pitch, SIGNAL(continueGameClock()), this, SLOT(continueGameClock()));
+    connect(&m_pitch, SIGNAL(pauseGameClock()), this, SLOT(pauseGameClock()));
+    connect(&m_pitch, SIGNAL(continueGameClock()), this, SLOT(continueGameClock()));
 }
 
 void GameHalf::foulCaused(Team* orig, QPointF location)
 {
-    qDebug() << "Game::foulCaused";
+    //qDebug() << "Game::foulCaused";
     m_foulingTeam = orig;
     m_foulingLocation = location;
     m_pitch.ball()->setPos(m_foulingLocation);
@@ -151,7 +151,7 @@ void GameHalf::foulCaused(Team* orig, QPointF location)
 
 GameHalf::~GameHalf()
 {
-    pauseGameClock();
+//    pauseGameClock();
     delete m_1second;
 
     delete m_timeLineTakePositions;
@@ -160,6 +160,7 @@ GameHalf::~GameHalf()
 
 void GameHalf::decrementGameTime()
 {
+    qDebug() << "GameHalf::decrementGameTime";
     m_remainingTimeInHalfMs = m_remainingTimeInHalfMs - 1000;
     m_pitch.updateDisplayTime(m_remainingTimeInHalfMs);
     if (m_remainingTimeInHalfMs == 0) {
@@ -167,6 +168,7 @@ void GameHalf::decrementGameTime()
         foreach (Player *p, m_pitch.m_players) {
             p->setAllowedOffPitch(true);
         }
+        qDebug() << "GameHalf::decrementGameTime half over " << objectName();
         emit halfOver(objectName());
     }
 }
@@ -175,26 +177,37 @@ void GameHalf::startPlayersLeavePitchAnim(QString /* halfName */)
 {
     qDebug() << "GameHalf::startPlayersLeavePitchAnim " << objectName();
     createPlayerAnimationItems(HalfOver);
+    if (m_1second->isActive())
+        m_1second->stop();
     m_timeLineLeavePitch->start();
-    pauseGameClock();
 }
 
 void GameHalf::pauseGameClock()
 {
-    qDebug() << "Game::pauseGameClock() " << objectName();
+    if (m_game->currentState() != this)
+        return;
+
+    qDebug() << "GameHalf::pauseGameClock() " << objectName();
     if (m_1second->isActive())
         m_1second->stop();
-//    m_timeLineTakePositions->setPaused(true);
-//    m_timeLineLeavePitch->setPaused(true);
+    if (m_timeLineTakePositions->state() == QTimeLine::Running)
+        m_timeLineTakePositions->setPaused(true);
+    else if (m_timeLineLeavePitch->state() == QTimeLine::Running)
+        m_timeLineLeavePitch->setPaused(true);
 }
 
 void GameHalf::continueGameClock()
 {
-    qDebug() << "Game::continueGameClock() "<< objectName();
+    if (m_game->currentState() != this)
+        return;
+
+    qDebug() << "GameHalf::continueGameClock() "<< objectName();
     if (!m_1second->isActive())
         m_1second->start();
-//    m_timeLineTakePositions->setPaused(false);
-//    m_timeLineLeavePitch->setPaused(false);
+    if (m_timeLineTakePositions->state() == QTimeLine::Running)
+        m_timeLineTakePositions->setPaused(false);
+    else if (m_timeLineLeavePitch->state() == QTimeLine::Running)
+        m_timeLineLeavePitch->setPaused(false);
 }
 
 void GameHalf::kickOff()
@@ -312,7 +325,8 @@ void GameHalf::onExit(QEvent * /* event */)
 
     m_pitch.m_scene->removeItem(m_pitch.ball());
 
-    pauseGameClock();
+    if (m_1second->isActive())
+        m_1second->stop();
 }
 
 

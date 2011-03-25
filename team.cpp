@@ -4,6 +4,7 @@
 // #include "compileTimeSettings.h" // KPlayerDefaultSpeed
 #include <QDebug>
 
+
 void TeamManager::createTeams()
 {
     QStringList colorNames(QColor::colorNames());
@@ -18,26 +19,32 @@ void TeamManager::createTeams()
         if (line.contains('#'))
             continue;
 
-        QList<QByteArray> nameAndColor = line.split(',');
-        QString briefName = nameAndColor.at(0).simplified();
-        QString name = nameAndColor.at(1).simplified();
+        QList<QByteArray> values = line.split(',');
+        int ranking = values.at(Ranking).simplified().toInt();
+        QString briefName = values.at(BriefName).simplified();
+        QString name = values.at(FullName).simplified();
 
-        QString shirtColorString = nameAndColor.at(2).simplified();
-        QString shortColorString = nameAndColor.at(3).simplified();
+        QString shirtColorString = values.at(ShirtColor).simplified();
+        QString shortColorString = values.at(ShortColor).simplified();
 
-        const int playerSpeed = nameAndColor.at(4).simplified().toInt();
+        const int playerSpeed = values.at(PlayerSpeed).simplified().toInt();
 
         QColor shirtColor(shirtColorString);
         QColor shortColor(shortColorString);
 
-        Team* t = new Team(briefName, name, shirtColor, shortColor, playerSpeed);
+        Team* t = new Team(ranking,
+                           briefName,
+                           name,
+                           shirtColor,
+                           shortColor,
+                           playerSpeed);
         m_teams.append(t);
     }
     file.close();
 }
 
 
-Team::Team(QString briefName, QString teamName, QColor shirtColor, QColor shortColor, int playerSpeed)
+Team::Team(int ranking, QString briefName, QString teamName, QColor shirtColor, QColor shortColor, int playerSpeed)
     :
     m_briefName(briefName),
     m_name(teamName),
@@ -46,7 +53,8 @@ Team::Team(QString briefName, QString teamName, QColor shirtColor, QColor shortC
     m_teamHasBall(false),
     m_goals(0),
     m_scoredLastGoal(false),
-    m_speed(playerSpeed)
+    m_speed(playerSpeed),
+    m_rank(ranking)
 {
 }
 

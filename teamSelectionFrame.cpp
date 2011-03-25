@@ -1,7 +1,7 @@
 
 #include "teamSelectionFrame.h"
 #include "ui_teamSelectionFrame.h"
-#include "mainwindow.h"
+
 #include "team.h"
 #include "pitch.h"
 
@@ -24,19 +24,48 @@ TeamSelectionFrame::TeamSelectionFrame(MWindow *parent) :
 
     ui->teamSelectionErrorLabel->setVisible(false);
     ui->m_homeTeamComboBox->setCurrentIndex(0);
+    updateHomeTeamDetails(0);
     ui->m_awayTeamComboBox->setCurrentIndex(1);
+    updateAwayTeamDetails(1);
 
-    connect(ui->buttonBox, SIGNAL(accepted()), parent, SLOT(hideTeamSelectionFrame()));
-    connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(startGame()));
-    connect(ui->buttonBox, SIGNAL(rejected()), parent, SLOT(hideTeamSelectionFrame()));
+    connect(parent, SIGNAL(setFrame(MWindow::Frame)),
+            this, SLOT(showFrame(MWindow::Frame)));
 
-    connect(ui->m_homeTeamComboBox, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(checkSelectedTeams(const QString &)));
-    connect(ui->m_awayTeamComboBox, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(checkSelectedTeams(const QString &)));
+    connect(ui->buttonBox, SIGNAL(accepted()),
+            parent, SLOT(showGraphicsViewFrame()));
+    connect(ui->buttonBox, SIGNAL(accepted()),
+            this, SLOT(startGame()));
+    connect(ui->buttonBox, SIGNAL(rejected()),
+            parent, SLOT(showMainMenuFrame()));
+
+    connect(ui->m_homeTeamComboBox, SIGNAL(currentIndexChanged(const QString &)),
+            this, SLOT(checkSelectedTeams(const QString &)));
+    connect(ui->m_awayTeamComboBox, SIGNAL(currentIndexChanged(const QString &)),
+            this, SLOT(checkSelectedTeams(const QString &)));
+
+    connect(ui->m_homeTeamComboBox, SIGNAL(currentIndexChanged(int)),
+            this, SLOT(updateHomeTeamDetails(int)));
+    connect(ui->m_awayTeamComboBox, SIGNAL(currentIndexChanged(int)),
+            this, SLOT(updateAwayTeamDetails(int)));
 }
 
 TeamSelectionFrame::~TeamSelectionFrame()
 {
     delete ui;
+}
+
+void TeamSelectionFrame::updateHomeTeamDetails(int index)
+{
+    Team* t = m_parent->pitch()->teams().at(index);
+    ui->m_homeTeamName->setText(t->fullName());
+    ui->m_homeTeamRank->setText(tr("Rank: %1").arg(t->ranking()));
+}
+
+void TeamSelectionFrame::updateAwayTeamDetails(int index)
+{
+    Team* t = m_parent->pitch()->teams().at(index);
+    ui->m_awayTeamName->setText(t->fullName());
+    ui->m_awayTeamRank->setText(tr("Rank: %1").arg(t->ranking()));
 }
 
 void TeamSelectionFrame::checkSelectedTeams(const QString &)
@@ -53,4 +82,13 @@ void TeamSelectionFrame::checkSelectedTeams(const QString &)
 void TeamSelectionFrame::startGame()
 {
     m_parent->newGame(ui->m_homeTeamComboBox->currentIndex(), ui->m_awayTeamComboBox->currentIndex());
+}
+
+void TeamSelectionFrame::showFrame(MWindow::Frame f)
+{
+    qDebug() << "TeamSelectionFrame::showFrame" << f;
+    if ( f == MWindow::TeamSelection )
+        showMaximized();
+    else
+        setVisible(false);
 }

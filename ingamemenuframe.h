@@ -3,11 +3,8 @@
 
 #include <QFrame>
 
-class MWindow;
-
-namespace Ui {
-    class InGameMenuFrame;
-}
+#include "ui_ingamemenuframe.h"
+#include "mainwindow.h"
 
 class InGameMenuFrame : public QFrame
 {
@@ -16,6 +13,13 @@ class InGameMenuFrame : public QFrame
 public:
     explicit InGameMenuFrame(MWindow *parent = 0);
     ~InGameMenuFrame();
+    void setHomeTeamGoals(int n) { ui->homeGoals->setText(QString::number(n)); }
+    void setAwayTeamGoals(int n) { ui->awayGoals->setText(QString::number(n)); }
+    void setHomeTeamFlag(QString flag) { ui->homeFlag->setPixmap(flag);}
+    void setAwayTeamFlag(QString flag) { ui->awayFlag->setPixmap(flag);}
+
+public slots:
+    void showFrame(MWindow::Frame f);
 
 private:
     Ui::InGameMenuFrame *ui;

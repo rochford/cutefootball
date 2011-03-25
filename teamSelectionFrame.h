@@ -2,7 +2,7 @@
 #define TEAMSELECTIONFRAME_H
 
 #include <QFrame>
-class MWindow;
+#include "mainwindow.h"
 
 namespace Ui {
     class teamSelectionFrame;
@@ -15,8 +15,14 @@ class TeamSelectionFrame : public QFrame
 public:
     explicit TeamSelectionFrame(MWindow *parent = 0);
     ~TeamSelectionFrame();
+
+public slots:
+    void showFrame(MWindow::Frame f);
+
 private slots:
     void checkSelectedTeams(const QString &);
+    void updateHomeTeamDetails(int index);
+    void updateAwayTeamDetails(int index);
     void startGame();
 
 private:

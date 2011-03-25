@@ -66,7 +66,6 @@ public:
       NoAction
     };
 
-private:
     enum Frame {
         MainMenu,
         Settings,
@@ -78,27 +77,32 @@ private:
         InGameMenu
     };
 
+private:
     void createConnections();
     void removeContextMenus();
 
-public slots:
-    void showFrame(Frame f);
-    void newGame(int homeTeam, int awayTeam);
-    void hideInputSettingsFrame(){showFrame(MWindow::MainMenu);}
-    void hideHelpFrame(){showFrame(MWindow::MainMenu);}
-    void hideSettingsFrame(){ showFrame(MWindow::MainMenu);}
-    void showSettingsFrame(){ showFrame(MWindow::Settings);}
-    void showMainMenuFrame(){ showFrame(MWindow::MainMenu);}
-    void hideTeamSelectionFrame(){ showFrame(MWindow::MainMenu);}
-    void showTeamSelectionFrame(){ showFrame(MWindow::TeamSelection);}
-    void showInputSettingsFrame() { showFrame(MWindow::InputSettings);}
-    void showHelpFrame(){showFrame(MWindow::Help);}
-    void showStatisticsFrame(){showFrame(MWindow::HalfTimeStatistics);}
-    void hideStatisticsFrame();
-    void showInGameMenu() { showFrame(MWindow::InGameMenu); }
-    void hideInGameMenu();
+signals:
+    void setFrame(MWindow::Frame f);
 
+public slots:
+    void showFrame(MWindow::Frame f);
+    void newGame(int homeTeam, int awayTeam);
+
+    void hideInputSettingsFrame(){ emit setFrame(MWindow::MainMenu);}
+    void hideHelpFrame(){emit setFrame(MWindow::MainMenu);}
+    void hideSettingsFrame(){ emit setFrame(MWindow::MainMenu);}
+    void showSettingsFrame(){ emit setFrame(MWindow::Settings);}
+    void showMainMenuFrame(){ emit setFrame(MWindow::MainMenu);}
+    void hideTeamSelectionFrame(){ emit setFrame(MWindow::MainMenu);}
+    void showTeamSelectionFrame(){ emit setFrame(MWindow::TeamSelection);}
+    void showInputSettingsFrame() { emit setFrame(MWindow::InputSettings);}
+    void showHelpFrame(){emit setFrame(MWindow::Help);}
+    void showStatisticsFrame(){emit setFrame(MWindow::HalfTimeStatistics);}
+    void hideStatisticsFrame();
+    void showInGameMenu() { emit setFrame(MWindow::InGameMenu); }
+    void hideInGameMenu();
     void displayHalfTimeStatistics(bool display);
+    void showGraphicsViewFrame() { emit setFrame(MWindow::GraphicsView); }
 
 protected:
     void resizeEvent(QResizeEvent *e);

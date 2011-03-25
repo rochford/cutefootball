@@ -2,7 +2,7 @@
 #define SETTINGSDIALOG_H
 
 #include <QFrame>
-class MWindow;
+#include "mainwindow.h"
 
 namespace Ui {
     class settingsFrame;
@@ -26,6 +26,9 @@ public:
     ExtraTime extraTimeAllowed() const { return m_extraTime; }
 signals:
     void soundChanged(bool enabled);
+
+public slots:
+    void showFrame(MWindow::Frame f);
 
 private slots:
     void updateSettings();

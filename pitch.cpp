@@ -75,8 +75,9 @@ Pitch::Pitch(const QRectF& footballGroundRect,
 
     m_gameFSM = new QStateMachine(this);
     m_game = new Game(*m_gameFSM, *this);
-    connect(m_gameFSM, SIGNAL(finished()), this, SLOT(gameStopped()));
     connect(m_gameFSM, SIGNAL(started()), this, SLOT(gameStarted()));
+    connect(m_gameFSM, SIGNAL(finished()), this, SLOT(gameStopped()));
+    connect(m_gameFSM, SIGNAL(stopped()), this, SLOT(gameStopped()));
 
     layoutPitch();
 
@@ -151,6 +152,12 @@ Player* Pitch::selectNearestPlayer(Team* team)
     return nearestPlayer;
 }
 
+void Pitch::gameStop()
+{
+    if (m_gameFSM->isRunning())
+        m_gameFSM->stop();
+}
+
 void Pitch::gameStarted()
 {
     m_motionTimer->start();
@@ -159,10 +166,13 @@ void Pitch::gameStarted()
 
 void Pitch::gameStopped()
 {
-    if (m_gameFSM->initialState() == m_game->firstHalfState() && extraTimeAllowed() && extraTime() ) {
+    qdebug() << "Pitch::gameStopped";
+    const QString initialStateName = static_cast<GameHalf*>(m_gameFSM->initialState())->objectName();
+    if ( initialStateName == m_game->firstHalfState()->objectName()
+            && extraTimeAllowed() && extraTime() ) {
         m_gameFSM->setInitialState(m_game->extraTimeFirstHalfState());
         m_gameFSM->start();
-    } else if (m_gameFSM->initialState() == m_game->extraTimeFirstHalfState() && extraTime() ) {
+    } else if (initialStateName == m_game->extraTimeFirstHalfState()->objectName() && extraTime() ) {
         m_gameFSM->setInitialState(m_game->penaltiesState());
         m_gameFSM->start();
     } else {
@@ -334,7 +344,7 @@ void Pitch::continueGame()
 {
     qDebug() << "continueGame";
     m_motionTimer->start();
-    // emit continueGameClock();
+    emit continueGameClock();
     if ( m_game->currentState() )
         m_game->currentState()->continueGameClock();
 }

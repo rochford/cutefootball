@@ -1,0 +1,39 @@
+; Language
+&EN
+
+
+; SIS header: name, uid, version
+#{"5 soccer"},(0x2003AE9D),1,0,0
+
+; Default localized vendor name
+%{"Timothy Rochford"}
+
+
+; Default unique vendor name
+:"Timothy Rochford"
+
+; Manual PKG pre-rules from PRO files
+; Default dependency to Qt libraries
+;(0x2001E61C), 4, 7, 1, {"Qt"}
+; Default HW/platform dependencies
+;[0x102032BE],0,0,0,{"S60ProductID"}
+;[0x102752AE],0,0,0,{"S60ProductID"}
+;[0x1028315F],0,0,0,{"S60ProductID"}
+;[0x20022E6D],0,0,0,{"S60ProductID"}
+;[0x20032DE7],0,0,0,{"S60ProductID"}
+
+;E5-00
+[0x20024100], 0, 0, 0, {"Nokia E5-00"}
+;E72
+[0x20014DD0], 0, 0, 0, {"Nokia E72"}
+;E71
+[0x2000249B], 0, 0, 0, {"Nokia E71"}
+;E66
+[0x2000249C], 0, 0, 0, {"Nokia E66"}
+;E63
+[0x200025C3], 0, 0, 0, {"Nokia E63"}
+;E52
+[0x20014DCC], 0, 0, 0, {"Nokia E52"}
+ 
+@"qt_installer.sis", (0x2001E62D)
+@"soccer.sis", (0x2003AE9C)
