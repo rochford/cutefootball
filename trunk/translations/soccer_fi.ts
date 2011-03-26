@@ -51,12 +51,11 @@
         <translation>Tilastot</translation>
     </message>
     <message>
-        <location filename="../halfstatisticsframe.ui" line="267"/>
         <source>Continue</source>
-        <translation>Jatka</translation>
+        <translation type="obsolete">Jatka</translation>
     </message>
     <message>
-        <location filename="../halfstatisticsframe.ui" line="274"/>
+        <location filename="../halfstatisticsframe.ui" line="267"/>
         <source>Main Menu</source>
         <translation type="unfinished">Päävalikko</translation>
     </message>
@@ -186,8 +185,8 @@
         <translation>Päävalikko</translation>
     </message>
     <message>
-        <location filename="../teamSelectionFrame.cpp" line="59"/>
-        <location filename="../teamSelectionFrame.cpp" line="66"/>
+        <location filename="../teamSelectionFrame.cpp" line="61"/>
+        <location filename="../teamSelectionFrame.cpp" line="68"/>
         <source>Rank: %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -200,9 +199,13 @@
         <translation>Päävalikko</translation>
     </message>
     <message>
-        <location filename="../helpFrame.ui" line="35"/>
         <source>Only goalkeepers are allowed in the penalty area. A foul will result if an outfield player enters the penalty area.</source>
-        <translation>Vain maalivahdit ovat sallittuja rangaistusalueella. Kenttäpelaajan astuminen rangaistusalueelle johtaa virheeseen.</translation>
+        <translation type="obsolete">Vain maalivahdit ovat sallittuja rangaistusalueella. Kenttäpelaajan astuminen rangaistusalueelle johtaa virheeseen.</translation>
+    </message>
+    <message>
+        <location filename="../helpFrame.ui" line="35"/>
+        <source>Only goalkeepers are allowed in the penalty area. </source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -218,7 +221,7 @@
     </message>
     <message>
         <location filename="../inputSettingsFrame.ui" line="169"/>
-        <source>Press 5 to tackle if player does not have the ball. if player has ball, then short press 5 to pass, long press 5 to shoot. Press 0 to display in-game options.</source>
+        <source>Press 5 to shoot, pass or tackle. 0 to display in-game options, other keys to move the player.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

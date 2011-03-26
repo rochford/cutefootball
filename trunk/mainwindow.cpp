@@ -26,7 +26,6 @@ MWindow::MWindow(QWidget *parent)
     // these frames are dependent on uiMainWindow actions, construct
     // after uiMainWindow
     m_halfStatisticsFrame = new HalfStatisticsFrame(this);
-    m_inGameMenuFrame = new InGameMenuFrame(this);
 
     QRectF footballGround(0,0,300,400);
     m_pitch = new Pitch(footballGround,
@@ -34,6 +33,7 @@ MWindow::MWindow(QWidget *parent)
                         m_soundEffects,
                         m_settingsFrame);
     m_teamSelectionFrame = new TeamSelectionFrame(this);
+    m_inGameMenuFrame = new InGameMenuFrame(this);
 
     removeContextMenus();
 
@@ -87,17 +87,14 @@ void MWindow::createConnections()
 
     connect(uiMainWindow.actionContinue, SIGNAL(triggered()),
             this, SLOT(hideInGameMenu()));
-    connect(uiMainWindow.actionContinue, SIGNAL(triggered()),
-            this, SLOT(hideStatisticsFrame()));
     connect(uiMainWindow.actionQuit, SIGNAL(triggered()),
             this, SLOT(close()));
 
     connect(m_pitch, SIGNAL(gameInProgress(bool)),
             this, SLOT(enableActions(bool)));
-    connect(m_pitch, SIGNAL(displayHalfTimeStatistics(bool)),
-            this, SLOT(displayHalfTimeStatistics(bool)));
 
-    connect(m_pitch, SIGNAL(pauseGameClock()), this, SLOT(showInGameMenu()));
+    connect(m_pitch, SIGNAL(pauseGameClock()),
+            this, SLOT(showInGameMenu()));
 }
 
 void MWindow::hideInGameMenu()
@@ -129,15 +126,6 @@ void MWindow::displayHalfTimeStatistics(bool display)
 void MWindow::enableActions(bool gameInProgress)
 {
     qDebug() << "MWindow::enableActions" << gameInProgress;
-#if 0
-    if (gameInProgress) {
-        disconnect(uiMainWindow.actionQuit, SIGNAL(triggered()), this, SLOT(close()));
-        connect(uiMainWindow.actionQuit, SIGNAL(triggered()), this, SLOT(showInGameMenu()));
-    } else {
-        connect(uiMainWindow.actionQuit, SIGNAL(triggered()), this, SLOT(close()));
-        disconnect(uiMainWindow.actionQuit, SIGNAL(triggered()), this, SLOT(showInGameMenu()));
-    }
-#endif
     m_gameInProgress = gameInProgress;
     uiMainWindow.actionNew_Game->setEnabled(!gameInProgress);
     uiMainWindow.actionSettings->setEnabled(!gameInProgress);
@@ -147,8 +135,12 @@ void MWindow::enableActions(bool gameInProgress)
     uiMainWindow.actionPause->setEnabled(gameInProgress);
     uiMainWindow.actionContinue->setEnabled(gameInProgress);
 
-//    if (!gameInProgress)
-//        showFrame(MWindow::HalfTimeStatistics);
+    // TODO this needs to be moved to be triggered by game FSM
+    // complete.
+    // dont want to show this frame if user paused and returned
+    // to main menu
+    if (!gameInProgress)
+        displayHalfTimeStatistics(true);
 }
 
 void MWindow::showFrame(Frame f)
@@ -160,8 +152,6 @@ void MWindow::showFrame(Frame f)
         uiMainWindow.m_graphicsView->showMaximized();
         uiMainWindow.m_graphicsView->setFocus();
     } else {
-        if ( f == MainMenu )
-            enableActions(false);
         uiMainWindow.m_graphicsView->setVisible(false);
         uiMainWindow.m_graphicsView->clearFocus();
     }
@@ -169,10 +159,10 @@ void MWindow::showFrame(Frame f)
 
 void MWindow::hideStatisticsFrame()
 {
-    if (m_gameInProgress) {
-        m_pitch->setState(Pitch::ReadyForNextHalf);
+    qDebug() << "MWindow::hideStatisticsFrame " << m_gameInProgress;
+    if (m_gameInProgress)
         emit setFrame(MWindow::GraphicsView);
-    } else
+    else
         emit setFrame(MWindow::MainMenu);
 }
 

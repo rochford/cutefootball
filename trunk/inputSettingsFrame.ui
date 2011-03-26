@@ -166,7 +166,7 @@
     <item>
      <widget class="QLabel" name="label_13">
       <property name="text">
-       <string>Press 5 to tackle if player does not have the ball. if player has ball, then short press 5 to pass, long press 5 to shoot. Press 0 to display in-game options.</string>
+       <string>Press 5 to shoot, pass or tackle. 0 to display in-game options, other keys to move the player.</string>
       </property>
       <property name="wordWrap">
        <bool>true</bool>

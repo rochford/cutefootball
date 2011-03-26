@@ -85,10 +85,10 @@ Pitch::Pitch(const QRectF& footballGroundRect,
 
     m_teamMgr->createTeams();
 
+    connect(m_motionTimer, SIGNAL(timeout()), m_cameraView, SLOT(update()));
     connect(m_motionTimer, SIGNAL(timeout()), m_scene, SLOT(advance()));
     connect(m_motionTimer, SIGNAL(timeout()), m_scene, SLOT(update()));
     connect(m_motionTimer, SIGNAL(timeout()), this, SLOT(hasBallCheck()));
-    connect(m_motionTimer, SIGNAL(timeout()), m_cameraView, SLOT(update()));
 
     connect(m_motionTimer, SIGNAL(timeout()), this, SLOT(selectNearestPlayer()));
     connect(m_settingsFrame, SIGNAL(soundChanged(bool)), m_soundEffects, SLOT(soundEnabled(bool)));
@@ -154,6 +154,7 @@ Player* Pitch::selectNearestPlayer(Team* team)
 
 void Pitch::gameStop()
 {
+    qDebug() << "Pitch::gameStop";
     if (m_gameFSM->isRunning())
         m_gameFSM->stop();
 }
@@ -166,7 +167,7 @@ void Pitch::gameStarted()
 
 void Pitch::gameStopped()
 {
-    qdebug() << "Pitch::gameStopped";
+    qDebug() << "Pitch::gameStopped";
     const QString initialStateName = static_cast<GameHalf*>(m_gameFSM->initialState())->objectName();
     if ( initialStateName == m_game->firstHalfState()->objectName()
             && extraTimeAllowed() && extraTime() ) {
@@ -522,30 +523,5 @@ void Pitch::setPlayerStartPositions(Team *team)
             p->m_startPositionRectF = startPositions[p->m_role];
             setPlayerDefendZone(p);
         }
-    }
-}
-
-
-void Pitch::showHalfStatisticsFrame()
-{
-    emit displayHalfTimeStatistics(true);
-}
-
-void Pitch::hideHalfStatisticsFrame()
-{
-    emit displayHalfTimeStatistics(false);
-}
-
-void Pitch::setState(Pitch::State s)
-{
-    m_state = s;
-    switch(s) {
-    case Pitch::ReadyForNextHalf:
-        emit triggerNextHalf();
-        break;
-    case Pitch::Pause:
-        break;
-    default:
-        break;
     }
 }
