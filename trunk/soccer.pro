@@ -13,18 +13,18 @@ TRANSLATIONS = \
     translations/soccer_fi.ts
 
 symbian {
-#    symbian:TARGET.UID3 = 0xEED6D15E
-    symbian:TARGET.UID3 = 0x2003AE9C
+    symbian:TARGET.UID3 = 0xEED6D15E
+#    symbian:TARGET.UID3 = 0x2003AE9C
 
     # Add files and directories to ship with the application
     # by adapting the examples below.
-    soundFiles.sources = audio\\*.wav
+#    soundFiles.sources = audio\\*.wav
     #file1.source = audio\\Crowd.wav
     #file2.source = audio\\whistle.wav
     #file3.source = audio\\theme.wav
     #file4.source = audio\\finalwhistle.wav
     # dir1.source = mydir
-    DEPLOYMENT += soundFiles # file1 dir1
+#    DEPLOYMENT += soundFiles # file1 dir1
 #    DEPLOYMENT += file1 file2 file3 file4
 
     # qt ovi products

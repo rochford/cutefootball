@@ -144,6 +144,8 @@ void Player::createPixmaps()
     pixmapInsert(MWindow::TackleW, "tackleW.PNG", "tackleW.PNG", "tackleW.PNG", m_team->m_shirtColor.rgb(), m_team->m_shortColor.rgb());
 
     pixmapInsert(MWindow::FallenOver, "pTackled.PNG", "pTackled.PNG", "pTackled.PNG", m_team->m_shirtColor.rgb(), m_team->m_shortColor.rgb()); // TODO XXX TIM
+    pixmapInsert(MWindow::NoAction, "pS.PNG", "pS1.PNG", "pS2.PNG", m_team->m_shirtColor.rgb(), m_team->m_shortColor.rgb());
+
     // set default pixmap
     setPixmap(m_images[MWindow::North].at(0));
 }
@@ -183,6 +185,8 @@ void Player::focusOutEvent(QFocusEvent * event)
     m_toolTipPen = KPlayerNameUnfocused;
     m_toolTipTextPos = QPointF(boundingRect().center().x()-2,
                                boundingRect().y()-5);
+    // stop any key events
+    stopKeyEvent();
 }
 
 
@@ -593,7 +597,17 @@ void Player::keyPressEvent(QKeyEvent *event)
         return;
     }
 
+    qDebug() << "keyPressEvent";
     MWindow::Action a = m_actions[ event->key() ];
+
+    if (a == m_lastAction) {
+        qDebug() << "halt";
+        m_lastAction = MWindow::NoAction;
+        move(MWindow::NoAction);
+        event->accept();
+        m_keyEventTimer->stop();
+        return;
+    }
 
     switch ( a )
     {
@@ -629,11 +643,10 @@ void Player::keyReleaseEvent(QKeyEvent *event)
         event->ignore();
         return;
     }
+    qDebug() << "keyReleaseEvent";
     MWindow::Action a = m_actions[ event->key() ];
 
-    if ( a != MWindow::Button ) {
-        stopKeyEvent();
-    } else {
+    if ( a == MWindow::Button ) {
         int elapsed = m_elapsedTime.elapsed();
         if ( elapsed > KLongPressValue )
             move(MWindow::ButtonLongPress);
@@ -645,12 +658,14 @@ void Player::keyReleaseEvent(QKeyEvent *event)
 
 void Player::repeatKeyEvent()
 {
+    qDebug() << "repeatKeyEvent";
    move(m_lastAction);
    m_keyEventTimer->start();
 }
 
 void Player::stopKeyEvent()
 {
+    qDebug() << "stopKeyEvent";
     if (m_keyEventTimer->isActive())
         m_keyEventTimer->stop();
 }

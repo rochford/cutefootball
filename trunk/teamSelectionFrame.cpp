@@ -87,8 +87,9 @@ void TeamSelectionFrame::startGame()
 void TeamSelectionFrame::showFrame(MWindow::Frame f)
 {
     qDebug() << "TeamSelectionFrame::showFrame" << f;
-    if ( f == MWindow::TeamSelection )
+    if ( f == MWindow::TeamSelection ) {
+        ui->buttonBox->button(QDialogButtonBox::Ok)->setFocus();
         showMaximized();
-    else
+    } else
         setVisible(false);
 }
