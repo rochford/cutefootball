@@ -90,30 +90,23 @@ public:
 public slots:
     void pause();
     void continueGame();
-
     void newGame(int homeTeam, int awayTeam);
-    void setState(Pitch::State s);
-
-    void hasBallCheck();
     void selectNearestPlayer();
     // causes the game to be stopped
     void gameStop();
+    void countShots(Team* team, QPointF dest);
+
+private slots:
+    void hasBallCheck();
     void gameStarted();
     // called when game FSM has been stopped
     void gameStopped();
-
-    void showHalfStatisticsFrame();
-    void hideHalfStatisticsFrame();
-
-    void countShots(Team* team, QPointF dest);
 
 signals:
     void continueGameClock();
     void pauseGameClock();
     void gameInProgress(bool playing);
     void foul(Team* originatingTeam, QPointF foulLocation);
-    void displayHalfTimeStatistics(bool);
-    void triggerNextHalf();
 
 private:
     void createTeamPlayers(Team *team);

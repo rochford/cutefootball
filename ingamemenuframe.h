@@ -5,6 +5,7 @@
 
 #include "ui_ingamemenuframe.h"
 #include "mainwindow.h"
+#include "pitch.h"
 
 class InGameMenuFrame : public QFrame
 {
@@ -23,6 +24,7 @@ public slots:
 
 private:
     Ui::InGameMenuFrame *ui;
+    Pitch& m_pitch;
 };
 
 #endif // INGAMEMENUFRAME_H

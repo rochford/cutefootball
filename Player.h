@@ -10,6 +10,8 @@
 #include "team.h"
 #include "pitch.h"
 
+class QFocusEvent;
+
 typedef QList<QPixmap> PixmapList;
 
 class Player : public QObject,
@@ -52,6 +54,11 @@ public:
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
 
+protected: // From QGraphicsItem
+    void focusInEvent(QFocusEvent * event);
+    void focusOutEvent(QFocusEvent * event);
+
+public:
     bool ballCollisionCheck() const;
     bool playerCollisionCheck() const;
 
@@ -135,6 +142,11 @@ protected:
     bool m_captain;
 
     QColor m_hairColor;
+
+    // Displaying player name/number:
+    QString m_toolTipText;
+    QPen m_toolTipPen;
+    QPointF m_toolTipTextPos;
 };
 
 #endif // PLAYER_H

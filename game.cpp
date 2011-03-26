@@ -54,18 +54,20 @@ Game::Game(QStateMachine& fsm, Pitch& p)
     m_pausedState->addTransition(&m_pitch,
                                  SIGNAL(continueGameClock()),
                                  m_prePausedState);
-    m_firstHalfState->addTransition(&m_pitch, SIGNAL(triggerNextHalf()),
+    m_firstHalfState->addTransition(m_firstHalfState, SIGNAL(finished()),
                                     m_secondHalfState);
     m_secondHalfState->addTransition(m_secondHalfState, SIGNAL(finished()),
                                      m_allDone);
-    m_extraTimeFirstHalfState->addTransition(&m_pitch,
-                                             SIGNAL(triggerNextHalf()),
+    m_extraTimeFirstHalfState->addTransition(m_extraTimeFirstHalfState,
+                                             SIGNAL(finished()),
                                              m_extraTimeSecondHalfState);
-    m_extraTimeSecondHalfState->addTransition(&m_pitch,
-                                              SIGNAL(triggerNextHalf()),
+    m_extraTimeSecondHalfState->addTransition(m_extraTimeSecondHalfState,
+                                              SIGNAL(finished()),
                                               m_allDone);
     m_penaltiesState->addTransition(m_penaltiesState, SIGNAL(finished()),
                                     m_allDone);
+    connect(m_secondHalfState, SIGNAL(finished()),
+            &m_pitch, SLOT(gameStop()));
 }
 
 Game::~Game()
@@ -126,19 +128,23 @@ GameHalf::GameHalf(Game* parent,
     m_foulState->addTransition(m_foulState, SIGNAL(finished()), m_playingState);
     m_halfEndState->addTransition(m_timeLineLeavePitch, SIGNAL(finished()), m_allDoneState);
 
-    connect(this, SIGNAL(halfOver(QString)), this, SLOT(startPlayersLeavePitchAnim(QString)));
-    connect(m_timeLineLeavePitch, SIGNAL(finished()), &m_pitch, SLOT(showHalfStatisticsFrame()));
+    connect(this, SIGNAL(halfOver(QString)),
+            this, SLOT(startPlayersLeavePitchAnim(QString)));
 
     connect(m_timeLineTakePositions, SIGNAL(finished()), this, SLOT(kickOff()));
     connect(m_timeLineTakePositions, SIGNAL(frameChanged(int)), this, SLOT(playFrame(int)));
     connect(m_timeLineLeavePitch, SIGNAL(frameChanged(int)), this, SLOT(playFrame(int)));
 
-    connect(m_1second, SIGNAL(timeout()), this, SLOT(decrementGameTime()));
+    connect(m_1second, SIGNAL(timeout()),
+            this, SLOT(decrementGameTime()));
 
 //    connect(m_playingState, SIGNAL(entered()), m_pitch, SLOT(gameStarted()));
-    connect(&m_pitch, SIGNAL(foul(Team*,QPointF)), this, SLOT(foulCaused(Team*,QPointF)));
-    connect(&m_pitch, SIGNAL(pauseGameClock()), this, SLOT(pauseGameClock()));
-    connect(&m_pitch, SIGNAL(continueGameClock()), this, SLOT(continueGameClock()));
+    connect(&m_pitch, SIGNAL(foul(Team*,QPointF)),
+            this, SLOT(foulCaused(Team*,QPointF)));
+    connect(&m_pitch, SIGNAL(pauseGameClock()),
+            this, SLOT(pauseGameClock()));
+    connect(&m_pitch, SIGNAL(continueGameClock()),
+            this, SLOT(continueGameClock()));
 }
 
 void GameHalf::foulCaused(Team* orig, QPointF location)
@@ -202,12 +208,12 @@ void GameHalf::continueGameClock()
         return;
 
     qDebug() << "GameHalf::continueGameClock() "<< objectName();
-    if (!m_1second->isActive())
-        m_1second->start();
-    if (m_timeLineTakePositions->state() == QTimeLine::Running)
+    if (m_timeLineTakePositions->state() == QTimeLine::Paused) {
         m_timeLineTakePositions->setPaused(false);
-    else if (m_timeLineLeavePitch->state() == QTimeLine::Running)
+    } else if (m_timeLineLeavePitch->state() == QTimeLine::Paused) {
         m_timeLineLeavePitch->setPaused(false);
+    } else if (!m_1second->isActive())
+            m_1second->start();
 }
 
 void GameHalf::kickOff()

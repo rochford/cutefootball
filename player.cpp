@@ -8,6 +8,7 @@
 #include <QDebug>
 #include <QGraphicsItem>
 #include <QToolTip>
+#include <QFocusEvent>
 
 Player::Player(QString name,
                int number,
@@ -48,6 +49,12 @@ Player::Player(QString name,
 
     createKeyboardActions();
     setTransformOriginPoint(boundingRect().center());
+
+    m_toolTipText = QString::number(m_number);
+    m_toolTipPen = KPlayerNameUnfocused;
+    m_toolTipTextPos = QPointF(boundingRect().center().x()-2,
+                               boundingRect().y()-5);
+
 
 }
 
@@ -153,22 +160,31 @@ void Player::paint(QPainter *painter,
 {
 //    KPlayerToolTipFont.setStyleStrategy(QFont::NoAntialias);
 
-    if ( hasFocus() ) {
-        QPointF textPos(boundingRect().topLeft().x()-2,boundingRect().y()-5);
-
-        painter->setFont(KPlayerToolTipFont);
-        painter->setPen(KPlayerNameFocused);
-        painter->drawText(textPos, m_name);
-    } else {
-        QPointF textPos(boundingRect().center().x()-2,boundingRect().y()-5);
-        painter->setFont(KPlayerToolTipFont);
-        painter->setPen(KPlayerNameUnfocused);
-        painter->drawText(textPos, QString::number(m_number));
-    }
+    painter->setPen(m_toolTipPen);
+    painter->setFont(KPlayerToolTipFont);
+    painter->drawText(m_toolTipTextPos, m_toolTipText);
 
     // Draw QGraphicsPixmapItem face
     painter->drawPixmap(boundingRect().toRect(), pixmap());
 }
+
+void Player::focusInEvent(QFocusEvent * event)
+{
+    qDebug() << " Player::focusInEvent " << m_name;
+    m_toolTipText = m_name;
+    m_toolTipPen = KPlayerNameFocused;
+    m_toolTipTextPos = QPointF(boundingRect().topLeft().x()-2,
+                               boundingRect().y()-5);
+}
+void Player::focusOutEvent(QFocusEvent * event)
+{
+    qDebug() << " Player::focusOutEvent " << m_name;
+    m_toolTipText = QString::number(m_number);
+    m_toolTipPen = KPlayerNameUnfocused;
+    m_toolTipTextPos = QPointF(boundingRect().center().x()-2,
+                               boundingRect().y()-5);
+}
+
 
 QPainterPath Player::shape() const
 {

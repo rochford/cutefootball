@@ -9,10 +9,12 @@ HalfStatisticsFrame::HalfStatisticsFrame(MWindow *parent) :
     connect(parent, SIGNAL(setFrame(MWindow::Frame)),
             this, SLOT(showFrame(MWindow::Frame)));
 
+    /*
     connect(ui->continueBtn,
             SIGNAL(clicked()),
             parent->uiMainWindow.actionContinue,
             SLOT(trigger()));
+            */
     connect(ui->mainMenuBtn,
             SIGNAL(clicked()),
             parent->uiMainWindow.actionMainMenu,

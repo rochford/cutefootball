@@ -8,6 +8,7 @@ mainMenuFrame::mainMenuFrame(MWindow *parent) :
 {
     ui->setupUi(this);
     ui->versionLabel->setText(versionNumber.arg(KBuildNumber));
+    ui->m_settingsBtn->setVisible(false);
 
     connect(parent, SIGNAL(setFrame(MWindow::Frame)),
             this, SLOT(showFrame(MWindow::Frame)));
