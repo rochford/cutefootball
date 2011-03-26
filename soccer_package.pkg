@@ -1,9 +1,9 @@
 ; Language
 &EN
 
-
 ; SIS header: name, uid, version
-#{"5 soccer"},(0x2003AE9D),1,0,0
+;#{"5 soccer"},(0x2003AE9D),1,0,0
+#{"5 soccer"},(0xEED6D15F),1,0,0
 
 ; Default localized vendor name
 %{"Timothy Rochford"}
@@ -36,4 +36,4 @@
 [0x20014DCC], 0, 0, 0, {"Nokia E52"}
  
 @"qt_installer.sis", (0x2001E62D)
-@"soccer.sis", (0x2003AE9C)
+@"soccer.sis", (0xEED6D15E)

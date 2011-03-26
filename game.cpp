@@ -104,13 +104,13 @@ GameHalf::GameHalf(Game* parent,
     setObjectName(stateName);
     qDebug() << "GameHalf::GameHalf " << objectName();
     m_1second = new QTimer(this);
-    m_1second->setInterval(1000);
+    m_1second->setInterval(KOneSecondMs);
 
-    m_timeLineTakePositions = new QTimeLine(1000*5, this);
+    m_timeLineTakePositions = new QTimeLine(KOneSecondMs*5, this);
     m_timeLineTakePositions->setCurveShape(QTimeLine::LinearCurve);
     m_timeLineTakePositions->setFrameRange(0, 100);
 
-    m_timeLineLeavePitch = new QTimeLine(1000*5, this);
+    m_timeLineLeavePitch = new QTimeLine(KOneSecondMs*5, this);
     m_timeLineLeavePitch->setCurveShape(QTimeLine::LinearCurve);
     m_timeLineLeavePitch->setFrameRange(0, 100);
 
@@ -166,15 +166,14 @@ GameHalf::~GameHalf()
 
 void GameHalf::decrementGameTime()
 {
-    qDebug() << "GameHalf::decrementGameTime";
-    m_remainingTimeInHalfMs = m_remainingTimeInHalfMs - 1000;
+    m_remainingTimeInHalfMs = m_remainingTimeInHalfMs - KOneSecondMs;
     m_pitch.updateDisplayTime(m_remainingTimeInHalfMs);
     if (m_remainingTimeInHalfMs == 0) {
         // players are now allowed off the pitch
         foreach (Player *p, m_pitch.m_players) {
             p->setAllowedOffPitch(true);
         }
-        qDebug() << "GameHalf::decrementGameTime half over " << objectName();
+        //qDebug() << "GameHalf::decrementGameTime half over " << objectName();
         emit halfOver(objectName());
     }
 }

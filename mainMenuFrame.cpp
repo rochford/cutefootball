@@ -33,9 +33,10 @@ mainMenuFrame::~mainMenuFrame()
 void mainMenuFrame::showFrame(MWindow::Frame f)
 {
     qDebug() << "mainMenuFrame::showFrame" << f;
-    if ( f == MWindow::MainMenu )
+    if ( f == MWindow::MainMenu ) {
+        ui->m_newGameBtn->setFocus();
         showMaximized();
-    else
+    } else
         setVisible(false);
 }
 
