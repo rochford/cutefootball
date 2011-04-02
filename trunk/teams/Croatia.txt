@@ -1,5 +1,5 @@
-adam,GK,black
-bob,CD,black
-charlie,LM,brown
-dave,RM,black
-eddie,CF,black
+Luka,GK,black,pink
+Ivan,CD,black,pink
+Marko,LM,brown,pink
+Filip,RM,black,pink
+Karlo,CF,black,pink

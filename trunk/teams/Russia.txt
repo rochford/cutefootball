@@ -1,6 +1,6 @@
-adam,GK,black
-bob,CD,black
-charlie,LM,yellow
-dave,RM,black
-eddie,CF,brown
+Alexandr,GK,black,pink
+Andrey,CD,black,pink
+Daniil,LM,yellow,pink
+Dmitry,RM,black,pink
+Ivan,CF,brown,pink
 

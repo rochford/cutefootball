@@ -1,5 +1,5 @@
-adolf,GK,yellow
-henrich,CD,black
-boris,LM,yellow
-jurgen,RM,black
-hans,CF,black
+adolf,GK,yellow,pink
+henrich,CD,black,brown
+boris,LM,yellow,pink
+jurgen,RM,black,pink
+hans,CF,black,pink

@@ -1,5 +1,5 @@
-adam,GK,yellow
-bob,CD,grey
-charlie,LM,black
-dave,RM,brown
-eddie,CF,black
+adam,GK,yellow,pink
+bob,CD,grey,pink
+charlie,LM,black,brown
+dave,RM,brown,pink
+eddie,CF,black,pink

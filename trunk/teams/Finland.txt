@@ -1,5 +1,5 @@
-jani,GK,yellow
-jari,CD,yellow
-tomi,LM,yellow
-olli,RM,black
-markus,CF,yellow
+jani,GK,yellow,pink
+jari,CD,yellow,pink
+tomi,LM,yellow,pink
+olli,RM,black,pink
+markus,CF,yellow,pink

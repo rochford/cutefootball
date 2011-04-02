@@ -1,5 +1,5 @@
-claudio,GK,brown
-roberto,CD,black
-mario,LM,black
-lugi,RM,black
-pablo,CF,black
+claudio,GK,brown,pink
+roberto,CD,black,pink
+mario,LM,black,pink
+lugi,RM,black,pink
+pablo,CF,black,pink

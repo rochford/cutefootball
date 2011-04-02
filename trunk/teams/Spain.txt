@@ -1,5 +1,5 @@
-jose,GK,black
-alfonso,CD,black
-juan,LM,black
-miguel,RM,brown
-dan,CF,grey
+Daniel,GK,black,pink
+Alejandro,CD,black,pink
+David,LM,black,pink
+Pablo,RM,brown,pink
+Javier,CF,grey,pink
