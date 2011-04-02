@@ -1,5 +1,5 @@
-adam,GK,yellow
-bob,CD,yellow
-charlie,LM,yellow
-dave,RM,yellow
-eddie,CF,yellow
+Björn,GK,yellow,pink
+Adalstienn,CD,yellow,pink
+Finnur,LM,yellow,pink
+Fridgeir,RM,yellow,pink
+Dagbjart,CF,yellow,pink

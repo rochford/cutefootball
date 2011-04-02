@@ -1,5 +1,5 @@
-charles,GK,black
-jean,CD,black
-eric,LM,black
-bernard,RM,yellow
-francois,CF,black
+charles,GK,black,pink
+jean,CD,black,pink
+eric,LM,black,brown
+bernard,RM,yellow,pink
+francois,CF,black,brown

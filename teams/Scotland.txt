@@ -1,5 +1,5 @@
-wallace,GK,yellow
-bruce,CD,brown
-charlie,LM,brown
-donald,RM,brown
-rob,CF,yellow
+wallace,GK,yellow,pink
+bruce,CD,brown,pink
+charlie,LM,brown,pink
+donald,RM,brown,pink
+rob,CF,yellow,pink

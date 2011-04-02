@@ -1,5 +1,5 @@
-adam,GK,brown
-bob,LB,black
-charlie,RB,lightyellow
-dave,CM,black
-eddie,CF,black
+Lucas,GK,brown,pink
+Tim,LB,black,brown
+Thomas,RB,lightyellow,pink
+Sem,CM,black,pink
+Dan,CF,black,pink
