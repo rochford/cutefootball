@@ -28,6 +28,7 @@
 #include "teamSelectionFrame.h"
 #include "mainMenuFrame.h"
 #include "ingamemenuframe.h"
+#include "aboutFrame.h"
 
 MWindow::MWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -37,6 +38,7 @@ MWindow::MWindow(QWidget *parent)
 
     m_helpFrame = new helpFrame(this);
     m_inputSettingsFrame = new inputSettingsFrame(this);
+    m_aboutFrame = new aboutFrame(this);
 
     m_settingsFrame = new settingsFrame(this);
     m_mainMenuFrame = new mainMenuFrame(this);
@@ -74,6 +76,7 @@ MWindow::~MWindow()
     delete m_teamSelectionFrame;
     delete m_mainMenuFrame;
     delete m_inGameMenuFrame;
+    delete m_aboutFrame;
 }
 
 void MWindow::removeContextMenus()
@@ -103,6 +106,8 @@ void MWindow::createConnections()
             this, SLOT(showMainMenuFrame()));
     connect(uiMainWindow.actionMainMenu, SIGNAL(triggered()),
             m_pitch, SLOT(gameStop()));
+    connect(uiMainWindow.actionAbout, SIGNAL(triggered()),
+            this, SLOT(showAboutFrame()));
 
     connect(uiMainWindow.actionContinue, SIGNAL(triggered()),
             this, SLOT(hideInGameMenu()));
@@ -150,6 +155,7 @@ void MWindow::enableActions(bool gameInProgress)
     uiMainWindow.actionSettings->setEnabled(!gameInProgress);
     uiMainWindow.actionInputSettings->setEnabled(!gameInProgress);
     uiMainWindow.actionHelp->setEnabled(!gameInProgress);
+    uiMainWindow.actionAbout->setEnabled(!gameInProgress);
     uiMainWindow.actionQuit->setEnabled(true);
     uiMainWindow.actionPause->setEnabled(gameInProgress);
     uiMainWindow.actionContinue->setEnabled(gameInProgress);
@@ -199,4 +205,42 @@ void MWindow::resizeEvent(QResizeEvent *e)
     foreach(w,widgets) {
         w->resize(e->size());
     }
+}
+
+void MWindow::setOrientation(ScreenOrientation orientation)
+{
+#ifdef Q_OS_SYMBIAN
+    if (orientation != ScreenOrientationAuto) {
+#if defined(ORIENTATIONLOCK)
+        const CAknAppUiBase::TAppUiOrientation uiOrientation =
+                (orientation == ScreenOrientationLockPortrait) ? CAknAppUi::EAppUiOrientationPortrait
+                    : CAknAppUi::EAppUiOrientationLandscape;
+        CAknAppUi* appUi = dynamic_cast<CAknAppUi*> (CEikonEnv::Static()->AppUi());
+        TRAPD(error,
+            if (appUi)
+                appUi->SetOrientationL(uiOrientation);
+        );
+        Q_UNUSED(error)
+#else // ORIENTATIONLOCK
+        qWarning("'ORIENTATIONLOCK' needs to be defined on Symbian when locking the orientation.");
+#endif // ORIENTATIONLOCK
+    }
+#elif defined(Q_WS_MAEMO_5)
+    Qt::WidgetAttribute attribute;
+    switch (orientation) {
+    case ScreenOrientationLockPortrait:
+        attribute = Qt::WA_Maemo5PortraitOrientation;
+        break;
+    case ScreenOrientationLockLandscape:
+        attribute = Qt::WA_Maemo5LandscapeOrientation;
+        break;
+    case ScreenOrientationAuto:
+    default:
+        attribute = Qt::WA_Maemo5AutoOrientation;
+        break;
+    }
+    setAttribute(attribute, true);
+#else // Q_OS_SYMBIAN
+    Q_UNUSED(orientation);
+#endif // Q_OS_SYMBIAN
 }

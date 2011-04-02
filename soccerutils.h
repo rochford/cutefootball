@@ -21,7 +21,10 @@
 #define SOCCERUTILS_H
 
 #include "mainwindow.h"
+#include "Player.h"
 
+Player::Role mapPositionStringToRole(QString positionString);
+QColor skinColorMapping(QString col);
 int calculateTackleRotationFromLastAction(MWindow::Action lastAction);
 MWindow::Action calculateTackleActionFromLastAction(MWindow::Action lastAction);
 
@@ -30,7 +33,8 @@ void teamColorTransform(QPixmap &pixmap,
                         QRgb colorFrom,
                         QRgb shirtColor,
                         QRgb shortColor,
-                        QRgb hairColor);
+                        QRgb hairColor,
+                        QRgb skinColor);
 MWindow::Action calculateAction(QPointF source,
                                 QPointF destination);
 #endif // SOCCERUTILS_H

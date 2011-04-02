@@ -19,14 +19,12 @@
  */
 #include "mainMenuFrame.h"
 #include "ui_mainMenuFrame.h"
-#include "version.h"
 
 mainMenuFrame::mainMenuFrame(MWindow *parent) :
     QFrame(parent),
     ui(new Ui::mainMenuFrame)
 {
     ui->setupUi(this);
-    ui->versionLabel->setText(versionNumber.arg(KBuildNumber));
     ui->m_settingsBtn->setVisible(false);
 
     connect(parent, SIGNAL(setFrame(MWindow::Frame)),
@@ -42,6 +40,8 @@ mainMenuFrame::mainMenuFrame(MWindow *parent) :
             parent,SLOT(showHelpFrame()));
     connect(ui->actionQuit, SIGNAL(triggered()),
             parent, SLOT(close()));
+    connect(ui->actionAbout, SIGNAL(triggered()),
+            parent, SLOT(showAboutFrame()));
 }
 
 mainMenuFrame::~mainMenuFrame()

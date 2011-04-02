@@ -23,7 +23,8 @@
 #include <QString>
 #include <QObject>
 
-const int KBuildNumber = 11;
-const QString versionNumber(QObject::tr("build %1"));
+const int KMajor = 0;
+const int KMinor = 2;
+const QString KVersionNumber(QObject::tr("Version %1.%2").arg(KMajor).arg(KMinor));
 
 #endif // VERSION_H

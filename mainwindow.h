@@ -24,6 +24,7 @@
 #include <qmap.h>
 #include "ui_mainwindow.h"
 
+class aboutFrame;
 class Pitch;
 class SoundEffects;
 class settingsFrame;
@@ -39,9 +40,16 @@ class MWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    enum ScreenOrientation {
+        ScreenOrientationLockPortrait,
+        ScreenOrientationLockLandscape,
+        ScreenOrientationAuto
+    };
+
     MWindow(QWidget *parent = 0);
     virtual ~MWindow();
 
+    void setOrientation(ScreenOrientation orientation);
     Pitch* pitch() { return m_pitch; }
 
     enum Action {
@@ -93,7 +101,8 @@ public:
         TeamSelection,
         HalfTimeStatistics,
         GraphicsView,
-        InGameMenu
+        InGameMenu,
+        About
     };
 
 private:
@@ -118,6 +127,8 @@ public slots:
     void showHelpFrame(){emit setFrame(MWindow::Help);}
     void showStatisticsFrame(){emit setFrame(MWindow::HalfTimeStatistics);}
     void hideStatisticsFrame();
+    void showAboutFrame(){emit setFrame(MWindow::About);}
+    void hideAboutFrame() { emit setFrame(MWindow::MainMenu);}
     void showInGameMenu() { emit setFrame(MWindow::InGameMenu); }
     void hideInGameMenu();
     void displayHalfTimeStatistics(bool display);
@@ -139,6 +150,7 @@ private:
     InGameMenuFrame* m_inGameMenuFrame;
     mainMenuFrame* m_mainMenuFrame;
     SoundEffects* m_soundEffects;
+    aboutFrame* m_aboutFrame;
     bool m_gameInProgress;
 public:
     Ui::MainWindow uiMainWindow;

@@ -36,28 +36,8 @@
 #include "soundEffects.h"
 #include "settingsFrame.h"
 #include "cameraview.h"
+#include "soccerutils.h"
 
-Player::Role mapPositionStringToRole(QString positionString)
-{
-    QMap<QString, Player::Role> map;
-    map.insert( "GK", Player::GoalKeeper );
-
-    map.insert( "LB", Player::LeftDefence );
-    map.insert( "LD", Player::LeftCentralDefence );
-    map.insert( "CD", Player::CentralDefence );
-    map.insert( "RD", Player::RightCentralDefence );
-    map.insert( "RB", Player::RightDefence );
-
-    map.insert( "LM", Player::LeftMidfield );
-    map.insert( "CM", Player::CentralMidfield );
-    map.insert( "RM", Player::RightMidfield );
-
-    map.insert( "LF", Player::LeftAttack );
-    map.insert( "CF", Player::CentralAttack );
-    map.insert( "RF", Player::RightAttack );
-
-    return map[positionString];
-}
 
 Pitch::Pitch(const QRectF& footballGroundRect,
              QGraphicsView* view,
@@ -88,6 +68,8 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     m_scene->setBackgroundBrush(QBrush(Qt::green));
     // disable focus selection by user pressing scene items
     m_scene->setStickyFocus(true);
+
+    m_ball = new Ball(this);
 
     m_motionTimer = new QTimer(this);
     m_motionTimer->setInterval(KGameRefreshRate);
@@ -196,6 +178,8 @@ void Pitch::gameStopped()
         m_gameFSM->setInitialState(m_game->penaltiesState());
         m_gameFSM->start();
     } else {
+        m_scene->removeItem(m_ball);
+
         foreach(Player *p, m_players)
             m_scene->removeItem(p);
 
@@ -400,9 +384,6 @@ void Pitch::newGame(int homeTeam, int awayTeam)
 {
     m_game->setHalfLength(m_settingsFrame->gameLengthMinutes());
 
-    m_ball = new Ball(this);
-    m_scene->addItem(m_ball);
-
     m_homeTeam = m_teamMgr->at(homeTeam);
     m_homeTeam->newGame();
     m_awayTeam = m_teamMgr->at(awayTeam);
@@ -451,6 +432,8 @@ void Pitch::createTeamPlayers(Team *team)
         Player::Role r = mapPositionStringToRole(nameAndPosition.at(1).simplified());
         QString hairColorString = nameAndPosition.at(2).simplified();
         QColor hairColor(hairColorString);
+        QString skinColorStr = nameAndPosition.at(3).simplified();
+        QColor skinColor(skinColorMapping(skinColorStr));
 
         Player *pl(NULL);
 
@@ -460,7 +443,8 @@ void Pitch::createTeamPlayers(Team *team)
                     i+1,
                     this,
                     team,
-                    hairColor);
+                    hairColor,
+                    skinColor);
 
         } else {
             pl = new Player(
@@ -471,7 +455,8 @@ void Pitch::createTeamPlayers(Team *team)
                     team,
                     team->speed(),
                     r,
-                    hairColor);
+                    hairColor,
+                    skinColor);
         }
         pl->createPixmaps();
         pl->setPos(startPos);
