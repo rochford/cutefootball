@@ -29,8 +29,13 @@ GoalKeeper::GoalKeeper(QString name,
                        int number,
                        Pitch *pitch,
                        Team* team,
-                       QColor hairColor)
-    : Player(name,number,true,pitch,team,5.0,Player::GoalKeeper,hairColor)
+                       QColor hairColor,
+                       QColor skinColor)
+    : Player(name,number,true,pitch,
+          team,5.0,
+          Player::GoalKeeper,
+          hairColor,
+          skinColor)
 {
 
     connect(pitch->ball(), SIGNAL(shot(Team*,QPointF)),
@@ -92,9 +97,9 @@ void GoalKeeper::pixmapInsert(MWindow::Action a, QString s1, QString s2, QString
     QString n1(s), n2(s), n3(s);
     QPixmap p1, p2, p3;
 
-    teamColorTransform(p1, n1.append(s1), qRgb(255, 0, 0), goalKeeperShirtColor, goalKeeperShortColor, m_hairColor.rgb());
-    teamColorTransform(p2, n2.append(s2), qRgb(255, 0, 0), goalKeeperShirtColor, goalKeeperShortColor, m_hairColor.rgb());
-    teamColorTransform(p3, n3.append(s3), qRgb(255, 0, 0), goalKeeperShirtColor, goalKeeperShortColor, m_hairColor.rgb());
+    teamColorTransform(p1, n1.append(s1), qRgb(255, 0, 0), goalKeeperShirtColor, goalKeeperShortColor, m_hairColor.rgb(), m_skinColor.rgb());
+    teamColorTransform(p2, n2.append(s2), qRgb(255, 0, 0), goalKeeperShirtColor, goalKeeperShortColor, m_hairColor.rgb(), m_skinColor.rgb());
+    teamColorTransform(p3, n3.append(s3), qRgb(255, 0, 0), goalKeeperShirtColor, goalKeeperShortColor, m_hairColor.rgb(), m_skinColor.rgb());
 
     QList<QPixmap> list;
     list << p1 <<  p2 << p3;

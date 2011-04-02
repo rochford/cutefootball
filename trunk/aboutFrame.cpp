@@ -1,6 +1,5 @@
 #include "aboutFrame.h"
 #include "ui_aboutFrame.h"
-#include "mainwindow.h"
 #include "version.h"
 
 aboutFrame::aboutFrame(MWindow *parent) :
@@ -8,15 +7,24 @@ aboutFrame::aboutFrame(MWindow *parent) :
     uiAbout(new Ui::aboutFrame)
 {
     uiAbout->setupUi(this);
-    uiAbout->versionLabel->setText(versionNumber.arg(KMajorVersion).arg(KMinorVersion));
-    uiAbout->buttonBox->button(QDialogButtonBox::Ok)
-            ->setText(tr("Main Menu"));
+    uiAbout->versionLabel->setText(KVersionNumber);
 
-    connect(uiAbout->buttonBox, SIGNAL(accepted()), parent, SLOT(hideAboutFrame()));
-    connect(uiAbout->buttonBox, SIGNAL(rejected()), parent, SLOT(hideAboutFrame()));
+    connect(parent, SIGNAL(setFrame(MWindow::Frame)),
+            this, SLOT(showFrame(MWindow::Frame)));
+    connect(uiAbout->mainMenuBtn, SIGNAL(clicked()),
+            parent, SLOT(hideAboutFrame()));
 }
 
 aboutFrame::~aboutFrame()
 {
     delete uiAbout;
+}
+
+void aboutFrame::showFrame(MWindow::Frame f)
+{
+    qDebug() << "aboutFrame::showFrame" << f;
+    if ( f == MWindow::About )
+        showMaximized();
+    else
+        setVisible(false);
 }

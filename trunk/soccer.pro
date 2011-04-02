@@ -1,27 +1,30 @@
 #
 # Copyright 2010,2011 Timothy Rochford
 #
-#    This program is free software: you can redistribute it and/or modify
+#    CuteFootball is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
+#    CuteFootball is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with CuteFootball.  If not, see <http://www.gnu.org/licenses/>.
 #
 
 QT       += core gui
 
-TARGET = soccer
+TARGET = "5soccer"
 TEMPLATE = app
 
 TRANSLATIONS = \
     translations/soccer_fi.ts
+
+# Avoid auto screen rotation
+DEFINES += ORIENTATIONLOCK
 
 symbian {
     symbian:TARGET.UID3 = 0xEED6D15E
@@ -37,19 +40,37 @@ symbian {
 #    DEPLOYMENT += soundFiles # file1 dir1
 #    DEPLOYMENT += file1 file2 file3 file4
 
+     vendorinfo = \
+         "%{\"Timothy Rochford\"}" \
+         ":\"Timothy Rochford\""
+
     # qt ovi products
     # S60 3rd Edition: E72, E71, E66, E63, and E52
     supported_platforms = \
-        "; This application only supports certain phones" \
-        "[0x20024100], 0, 0, 0, {\"Nokia E5-00\"}" \ #E5
-        "[0x20014DD0], 0, 0, 0, {\"Nokia E72\"}" \ #E72
-        "[0x2000249B], 0, 0, 0, {\"Nokia E71\"}" \ #E71
-        "[0x2000249C], 0, 0, 0, {\"Nokia E66\"}" \ #E66
-        "[0x200025C3], 0, 0, 0, {\"Nokia E63\"}" \ #E63
-        "[0x20014DCC], 0, 0, 0, {\"Nokia E52\"}"  #E52
+        " ;Supports S60 v3.1" \
+        " [0x102032BE], 0, 0, 0, {\"SymbianProductID\"}" \
+        " ;Supports S60 v3.2" \
+        " [0x102752AE], 0, 0, 0, {\"SymbianProductID\"}"
+#
+#        "; This application only supports certain phones" \
+#        "[0x20024100], 0, 0, 0, {\"Nokia E5-00\"}" \ #E5
+#        "[0x20014DD0], 0, 0, 0, {\"Nokia E72\"}" \ #E72
+#        "[0x2000249B], 0, 0, 0, {\"Nokia E71\"}" \ #E71
+#        "[0x2000249C], 0, 0, 0, {\"Nokia E66\"}" \ #E66
+#        "[0x200025C3], 0, 0, 0, {\"Nokia E63\"}" \ #E63
+#        "[0x20014DCC], 0, 0, 0, {\"Nokia E52\"}"  #E52
+#
+    license_file = \
+        "IF  (LANGUAGE=1) ; If the language is English" \
+        "   \"lgpl.txt\"-\"\", FILETEXT, TEXTABORT" \
+        "ELSE" \
+        "   \"lgpl.txt\"-\"\", FILETEXT, TEXTABORT" \
+        "ENDIF"
 
     default_deployment.pkg_prerules -= pkg_platform_dependencies
+    my_deployment.pkg_prerules += vendorinfo
     my_deployment.pkg_prerules += supported_platforms
+    my_deployment.pkg_prerules += license_file
     DEPLOYMENT += my_deployment
 }
 
@@ -74,8 +95,8 @@ SOURCES += \
     halfstatisticsframe.cpp \
     soccerutils.cpp \
     cameraview.cpp \
+    aboutFrame.cpp \
     ingamemenuframe.cpp
-#    aboutFrame.cpp \
 
 HEADERS  += \
     mainwindow.h \
@@ -99,8 +120,8 @@ HEADERS  += \
     version.h \
     soccerutils.h \
     cameraview.h \
+    aboutFrame.h \
     ingamemenuframe.h
-#    aboutFrame.h \
 
 RESOURCES += \
     soccer.qrc \
@@ -118,8 +139,8 @@ FORMS += \
     inputSettingsFrame.ui \
     halfstatisticsframe.ui \
     screengraphicsframe.ui \
+    aboutFrame.ui \
     ingamemenuframe.ui
-#    aboutFrame.ui \
 
 OTHER_FILES += \
     teams/teams.txt \
@@ -155,12 +176,28 @@ OTHER_FILES += \
     teams/Austria.txt \
     teams/Bulgaria.txt \
     desktop.qss \
-    mobile.qss \
     teams/Ireland.txt \
     teams/Belgium.txt \
     teams/Serbia.txt \
     teams/Malta.txt \
-    soccer_package.pkg
+    teams/Vietnam.txt \
+    teams/Uruguay.txt \
+    teams/UnitedStates.txt \
+    teams/SouthAfrica.txt \
+    teams/Philippines.txt \
+    teams/Peru.txt \
+    teams/Mexico.txt \
+    teams/Malaysia.txt \
+    teams/Japan.txt \
+    teams/India.txt \
+    teams/Egypt.txt \
+    teams/China.txt \
+    teams/Brazil.txt \
+    teams/Australia.txt \
+    teams/Argentina.txt \
+    mobileQVGA.qss \
+    mobileVGA.qss \
+    info.txt
 
 # Please do not modify the following two lines. Required for deployment.
 include(deployment.pri)

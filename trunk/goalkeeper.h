@@ -36,7 +36,8 @@ public:
                         int number,
                         Pitch* pitch,
                         Team* team,
-                        QColor hairColor);
+                        QColor hairColor,
+                        QColor skinColor);
 
     // goal keepers are players too
     enum { Type = UserType + 2 };

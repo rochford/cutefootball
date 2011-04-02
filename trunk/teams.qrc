@@ -1,13 +1,18 @@
 <RCC>
     <qresource prefix="/">
-        <file>teams/teams.txt</file>
+        <file>images/flags/Vietnam.png</file>
         <file>images/flags/Andorra.png</file>
+        <file>images/flags/Argentina.png</file>
+        <file>images/flags/Australia.png</file>
         <file>images/flags/Austria.png</file>
         <file>images/flags/Belgium.png</file>
+        <file>images/flags/Brazil.png</file>
         <file>images/flags/Bulgaria.png</file>
+        <file>images/flags/China.png</file>
         <file>images/flags/Croatia.png</file>
         <file>images/flags/Czech.png</file>
         <file>images/flags/Denmark.png</file>
+        <file>images/flags/Egypt.png</file>
         <file>images/flags/England.png</file>
         <file>images/flags/Estonia.png</file>
         <file>images/flags/Finland.png</file>
@@ -16,11 +21,17 @@
         <file>images/flags/Greece.png</file>
         <file>images/flags/Hungary.png</file>
         <file>images/flags/Iceland.png</file>
+        <file>images/flags/India.png</file>
         <file>images/flags/Ireland.png</file>
         <file>images/flags/Italy.png</file>
+        <file>images/flags/Japan.png</file>
+        <file>images/flags/Malaysia.png</file>
         <file>images/flags/Malta.png</file>
+        <file>images/flags/Mexico.png</file>
         <file>images/flags/Netherlands.png</file>
         <file>images/flags/Norway.png</file>
+        <file>images/flags/Peru.png</file>
+        <file>images/flags/Philippines.png</file>
         <file>images/flags/Poland.png</file>
         <file>images/flags/Portugal.png</file>
         <file>images/flags/Romania.png</file>
@@ -29,18 +40,26 @@
         <file>images/flags/Scotland.png</file>
         <file>images/flags/Serbia.png</file>
         <file>images/flags/Slovakia.png</file>
+        <file>images/flags/SouthAfrica.png</file>
         <file>images/flags/Spain.png</file>
         <file>images/flags/Sweden.png</file>
         <file>images/flags/Switzerland.png</file>
         <file>images/flags/Turkey.png</file>
         <file>images/flags/Ukraine.png</file>
+        <file>images/flags/UnitedStates.png</file>
+        <file>images/flags/Uruguay.png</file>
         <file>teams/Andorra.txt</file>
+        <file>teams/Argentina.txt</file>
+        <file>teams/Australia.txt</file>
         <file>teams/Austria.txt</file>
         <file>teams/Belgium.txt</file>
+        <file>teams/Brazil.txt</file>
         <file>teams/Bulgaria.txt</file>
+        <file>teams/China.txt</file>
         <file>teams/Croatia.txt</file>
         <file>teams/Czech.txt</file>
         <file>teams/Denmark.txt</file>
+        <file>teams/Egypt.txt</file>
         <file>teams/England.txt</file>
         <file>teams/Estonia.txt</file>
         <file>teams/Finland.txt</file>
@@ -49,12 +68,18 @@
         <file>teams/Greece.txt</file>
         <file>teams/Hungary.txt</file>
         <file>teams/Iceland.txt</file>
+        <file>teams/India.txt</file>
         <file>teams/Ireland.txt</file>
         <file>teams/Italy.txt</file>
+        <file>teams/Japan.txt</file>
+        <file>teams/Malaysia.txt</file>
         <file>teams/Malta.txt</file>
+        <file>teams/Mexico.txt</file>
         <file>teams/Netherlands.txt</file>
         <file>teams/NorthernIreland.txt</file>
         <file>teams/Norway.txt</file>
+        <file>teams/Peru.txt</file>
+        <file>teams/Philippines.txt</file>
         <file>teams/Poland.txt</file>
         <file>teams/Portugal.txt</file>
         <file>teams/Romania.txt</file>
@@ -63,11 +88,16 @@
         <file>teams/Scotland.txt</file>
         <file>teams/Serbia.txt</file>
         <file>teams/Slovakia.txt</file>
+        <file>teams/SouthAfrica.txt</file>
         <file>teams/Spain.txt</file>
         <file>teams/Sweden.txt</file>
         <file>teams/Switzerland.txt</file>
         <file>teams/Turkey.txt</file>
         <file>teams/Ukraine.txt</file>
+        <file>teams/UnitedStates.txt</file>
+        <file>teams/Uruguay.txt</file>
+        <file>teams/Vietnam.txt</file>
         <file>teams/Wales.txt</file>
+        <file>teams/teams.txt</file>
     </qresource>
 </RCC>

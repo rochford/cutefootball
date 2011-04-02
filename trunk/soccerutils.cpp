@@ -21,9 +21,42 @@
 #include "soccerutils.h"
 #include "compileTimeSettings.h"
 
+Player::Role mapPositionStringToRole(QString positionString)
+{
+    QMap<QString, Player::Role> map;
+    map.insert( "GK", Player::GoalKeeper );
 
+    map.insert( "LB", Player::LeftDefence );
+    map.insert( "LD", Player::LeftCentralDefence );
+    map.insert( "CD", Player::CentralDefence );
+    map.insert( "RD", Player::RightCentralDefence );
+    map.insert( "RB", Player::RightDefence );
 
-void teamColorTransform(QPixmap &pixmap, QString pix, QRgb colorFrom, QRgb shirtColor, QRgb shortColor, QRgb hairColor)
+    map.insert( "LM", Player::LeftMidfield );
+    map.insert( "CM", Player::CentralMidfield );
+    map.insert( "RM", Player::RightMidfield );
+
+    map.insert( "LF", Player::LeftAttack );
+    map.insert( "CF", Player::CentralAttack );
+    map.insert( "RF", Player::RightAttack );
+
+    return map[positionString];
+}
+
+QColor skinColorMapping(QString col)
+{
+    if (col == "pink")
+        return QColor(255,200,156);
+    else if (col == "tan")
+        return QColor(242,160,94);
+    else // brown
+        return QColor(146,96,56);
+}
+
+void teamColorTransform(QPixmap &pixmap, QString pix,
+                        QRgb colorFrom,
+                        QRgb shirtColor, QRgb shortColor,
+                        QRgb hairColor, QRgb skinColor)
 {
     QImage img(pix);
     QRect rect = img.rect();
@@ -36,6 +69,8 @@ void teamColorTransform(QPixmap &pixmap, QString pix, QRgb colorFrom, QRgb shirt
                 img.setPixel(QPoint(w,h), shortColor);
             else if (qRed(rgb) == 195 && qBlue(rgb) == 74 && qGreen(rgb) == 74)
                 img.setPixel(QPoint(w,h), hairColor);
+            else if (qRed(rgb) == 255 && qBlue(rgb) == 156 && qGreen(rgb) == 200)
+                img.setPixel(QPoint(w,h), skinColor);
         }
     }
     pixmap = QPixmap::fromImage(img);

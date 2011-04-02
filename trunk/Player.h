@@ -60,7 +60,8 @@ public:
            Team* team,
            qreal speed,
            Player::Role role,
-           QColor hairColor);
+           QColor hairColor,
+           QColor skinColor);
     virtual ~Player();
 
     enum { Type = UserType + 2 };
@@ -161,6 +162,7 @@ protected:
     bool m_captain;
 
     QColor m_hairColor;
+    QColor m_skinColor;
 
     // Displaying player name/number:
     QString m_toolTipText;

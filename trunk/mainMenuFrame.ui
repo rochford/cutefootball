@@ -31,14 +31,14 @@
      <x>0</x>
      <y>0</y>
      <width>321</width>
-     <height>241</height>
+     <height>250</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout">
     <property name="spacing">
      <number>3</number>
     </property>
-    <item row="1" column="1">
+    <item row="0" column="1">
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
        <spacer name="verticalSpacer_3">
@@ -82,6 +82,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="m_aboutBtn">
+        <property name="text">
+         <string>About</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="m_quitBtn">
         <property name="text">
          <string>Quit</string>
@@ -103,7 +110,7 @@
       </item>
      </layout>
     </item>
-    <item row="1" column="0">
+    <item row="0" column="0">
      <spacer name="horizontalSpacer">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
@@ -116,7 +123,7 @@
       </property>
      </spacer>
     </item>
-    <item row="1" column="2">
+    <item row="0" column="2">
      <spacer name="horizontalSpacer_2">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
@@ -129,89 +136,11 @@
       </property>
      </spacer>
     </item>
-    <item row="0" column="1">
-     <spacer name="verticalSpacer">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="3" column="0">
+    <item row="2" column="0">
      <layout class="QVBoxLayout" name="verticalLayout_2"/>
     </item>
-    <item row="2" column="2">
-     <spacer name="verticalSpacer_4">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="0" column="2">
-     <layout class="QVBoxLayout" name="verticalLayout_3">
-      <item>
-       <widget class="QLabel" name="versionLabel">
-        <property name="text">
-         <string notr="true">XXX</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="verticalSpacer_5">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-     </layout>
-    </item>
-    <item row="2" column="0">
-     <layout class="QVBoxLayout" name="verticalLayout_4">
-      <item>
-       <spacer name="verticalSpacer_6">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QLabel" name="copyrightLabel">
-        <property name="text">
-         <string notr="true">Copyright 2011,
-Tim Rochford</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
-        </property>
-       </widget>
-      </item>
-     </layout>
+    <item row="1" column="0">
+     <layout class="QVBoxLayout" name="verticalLayout_4"/>
     </item>
    </layout>
   </widget>
@@ -324,6 +253,22 @@ Tim Rochford</string>
     <hint type="sourcelabel">
      <x>120</x>
      <y>146</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_aboutBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>actionAbout</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>160</x>
+     <y>159</y>
     </hint>
     <hint type="destinationlabel">
      <x>-1</x>

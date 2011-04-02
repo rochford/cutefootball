@@ -59,6 +59,7 @@ int main(int argc, char *argv[])
 
     MWindow window;
 #if defined(Q_OS_SYMBIAN)
+    window.setOrientation(MWindow::ScreenOrientationLockLandscape);
     window.showFullScreen();
 #else
     window.show();
@@ -72,7 +73,7 @@ int main(int argc, char *argv[])
 void loadStyleSheet(QApplication& app)
 {
 #if defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR)
-    QFile f(":/mobile.qss");
+    QFile f(":/mobileQVGA.qss");
 #else
     QFile f(":/desktop.qss");
 #endif
