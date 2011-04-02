@@ -1,5 +1,5 @@
-adam,GK,black
-bob,CD,black
-charlie,LM,yellow
-dave,RM,yellow
-eddie,CF,brown
+Alejandro,GK,black,tan
+Juan,CD,black,tan
+Miguel,LM,yellow,tan
+Eduardo,RM,yellow,tan
+Fernando,CF,brown,tan
