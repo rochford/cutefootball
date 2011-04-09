@@ -24,13 +24,14 @@
 #include <QColor>
 #include <QString>
 #include <QList>
+#include <qmap.h>
 
 class Team;
 
 class TeamManager {
 public:
-    TeamManager() {};
-    ~TeamManager() {};
+    TeamManager();
+    ~TeamManager();
     QList<Team*> teams() { return m_teams; }
     Team* at(int index) { return m_teams.at(index); }
     void createTeams();
@@ -43,8 +44,10 @@ private:
         ShortColor,
         PlayerSpeed
     };
+   QString translateTeamName(QString untranslated);
 
    QList<Team*> m_teams;
+   QMap<QString,QString> m_teamNameTranslations;
 };
 
 class Team : public QObject {

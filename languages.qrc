@@ -1,7 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>translations/soccer_fr.qm</file>
         <file>translations/soccer_fi.qm</file>
-        <file>translations/soccer_de.qm</file>
     </qresource>
 </RCC>

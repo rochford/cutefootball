@@ -26,6 +26,9 @@ TRANSLATIONS = \
 # Avoid auto screen rotation
 DEFINES += ORIENTATIONLOCK
 
+# Symbian^3, touch ui and VGA resolution support
+# DEFINES += SOCCER_VGA
+
 symbian {
     symbian:TARGET.UID3 = 0xEED6D15E
 
@@ -44,14 +47,14 @@ symbian {
          "%{\"Timothy Rochford\"}" \
          ":\"Timothy Rochford\""
 
-    # qt ovi products
-    # S60 3rd Edition: E72, E71, E66, E63, and E52
     supported_platforms = \
-        " ;Supports S60 v3.1" \
-        " [0x102032BE], 0, 0, 0, {\"SymbianProductID\"}" \
-        " ;Supports S60 v3.2" \
-        " [0x102752AE], 0, 0, 0, {\"SymbianProductID\"}"
+        ";Supports S60 v3.1" \
+        "[0x102032BE], 0, 0, 0, {\"SymbianProductID\"}" \
+        ";Supports S60 v3.2" \
+        "[0x102752AE], 0, 0, 0, {\"SymbianProductID\"}"
 #
+#       qt ovi products
+#       S60 3rd Edition: E72, E71, E66, E63, and E52
 #        "; This application only supports certain phones" \
 #        "[0x20024100], 0, 0, 0, {\"Nokia E5-00\"}" \ #E5
 #        "[0x20014DD0], 0, 0, 0, {\"Nokia E72\"}" \ #E72
@@ -67,10 +70,18 @@ symbian {
         "   \"lgpl.txt\"-\"\", FILETEXT, TEXTABORT" \
         "ENDIF"
 
+     embedded_deployments = \
+         "; Embed Qt dependencies" \
+         "IF NOT(0x2001E62D)" \
+         "@\"c:/QtSDK/Symbian/sis/Symbian^1/Qt/4.7.1/qt_installer.sis\",(0x2001E62D)" \
+         "ENDIF"
+
     default_deployment.pkg_prerules -= pkg_platform_dependencies
     my_deployment.pkg_prerules += vendorinfo
     my_deployment.pkg_prerules += supported_platforms
-    my_deployment.pkg_prerules += license_file
+#    my_deployment.pkg_prerules += license_file
+# not needed
+#    my_deployment.pkg_prerules += embedded_deployments
     DEPLOYMENT += my_deployment
 }
 
@@ -121,7 +132,8 @@ HEADERS  += \
     soccerutils.h \
     cameraview.h \
     aboutFrame.h \
-    ingamemenuframe.h
+    ingamemenuframe.h \
+    teamNameTranslations.h
 
 RESOURCES += \
     soccer.qrc \
@@ -197,7 +209,8 @@ OTHER_FILES += \
     teams/Argentina.txt \
     mobileQVGA.qss \
     mobileVGA.qss \
-    info.txt
+    info.txt \
+    5soccer_package.pkg
 
 # Please do not modify the following two lines. Required for deployment.
 include(deployment.pri)

@@ -1,0 +1,11 @@
+; Language
+&EN
+
+; SIS header: name, uid, version
+#{"5 soccer package"},(0xEED6D15F),0,3,0
+
+%{"Timothy Rochford"}
+:"Timothy Rochford"
+
+@"c:/QtSDK/Symbian/sis/Symbian^1/Qt/4.7.1/qt_installer.sis",(0x2001E62D)
+@"5soccer.sis",(0xEED6D15E)

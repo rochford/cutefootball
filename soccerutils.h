@@ -35,6 +35,10 @@ void teamColorTransform(QPixmap &pixmap,
                         QRgb shortColor,
                         QRgb hairColor,
                         QRgb skinColor);
+
 MWindow::Action calculateAction(QPointF source,
                                 QPointF destination);
+
+
+
 #endif // SOCCERUTILS_H

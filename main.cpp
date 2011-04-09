@@ -26,13 +26,14 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    QSplashScreen* splash = new QSplashScreen;
-#if defined(Q_OS_SYMBIAN)
+    QSplashScreen* splash = new QSplashScreen(QPixmap(":/images/splash240x320.svg"));
+#if defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR)
     splash->showFullScreen();
 #else
     splash->show();
 #endif
 
+#if 0
     QSize screenSize(splash->size());
     if (screenSize == QSize(240,320)) {
         splash->setPixmap(QPixmap(":/images/splash240x320.svg"));
@@ -46,9 +47,9 @@ int main(int argc, char *argv[])
         splash->setPixmap(px.scaled(screenSize));
     } else {
         QPixmap px = QPixmap(":/images/splash100x100.svg");
-        splash->setPixmap(px.scaled(screenSize));
+        splash->setPixmap(px);
     }
-
+#endif // 0
     loadStyleSheet(a);
 
     QString locale(QString("soccer_") + QLocale::system().name());
@@ -58,8 +59,10 @@ int main(int argc, char *argv[])
     a.installTranslator(&appTranslator);
 
     MWindow window;
-#if defined(Q_OS_SYMBIAN)
+#if defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR)
+#if defined(SOCCER_VGA)
     window.setOrientation(MWindow::ScreenOrientationLockLandscape);
+#endif // defined(SOCCER_VGA)
     window.showFullScreen();
 #else
     window.show();
@@ -73,7 +76,11 @@ int main(int argc, char *argv[])
 void loadStyleSheet(QApplication& app)
 {
 #if defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR)
+#if defined(SOCCER_VGA)
+    QFile f(":/mobileVGA.qss");
+#else
     QFile f(":/mobileQVGA.qss");
+#endif
 #else
     QFile f(":/desktop.qss");
 #endif
