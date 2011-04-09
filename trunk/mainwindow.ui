@@ -105,7 +105,7 @@
   </action>
   <action name="actionMainMenu">
    <property name="text">
-    <string>MainMenu</string>
+    <string>Main Menu</string>
    </property>
   </action>
  </widget>

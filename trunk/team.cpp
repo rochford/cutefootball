@@ -22,7 +22,67 @@
 #include <QtGlobal>
 // #include "compileTimeSettings.h" // KPlayerDefaultSpeed
 #include <QDebug>
+#include "soccerutils.h"
+#include "teamNameTranslations.h"
 
+TeamManager::TeamManager()
+{
+    m_teamNameTranslations.insert("Andorra", KAndorra);
+    m_teamNameTranslations.insert("Argentina", KArgentina);
+    m_teamNameTranslations.insert("Australia", KAustralia);
+    m_teamNameTranslations.insert("Austria", KAustria);
+    m_teamNameTranslations.insert("Belgium", KBelgium);
+    m_teamNameTranslations.insert("Brazil", KBrazil);
+    m_teamNameTranslations.insert("Bulgaria", KBulgaria);
+    m_teamNameTranslations.insert("China", KChina);
+    m_teamNameTranslations.insert("Croatia", KCroatia);
+    m_teamNameTranslations.insert("Czech", KCzech);
+    m_teamNameTranslations.insert("Denmark", KDenmark);
+    m_teamNameTranslations.insert("Egypt", KEgypt);
+    m_teamNameTranslations.insert("England", KEngland);
+    m_teamNameTranslations.insert("Estonia", KEstonia);
+    m_teamNameTranslations.insert("Finland", KFinland);
+    m_teamNameTranslations.insert("France", KFrance);
+    m_teamNameTranslations.insert("Germany", KGermany);
+    m_teamNameTranslations.insert("Greece", KGreece);
+    m_teamNameTranslations.insert("Hungary", KHungary);
+    m_teamNameTranslations.insert("Iceland", KIceland);
+    m_teamNameTranslations.insert("India", KIndia);
+    m_teamNameTranslations.insert("Ireland", KIreland);
+    m_teamNameTranslations.insert("Italy", KItaly);
+    m_teamNameTranslations.insert("Japan", KJapan);
+    m_teamNameTranslations.insert("Malaysia", KMalaysia);
+    m_teamNameTranslations.insert("Malta", KMalta);
+    m_teamNameTranslations.insert("Mexico", KMexico);
+    m_teamNameTranslations.insert("Netherlands", KNetherlands);
+    m_teamNameTranslations.insert("NorthernIreland", KNorthernIreland);
+    m_teamNameTranslations.insert("Norway", KNorway);
+    m_teamNameTranslations.insert("Peru", KPeru);
+    m_teamNameTranslations.insert("Philippines", KPhilippines);
+    m_teamNameTranslations.insert("Poland", KPoland);
+    m_teamNameTranslations.insert("Portugal", KPortugal);
+    m_teamNameTranslations.insert("Romania", KRomania);
+    m_teamNameTranslations.insert("Russia", KRussia);
+    m_teamNameTranslations.insert("SanMarino", KSanMarino);
+    m_teamNameTranslations.insert("Scotland", KScotland);
+    m_teamNameTranslations.insert("Serbia", KSerbia);
+    m_teamNameTranslations.insert("Slovakia", KSlovakia);
+    m_teamNameTranslations.insert("SouthAfrica", KSouthAfrica);
+    m_teamNameTranslations.insert("Spain", KSpain);
+    m_teamNameTranslations.insert("Sweden", KSweden);
+    m_teamNameTranslations.insert("Switzerland", KSwitzerland);
+    m_teamNameTranslations.insert("Turkey", KTurkey);
+    m_teamNameTranslations.insert("Ukraine", KUkraine);
+    m_teamNameTranslations.insert("UnitedStates", KUnitedStates);
+    m_teamNameTranslations.insert("Uruguay", KUruguay);
+    m_teamNameTranslations.insert("Vietnam", KVietnam);
+    m_teamNameTranslations.insert("Wales", KWales);
+}
+
+TeamManager::~TeamManager()
+{
+    m_teamNameTranslations.clear();
+}
 
 void TeamManager::createTeams()
 {
@@ -41,7 +101,7 @@ void TeamManager::createTeams()
         QList<QByteArray> values = line.split(',');
         int ranking = values.at(Ranking).simplified().toInt();
         QString briefName = values.at(BriefName).simplified();
-        QString name = values.at(FullName).simplified();
+        QString name = translateTeamName(values.at(FullName).simplified());
 
         QString shirtColorString = values.at(ShirtColor).simplified();
         QString shortColorString = values.at(ShortColor).simplified();
@@ -60,6 +120,12 @@ void TeamManager::createTeams()
         m_teams.append(t);
     }
     file.close();
+}
+
+
+QString TeamManager::translateTeamName(QString untranslated)
+{
+    return m_teamNameTranslations[untranslated];
 }
 
 

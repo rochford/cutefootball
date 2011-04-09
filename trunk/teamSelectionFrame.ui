@@ -88,7 +88,7 @@
         <item row="5" column="1">
          <widget class="QLabel" name="m_awayTeamRank">
           <property name="text">
-           <string>World Rank: %1</string>
+           <string notr="true">Rank: %1</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -142,7 +142,7 @@
         <item row="5" column="0">
          <widget class="QLabel" name="m_homeTeamRank">
           <property name="text">
-           <string>World Rank: %1</string>
+           <string notr="true">Rank: %1</string>
           </property>
          </widget>
         </item>
