@@ -51,12 +51,10 @@ void ScreenGraphics::update(QString s)
 void ScreenGraphics::setTeams(Team* home, Team* away)
 {
     ui->SGFhomeTeamFlag->setPixmap(
-                QPixmap(QString(":/images/flags/")
-                        +home->fullName()+".png").scaled(20,15));
+                QPixmap(home->flag()).scaled(20,15));
     ui->SGFhomeTeamName->setText(home->briefName());
     ui->SGFawayTeamFlag->setPixmap(
-                QPixmap(QString(":/images/flags/")
-                        +away->fullName()+".png").scaled(20,15));
+                QPixmap(away->flag()).scaled(20,15));
     ui->SGFawayTeamName->setText(away->briefName());
 }
 

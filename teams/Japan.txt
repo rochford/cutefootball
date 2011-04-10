@@ -1,5 +1,5 @@
 Yuuki,GK,black,tan
 Haruto,CD,black,tan
-Souta,LM,yellow,tan
-Yuuto,RM,yellow,tan
-Haruki,CF,brown,tan
+Souta,LM,black,tan
+Yuuto,RM,black,tan
+Haruki,CF,black,tan

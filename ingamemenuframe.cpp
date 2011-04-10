@@ -48,8 +48,8 @@ void InGameMenuFrame::showFrame(MWindow::Frame f)
     if ( f == MWindow::InGameMenu ) {
         setHomeTeamGoals(m_pitch.homeTeam()->m_goals);
         setAwayTeamGoals(m_pitch.awayTeam()->m_goals);
-        setHomeTeamFlag(QString(":/images/flags/") + m_pitch.homeTeam()->fullName() + ".png");
-        setAwayTeamFlag(QString(":/images/flags/") + m_pitch.awayTeam()->fullName() + ".png");
+        setHomeTeamFlag(m_pitch.homeTeam()->flag());
+        setAwayTeamFlag(m_pitch.awayTeam()->flag());
         showMaximized();
     } else
         setVisible(false);

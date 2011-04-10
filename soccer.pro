@@ -132,8 +132,8 @@ HEADERS  += \
     soccerutils.h \
     cameraview.h \
     aboutFrame.h \
-    ingamemenuframe.h \
-    teamNameTranslations.h
+    ingamemenuframe.h
+#    teamNameTranslations.h
 
 RESOURCES += \
     soccer.qrc \

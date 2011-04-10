@@ -1,5 +1,5 @@
-adam,GK,red,pink
-bob,CD,yellow,pink
-charlie,LM,brown,pink
-dave,RM,brown,pink
-eddie,CF,brown,pink
+Jack,GK,red,pink
+Seán,CD,yellow,pink
+Daniel,LM,brown,pink
+Conor,RM,brown,pink
+Ryan,CF,brown,pink

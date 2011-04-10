@@ -1,5 +1,5 @@
-adam,GK,black,pink
-bob,CD,black,pink
-charlie,LM,black,pink
-dave,RM,black,pink
-eddie,CF,black,pink
+Tomáš,GK,black,pink
+Jakub,CD,black,pink
+Samuel,LM,black,pink
+Patrik,RM,black,pink
+Matúš,CF,black,pink
