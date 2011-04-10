@@ -1,5 +1,5 @@
-adam,GK,black,tan
-bob,CD,black,tan
-charlie,LM,yellow,tan
-dave,RM,yellow,tan
-eddie,CF,brown,tan
+Omar,GK,black,tan
+Ahmed,CD,black,tan
+Abdallah,LM,black,tan
+Ali,RM,brown,tan
+Khaled,CF,brown,tan

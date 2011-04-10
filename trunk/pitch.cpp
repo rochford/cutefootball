@@ -57,11 +57,8 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     m_soundEffects(se),
     m_teamMgr(new TeamManager)
 {
-#if defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR)
     m_view->scale(1.4,1.4);
-#else
-    m_view->scale(7.0,7.0);
-#endif
+
     m_view->setScene(m_scene);
     m_cameraView = new CameraView(*m_view, this);
 
@@ -108,6 +105,9 @@ Pitch::~Pitch()
     delete m_ball;
     delete m_teamMgr;
     delete m_cameraView;
+
+    while (!m_adverts.isEmpty())
+        delete m_adverts.takeFirst();
 }
 
 void Pitch::centerOn(QPointF point)
@@ -216,14 +216,37 @@ void Pitch::setPiece(Team* originatingTeam, SetPiece s, QPointF foulLocation)
         break;
     }
 }
+void Pitch::layoutPitchBorder()
+{
+    QPixmap advertVertical(m_footballPitch->rect().height(),10);
+    advertVertical.fill(Qt::yellow);
+    QPixmap advertHorizontal(m_footballPitch->rect().width(),10);
+    advertHorizontal.fill(Qt::yellow);
+    // the right adverts
+    QGraphicsPixmapItem* advert = m_scene->addPixmap(advertVertical);
+    advert->setPos(m_footballPitch->rect().right()+10, m_footballPitch->rect().top());
+    advert->setRotation(90.0);
+    m_adverts.append(advert);
+    advert = NULL;
+    // the top adverts
+    advert = m_scene->addPixmap(advertHorizontal);
+    advert->setPos(m_footballPitch->rect().left(), m_footballPitch->rect().top()-10);
+    m_adverts.append(advert);
+    advert = NULL;
+    // the left adverts
+    advert = m_scene->addPixmap(advertVertical);
+    advert->setRotation(-90.0);
+    advert->setPos(m_footballPitch->rect().left()-10, m_footballPitch->rect().bottom());
+    m_adverts.append(advert);
+    advert = NULL;
+    // the bottom adverts
+    advert = m_scene->addPixmap(advertHorizontal);
+    advert->setPos(m_footballPitch->rect().left(), m_footballPitch->rect().bottom());
+    m_adverts.append(advert);
+}
 
 void Pitch::layoutPitch()
 {
-    QPixmap advertTop(":/images/advertTop.png");
-    QPixmap advertRight(":/images/advertRight.png");
-    QPixmap advertLeft(":/images/advertLeft.png");
-    QPixmap advertBottom(":/images/advertBottom.png");
-
     const int KPitchBoundaryWidth = 40;
     QPixmap pitchUnscaled(QString(":/images/pitch3.png"));
     m_grass = new QGraphicsPixmapItem(pitchUnscaled /* pitchScaled */);
@@ -234,34 +257,8 @@ void Pitch::layoutPitch()
                                        m_scene->width()-(KPitchBoundaryWidth*2), m_scene->height()-(KPitchBoundaryWidth*2),
                                     KWhitePaintPen,
                                     QBrush(Qt::white,Qt::NoBrush) );
-    // top line adverts
-    QPen advertPen(QBrush(advertTop),10);
-    m_scene->addLine(m_footballPitch->rect().left(), (m_footballPitch->rect().top()-advertPen.width()),
-                     (m_scene->width() / 2)-60-KWhitePaintPen.width()*4,(m_footballPitch->rect().top()-advertPen.width()),
-                     advertPen);
-    m_scene->addLine((m_scene->width() / 2)+60+KWhitePaintPen.width()*4, (m_footballPitch->rect().top()-advertPen.width()),
-                     m_footballPitch->rect().right(),(m_footballPitch->rect().top()-advertPen.width()),
-                     advertPen);
-    // bottom line adverts
-    advertPen = QPen(QBrush(advertBottom),10);
-    m_scene->addLine(m_footballPitch->rect().left(), (m_footballPitch->rect().bottom()+advertPen.width()),
-                     (m_scene->width() / 2)-60-KWhitePaintPen.width()*4,(m_footballPitch->rect().bottom()+advertPen.width()),
-                     advertPen);
-    m_scene->addLine((m_scene->width() / 2)+60+KWhitePaintPen.width()*4, (m_footballPitch->rect().bottom()+advertPen.width()),
-                     m_footballPitch->rect().right(),(m_footballPitch->rect().bottom()+advertPen.width()),
-                     advertPen);
 
-    // right line adverts
-    advertPen = QPen(QBrush(advertRight),10);
-    m_scene->addLine(m_footballPitch->rect().right()+advertPen.width(), (m_footballPitch->rect().top()-advertPen.width()),
-                     m_footballPitch->rect().right()+advertPen.width(), (m_footballPitch->rect().bottom()+advertPen.width()),
-                     advertPen);
-    // left line adverts
-    advertPen = QPen(QBrush(advertLeft),10);
-    m_scene->addLine(m_footballPitch->rect().left()-advertPen.width(), (m_footballPitch->rect().top()-advertPen.width()),
-                     m_footballPitch->rect().left()-advertPen.width(), (m_footballPitch->rect().bottom()+advertPen.width()),
-                     advertPen);
-
+    layoutPitchBorder();
 
     // half way line
     m_centerLine = m_scene->addLine(m_footballPitch->rect().left(), (m_footballPitch->rect().height()/2.0)+KPitchBoundaryWidth,
@@ -461,8 +458,6 @@ void Pitch::createTeamPlayers(Team *team)
         pl->createPixmaps();
         pl->setPos(startPos);
 
-        if (i==1)
-            pl->setCaptain();
         m_players.append(pl);
         m_scene->addItem(pl);
         i++;

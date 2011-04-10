@@ -1,5 +1,5 @@
-adam,GK,black,pink
-bob,CD,black,pink
-charlie,LM,black,pink
-dave,RM,black,pink
-eddie,CF,black,pink
+Georgios,GK,black,pink
+Dimitrios,CD,black,pink
+Ioannis,LM,black,pink
+Nikolaos,RM,black,pink
+Christos,CF,black,pink

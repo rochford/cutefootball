@@ -165,252 +165,252 @@
         <translation>Rangaistuspotkut</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="22"/>
+        <location filename="../team.cpp" line="78"/>
         <source>Andorra</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="23"/>
+        <location filename="../team.cpp" line="79"/>
         <source>Argentina</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="24"/>
+        <location filename="../team.cpp" line="80"/>
         <source>Australia</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="25"/>
+        <location filename="../team.cpp" line="81"/>
         <source>Austria</source>
         <translation>Itävalta</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="26"/>
+        <location filename="../team.cpp" line="82"/>
         <source>Belgium</source>
         <translation>Belgia</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="27"/>
+        <location filename="../team.cpp" line="83"/>
         <source>Brazil</source>
         <translation>Brasilia</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="28"/>
+        <location filename="../team.cpp" line="84"/>
         <source>Bulgaria</source>
         <translation>Bulgaria</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="29"/>
+        <location filename="../team.cpp" line="85"/>
         <source>China</source>
         <translation>Kiina</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="30"/>
+        <location filename="../team.cpp" line="86"/>
         <source>Croatia</source>
         <translation>Kroatia</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="31"/>
+        <location filename="../team.cpp" line="87"/>
         <source>Czech</source>
         <translation>Tšekin</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="32"/>
+        <location filename="../team.cpp" line="88"/>
         <source>Denmark</source>
         <translation>Tanska</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="33"/>
+        <location filename="../team.cpp" line="89"/>
         <source>Egypt</source>
         <translation>Egypti</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="34"/>
+        <location filename="../team.cpp" line="90"/>
         <source>England</source>
         <translation>Englanti</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="35"/>
+        <location filename="../team.cpp" line="91"/>
         <source>Estonia</source>
         <translation>Viro</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="36"/>
+        <location filename="../team.cpp" line="92"/>
         <source>Finland</source>
         <translation>Suomi</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="37"/>
+        <location filename="../team.cpp" line="93"/>
         <source>France</source>
         <translation>Ranska</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="38"/>
+        <location filename="../team.cpp" line="94"/>
         <source>Germany</source>
         <translation>Saksa</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="39"/>
+        <location filename="../team.cpp" line="95"/>
         <source>Greece</source>
         <translation>Kreikka</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="40"/>
+        <location filename="../team.cpp" line="96"/>
         <source>Hungary</source>
         <translation>Unkari</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="41"/>
+        <location filename="../team.cpp" line="97"/>
         <source>Iceland</source>
         <translation>Islanti</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="42"/>
+        <location filename="../team.cpp" line="98"/>
         <source>India</source>
         <translation>Intia</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="43"/>
+        <location filename="../team.cpp" line="99"/>
         <source>Ireland</source>
         <translation>Irlanti</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="44"/>
+        <location filename="../team.cpp" line="100"/>
         <source>Italy</source>
         <translation>Italia</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="45"/>
+        <location filename="../team.cpp" line="101"/>
         <source>Japan</source>
         <translation>Japani</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="46"/>
+        <location filename="../team.cpp" line="102"/>
         <source>Malaysia</source>
         <translation>Malesia</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="47"/>
+        <location filename="../team.cpp" line="103"/>
         <source>Malta</source>
         <translation>Malta</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="48"/>
+        <location filename="../team.cpp" line="104"/>
         <source>Mexico</source>
         <translation>Meksiko</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="49"/>
+        <location filename="../team.cpp" line="105"/>
         <source>Netherlands</source>
         <translation>Alankomaat</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="50"/>
+        <location filename="../team.cpp" line="106"/>
         <source>NorthernIreland</source>
-        <translation></translation>
+        <translation>P. Irlanti</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="51"/>
+        <location filename="../team.cpp" line="107"/>
         <source>Norway</source>
         <translation>Norja</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="52"/>
+        <location filename="../team.cpp" line="108"/>
         <source>Peru</source>
         <translation>Peru</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="53"/>
+        <location filename="../team.cpp" line="109"/>
         <source>Philippines</source>
         <translation>Filippiinit</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="54"/>
+        <location filename="../team.cpp" line="110"/>
         <source>Poland</source>
         <translation>Puola</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="55"/>
+        <location filename="../team.cpp" line="111"/>
         <source>Portugal</source>
         <translation>Portugali</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="56"/>
+        <location filename="../team.cpp" line="112"/>
         <source>Romania</source>
         <translation>Romania</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="57"/>
+        <location filename="../team.cpp" line="113"/>
         <source>Russia</source>
         <translation>Venäjä</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="58"/>
+        <location filename="../team.cpp" line="114"/>
         <source>SanMarino</source>
-        <translation></translation>
+        <translation>San Marino</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="59"/>
+        <location filename="../team.cpp" line="115"/>
         <source>Scotland</source>
         <translation>Skotlanti</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="60"/>
+        <location filename="../team.cpp" line="116"/>
         <source>Serbia</source>
         <translation>Serbia</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="61"/>
+        <location filename="../team.cpp" line="117"/>
         <source>Slovakia</source>
         <translation>Slovakia</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="62"/>
+        <location filename="../team.cpp" line="118"/>
         <source>SouthAfrica</source>
         <translation>Etelä-Afrikka</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="63"/>
+        <location filename="../team.cpp" line="119"/>
         <source>Spain</source>
         <translation>Espanja</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="64"/>
+        <location filename="../team.cpp" line="120"/>
         <source>Sweden</source>
         <translation>Ruotsi</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="65"/>
+        <location filename="../team.cpp" line="121"/>
         <source>Switzerland</source>
         <translation>Sveitsi</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="66"/>
+        <location filename="../team.cpp" line="122"/>
         <source>Turkey</source>
         <translation>Turkki</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="67"/>
+        <location filename="../team.cpp" line="123"/>
         <source>Ukraine</source>
         <translation>Ukraina</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="68"/>
+        <location filename="../team.cpp" line="124"/>
         <source>UnitedStates</source>
         <translation>Yhdysvallat</translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="69"/>
+        <location filename="../team.cpp" line="125"/>
         <source>Uruguay</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="70"/>
+        <location filename="../team.cpp" line="126"/>
         <source>Vietnam</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../teamNameTranslations.h" line="71"/>
+        <location filename="../team.cpp" line="127"/>
         <source>Wales</source>
         <translation></translation>
     </message>
@@ -423,20 +423,20 @@
 <context>
     <name>TeamSelectionFrame</name>
     <message>
-        <location filename="../teamSelectionFrame.cpp" line="33"/>
+        <location filename="../teamSelectionFrame.cpp" line="36"/>
         <source>Play</source>
         <translation>Pelaa</translation>
     </message>
     <message>
-        <location filename="../teamSelectionFrame.cpp" line="35"/>
+        <location filename="../teamSelectionFrame.cpp" line="38"/>
         <source>Main Menu</source>
         <translation>Päävalikko</translation>
     </message>
     <message>
-        <location filename="../teamSelectionFrame.cpp" line="79"/>
-        <location filename="../teamSelectionFrame.cpp" line="86"/>
+        <location filename="../teamSelectionFrame.cpp" line="81"/>
+        <location filename="../teamSelectionFrame.cpp" line="88"/>
         <source>Rank: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Sijoitus: %1</translation>
     </message>
 </context>
 <context>

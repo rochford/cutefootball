@@ -129,6 +129,7 @@ signals:
 
 private:
     void createTeamPlayers(Team *team);
+    void layoutPitchBorder();
     void layoutPitch();
     void setPlayerDefendZone(Player *p);
 
@@ -174,6 +175,9 @@ private:
 
     CameraView* m_cameraView;
     QGraphicsProxyWidget *m_screenGraphicsFrameProxy;
+
+    // list of advert boards
+    QList<QGraphicsPixmapItem*> m_adverts;
 };
 
 #endif // PITCH_H

@@ -24,7 +24,7 @@
 #include <QColor>
 #include <QString>
 #include <QList>
-#include <qmap.h>
+//#include <qmap.h>
 
 class Team;
 
@@ -35,6 +35,7 @@ public:
     QList<Team*> teams() { return m_teams; }
     Team* at(int index) { return m_teams.at(index); }
     void createTeams();
+    static QString translateTeamName(QString untranslated);
 private:
     enum TeamFileFormat {
         Ranking = 0,
@@ -44,10 +45,9 @@ private:
         ShortColor,
         PlayerSpeed
     };
-   QString translateTeamName(QString untranslated);
+
 
    QList<Team*> m_teams;
-   QMap<QString,QString> m_teamNameTranslations;
 };
 
 class Team : public QObject {
@@ -62,6 +62,7 @@ public:
          QColor shortColor,
          int playerSpeed);
     QString fullName() const { return m_name; }
+    QString localisedName() const { return TeamManager::translateTeamName(m_name); }
     void setDirection(Direction dir) { m_direction = dir; }
     Direction getDirection() const { return m_direction; }
     void setHasBall(bool hasBall);
@@ -73,6 +74,7 @@ public:
     inline qreal speed() const { return m_speed; }
     inline QString briefName() const { return m_briefName; }
     inline int ranking() const { return m_rank; }
+    inline QString flag() const { return QString(":/images/flags/" + m_name + ".png");}
 
 public slots:
     void goalScored(bool isNorthGoal);

@@ -1,5 +1,5 @@
 adam,GK,black,tan
 bob,CD,black,tan
-charlie,LM,yellow,tan
-dave,RM,yellow,tan
+charlie,LM,brown,tan
+dave,RM,brown,tan
 eddie,CF,brown,tan

@@ -35,9 +35,8 @@ TeamSelectionFrame::TeamSelectionFrame(MWindow *parent) :
             ->setText(tr("Main Menu"));
 
     foreach( Team* t, m_parent->pitch()->teams()) {
-        QString flagFile(QString(":/images/flags/") + t->fullName() + QString(".png"));
-        ui->m_homeTeamComboBox->addItem(QIcon(QPixmap(flagFile)),t->briefName());
-        ui->m_awayTeamComboBox->addItem(QIcon(QPixmap(flagFile)),t->briefName());
+        ui->m_homeTeamComboBox->addItem(QIcon(QPixmap(t->flag())),t->briefName());
+        ui->m_awayTeamComboBox->addItem(QIcon(QPixmap(t->flag())),t->briefName());
     }
 
     ui->teamSelectionErrorLabel->setVisible(false);
@@ -75,14 +74,14 @@ TeamSelectionFrame::~TeamSelectionFrame()
 void TeamSelectionFrame::updateHomeTeamDetails(int index)
 {
     Team* t = m_parent->pitch()->teams().at(index);
-    ui->m_homeTeamName->setText(t->fullName());
+    ui->m_homeTeamName->setText(t->localisedName());
     ui->m_homeTeamRank->setText(tr("Rank: %1").arg(t->ranking()));
 }
 
 void TeamSelectionFrame::updateAwayTeamDetails(int index)
 {
     Team* t = m_parent->pitch()->teams().at(index);
-    ui->m_awayTeamName->setText(t->fullName());
+    ui->m_awayTeamName->setText(t->localisedName());
     ui->m_awayTeamRank->setText(tr("Rank: %1").arg(t->ranking()));
 }
 
@@ -111,3 +110,4 @@ void TeamSelectionFrame::showFrame(MWindow::Frame f)
     } else
         setVisible(false);
 }
+

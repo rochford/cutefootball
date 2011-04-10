@@ -131,10 +131,10 @@ void MWindow::displayHalfTimeStatistics(bool display)
 {
     if (display) {
         // m_halfStatisticsFrame->setHalfName(halfName);
-        m_halfStatisticsFrame->setHomeTeamName(m_pitch->homeTeam()->fullName());
-        m_halfStatisticsFrame->setHomeTeamFlag(QString(":/images/flags/") + m_pitch->homeTeam()->fullName() + ".png");
-        m_halfStatisticsFrame->setAwayTeamName(m_pitch->awayTeam()->fullName());
-        m_halfStatisticsFrame->setAwayTeamFlag(QString(":/images/flags/") + m_pitch->awayTeam()->fullName() + ".png");
+        m_halfStatisticsFrame->setHomeTeamName(m_pitch->homeTeam()->localisedName());
+        m_halfStatisticsFrame->setHomeTeamFlag(m_pitch->homeTeam()->flag());
+        m_halfStatisticsFrame->setAwayTeamName(m_pitch->awayTeam()->localisedName());
+        m_halfStatisticsFrame->setAwayTeamFlag(m_pitch->awayTeam()->flag());
 
         m_halfStatisticsFrame->setHomeTeamGoals(m_pitch->homeTeam()->m_goals);
         m_halfStatisticsFrame->setAwayTeamGoals(m_pitch->awayTeam()->m_goals);
