@@ -94,6 +94,12 @@ Pitch::Pitch(const QRectF& footballGroundRect,
 
 Pitch::~Pitch()
 {
+    // some items are dependent on the scene...
+    while (!m_adverts.isEmpty())
+        delete m_adverts.takeFirst();
+
+    m_scene->removeItem(m_grass);
+    delete m_grass;
     delete m_scene;
 
     if (m_motionTimer->isActive())
@@ -101,13 +107,10 @@ Pitch::~Pitch()
     delete m_motionTimer;
     delete m_gameFSM;
 
-    delete m_grass;
     delete m_ball;
     delete m_teamMgr;
     delete m_cameraView;
 
-    while (!m_adverts.isEmpty())
-        delete m_adverts.takeFirst();
 }
 
 void Pitch::centerOn(QPointF point)

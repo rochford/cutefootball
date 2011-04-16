@@ -20,12 +20,26 @@
 #include "mainMenuFrame.h"
 #include "ui_mainMenuFrame.h"
 
+#include <QParallelAnimationGroup>
+#include <QPropertyAnimation>
+
 mainMenuFrame::mainMenuFrame(MWindow *parent) :
     QFrame(parent),
     ui(new Ui::mainMenuFrame)
 {
     ui->setupUi(this);
     ui->m_settingsBtn->setVisible(false);
+
+    m_animationGrp = new QParallelAnimationGroup(this);
+    const int xPoint(120);
+    int yPoint(10);
+    m_animationGrp->addAnimation(createAnimation(ui->m_newGameBtn, QPoint(xPoint,yPoint+=30)));
+    if (ui->m_settingsBtn->isVisible())
+        m_animationGrp->addAnimation(createAnimation(ui->m_settingsBtn, QPoint(xPoint,yPoint+=30)));
+    m_animationGrp->addAnimation(createAnimation(ui->m_inputBtn, QPoint(xPoint,yPoint+=30)));
+    m_animationGrp->addAnimation(createAnimation(ui->m_informationBtn, QPoint(xPoint,yPoint+=30)));
+    m_animationGrp->addAnimation(createAnimation(ui->m_aboutBtn, QPoint(xPoint,yPoint+=30)));
+    m_animationGrp->addAnimation(createAnimation(ui->m_quitBtn, QPoint(xPoint,yPoint+=30)));
 
     connect(parent, SIGNAL(setFrame(MWindow::Frame)),
             this, SLOT(showFrame(MWindow::Frame)));
@@ -44,9 +58,21 @@ mainMenuFrame::mainMenuFrame(MWindow *parent) :
             parent, SLOT(showAboutFrame()));
 }
 
+QPropertyAnimation* mainMenuFrame::createAnimation(QWidget* widget, QPoint finalPosition)
+{
+    QPropertyAnimation* anim = new QPropertyAnimation(widget, "pos");
+    anim->setDuration(1200);
+    anim->setEasingCurve(QEasingCurve::OutElastic);
+    anim->setStartValue(QPoint(0,finalPosition.y()));
+    anim->setEndValue(finalPosition);
+    return anim;
+
+}
+
 mainMenuFrame::~mainMenuFrame()
 {
     delete ui;
+    delete m_animationGrp;
 }
 
 void mainMenuFrame::showFrame(MWindow::Frame f)
@@ -55,7 +81,10 @@ void mainMenuFrame::showFrame(MWindow::Frame f)
     if ( f == MWindow::MainMenu ) {
         ui->m_newGameBtn->setFocus();
         showMaximized();
-    } else
+        m_animationGrp->start();
+    } else {
         setVisible(false);
+        m_animationGrp->stop();
+    }
 }
 

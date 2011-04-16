@@ -39,6 +39,9 @@ public slots:
     void showFrame(MWindow::Frame f);
 
 private:
+    QPropertyAnimation* createAnimation(QWidget* widget, QPoint finalPosition);
+
     Ui::mainMenuFrame *ui;
+    QParallelAnimationGroup* m_animationGrp;
 };
 #endif // MAINMENUDIALOG_H
