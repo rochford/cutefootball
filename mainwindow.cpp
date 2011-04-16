@@ -48,7 +48,7 @@ MWindow::MWindow(QWidget *parent)
     // after uiMainWindow
     m_halfStatisticsFrame = new HalfStatisticsFrame(this);
 
-    QRectF footballGround(0,0,300,400);
+    QRectF footballGround(0,0,340,420);
     m_pitch = new Pitch(footballGround,
                         uiMainWindow.m_graphicsView,
                         m_soundEffects,
@@ -77,6 +77,8 @@ MWindow::~MWindow()
     delete m_mainMenuFrame;
     delete m_inGameMenuFrame;
     delete m_aboutFrame;
+    delete m_inputSettingsFrame;
+    delete m_pitch;
 }
 
 void MWindow::removeContextMenus()
@@ -203,8 +205,10 @@ void MWindow::resizeEvent(QResizeEvent *e)
     QWidgetList widgets = QApplication::allWidgets();
     QWidget* w=0;
     foreach(w,widgets) {
-        w->resize(e->size());
+        if (dynamic_cast<QPushButton*>(w)==NULL)
+            w->resize(e->size());
     }
+    e->accept();
 }
 
 void MWindow::setOrientation(ScreenOrientation orientation)
