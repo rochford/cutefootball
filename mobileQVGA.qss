@@ -1,0 +1,119 @@
+/*
+ * Copyright 2010,2011 Timothy Rochford
+ *
+ *    This file is part of CuteFootball.
+ *
+ *    CuteFootball is free software: you can redistribute it and/or modify
+ *    it under the terms of the Lesser GNU General Public License as published by
+ *    the Free Software Foundation, either version 3 of the License, or
+ *    (at your option) any later version.
+ *
+ *    CuteFootball is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    Lesser GNU General Public License for more details.
+ *
+ *    You should have received a copy of the Lesser GNU General Public License
+ *    along with CuteFootball.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+QFrame {
+    background-image: url(:/images/pitch3.png);
+    border: none;
+    font: bold large "Times";
+}
+
+QDialog {
+    border: none;
+    background-color: yellow;
+    font: bold large "Times";
+}
+
+QComboxBox {
+    background-color: yellow;
+    background: yellow;
+}
+
+QPushButton, QCheckbox {
+    background-color: yellow;
+    border-style: solid;
+    border-width: 2px;
+    border-color: red;
+    border-radius: 12px;
+
+    padding: 2px;
+
+    color: red;
+    font-size: 14px;
+}
+
+QPushButton:pressed {
+    background-color: red;
+    color: yellow;
+}
+
+QPushButton:focus {
+    background-color: red;
+    color: yellow;
+}
+
+QPushButton:hover {
+    background-color: red;
+    color: yellow;
+}
+
+QPushButton:!enabled {
+    background-color: grey;
+    color: black;
+}
+
+QSpinBox {
+    color: red;
+    background-color: yellow;
+    font-size: 18px;
+}
+
+QLabel {
+    color: red;
+    background-color: yellow;
+    font-size: 18px;
+}
+
+QLabel#copyrightLabel,
+QLabel#versionLabel,
+QLabel#sourceCodeLabel,
+QLabel#licenseLabel {
+    font-size: 10px;
+    color: yellow;
+}
+
+QComboBox {
+    color: red;
+    background-color: yellow;
+    font-size: 18px;
+}
+
+QFrame#ScreenGraphicsFrame {
+    background : transparent;
+}
+
+QLabel#SGFawayTeamName,
+QLabel#SGFhomeTeamName {
+    font-size: 12px;
+    color: red;
+    background: transparent;
+}
+
+QLabel#SGFawayGoals,
+QLabel#SGFhomeGoals,
+QLabel#SGFBlank {
+    font-size: 8px;
+    color: black;
+    background: white;
+}
+
+QLabel#scoreTextLabel {
+    font-size: 9px;
+    color: black;
+    background: white;
+}
