@@ -49,7 +49,8 @@ public slots:
     void playFrame(int frame);
 
 protected:
-    void onEntry (QEvent * event );
+    void onEntry (QEvent* event );
+    void onExit(QEvent* event);
 
 private:
     void createPlayerAnimationItems();

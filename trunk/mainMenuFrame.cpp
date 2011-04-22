@@ -31,7 +31,8 @@ mainMenuFrame::mainMenuFrame(MWindow *parent) :
     ui->m_settingsBtn->setVisible(false);
 
     m_animationGrp = new QParallelAnimationGroup(this);
-    const int xPoint(120);
+    const int offset = ui->m_newGameBtn->size().width()/2;
+    const int xPoint = size().width()/2 - offset;
     int yPoint(10);
     m_animationGrp->addAnimation(createAnimation(ui->m_newGameBtn, QPoint(xPoint,yPoint+=30)));
     if (ui->m_settingsBtn->isVisible())
@@ -88,3 +89,15 @@ void mainMenuFrame::showFrame(MWindow::Frame f)
     }
 }
 
+void mainMenuFrame::resizeEvent(QResizeEvent *e)
+{
+    const int offset = ui->m_newGameBtn->size().width()/2;
+    const int xPos = e->size().width()/2 - offset;
+    ui->m_newGameBtn->setProperty("pos", QPoint(xPos,ui->m_newGameBtn->property("pos").toPoint().y()));
+    if (ui->m_settingsBtn->isVisible())
+        ui->m_settingsBtn->setProperty("pos", QPoint(xPos,ui->m_settingsBtn->property("pos").toPoint().y()));
+    ui->m_inputBtn->setProperty("pos", QPoint(xPos,ui->m_inputBtn->property("pos").toPoint().y()));
+    ui->m_informationBtn->setProperty("pos", QPoint(xPos,ui->m_informationBtn->property("pos").toPoint().y()));
+    ui->m_aboutBtn->setProperty("pos", QPoint(xPos,ui->m_aboutBtn->property("pos").toPoint().y()));
+    ui->m_quitBtn->setProperty("pos", QPoint(xPos,ui->m_quitBtn->property("pos").toPoint().y()));
+}

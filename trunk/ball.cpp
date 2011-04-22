@@ -53,12 +53,12 @@ Ball::Ball(Pitch* pitch)
     setZValue(Pitch::ZBall);
 
     m_animation = new QGraphicsItemAnimation(this);
-    m_animationTimer = new QTimeLine(1000, this);
-    m_animationTimer->setFrameRange(0, 40);
+    m_animationTimeLine = new QTimeLine(1000, this);
+    m_animationTimeLine->setFrameRange(0, 40);
 
     m_animation->setItem(this);
-    m_animation->setTimeLine(m_animationTimer);
-    connect(m_animationTimer, SIGNAL(frameChanged(int)), this, SLOT(updateBall(int)));
+    m_animation->setTimeLine(m_animationTimeLine);
+    connect(m_animationTimeLine, SIGNAL(frameChanged(int)), this, SLOT(updateBall(int)));
     connect(m_ballOwnerTimer, SIGNAL(timeout()), this, SLOT(updateBallOwner()));
 }
 
@@ -67,7 +67,7 @@ Ball::~Ball()
     m_ballOwnerTimer->stop();
     delete m_ballOwnerTimer;
     delete m_animation;
-    delete m_animationTimer;
+    delete m_animationTimeLine;
 }
 
 void Ball::updateBallOwner()
@@ -185,24 +185,27 @@ void Ball::kickBall(MWindow::Action action, QPointF destination)
     setNoBallOwner();
 
     // calculate the difference between present and destination
+    QLineF line(pos(),destination);
+
+    m_animationTimeLine->setDuration(line.length()*7);
     QPointF tmp(pos());
 
-    m_animationTimer->stop();
+    m_animationTimeLine->stop();
 
     qreal stepX = (destination.x() - tmp.x()) / 40.0;
     qreal stepY = (destination.y() - tmp.y()) / 40.0;
-    QPointF diff(stepX,stepY);
+    QPointF delta(stepX,stepY);
 
     for (int i = 0; i <= 40; ++i) {
 //        QPointF newPos = tmp + QPointF(stepX,stepY);
-        m_animation->setPosAt(i / 40.0, tmp + diff);
+        m_animation->setPosAt(i / 40.0, tmp + delta);
         // Rotation in animations does not seem to work
         // animation_->setRotationAt(i / 40.0, i*90.0);
-        tmp = tmp + diff;
+        tmp = tmp + delta;
     }
-    m_animationTimer->start();
+    m_animationTimeLine->start();
 
-    if (action == MWindow::Shot ||  action == MWindow::Pass)
+    if (action == MWindow::Shot)
         emit shot(team, destination);
     emit soundEvent(SoundEffects::BallKick);
 }
@@ -211,7 +214,7 @@ void Ball::updateBall(int frame)
 {
   //  qDebug() << "Ball::updateBall" << frame;
     // animation may no longer be running due to a goal
-    if ( (m_animationTimer->state() == QTimeLine::Running) && !m_positionLocked ) {
+    if ( (m_animationTimeLine->state() == QTimeLine::Running) && !m_positionLocked ) {
         QPointF newPos = m_animation->posAt(frame/40.0);
         if (!m_pitch->m_footballPitch->contains(newPos))
             qDebug() << "Ball::updateBall XXX error" << frame;
@@ -244,7 +247,7 @@ QVariant Ball::itemChange(GraphicsItemChange change, const QVariant &value)
              emit soundEvent(SoundEffects::Goal);
              emit soundEvent(SoundEffects::Whistle);
              setNoBallOwner();
-             m_animationTimer->stop();
+             m_animationTimeLine->stop();
              m_lastPos = newPos;
              return newPos;
          }
@@ -254,7 +257,7 @@ QVariant Ball::itemChange(GraphicsItemChange change, const QVariant &value)
             qreal dx = newPos.x() - m_lastPos.x();
             qreal dy = newPos.y() - m_lastPos.y();
             //qDebug() << "Ball::itemChange not in pitch, dx" << dx << "," << dy;
-            m_animationTimer->stop();
+            m_animationTimeLine->stop();
             emit soundEvent(SoundEffects::BallRebound);
             return QPointF(m_lastPos.x() - dx*1.5,m_lastPos.y()-dy*1.5);
         } else {

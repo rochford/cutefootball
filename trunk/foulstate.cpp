@@ -54,12 +54,21 @@ FoulState::~FoulState()
 void FoulState::onEntry(QEvent * /* event */)
 {
     qDebug() << "FoulState::onEntry";
+    m_pitch->m_screenGraphicsLabel->setGraphics(ScreenGraphics::Foul);
+    m_pitch->updateDisplayTime(m_game->remainingTimeInHalfMs());
     m_takeFreeKick->addTransition(m_pitch->ball(), SIGNAL(shot(Team*,QPointF)), m_allDone);
     connect(m_pitch->ball(), SIGNAL(shot(Team*,QPointF)),m_game, SLOT(continueGameClock()));
 
     m_game->pauseGameClock();
     createPlayerAnimationItems();
     m_timeLineTakePositions->start();
+}
+
+void FoulState::onExit(QEvent* /* event */)
+{
+    qDebug() << "FoulState::onExit";
+    m_pitch->m_screenGraphicsLabel->setGraphics(ScreenGraphics::ScoreText);
+    m_pitch->updateDisplayTime(m_game->remainingTimeInHalfMs());
 }
 
 // animate from present player position to another point.

@@ -25,27 +25,28 @@
 ScreenGraphics::ScreenGraphics(Pitch *p)
   :  QFrame(NULL),
     m_pitch(p),
-    ui(new Ui::ScreenGraphicsFrame)
+    ui(new Ui::ScreenGraphicsFrame),
+    m_type(ScoreText)
 {
     ui->setupUi(this);
 }
 
 ScreenGraphics::~ScreenGraphics()
 {
-//    delete m_scoreText;
+    delete ui;
 }
 
 void ScreenGraphics::update(QString s)
 {
     resize(160,50);
-    ui->scoreTextLabel->setVisible(true);
-
-    ui->scoreTextLabel->setText(s);
-
-    ui->SGFhomeTeamName->setText(/* m_pitch->homeTeam()->briefName() + " " + */ QString::number(m_pitch->homeTeam()->m_goals));
-//    ui->SGFhomeGoals->setText("" /* QString::number(m_pitch->homeTeam()->m_goals) */);
-    ui->SGFawayTeamName->setText(/* m_pitch->awayTeam()->briefName()+ " " + */ QString::number(m_pitch->awayTeam()->m_goals));
-//    ui->SGFawayGoals->setText("" /* + QString::number(m_pitch->awayTeam()->m_goals) */);
+    ui->SGFhomeTeamName->setText(QString::number(m_pitch->homeTeam()->m_goals));
+    ui->SGFawayTeamName->setText(QString::number(m_pitch->awayTeam()->m_goals));
+    if (m_type == ScoreText)
+        ui->scoreTextLabel->setText(s);
+    else if (m_type == Foul )
+        ui->scoreTextLabel->setText(tr("Foul"));
+    else if (m_type == GoalScored )
+        ui->scoreTextLabel->setText(tr("Goal"));
 }
 
 void ScreenGraphics::setTeams(Team* home, Team* away)
@@ -57,4 +58,11 @@ void ScreenGraphics::setTeams(Team* home, Team* away)
                 QPixmap(away->flag()).scaled(20,15));
     ui->SGFawayTeamName->setText(away->briefName());
 }
+
+void ScreenGraphics::setGraphics(ScreenGraphicsType type)
+{
+    qDebug() << "ScreenGraphics::setGraphics";
+    m_type = type;
+}
+
 
