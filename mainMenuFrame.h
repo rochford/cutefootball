@@ -35,6 +35,9 @@ class mainMenuFrame : public QFrame
 public:
     explicit mainMenuFrame(MWindow *parent = 0);
     ~mainMenuFrame();
+protected:
+    void resizeEvent(QResizeEvent *);
+
 public slots:
     void showFrame(MWindow::Frame f);
 

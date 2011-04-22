@@ -101,7 +101,7 @@ private:
 
     // ball passing animation
     QGraphicsItemAnimation *m_animation;
-    QTimeLine *m_animationTimer;
+    QTimeLine *m_animationTimeLine;
 
     Player* m_lastPlayerToTouchBall; // can be null // NOT OWNED
 

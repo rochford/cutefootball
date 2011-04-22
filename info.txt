@@ -36,10 +36,10 @@ X5-01,
 6700 slide,
 6710 Navigator,
 6720 classic,
+6730 classic,
 6760 slide,
 6788,
 6788i,
-6730 classic,
 6790 slide,
 6790 Surge
 

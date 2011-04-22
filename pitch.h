@@ -148,7 +148,7 @@ public:
     QGraphicsLineItem *m_centerLine;
     QGraphicsEllipseItem *m_centerCircle;
     QGraphicsEllipseItem *m_centerMark;
-    ScreenGraphics *m_scoreText;
+    ScreenGraphics *m_screenGraphicsLabel;
     QRectF m_pitchArea[KRow][KColumn];
     SoundEffects* m_soundEffects;  // NOT OWNED
 
@@ -170,8 +170,6 @@ private:
     QPointF m_entrancePoint;
 
     settingsFrame *m_settingsFrame;
-
-    ScreenGraphics* m_screenGraphicsLabel;
 
     CameraView* m_cameraView;
     QGraphicsProxyWidget *m_screenGraphicsFrameProxy;

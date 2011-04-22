@@ -165,252 +165,252 @@
         <translation>Rangaistuspotkut</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="78"/>
+        <location filename="../team.cpp" line="77"/>
         <source>Andorra</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="79"/>
+        <location filename="../team.cpp" line="78"/>
         <source>Argentina</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="80"/>
+        <location filename="../team.cpp" line="79"/>
         <source>Australia</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="81"/>
+        <location filename="../team.cpp" line="80"/>
         <source>Austria</source>
         <translation>Itävalta</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="82"/>
+        <location filename="../team.cpp" line="81"/>
         <source>Belgium</source>
         <translation>Belgia</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="83"/>
+        <location filename="../team.cpp" line="82"/>
         <source>Brazil</source>
         <translation>Brasilia</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="84"/>
+        <location filename="../team.cpp" line="83"/>
         <source>Bulgaria</source>
         <translation>Bulgaria</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="85"/>
+        <location filename="../team.cpp" line="84"/>
         <source>China</source>
         <translation>Kiina</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="86"/>
+        <location filename="../team.cpp" line="85"/>
         <source>Croatia</source>
         <translation>Kroatia</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="87"/>
+        <location filename="../team.cpp" line="86"/>
         <source>Czech</source>
         <translation>Tšekin</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="88"/>
+        <location filename="../team.cpp" line="87"/>
         <source>Denmark</source>
         <translation>Tanska</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="89"/>
+        <location filename="../team.cpp" line="88"/>
         <source>Egypt</source>
         <translation>Egypti</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="90"/>
+        <location filename="../team.cpp" line="89"/>
         <source>England</source>
         <translation>Englanti</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="91"/>
+        <location filename="../team.cpp" line="90"/>
         <source>Estonia</source>
         <translation>Viro</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="92"/>
+        <location filename="../team.cpp" line="91"/>
         <source>Finland</source>
         <translation>Suomi</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="93"/>
+        <location filename="../team.cpp" line="92"/>
         <source>France</source>
         <translation>Ranska</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="94"/>
+        <location filename="../team.cpp" line="93"/>
         <source>Germany</source>
         <translation>Saksa</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="95"/>
+        <location filename="../team.cpp" line="94"/>
         <source>Greece</source>
         <translation>Kreikka</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="96"/>
+        <location filename="../team.cpp" line="95"/>
         <source>Hungary</source>
         <translation>Unkari</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="97"/>
+        <location filename="../team.cpp" line="96"/>
         <source>Iceland</source>
         <translation>Islanti</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="98"/>
+        <location filename="../team.cpp" line="97"/>
         <source>India</source>
         <translation>Intia</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="99"/>
+        <location filename="../team.cpp" line="98"/>
         <source>Ireland</source>
         <translation>Irlanti</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="100"/>
+        <location filename="../team.cpp" line="99"/>
         <source>Italy</source>
         <translation>Italia</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="101"/>
+        <location filename="../team.cpp" line="100"/>
         <source>Japan</source>
         <translation>Japani</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="102"/>
+        <location filename="../team.cpp" line="101"/>
         <source>Malaysia</source>
         <translation>Malesia</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="103"/>
+        <location filename="../team.cpp" line="102"/>
         <source>Malta</source>
         <translation>Malta</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="104"/>
+        <location filename="../team.cpp" line="103"/>
         <source>Mexico</source>
         <translation>Meksiko</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="105"/>
+        <location filename="../team.cpp" line="104"/>
         <source>Netherlands</source>
         <translation>Alankomaat</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="106"/>
+        <location filename="../team.cpp" line="105"/>
         <source>NorthernIreland</source>
         <translation>P. Irlanti</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="107"/>
+        <location filename="../team.cpp" line="106"/>
         <source>Norway</source>
         <translation>Norja</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="108"/>
+        <location filename="../team.cpp" line="107"/>
         <source>Peru</source>
         <translation>Peru</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="109"/>
+        <location filename="../team.cpp" line="108"/>
         <source>Philippines</source>
         <translation>Filippiinit</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="110"/>
+        <location filename="../team.cpp" line="109"/>
         <source>Poland</source>
         <translation>Puola</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="111"/>
+        <location filename="../team.cpp" line="110"/>
         <source>Portugal</source>
         <translation>Portugali</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="112"/>
+        <location filename="../team.cpp" line="111"/>
         <source>Romania</source>
         <translation>Romania</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="113"/>
+        <location filename="../team.cpp" line="112"/>
         <source>Russia</source>
         <translation>Venäjä</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="114"/>
+        <location filename="../team.cpp" line="113"/>
         <source>SanMarino</source>
         <translation>San Marino</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="115"/>
+        <location filename="../team.cpp" line="114"/>
         <source>Scotland</source>
         <translation>Skotlanti</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="116"/>
+        <location filename="../team.cpp" line="115"/>
         <source>Serbia</source>
         <translation>Serbia</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="117"/>
+        <location filename="../team.cpp" line="116"/>
         <source>Slovakia</source>
         <translation>Slovakia</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="118"/>
+        <location filename="../team.cpp" line="117"/>
         <source>SouthAfrica</source>
         <translation>Etelä-Afrikka</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="119"/>
+        <location filename="../team.cpp" line="118"/>
         <source>Spain</source>
         <translation>Espanja</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="120"/>
+        <location filename="../team.cpp" line="119"/>
         <source>Sweden</source>
         <translation>Ruotsi</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="121"/>
+        <location filename="../team.cpp" line="120"/>
         <source>Switzerland</source>
         <translation>Sveitsi</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="122"/>
+        <location filename="../team.cpp" line="121"/>
         <source>Turkey</source>
         <translation>Turkki</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="123"/>
+        <location filename="../team.cpp" line="122"/>
         <source>Ukraine</source>
         <translation>Ukraina</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="124"/>
+        <location filename="../team.cpp" line="123"/>
         <source>UnitedStates</source>
         <translation>Yhdysvallat</translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="125"/>
+        <location filename="../team.cpp" line="124"/>
         <source>Uruguay</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="126"/>
+        <location filename="../team.cpp" line="125"/>
         <source>Vietnam</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../team.cpp" line="127"/>
+        <location filename="../team.cpp" line="126"/>
         <source>Wales</source>
         <translation></translation>
     </message>
@@ -421,20 +421,33 @@
     </message>
 </context>
 <context>
+    <name>ScreenGraphics</name>
+    <message>
+        <location filename="../screengraphics.cpp" line="47"/>
+        <source>Foul</source>
+        <translation>Potku</translation>
+    </message>
+    <message>
+        <location filename="../screengraphics.cpp" line="49"/>
+        <source>Goal</source>
+        <translation>Maali</translation>
+    </message>
+</context>
+<context>
     <name>TeamSelectionFrame</name>
     <message>
-        <location filename="../teamSelectionFrame.cpp" line="36"/>
+        <location filename="../teamSelectionFrame.cpp" line="33"/>
         <source>Play</source>
         <translation>Pelaa</translation>
     </message>
     <message>
-        <location filename="../teamSelectionFrame.cpp" line="38"/>
+        <location filename="../teamSelectionFrame.cpp" line="35"/>
         <source>Main Menu</source>
         <translation>Päävalikko</translation>
     </message>
     <message>
-        <location filename="../teamSelectionFrame.cpp" line="81"/>
-        <location filename="../teamSelectionFrame.cpp" line="88"/>
+        <location filename="../teamSelectionFrame.cpp" line="78"/>
+        <location filename="../teamSelectionFrame.cpp" line="85"/>
         <source>Rank: %1</source>
         <translation>Sijoitus: %1</translation>
     </message>
@@ -442,24 +455,32 @@
 <context>
     <name>aboutFrame</name>
     <message>
-        <location filename="../aboutFrame.ui" line="40"/>
-        <source>This game is distributed under the Lesser GNU Public License which can be read at http://www.gnu.org/licenses/lgpl.html</source>
+        <location filename="../aboutFrame.ui" line="37"/>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Lucida Grande&apos;; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;This game is distributed under the Lesser GNU Public License which can be read at &lt;a href=&quot;http://www.gnu.org/licenses/lgpl.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;http://www.gnu.org/licenses/lgpl.html&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../aboutFrame.ui" line="50"/>
-        <source>Full source code for this production is available at http://code.google.com/p/cutefootball/</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../aboutFrame.ui" line="84"/>
+        <location filename="../aboutFrame.ui" line="75"/>
         <source>Version X.X</source>
         <translation>versio %1 %2</translation>
     </message>
     <message>
-        <location filename="../aboutFrame.ui" line="111"/>
+        <location filename="../aboutFrame.ui" line="102"/>
         <source>Main Menu</source>
         <translation>Päävalikko</translation>
+    </message>
+    <message>
+        <location filename="../aboutFrame.ui" line="137"/>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Lucida Grande&apos;; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Full source code for this production is available at &lt;a href=&quot;http://code.google.com/p/cutefootball/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;http://code.google.com/p/cutefootball/&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -491,21 +512,20 @@
         <translation>Päävalikko</translation>
     </message>
     <message>
-        <location filename="../inputSettingsFrame.ui" line="169"/>
         <source>Press 5 to shoot, pass or tackle. 0 to display in-game options, other keys to move the player.</source>
-        <translation>5 näppäinlyöntiä jos pelaajalle ei palloa. Jos pelaajalla pallo, lyhyt lyönti syöttöön, pitkä lyönti potkuun</translation>
+        <translation type="obsolete">5 näppäinlyöntiä jos pelaajalle ei palloa. Jos pelaajalla pallo, lyhyt lyönti syöttöön, pitkä lyönti potkuun</translation>
     </message>
 </context>
 <context>
     <name>mainMenuFrame</name>
     <message>
-        <location filename="../mainMenuFrame.ui" line="59"/>
-        <location filename="../mainMenuFrame.ui" line="149"/>
+        <location filename="../mainMenuFrame.ui" line="80"/>
+        <location filename="../mainMenuFrame.ui" line="111"/>
         <source>Play</source>
         <translation>Pelaa</translation>
     </message>
     <message>
-        <location filename="../mainMenuFrame.ui" line="66"/>
+        <location filename="../mainMenuFrame.ui" line="61"/>
         <source>Settings</source>
         <translation>Asetukset</translation>
     </message>
@@ -514,32 +534,32 @@
         <translation type="obsolete">Näppäinasetukset</translation>
     </message>
     <message>
-        <location filename="../mainMenuFrame.ui" line="80"/>
-        <location filename="../mainMenuFrame.ui" line="177"/>
+        <location filename="../mainMenuFrame.ui" line="106"/>
+        <location filename="../mainMenuFrame.ui" line="139"/>
         <source>Help</source>
         <translation>Apua</translation>
     </message>
     <message>
-        <location filename="../mainMenuFrame.ui" line="87"/>
-        <location filename="../mainMenuFrame.ui" line="164"/>
+        <location filename="../mainMenuFrame.ui" line="35"/>
+        <location filename="../mainMenuFrame.ui" line="126"/>
         <source>About</source>
         <translation>Lisätiedot</translation>
     </message>
     <message>
-        <location filename="../mainMenuFrame.ui" line="94"/>
-        <location filename="../mainMenuFrame.ui" line="159"/>
+        <location filename="../mainMenuFrame.ui" line="93"/>
+        <location filename="../mainMenuFrame.ui" line="121"/>
         <source>Quit</source>
         <translation>Lopeta</translation>
     </message>
     <message>
-        <location filename="../mainMenuFrame.ui" line="73"/>
-        <location filename="../mainMenuFrame.ui" line="169"/>
-        <location filename="../mainMenuFrame.ui" line="172"/>
+        <location filename="../mainMenuFrame.ui" line="48"/>
+        <location filename="../mainMenuFrame.ui" line="131"/>
+        <location filename="../mainMenuFrame.ui" line="134"/>
         <source>Keys</source>
         <translation>Näppäimet</translation>
     </message>
     <message>
-        <location filename="../mainMenuFrame.ui" line="154"/>
+        <location filename="../mainMenuFrame.ui" line="116"/>
         <source>Game Settings</source>
         <translation>Pelin asetukset</translation>
     </message>

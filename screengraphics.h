@@ -35,14 +35,24 @@ class Pitch;
 class ScreenGraphics : public QFrame
 {
 public:
+    enum ScreenGraphicsType {
+        ScoreText,
+        GoalScored,
+        Foul
+    };
+
     ScreenGraphics(Pitch *p);
     virtual ~ScreenGraphics();
     void update(QString s);
     void setTeams(Team* home, Team* away);
 
+public slots:
+    void setGraphics(ScreenGraphicsType type);
+
 private:
     Ui::ScreenGraphicsFrame *ui;
     Pitch *m_pitch;
+    ScreenGraphicsType m_type;
 };
 
 #endif // SCREENGRAPHICS_H

@@ -49,7 +49,6 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     m_motionTimer(NULL),
     m_bottomGoal(NULL),
     m_topGoal(NULL),
-    m_scoreText(NULL),
     m_centerLine(NULL),
     m_centerCircle(NULL),
     m_centerMark(NULL),
@@ -98,8 +97,12 @@ Pitch::~Pitch()
     while (!m_adverts.isEmpty())
         delete m_adverts.takeFirst();
 
+    m_scene->removeItem(m_screenGraphicsFrameProxy);
+    delete m_screenGraphicsLabel;
+
     m_scene->removeItem(m_grass);
     delete m_grass;
+
     delete m_scene;
 
     if (m_motionTimer->isActive())
@@ -198,9 +201,10 @@ void Pitch::setPiece(Team* originatingTeam, SetPiece s, QPointF foulLocation)
     m_soundEffects->soundEvent(SoundEffects::Whistle);
     switch(s) {
     case Pitch::Foul: // TODO foul logic
-//        emit foul(originatingTeam, foulLocation);
+        //emit foul(originatingTeam, foulLocation);
         break;
     case Pitch::KickOff:
+        m_screenGraphicsLabel->setGraphics(ScreenGraphics::ScoreText);
         foreach (Player *p, m_players) {
                 p->setHasBall(false);
                 p->setPos(p->m_startPositionRectF.center());
@@ -360,6 +364,8 @@ void Pitch::updateDisplayTime(int timeLeftMs)
         QTime tmp(0,0,0,0);
         tmp = tmp.addMSecs(timeLeftMs);
         m_screenGraphicsLabel->update(tmp.toString(QString("m:ss")));
+    } else {
+        qDebug() << "updateDisplayTime FSM not running";
     }
 }
 

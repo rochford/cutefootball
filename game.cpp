@@ -199,7 +199,7 @@ void GameHalf::decrementGameTime()
 
 void GameHalf::startPlayersLeavePitchAnim(QString /* halfName */)
 {
-    qDebug() << "GameHalf::startPlayersLeavePitchAnim " << objectName();
+    //qDebug() << "GameHalf::startPlayersLeavePitchAnim " << objectName();
     createPlayerAnimationItems(HalfOver);
     if (m_1second->isActive())
         m_1second->stop();
@@ -225,7 +225,7 @@ void GameHalf::continueGameClock()
     if (m_game->currentState() != this)
         return;
 
-    qDebug() << "GameHalf::continueGameClock() "<< objectName();
+    //qDebug() << "GameHalf::continueGameClock() "<< objectName();
     if (m_timeLineTakePositions->state() == QTimeLine::Paused) {
         m_timeLineTakePositions->setPaused(false);
     } else if (m_timeLineLeavePitch->state() == QTimeLine::Paused) {
@@ -236,7 +236,7 @@ void GameHalf::continueGameClock()
 
 void GameHalf::kickOff()
 {
-    qDebug() << "GameHalf::kickoff " << objectName();
+    //qDebug() << "GameHalf::kickoff " << objectName();
 
     foreach (Player *p, m_pitch.m_players)
         p->setAllowedOffPitch(false);
@@ -252,7 +252,7 @@ void GameHalf::kickOff()
 
 void GameHalf::playFrame(int frame)
 {
-    qDebug() << "GameHalf::playFrame " << objectName();
+    //qDebug() << "GameHalf::playFrame " << objectName();
 
     m_pitch.centerOn(m_playerAnimationItems.last()->item());
 
@@ -266,7 +266,7 @@ void GameHalf::playFrame(int frame)
 // animate from present player position to another point.
 void GameHalf::createPlayerAnimationItems(GameState g)
 {
-    qDebug() << "GameHalf::createPlayerAnimationItems " << objectName();
+    //qDebug() << "GameHalf::createPlayerAnimationItems " << objectName();
     m_playerAnimationItems.clear(); // TODO XXX TIM delete all
 
     foreach (Player *p, m_pitch.m_players) {
@@ -318,6 +318,7 @@ void GameHalf::onEntry(QEvent * /* event */)
     qDebug() << "GameHalf::onEntry " << objectName();
     m_game->setCurrentState(this);
 
+    m_pitch.m_screenGraphicsLabel->setGraphics(ScreenGraphics::ScoreText);
     m_pitch.updateDisplayTime(remainingTimeInHalfMs());
     if (  m_isFirstHalf ) {
         m_pitch.homeTeam()->setDirection(Team::NorthToSouth);
@@ -338,7 +339,7 @@ void GameHalf::onEntry(QEvent * /* event */)
 
 void GameHalf::onExit(QEvent * /* event */)
 {
-    qDebug() << "GameHalf::onExit() " << objectName();
+    //qDebug() << "GameHalf::onExit() " << objectName();
     if ((objectName() == KSecondHalfET) && m_pitch.extraTimeAllowed()) {
         if ( m_pitch.extraTime() )
             m_pitch.setPenaltyShootOut(true);

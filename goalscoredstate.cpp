@@ -24,6 +24,7 @@
 #include "pitch.h"
 #include "ball.h"
 #include "Player.h"
+#include "screengraphics.h"
 #include "soccerutils.h"
 
 GoalScoredState::GoalScoredState(GameHalf *g, Pitch *p)
@@ -82,10 +83,12 @@ void GoalScoredState::createTakePositionAnimation()
 void GoalScoredState::onEntry(QEvent * /* event */)
 {
     qDebug() << "GoalScoredState::onEntry parent " << parent()->objectName();
+    m_pitch->m_screenGraphicsLabel->setGraphics(ScreenGraphics::GoalScored);
     m_pitch->updateDisplayTime(m_game->remainingTimeInHalfMs());
     m_game->pauseGameClock();
     createPlayerAnimationItems(Celebrate);
     m_timeLineCelebrate->start();
+
 }
 
 // animate from present player position to another point.
@@ -119,13 +122,18 @@ void GoalScoredState::createPlayerAnimationItems(GameState g)
             break;
 
         case Celebrate:
+            {
             anim->setTimeLine(m_timeLineCelebrate);
             tmp = p->pos();
             stepX = ( m_pitch->m_footballPitch->rect().center().x() - tmp.x() ) / 100.0;
             stepY = ( m_pitch->m_footballPitch->rect().center().y() - tmp.y() ) / 100.0;
+            MWindow::Action a = calculateAction(tmp, m_pitch->m_footballPitch->rect().center());
+            p->movePlayer(a);
+            }
             break;
 
         default:
+            Q_ASSERT(0);
             break;
         }
 
@@ -140,7 +148,7 @@ void GoalScoredState::createPlayerAnimationItems(GameState g)
 
 void GoalScoredState::playFrameCelebrate(int frame)
 {
-    qDebug() << "playFrameCelebrate" << frame;
+    //qDebug() << "playFrameCelebrate" << frame;
     qreal f = frame/ 100.00;
 
     if ( frame > 30 )
@@ -153,7 +161,7 @@ void GoalScoredState::playFrameCelebrate(int frame)
 
 void GoalScoredState::playFramePositions(int frame)
 {
-    qDebug() << "playFramePositions" << frame;
+    //qDebug() << "playFramePositions" << frame;
     qreal f = frame/ 100.00;
 
 //    if ( frame > 80 )

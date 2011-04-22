@@ -84,7 +84,11 @@ Player::~Player()
     m_images.clear();
     m_actions.clear();
 
+    if (m_keyEventTimer->isActive())
+        m_keyEventTimer->stop();
     delete m_keyEventTimer;
+    if (m_outOfAction->isActive())
+        m_outOfAction->stop();
     delete m_outOfAction;
 }
 
@@ -198,7 +202,7 @@ void Player::paint(QPainter *painter,
 
 void Player::focusInEvent(QFocusEvent * event)
 {
-    qDebug() << " Player::focusInEvent " << m_name;
+    //qDebug() << " Player::focusInEvent " << m_name;
     m_toolTipText = m_name;
     m_toolTipPen = KPlayerNameFocused;
     m_toolTipTextPos = QPointF(boundingRect().topLeft().x()-2,
@@ -206,7 +210,7 @@ void Player::focusInEvent(QFocusEvent * event)
 }
 void Player::focusOutEvent(QFocusEvent * event)
 {
-    qDebug() << " Player::focusOutEvent " << m_name;
+    //qDebug() << " Player::focusOutEvent " << m_name;
     m_toolTipText = QString::number(m_number);
     m_toolTipPen = KPlayerNameUnfocused;
     m_toolTipTextPos = QPointF(boundingRect().center().x()-2,
@@ -623,11 +627,11 @@ void Player::keyPressEvent(QKeyEvent *event)
         return;
     }
 
-    qDebug() << "keyPressEvent";
+    //qDebug() << "keyPressEvent";
     MWindow::Action a = m_actions[ event->key() ];
 
     if (a == m_lastAction) {
-        qDebug() << "halt";
+        //qDebug() << "halt";
         m_lastAction = MWindow::NoAction;
         move(MWindow::NoAction);
         event->accept();
@@ -669,7 +673,7 @@ void Player::keyReleaseEvent(QKeyEvent *event)
         event->ignore();
         return;
     }
-    qDebug() << "keyReleaseEvent";
+    //qDebug() << "keyReleaseEvent";
     MWindow::Action a = m_actions[ event->key() ];
 
     if ( a == MWindow::Button ) {
@@ -684,14 +688,14 @@ void Player::keyReleaseEvent(QKeyEvent *event)
 
 void Player::repeatKeyEvent()
 {
-    qDebug() << "repeatKeyEvent";
+   //qDebug() << "repeatKeyEvent";
    move(m_lastAction);
    m_keyEventTimer->start();
 }
 
 void Player::stopKeyEvent()
 {
-    qDebug() << "stopKeyEvent";
+    //qDebug() << "stopKeyEvent";
     if (m_keyEventTimer->isActive())
         m_keyEventTimer->stop();
 }

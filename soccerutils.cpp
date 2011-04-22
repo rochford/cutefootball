@@ -172,6 +172,7 @@ MWindow::Action calculateTackleActionFromLastAction(MWindow::Action lastAction)
         action = MWindow::TackleNW;
         break;
     default:
+        action = MWindow::TackleN;
         break;
     }
     return action;
