@@ -26,44 +26,35 @@
 TeamSelectionFrame::TeamSelectionFrame(MWindow *parent) :
     QFrame(parent),
     m_parent(parent),
-    ui(new Ui::teamSelectionFrame)
+    ui(new Ui::teamSelectionFrame),
+    m_selection(PlayerTeamOnly)
 {
     ui->setupUi(this);
     ui->buttonBox->button(QDialogButtonBox::Ok)
-            ->setText(tr("Play"));
+            ->setText(tr("Continue"));
     ui->buttonBox->button(QDialogButtonBox::Cancel)
             ->setText(tr("Main Menu"));
 
     foreach( Team* t, m_parent->pitch()->teams()) {
-        ui->m_homeTeamComboBox->addItem(QIcon(QPixmap(t->flag())),t->briefName());
-        ui->m_awayTeamComboBox->addItem(QIcon(QPixmap(t->flag())),t->briefName());
+        ui->m_teamComboBox->addItem(QIcon(QPixmap(t->flag())),t->briefName());
     }
 
     ui->teamSelectionErrorLabel->setVisible(false);
-    ui->m_homeTeamComboBox->setCurrentIndex(0);
-    updateHomeTeamDetails(0);
-    ui->m_awayTeamComboBox->setCurrentIndex(1);
-    updateAwayTeamDetails(1);
+    ui->m_teamComboBox->setCurrentIndex(0);
+    updateTeamDetails(0);
 
     connect(parent, SIGNAL(setFrame(MWindow::Frame)),
             this, SLOT(showFrame(MWindow::Frame)));
 
-    connect(ui->buttonBox, SIGNAL(accepted()),
-            parent, SLOT(showGraphicsViewFrame()));
-    connect(ui->buttonBox, SIGNAL(accepted()),
-            this, SLOT(startGame()));
     connect(ui->buttonBox, SIGNAL(rejected()),
             parent, SLOT(showMainMenuFrame()));
+    connect(ui->buttonBox, SIGNAL(accepted()),
+            this, SLOT(setTeam()));
 
-    connect(ui->m_homeTeamComboBox, SIGNAL(currentIndexChanged(const QString &)),
+    connect(ui->m_teamComboBox, SIGNAL(currentIndexChanged(const QString &)),
             this, SLOT(checkSelectedTeams(const QString &)));
-    connect(ui->m_awayTeamComboBox, SIGNAL(currentIndexChanged(const QString &)),
-            this, SLOT(checkSelectedTeams(const QString &)));
-
-    connect(ui->m_homeTeamComboBox, SIGNAL(currentIndexChanged(int)),
-            this, SLOT(updateHomeTeamDetails(int)));
-    connect(ui->m_awayTeamComboBox, SIGNAL(currentIndexChanged(int)),
-            this, SLOT(updateAwayTeamDetails(int)));
+    connect(ui->m_teamComboBox, SIGNAL(currentIndexChanged(int)),
+            this, SLOT(updateTeamDetails(int)));
 }
 
 TeamSelectionFrame::~TeamSelectionFrame()
@@ -71,23 +62,33 @@ TeamSelectionFrame::~TeamSelectionFrame()
     delete ui;
 }
 
-void TeamSelectionFrame::updateHomeTeamDetails(int index)
+void TeamSelectionFrame::setTeam()
 {
-    Team* t = m_parent->pitch()->teams().at(index);
-    ui->m_homeTeamName->setText(t->localisedName());
-    ui->m_homeTeamRank->setText(tr("Rank: %1").arg(t->ranking()));
+    //
+    switch(m_selection) {
+    case ComputerTeamOnly:
+        m_parent->setComputerTeam(ui->m_teamComboBox->currentIndex());
+        break;
+    case PlayerAndComputerTeam:
+    case PlayerTeamOnly:
+        m_parent->setPlayerTeam(ui->m_teamComboBox->currentIndex());
+        break;
+    default:
+        break;
+    }
 }
 
-void TeamSelectionFrame::updateAwayTeamDetails(int index)
+void TeamSelectionFrame::updateTeamDetails(int index)
 {
     Team* t = m_parent->pitch()->teams().at(index);
-    ui->m_awayTeamName->setText(t->localisedName());
-    ui->m_awayTeamRank->setText(tr("Rank: %1").arg(t->ranking()));
+    ui->m_teamName->setText(t->localisedName());
+    ui->m_teamRank->setText(tr("Rank: %1").arg(t->ranking()));
 }
 
 void TeamSelectionFrame::checkSelectedTeams(const QString &)
 {
-    if ( ui->m_homeTeamComboBox->currentText() == ui->m_awayTeamComboBox->currentText() ) {
+    if ( ui->m_teamComboBox->currentIndex() == m_parent->playerTeam()
+        && m_selection == TeamSelectionFrame::ComputerTeamOnly ) {
         ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
         ui->teamSelectionErrorLabel->setVisible(true);
     } else {
@@ -98,16 +99,55 @@ void TeamSelectionFrame::checkSelectedTeams(const QString &)
 
 void TeamSelectionFrame::startGame()
 {
-    m_parent->newGame(ui->m_homeTeamComboBox->currentIndex(), ui->m_awayTeamComboBox->currentIndex());
+    if (m_selection == PlayerTeamOnly)
+        m_parent->setComputerTeam(0); // TODO pick a random team for cup competition
+    m_parent->newGame();
+    m_parent->showGraphicsViewFrame();
 }
 
 void TeamSelectionFrame::showFrame(MWindow::Frame f)
 {
     qDebug() << "TeamSelectionFrame::showFrame" << f;
     if ( f == MWindow::TeamSelection ) {
+        ui->m_teamComboBox->setCurrentIndex(0);
+        updateTeamDetails(0);
+
         ui->buttonBox->button(QDialogButtonBox::Ok)->setFocus();
         showMaximized();
     } else
         setVisible(false);
+}
+
+void TeamSelectionFrame::setTeamSelectionState(TeamSelectionState state)
+{
+        m_selection = state;
+        if (state == TeamSelectionFrame::PlayerTeamOnly ) {
+            ui->m_teamToSelect->setText(tr("Select Player team:"));
+            ui->buttonBox->button(QDialogButtonBox::Ok)
+                    ->setText(tr("Play"));
+
+            disconnect(ui->buttonBox, SIGNAL(accepted()),
+                    m_parent, SLOT(showComputerTeamSelection()));
+            connect(ui->buttonBox, SIGNAL(accepted()),
+                    this, SLOT(startGame()));
+         } else if (state == TeamSelectionFrame::PlayerAndComputerTeam) {
+            ui->m_teamToSelect->setText(tr("Select Player team:"));
+            ui->buttonBox->button(QDialogButtonBox::Ok)
+                    ->setText(tr("Continue"));
+
+            disconnect(ui->buttonBox, SIGNAL(accepted()),
+                    this, SLOT(startGame()));
+            connect(ui->buttonBox, SIGNAL(accepted()),
+                    m_parent, SLOT(showComputerTeamSelection()));
+        }  else if (state == TeamSelectionFrame::ComputerTeamOnly) {
+            ui->m_teamToSelect->setText(tr("Select Computer team:"));
+            ui->buttonBox->button(QDialogButtonBox::Ok)
+                    ->setText(tr("Play"));
+
+             disconnect(ui->buttonBox, SIGNAL(accepted()),
+                 m_parent, SLOT(showComputerTeamSelection()));
+             connect(ui->buttonBox, SIGNAL(accepted()),
+                 this, SLOT(startGame()));
+     }
 }
 

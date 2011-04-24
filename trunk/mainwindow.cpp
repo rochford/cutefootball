@@ -32,7 +32,9 @@
 
 MWindow::MWindow(QWidget *parent)
     : QMainWindow(parent),
-      m_gameInProgress(false)
+      m_gameInProgress(false),
+      m_homeTeamIndex(-1),
+      m_awayTeamIndex(-1)
 {
     m_soundEffects = new SoundEffects(this);
 
@@ -96,8 +98,10 @@ void MWindow::createConnections()
     connect(this, SIGNAL(setFrame(MWindow::Frame)),
             this, SLOT(showFrame(MWindow::Frame)));
 
-    connect(uiMainWindow.actionNew_Game, SIGNAL(triggered()),
-            this, SLOT(showTeamSelectionFrame()));
+    connect(uiMainWindow.actionSingleGame, SIGNAL(triggered()),
+            this, SLOT(showSingleGameTeamSelection()));
+    connect(uiMainWindow.actionGameCup, SIGNAL(triggered()),
+            this, SLOT(showCupTeamSelection()));
     connect(uiMainWindow.actionSettings, SIGNAL(triggered()),
             this, SLOT(showSettingsFrame()));
     connect(uiMainWindow.actionInputSettings, SIGNAL(triggered()),
@@ -153,7 +157,8 @@ void MWindow::enableActions(bool gameInProgress)
 {
     qDebug() << "MWindow::enableActions" << gameInProgress;
     m_gameInProgress = gameInProgress;
-    uiMainWindow.actionNew_Game->setEnabled(!gameInProgress);
+    uiMainWindow.actionSingleGame->setEnabled(!gameInProgress);
+    uiMainWindow.actionGameCup->setEnabled(!gameInProgress);
     uiMainWindow.actionSettings->setEnabled(!gameInProgress);
     uiMainWindow.actionInputSettings->setEnabled(!gameInProgress);
     uiMainWindow.actionHelp->setEnabled(!gameInProgress);
@@ -193,11 +198,11 @@ void MWindow::hideStatisticsFrame()
         emit setFrame(MWindow::MainMenu);
 }
 
-void MWindow::newGame(int homeTeam, int awayTeam)
+void MWindow::newGame()
 {
     showFrame(MWindow::GraphicsView);
     enableActions(true);
-    m_pitch->newGame(homeTeam, awayTeam);
+    m_pitch->newGame(playerTeam(), computerTeam()); // TODO
 }
 
 void MWindow::resizeEvent(QResizeEvent *e)
@@ -248,3 +253,21 @@ void MWindow::setOrientation(ScreenOrientation orientation)
     Q_UNUSED(orientation);
 #endif // Q_OS_SYMBIAN
 }
+
+void MWindow::showCupTeamSelection()
+    {
+    m_teamSelectionFrame->setTeamSelectionState(TeamSelectionFrame::PlayerTeamOnly);
+    emit setFrame(MWindow::TeamSelection);
+    }
+
+void MWindow::showSingleGameTeamSelection()
+    {
+    m_teamSelectionFrame->setTeamSelectionState(TeamSelectionFrame::PlayerAndComputerTeam);
+    emit setFrame(MWindow::TeamSelection);
+    }
+
+void MWindow::showComputerTeamSelection()
+    {
+    m_teamSelectionFrame->setTeamSelectionState(TeamSelectionFrame::ComputerTeamOnly);
+    emit setFrame(MWindow::TeamSelection);
+    }

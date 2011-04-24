@@ -26,8 +26,8 @@
    <property name="geometry">
     <rect>
      <x>90</x>
-     <y>130</y>
-     <width>75</width>
+     <y>160</y>
+     <width>101</width>
      <height>23</height>
     </rect>
    </property>
@@ -39,8 +39,8 @@
    <property name="geometry">
     <rect>
      <x>90</x>
-     <y>70</y>
-     <width>75</width>
+     <y>100</y>
+     <width>101</width>
      <height>23</height>
     </rect>
    </property>
@@ -52,8 +52,8 @@
    <property name="geometry">
     <rect>
      <x>90</x>
-     <y>40</y>
-     <width>75</width>
+     <y>70</y>
+     <width>101</width>
      <height>23</height>
     </rect>
    </property>
@@ -66,7 +66,7 @@
     <rect>
      <x>90</x>
      <y>10</y>
-     <width>75</width>
+     <width>101</width>
      <height>23</height>
     </rect>
    </property>
@@ -77,15 +77,15 @@
     </sizepolicy>
    </property>
    <property name="text">
-    <string>Play</string>
+    <string>Single Game</string>
    </property>
   </widget>
   <widget class="QPushButton" name="m_quitBtn">
    <property name="geometry">
     <rect>
      <x>90</x>
-     <y>160</y>
-     <width>75</width>
+     <y>190</y>
+     <width>101</width>
      <height>23</height>
     </rect>
    </property>
@@ -97,8 +97,8 @@
    <property name="geometry">
     <rect>
      <x>90</x>
-     <y>100</y>
-     <width>75</width>
+     <y>130</y>
+     <width>101</width>
      <height>23</height>
     </rect>
    </property>
@@ -106,9 +106,31 @@
     <string>Help</string>
    </property>
   </widget>
-  <action name="actionNewGame">
+  <widget class="QPushButton" name="m_playCupGameBtn">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>40</y>
+     <width>101</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
    <property name="text">
-    <string>Play</string>
+    <string>World Cup</string>
+   </property>
+  </widget>
+  <action name="actionGameSingle">
+   <property name="text">
+    <string>Single Game</string>
+   </property>
+   <property name="toolTip">
+    <string>Single Game</string>
    </property>
   </action>
   <action name="actionSettings">
@@ -139,6 +161,14 @@
     <string>Help</string>
    </property>
   </action>
+  <action name="actionWorld_Cup">
+   <property name="text">
+    <string>World Cup</string>
+   </property>
+   <property name="toolTip">
+    <string>World Cup</string>
+   </property>
+  </action>
  </widget>
  <tabstops>
   <tabstop>m_newGameBtn</tabstop>
@@ -153,7 +183,7 @@
   <connection>
    <sender>m_newGameBtn</sender>
    <signal>clicked()</signal>
-   <receiver>actionNewGame</receiver>
+   <receiver>actionGameSingle</receiver>
    <slot>trigger()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -239,6 +269,22 @@
     <hint type="sourcelabel">
      <x>160</x>
      <y>159</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_playCupGameBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>actionWorld_Cup</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>140</x>
+     <y>50</y>
     </hint>
     <hint type="destinationlabel">
      <x>-1</x>

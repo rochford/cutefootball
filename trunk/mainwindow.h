@@ -23,6 +23,7 @@
 #include <QtGui>
 #include <qmap.h>
 #include "ui_mainwindow.h"
+class TeamSelectionFrame;
 
 class aboutFrame;
 class Pitch;
@@ -31,7 +32,6 @@ class settingsFrame;
 class helpFrame;
 class inputSettingsFrame;
 class mainMenuFrame;
-class TeamSelectionFrame;
 class HalfStatisticsFrame;
 class InGameMenuFrame;
 
@@ -114,15 +114,19 @@ signals:
 
 public slots:
     void showFrame(MWindow::Frame f);
-    void newGame(int homeTeam, int awayTeam);
+    void newGame();
 
+    inline void setComputerTeam(int index) { m_awayTeamIndex = index; }
+    inline int computerTeam() const { return m_awayTeamIndex; }
+    inline void setPlayerTeam(int index){ m_homeTeamIndex = index; }
+    inline int playerTeam() const { return m_homeTeamIndex; }
     void hideInputSettingsFrame(){ emit setFrame(MWindow::MainMenu);}
     void hideHelpFrame(){emit setFrame(MWindow::MainMenu);}
     void hideSettingsFrame(){ emit setFrame(MWindow::MainMenu);}
     void showSettingsFrame(){ emit setFrame(MWindow::Settings);}
     void showMainMenuFrame(){ emit setFrame(MWindow::MainMenu);}
     void hideTeamSelectionFrame(){ emit setFrame(MWindow::MainMenu);}
-    void showTeamSelectionFrame(){ emit setFrame(MWindow::TeamSelection);}
+    void showSingleGameTeamSelection();
     void showInputSettingsFrame() { emit setFrame(MWindow::InputSettings);}
     void showHelpFrame(){emit setFrame(MWindow::Help);}
     void showStatisticsFrame(){emit setFrame(MWindow::HalfTimeStatistics);}
@@ -133,6 +137,9 @@ public slots:
     void hideInGameMenu();
     void displayHalfTimeStatistics(bool display);
     void showGraphicsViewFrame() { emit setFrame(MWindow::GraphicsView); }
+    void showComputerTeamSelection();
+    void showCupTeamSelection();
+
 
 protected:
     void resizeEvent(QResizeEvent *e);
@@ -141,6 +148,8 @@ private slots:
     void enableActions(bool gameInProgress);
 
 private:
+    int m_homeTeamIndex;
+    int m_awayTeamIndex;
     Pitch *m_pitch;
     settingsFrame* m_settingsFrame;
     inputSettingsFrame* m_inputSettingsFrame;

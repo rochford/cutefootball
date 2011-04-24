@@ -93,9 +93,13 @@
         <translation>Apua</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="59"/>
         <source>Play</source>
-        <translation>Pelaa</translation>
+        <translation type="obsolete">Pelaa</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.ui" line="59"/>
+        <source>Single Game</source>
+        <translation>Yksittäinen peli</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="64"/>
@@ -131,6 +135,12 @@
         <location filename="../mainwindow.ui" line="108"/>
         <source>Main Menu</source>
         <translation>Päävalikko</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.ui" line="113"/>
+        <location filename="../mainwindow.ui" line="116"/>
+        <source>World Cup</source>
+        <translation>MM</translation>
     </message>
 </context>
 <context>
@@ -436,20 +446,37 @@
 <context>
     <name>TeamSelectionFrame</name>
     <message>
-        <location filename="../teamSelectionFrame.cpp" line="33"/>
+        <location filename="../teamSelectionFrame.cpp" line="127"/>
+        <location filename="../teamSelectionFrame.cpp" line="145"/>
         <source>Play</source>
         <translation>Pelaa</translation>
     </message>
     <message>
-        <location filename="../teamSelectionFrame.cpp" line="35"/>
+        <location filename="../teamSelectionFrame.cpp" line="36"/>
         <source>Main Menu</source>
         <translation>Päävalikko</translation>
     </message>
     <message>
-        <location filename="../teamSelectionFrame.cpp" line="78"/>
+        <location filename="../teamSelectionFrame.cpp" line="34"/>
+        <location filename="../teamSelectionFrame.cpp" line="136"/>
+        <source>Continue</source>
+        <translation type="unfinished">Jatka</translation>
+    </message>
+    <message>
         <location filename="../teamSelectionFrame.cpp" line="85"/>
         <source>Rank: %1</source>
         <translation>Sijoitus: %1</translation>
+    </message>
+    <message>
+        <location filename="../teamSelectionFrame.cpp" line="125"/>
+        <location filename="../teamSelectionFrame.cpp" line="134"/>
+        <source>Select Player team:</source>
+        <translation>Valitse pelaaja joukkue:</translation>
+    </message>
+    <message>
+        <location filename="../teamSelectionFrame.cpp" line="143"/>
+        <source>Select Computer team:</source>
+        <translation>Valitse tietokone joukkue:</translation>
     </message>
 </context>
 <context>
@@ -480,7 +507,7 @@ p, li { white-space: pre-wrap; }
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Lucida Grande&apos;; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Full source code for this production is available at &lt;a href=&quot;http://code.google.com/p/cutefootball/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;http://code.google.com/p/cutefootball/&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -519,10 +546,8 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>mainMenuFrame</name>
     <message>
-        <location filename="../mainMenuFrame.ui" line="80"/>
-        <location filename="../mainMenuFrame.ui" line="111"/>
         <source>Play</source>
-        <translation>Pelaa</translation>
+        <translation type="obsolete">Pelaa</translation>
     </message>
     <message>
         <location filename="../mainMenuFrame.ui" line="61"/>
@@ -535,31 +560,45 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="../mainMenuFrame.ui" line="106"/>
-        <location filename="../mainMenuFrame.ui" line="139"/>
+        <location filename="../mainMenuFrame.ui" line="161"/>
         <source>Help</source>
         <translation>Apua</translation>
     </message>
     <message>
         <location filename="../mainMenuFrame.ui" line="35"/>
-        <location filename="../mainMenuFrame.ui" line="126"/>
+        <location filename="../mainMenuFrame.ui" line="148"/>
         <source>About</source>
         <translation>Lisätiedot</translation>
     </message>
     <message>
+        <location filename="../mainMenuFrame.ui" line="80"/>
+        <location filename="../mainMenuFrame.ui" line="130"/>
+        <location filename="../mainMenuFrame.ui" line="133"/>
+        <source>Single Game</source>
+        <translation>Yksittäinen peli</translation>
+    </message>
+    <message>
         <location filename="../mainMenuFrame.ui" line="93"/>
-        <location filename="../mainMenuFrame.ui" line="121"/>
+        <location filename="../mainMenuFrame.ui" line="143"/>
         <source>Quit</source>
         <translation>Lopeta</translation>
     </message>
     <message>
         <location filename="../mainMenuFrame.ui" line="48"/>
-        <location filename="../mainMenuFrame.ui" line="131"/>
-        <location filename="../mainMenuFrame.ui" line="134"/>
+        <location filename="../mainMenuFrame.ui" line="153"/>
+        <location filename="../mainMenuFrame.ui" line="156"/>
         <source>Keys</source>
         <translation>Näppäimet</translation>
     </message>
     <message>
-        <location filename="../mainMenuFrame.ui" line="116"/>
+        <location filename="../mainMenuFrame.ui" line="125"/>
+        <location filename="../mainMenuFrame.ui" line="166"/>
+        <location filename="../mainMenuFrame.ui" line="169"/>
+        <source>World Cup</source>
+        <translation>MM</translation>
+    </message>
+    <message>
+        <location filename="../mainMenuFrame.ui" line="138"/>
         <source>Game Settings</source>
         <translation>Pelin asetukset</translation>
     </message>
@@ -614,29 +653,30 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Kotijoukkue</translation>
     </message>
     <message>
-        <location filename="../teamSelectionFrame.ui" line="58"/>
         <source>Away</source>
-        <translation>Vieras</translation>
+        <translation type="obsolete">Vieras</translation>
     </message>
     <message>
-        <location filename="../teamSelectionFrame.ui" line="105"/>
         <source>Home</source>
-        <translation>Koti</translation>
+        <translation type="obsolete">Koti</translation>
     </message>
     <message>
-        <location filename="../teamSelectionFrame.ui" line="131"/>
         <source>Player</source>
-        <translation>Pelaaja</translation>
+        <translation type="obsolete">Pelaaja</translation>
     </message>
     <message>
-        <location filename="../teamSelectionFrame.ui" line="164"/>
+        <location filename="../teamSelectionFrame.ui" line="38"/>
         <source>Team Selection</source>
         <translation>Joukkueen valinta</translation>
     </message>
     <message>
-        <location filename="../teamSelectionFrame.ui" line="179"/>
-        <source>MUST CHOOSE TWO DIFFERENT TEAMS!</source>
+        <location filename="../teamSelectionFrame.ui" line="85"/>
+        <source>Must choose a different team!</source>
         <translation>TÄYTYY VALITA KAKSI ERI JOUKKUETTA</translation>
+    </message>
+    <message>
+        <source>MUST CHOOSE TWO DIFFERENT TEAMS!</source>
+        <translation type="obsolete">TÄYTYY VALITA KAKSI ERI JOUKKUETTA</translation>
     </message>
     <message>
         <source>DIFFICULTY:</source>
@@ -647,9 +687,8 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">TÄYTYY VALITA KAKSI ERI JOUKKUETTA</translation>
     </message>
     <message>
-        <location filename="../teamSelectionFrame.ui" line="71"/>
         <source>Computer</source>
-        <translation>Tietokone</translation>
+        <translation type="obsolete">Tietokone</translation>
     </message>
 </context>
 </TS>

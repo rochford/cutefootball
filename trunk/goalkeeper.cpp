@@ -32,12 +32,12 @@ GoalKeeper::GoalKeeper(QString name,
                        QColor hairColor,
                        QColor skinColor)
     : Player(name,number,true,pitch,
-          team,5.0,
+          team,
+          5.0,
           Player::GoalKeeper,
           hairColor,
           skinColor)
 {
-
     connect(pitch->ball(), SIGNAL(shot(Team*,QPointF)),
             this,SLOT(goalAttempt(Team*,QPointF)));
 }
@@ -127,19 +127,17 @@ void GoalKeeper::gkAdvanceWithoutBall()
     Team::Direction dir = m_team->getDirection();
     MWindow::Action action;
 
+    QPointF dst;
     if ( (dir == Team::SouthToNorth
         && m_pitch->m_bottomPenaltyArea->contains(m_pitch->ball()->pos()) )
     || (dir == Team::NorthToSouth
-        && m_pitch->m_topPenaltyArea->contains(m_pitch->ball()->pos())) ) {
-
+        && m_pitch->m_topPenaltyArea->contains(m_pitch->ball()->pos())) )
         //qDebug() << "GoalKeeper::gkAdvanceWithoutBall";
-        action = calculateAction(pos(), m_pitch->ball()->pos());
-        move(action, m_pitch->ball()->pos());
-    } else {
-        QPointF ownGoal;
-        action = calculateAction( pos(), m_startPositionRectF.center() );
-        move(action, m_startPositionRectF.center());
-    }
+        dst = m_pitch->ball()->pos();
+    else
+        dst = m_startPositionRectF.center();
+    action = calculateAction(pos(), dst);
+    move(action, dst);
 }
 
 void GoalKeeper::gkAdvanceWithBall()
@@ -150,7 +148,7 @@ void GoalKeeper::gkAdvanceWithBall()
         m_lastAction = MWindow::North;
     else
         m_lastAction = MWindow::South;
-    move(MWindow::Shot);
+    move(MWindow::Pass);
 }
 
 
