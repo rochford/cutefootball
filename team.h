@@ -75,6 +75,8 @@ public:
     inline QString briefName() const { return m_briefName; }
     inline int ranking() const { return m_rank; }
     inline QString flag() const { return QString(":/images/flags/" + m_name + ".png");}
+    inline bool humanControlled() const { return m_humanControlled; }
+    void setHumanControlled(bool human) { m_humanControlled = human; }
 
 public slots:
     void goalScored(bool isNorthGoal);
@@ -95,6 +97,8 @@ private:
     qreal m_speed;
     // the teams ranking
     int m_rank;
+    // is the team controlled by human player
+    bool m_humanControlled;
 };
 
 

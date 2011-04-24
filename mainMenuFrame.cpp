@@ -28,25 +28,22 @@ mainMenuFrame::mainMenuFrame(MWindow *parent) :
     ui(new Ui::mainMenuFrame)
 {
     ui->setupUi(this);
-    ui->m_settingsBtn->setVisible(false);
 
-    m_animationGrp = new QParallelAnimationGroup(this);
-    const int offset = ui->m_newGameBtn->size().width()/2;
-    const int xPoint = size().width()/2 - offset;
-    int yPoint(10);
-    m_animationGrp->addAnimation(createAnimation(ui->m_newGameBtn, QPoint(xPoint,yPoint+=30)));
-    if (ui->m_settingsBtn->isVisible())
-        m_animationGrp->addAnimation(createAnimation(ui->m_settingsBtn, QPoint(xPoint,yPoint+=30)));
-    m_animationGrp->addAnimation(createAnimation(ui->m_inputBtn, QPoint(xPoint,yPoint+=30)));
-    m_animationGrp->addAnimation(createAnimation(ui->m_informationBtn, QPoint(xPoint,yPoint+=30)));
-    m_animationGrp->addAnimation(createAnimation(ui->m_aboutBtn, QPoint(xPoint,yPoint+=30)));
-    m_animationGrp->addAnimation(createAnimation(ui->m_quitBtn, QPoint(xPoint,yPoint+=30)));
+    // TODO disable these until ready
+    ui->m_settingsBtn->setVisible(false);
+    ui->m_settingsBtn->setEnabled(false);
+    ui->m_playCupGameBtn->setVisible(false);
+    ui->m_playCupGameBtn->setEnabled(false);
+
+    animateButtons(size().width());
 
     connect(parent, SIGNAL(setFrame(MWindow::Frame)),
             this, SLOT(showFrame(MWindow::Frame)));
 
-    connect(ui->actionNewGame, SIGNAL(triggered()),
-            parent, SLOT(showTeamSelectionFrame()));
+    connect(ui->actionGameSingle, SIGNAL(triggered()),
+            parent, SLOT(showSingleGameTeamSelection()));
+    connect(ui->actionWorld_Cup, SIGNAL(triggered()),
+            parent, SLOT(showCupTeamSelection()));
     connect(ui->actionSettings, SIGNAL(triggered()),
             parent, SLOT(showSettingsFrame()));
     connect(ui->actionInputSettings, SIGNAL(triggered()),
@@ -94,10 +91,33 @@ void mainMenuFrame::resizeEvent(QResizeEvent *e)
     const int offset = ui->m_newGameBtn->size().width()/2;
     const int xPos = e->size().width()/2 - offset;
     ui->m_newGameBtn->setProperty("pos", QPoint(xPos,ui->m_newGameBtn->property("pos").toPoint().y()));
-    if (ui->m_settingsBtn->isVisible())
+    if (ui->m_playCupGameBtn->isEnabled())
+        ui->m_playCupGameBtn->setProperty("pos", QPoint(xPos,ui->m_playCupGameBtn->property("pos").toPoint().y()));
+    if (ui->m_settingsBtn->isEnabled())
         ui->m_settingsBtn->setProperty("pos", QPoint(xPos,ui->m_settingsBtn->property("pos").toPoint().y()));
     ui->m_inputBtn->setProperty("pos", QPoint(xPos,ui->m_inputBtn->property("pos").toPoint().y()));
     ui->m_informationBtn->setProperty("pos", QPoint(xPos,ui->m_informationBtn->property("pos").toPoint().y()));
     ui->m_aboutBtn->setProperty("pos", QPoint(xPos,ui->m_aboutBtn->property("pos").toPoint().y()));
     ui->m_quitBtn->setProperty("pos", QPoint(xPos,ui->m_quitBtn->property("pos").toPoint().y()));
+
+    animateButtons(e->size().width());
+}
+
+void mainMenuFrame::animateButtons(const int width)
+{
+    delete m_animationGrp;
+    m_animationGrp = NULL;
+    m_animationGrp = new QParallelAnimationGroup(this);
+    const int offset = ui->m_newGameBtn->size().width()/2;
+    const int xPoint = width/2 - offset;
+    int yPoint(10);
+    m_animationGrp->addAnimation(createAnimation(ui->m_newGameBtn, QPoint(xPoint,yPoint+=30)));
+    if (ui->m_playCupGameBtn->isEnabled())
+        m_animationGrp->addAnimation(createAnimation(ui->m_playCupGameBtn, QPoint(xPoint,yPoint+=30)));
+    if (ui->m_settingsBtn->isEnabled())
+        m_animationGrp->addAnimation(createAnimation(ui->m_settingsBtn, QPoint(xPoint,yPoint+=30)));
+    m_animationGrp->addAnimation(createAnimation(ui->m_inputBtn, QPoint(xPoint,yPoint+=30)));
+    m_animationGrp->addAnimation(createAnimation(ui->m_informationBtn, QPoint(xPoint,yPoint+=30)));
+    m_animationGrp->addAnimation(createAnimation(ui->m_aboutBtn, QPoint(xPoint,yPoint+=30)));
+    m_animationGrp->addAnimation(createAnimation(ui->m_quitBtn, QPoint(xPoint,yPoint+=30)));
 }

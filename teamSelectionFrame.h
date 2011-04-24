@@ -32,21 +32,29 @@ class TeamSelectionFrame : public QFrame
     Q_OBJECT
 
 public:
+    enum TeamSelectionState {
+        PlayerTeamOnly,
+        PlayerAndComputerTeam,
+        ComputerTeamOnly
+        };
+
     explicit TeamSelectionFrame(MWindow *parent = 0);
     ~TeamSelectionFrame();
 
 public slots:
     void showFrame(MWindow::Frame f);
+    void setTeamSelectionState(TeamSelectionState state);
 
 private slots:
     void checkSelectedTeams(const QString &);
-    void updateHomeTeamDetails(int index);
-    void updateAwayTeamDetails(int index);
+    void updateTeamDetails(int index);
     void startGame();
+    void setTeam();
 
 private:
     MWindow* m_parent;
     Ui::teamSelectionFrame *ui;
+    TeamSelectionState m_selection;
 };
 
 #endif // TEAMSELECTIONFRAME_H

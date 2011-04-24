@@ -50,13 +50,13 @@
      <x>0</x>
      <y>0</y>
      <width>320</width>
-     <height>20</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>
-  <action name="actionNew_Game">
+  <action name="actionSingleGame">
    <property name="text">
-    <string>Play</string>
+    <string>Single Game</string>
    </property>
   </action>
   <action name="actionQuit">
@@ -106,6 +106,14 @@
   <action name="actionMainMenu">
    <property name="text">
     <string>Main Menu</string>
+   </property>
+  </action>
+  <action name="actionGameCup">
+   <property name="text">
+    <string>World Cup</string>
+   </property>
+   <property name="toolTip">
+    <string>World Cup</string>
    </property>
   </action>
  </widget>

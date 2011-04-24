@@ -138,7 +138,8 @@ Team::Team(int ranking, QString briefName, QString teamName, QColor shirtColor, 
     m_goals(0),
     m_scoredLastGoal(false),
     m_speed(playerSpeed),
-    m_rank(ranking)
+    m_rank(ranking),
+    m_humanControlled(false)
 {
 }
 

@@ -43,7 +43,8 @@ public slots:
 
 private:
     QPropertyAnimation* createAnimation(QWidget* widget, QPoint finalPosition);
-
+    void animateButtons(const int width);
+private:
     Ui::mainMenuFrame *ui;
     QParallelAnimationGroup* m_animationGrp;
 };
