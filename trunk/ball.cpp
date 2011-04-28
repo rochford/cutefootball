@@ -64,7 +64,8 @@ Ball::Ball(Pitch* pitch)
 
 Ball::~Ball()
 {
-    m_ballOwnerTimer->stop();
+    if (m_ballOwnerTimer)
+        m_ballOwnerTimer->stop();
     delete m_ballOwnerTimer;
     delete m_animation;
     delete m_animationTimeLine;

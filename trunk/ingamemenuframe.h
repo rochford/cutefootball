@@ -35,8 +35,8 @@ public:
     ~InGameMenuFrame();
     void setHomeTeamGoals(int n) { ui->homeGoals->setText(QString::number(n)); }
     void setAwayTeamGoals(int n) { ui->awayGoals->setText(QString::number(n)); }
-    void setHomeTeamFlag(QString flag) { ui->homeFlag->setPixmap(flag);}
-    void setAwayTeamFlag(QString flag) { ui->awayFlag->setPixmap(flag);}
+    void setHomeTeamFlag(QString flag) { ui->homeFlag->setPixmap(QPixmap(flag).scaled(40,30));}
+    void setAwayTeamFlag(QString flag) { ui->awayFlag->setPixmap(QPixmap(flag).scaled(40,30));}
 
 public slots:
     void showFrame(MWindow::Frame f);
