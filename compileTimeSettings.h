@@ -25,8 +25,8 @@
 
 const int KHalfLength = 60*1000; // seconds
 //const QRgb KDefaultHairColor = QColor(195,74,74).rgb();
-const QRgb KGoalKeeperShirtColor = QColor(Qt::green).rgb();
-const QRgb KGoalKeeperShortColor = QColor(Qt::black).rgb();
+const QRgb KGKShirtColor = QColor(Qt::green).rgb();
+const QRgb KGKShortColor = QColor(Qt::black).rgb();
 const int KOneSecondMs = 1000; // ms
 const int KLongPressValue = 400; // Ms
 
@@ -37,8 +37,8 @@ const QPen KPlayerNameUnfocused(QBrush(Qt::white),4);
 const QPen KWhitePaintPen(QBrush(Qt::white),3);
 const QBrush KFocusPlayerBrush(Qt::white, Qt::Dense3Pattern);
 
-const int KGameRefreshRate = 1000 / 20; // ms
-const int KKeyPressRefreshRate = 1000 / 20; // ms
+const int KGameRefreshRate = 1000 / 24; // ms
+const int KKeyPressRefreshRate = 1000 / 24; // ms
 
 const int KColumn = 5; // Left, l-Centre, centre, r-centre, Right
 // goalkepper-defence-midfield-attack,attack-midfield-defence-goalkepper

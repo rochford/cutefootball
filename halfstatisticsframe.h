@@ -41,8 +41,8 @@ public:
     void setAwayTeamGoals(int n) { ui->m_awayGoals->setText(QString::number(n)); }
     void setHomeTeamShots(int n) { ui->m_homeShots->setText(QString::number(n)); }
     void setAwayTeamShots(int n) { ui->m_awayShots->setText(QString::number(n)); }
-    void setHomeTeamFlag(QString flag) { ui->homeFlag->setPixmap(flag);}
-    void setAwayTeamFlag(QString flag) { ui->awayFlag->setPixmap(flag);}
+    void setHomeTeamFlag(QString flag) { ui->homeFlag->setPixmap(QPixmap(flag).scaled(40,30));}
+    void setAwayTeamFlag(QString flag) { ui->awayFlag->setPixmap(QPixmap(flag).scaled(40,30));}
 public slots:
     void showFrame(MWindow::Frame f);
 

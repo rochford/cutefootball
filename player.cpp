@@ -177,7 +177,8 @@ void Player::createPixmaps()
     pixmapInsert(MWindow::NoAction, "pS.PNG", "pS1.PNG", "pS2.PNG", m_team->m_shirtColor.rgb(), m_team->m_shortColor.rgb());
 
     // set default pixmap
-    setPixmap(m_images[MWindow::North].at(0));
+    m_lastAction = MWindow::North;
+    setPixmap(m_images[m_lastAction].at(0));
 }
 
 QRectF Player::boundingRect() const
@@ -197,6 +198,10 @@ void Player::paint(QPainter *painter,
     painter->drawText(m_toolTipTextPos, m_toolTipText);
 
     // Draw QGraphicsPixmapItem face
+    if (!pixmap())
+        setPixmap(m_images[m_lastAction].at(m_step % 3));
+
+//    Q_ASSERT(pixmap());
     painter->drawPixmap(boundingRect().toRect(), pixmap());
 }
 
@@ -230,13 +235,6 @@ QPainterPath Player::shape() const
 
 void Player::movePlayer(MWindow::Action action, QPointF destination)
 {
-#if 0
-    if (this->m_role == Player::GoalKeeper) {
-        qDebug() << "Player::movePlayer GoalKeeper start";
-        if (m_pitch->ball()->ballOwner())
-            qDebug() << "Player::movePlayer m_pitch->ball()->ballOwner() name " << m_pitch->ball()->ballOwner()->m_name;
-    }
-#endif
     // if the ball is not owned then take ownership
     if (ballCollisionCheck() && !m_pitch->ball()->ballOwner()) {
 //        qDebug() << "Player::movePlayer taken ball";
@@ -360,6 +358,13 @@ QPointF Player::calculateDestination(MWindow::Action act)
 void Player::specialAction(MWindow::Action action)
 {
     switch (action) {
+        case MWindow::DiveEast:
+        case MWindow::DiveWest:
+            setPixmap(m_images[action].at(0));
+            m_outOfAction->stop();
+            m_outOfAction->start(750);
+            return;
+
         case MWindow::Tackle:
             {
             // perform tackle here...
@@ -463,7 +468,9 @@ void Player::move(MWindow::Action action, QPointF destination)
     if ( action == MWindow::Shot
         || action == MWindow::Tackle
         || action == MWindow::FallenOver
-        || action == MWindow::Pass)
+        || action == MWindow::Pass
+        || action == MWindow::DiveEast
+        || action == MWindow::DiveWest )
         specialAction(action);
     else
         movePlayer(action, destination);

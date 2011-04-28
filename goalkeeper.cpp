@@ -25,6 +25,8 @@
 #include "ball.h"
 #include <QDebug>
 
+const int KDiveDistance(25);
+
 GoalKeeper::GoalKeeper(QString name,
                        int number,
                        Pitch *pitch,
@@ -56,35 +58,35 @@ void GoalKeeper::goalAttempt(Team* t, QPointF dest)
         qDebug() << "need to save it";
         action = calculateAction(pos(), dest);
         if (action == MWindow::East)
-            qDebug() << "dive east";
+            move(MWindow::DiveEast, QPointF(pos().x()+KDiveDistance,pos().y()));
         else
-            qDebug() << "dive west";
+            move(MWindow::DiveWest, QPointF(pos().x()-KDiveDistance,pos().y()));
     }
 }
 
 void GoalKeeper::createPixmaps()
 {
-    pixmapInsert(MWindow::North, "pN.PNG", "pN1.PNG", "pN2.PNG", KGoalKeeperShirtColor, KGoalKeeperShortColor);
-    pixmapInsert(MWindow::NorthEast, "pNE.PNG", "pNE1.PNG", "pNE2.PNG", KGoalKeeperShirtColor, KGoalKeeperShortColor);
-    pixmapInsert(MWindow::East, "pE.PNG", "pE1.PNG", "pE2.PNG", KGoalKeeperShirtColor, KGoalKeeperShortColor);
-    pixmapInsert(MWindow::SouthEast, "pSE.PNG", "pSE1.PNG", "pSE2.PNG", KGoalKeeperShirtColor, KGoalKeeperShortColor);
-    pixmapInsert(MWindow::South, "pS.PNG", "pS1.PNG", "pS2.PNG", KGoalKeeperShirtColor, KGoalKeeperShortColor);
-    pixmapInsert(MWindow::SouthWest, "pSW.PNG", "pSW1.PNG", "pSW2.PNG", KGoalKeeperShirtColor, KGoalKeeperShortColor);
-    pixmapInsert(MWindow::West, "pW.PNG", "pW1.PNG", "pW2.PNG", KGoalKeeperShirtColor, KGoalKeeperShortColor);
-    pixmapInsert(MWindow::NorthWest, "pNW.PNG", "pNW1.PNG", "pNW2.PNG", KGoalKeeperShirtColor, KGoalKeeperShortColor);
+    pixmapInsert(MWindow::North, "pN.PNG", "pN1.PNG", "pN2.PNG", KGKShirtColor, KGKShortColor);
+    pixmapInsert(MWindow::NorthEast, "pNE.PNG", "pNE1.PNG", "pNE2.PNG", KGKShirtColor, KGKShortColor);
+    pixmapInsert(MWindow::East, "pE.PNG", "pE1.PNG", "pE2.PNG", KGKShirtColor, KGKShortColor);
+    pixmapInsert(MWindow::SouthEast, "pSE.PNG", "pSE1.PNG", "pSE2.PNG", KGKShirtColor, KGKShortColor);
+    pixmapInsert(MWindow::South, "pS.PNG", "pS1.PNG", "pS2.PNG", KGKShirtColor, KGKShortColor);
+    pixmapInsert(MWindow::SouthWest, "pSW.PNG", "pSW1.PNG", "pSW2.PNG", KGKShirtColor, KGKShortColor);
+    pixmapInsert(MWindow::West, "pW.PNG", "pW1.PNG", "pW2.PNG", KGKShirtColor, KGKShortColor);
+    pixmapInsert(MWindow::NorthWest, "pNW.PNG", "pNW1.PNG", "pNW2.PNG", KGKShirtColor, KGKShortColor);
 
-    pixmapInsert(MWindow::TackleN, "tackleN.PNG", "tackleN.PNG", "tackleN.PNG", KGoalKeeperShirtColor, KGoalKeeperShirtColor);
-    pixmapInsert(MWindow::TackleNE, "tackleNE.PNG", "tackleNE.PNG", "tackleNE.PNG", KGoalKeeperShirtColor, KGoalKeeperShirtColor);
-    pixmapInsert(MWindow::TackleNW, "tackleNW.PNG", "tackleNW.PNG", "tackleNW.PNG", KGoalKeeperShirtColor, KGoalKeeperShirtColor);
-    pixmapInsert(MWindow::TackleE, "tackleE.PNG", "tackleE.PNG", "tackleE.PNG", KGoalKeeperShirtColor, KGoalKeeperShirtColor);
-    pixmapInsert(MWindow::TackleSE, "tackleSE.PNG", "tackleSE.PNG", "tackleSE.PNG", KGoalKeeperShirtColor, KGoalKeeperShirtColor);
-    pixmapInsert(MWindow::TackleS, "tackleS.PNG", "tackleS.PNG", "tackleS.PNG", KGoalKeeperShirtColor, KGoalKeeperShirtColor);
-    pixmapInsert(MWindow::TackleSW, "tackleSW.PNG", "tackleSW.PNG", "tackleSW.PNG", KGoalKeeperShirtColor, KGoalKeeperShirtColor);
-    pixmapInsert(MWindow::TackleW, "tackleW.PNG", "tackleW.PNG", "tackleW.PNG", KGoalKeeperShirtColor, KGoalKeeperShirtColor);
-    pixmapInsert(MWindow::FallenOver, "pNW.PNG", "pNW1.PNG", "pNW2.PNG", KGoalKeeperShirtColor, KGoalKeeperShortColor); // TODO XXX TIM
+    pixmapInsert(MWindow::TackleN, "tackleN.PNG", "tackleN.PNG", "tackleN.PNG", KGKShirtColor, KGKShortColor);
+    pixmapInsert(MWindow::TackleNE, "tackleNE.PNG", "tackleNE.PNG", "tackleNE.PNG", KGKShirtColor, KGKShortColor);
+    pixmapInsert(MWindow::TackleNW, "tackleNW.PNG", "tackleNW.PNG", "tackleNW.PNG", KGKShirtColor, KGKShortColor);
+    pixmapInsert(MWindow::TackleE, "tackleE.PNG", "tackleE.PNG", "tackleE.PNG", KGKShirtColor, KGKShortColor);
+    pixmapInsert(MWindow::TackleSE, "tackleSE.PNG", "tackleSE.PNG", "tackleSE.PNG", KGKShirtColor, KGKShortColor);
+    pixmapInsert(MWindow::TackleS, "tackleS.PNG", "tackleS.PNG", "tackleS.PNG", KGKShirtColor, KGKShortColor);
+    pixmapInsert(MWindow::TackleSW, "tackleSW.PNG", "tackleSW.PNG", "tackleSW.PNG", KGKShirtColor, KGKShortColor);
+    pixmapInsert(MWindow::TackleW, "tackleW.PNG", "tackleW.PNG", "tackleW.PNG", KGKShirtColor, KGKShortColor);
+    pixmapInsert(MWindow::FallenOver, "pTackled.PNG", "pTackled.PNG", "pTackled.PNG", KGKShirtColor, KGKShortColor);
 
-    pixmapInsert(MWindow::DiveEast, "tackleN.PNG", "tackleN.PNG", "tackleN.PNG", KGoalKeeperShirtColor, KGoalKeeperShortColor); // TODO XXX TIM
-    pixmapInsert(MWindow::DiveWest, "tackleN.PNG", "tackleN.PNG", "tackleN.PNG", KGoalKeeperShirtColor, KGoalKeeperShortColor); // TODO XXX TIM
+    pixmapInsert(MWindow::DiveEast, "diveE.PNG", "diveE.PNG", "diveE.PNG", KGKShirtColor, KGKShortColor);
+    pixmapInsert(MWindow::DiveWest, "diveW.PNG", "diveW.PNG", "diveW.PNG", KGKShirtColor, KGKShortColor);
 
     // set default pixmap
     setPixmap(m_images[MWindow::North].at(0));
@@ -134,8 +136,16 @@ void GoalKeeper::gkAdvanceWithoutBall()
         && m_pitch->m_topPenaltyArea->contains(m_pitch->ball()->pos())) )
         //qDebug() << "GoalKeeper::gkAdvanceWithoutBall";
         dst = m_pitch->ball()->pos();
-    else
-        dst = m_startPositionRectF.center();
+    else {
+        // if the ball x point is within the goal range, then move the keeper to the same x pos
+        const qreal goalMinX = m_pitch->m_bottomGoal->pos().x() + m_pitch->m_bottomGoal->rect().topLeft().x();
+        const qreal goalMaxX = goalMinX + m_pitch->m_bottomGoal->rect().width();
+        const qreal ballX = m_pitch->ball()->pos().x();
+        if ( (goalMinX < ballX) && (ballX < goalMaxX)  )
+            dst = QPointF(ballX, m_startPositionRectF.center().y());
+        else
+            dst = m_startPositionRectF.center();
+    }
     action = calculateAction(pos(), dst);
     move(action, dst);
 }
