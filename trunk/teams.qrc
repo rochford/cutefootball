@@ -99,5 +99,37 @@
         <file>teams/Vietnam.txt</file>
         <file>teams/Wales.txt</file>
         <file>teams/teams.txt</file>
+        <file>teams/Algeria.txt</file>
+        <file>teams/Cameroon.txt</file>
+        <file>teams/Canada.txt</file>
+        <file>teams/Ghana.txt</file>
+        <file>teams/Israel.txt</file>
+        <file>teams/Jamaica.txt</file>
+        <file>teams/Jordan.txt</file>
+        <file>teams/KoreaRepublic.txt</file>
+        <file>teams/Morocco.txt</file>
+        <file>teams/NewZealand.txt</file>
+        <file>teams/Niger.txt</file>
+        <file>teams/Nigeria.txt</file>
+        <file>teams/Pakistan.txt</file>
+        <file>teams/Thailand.txt</file>
+        <file>images/flags/Algeria.png</file>
+        <file>images/flags/Cameroon.png</file>
+        <file>images/flags/Canada.png</file>
+        <file>images/flags/Colombia.png</file>
+        <file>images/flags/Ghana.png</file>
+        <file>images/flags/Israel.png</file>
+        <file>images/flags/Jamaica.png</file>
+        <file>images/flags/Jordan.png</file>
+        <file>images/flags/KoreaRepublic.png</file>
+        <file>images/flags/Morocco.png</file>
+        <file>images/flags/NewZealand.png</file>
+        <file>images/flags/Niger.png</file>
+        <file>images/flags/Nigeria.png</file>
+        <file>images/flags/Pakistan.png</file>
+        <file>images/flags/Thailand.png</file>
+        <file>images/flags/Tunisia.png</file>
+        <file>teams/Colombia.txt</file>
+        <file>teams/Tunisia.txt</file>
     </qresource>
 </RCC>

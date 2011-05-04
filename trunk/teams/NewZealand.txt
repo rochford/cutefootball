@@ -1,0 +1,5 @@
+adam,GK,black,pink
+bob,CD,yellow,pink
+charlie,LM,black,pink
+dave,RM,grey,tan
+eddie,CF,yellow,pink
