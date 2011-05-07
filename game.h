@@ -24,12 +24,12 @@
 #include <QTimer>
 #include <QtGlobal>
 #include <QStateMachine>
-
-// #include <QGraphicsItem>
 #include <QStyleOptionGraphicsItem>
 #include <QList>
 #include <QGraphicsItemAnimation>
 #include <QDebug>
+
+#include "kickoffstate.h"
 
 class QTimeLine;
 class QFinalState;
@@ -58,6 +58,7 @@ public:
         { return m_currentState; }
     void setCurrentState(GameHalf* half)
         { m_currentState = half; }
+    void setTeamToKickOff(Team* t);
 
 private:
     QStateMachine& m_fsm;
@@ -87,20 +88,20 @@ public:
 
     enum GameState {
         GoalScored, // reason for another kickoff
-        TakePositions,
         HalfOver
     };
     inline int remainingTimeInHalfMs() const
         { return m_remainingTimeInHalfMs; }
     inline void setGameLength(int totalGameInMinutes)
         { m_remainingTimeInHalfMs = (totalGameInMinutes * 60 *1000)/2.0; }
+    void setTeamToKickOff(Team* t) { m_kickOffState->teamToKickOff(t); }
+
 signals:
     void halfOver(QString halfName);
 
 public slots:
     void playFrame(int frame);
     void startPlayersLeavePitchAnim(QString halfName);
-    void kickOff();
     void decrementGameTime();
     void foulCaused(Team* orig, QPointF location);
 
@@ -113,7 +114,7 @@ protected:
     void onExit ( QEvent * event );
 
 private:
-    void createPlayerAnimationItems(GameState g);
+    void createPlayerAnimationItems();
 
 private:
     // the parent state
@@ -127,7 +128,7 @@ private:
     // amounts of MS left in this half
     int m_remainingTimeInHalfMs;
 
-    QState *m_startState;
+    KickOffState *m_kickOffState;
     QState *m_playingState;
     QState *m_halfEndState;
     GoalScoredState *m_goalScoredState;

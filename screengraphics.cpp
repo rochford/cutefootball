@@ -47,7 +47,8 @@ void ScreenGraphics::update(QString s)
         ui->scoreTextLabel->setText(tr("Foul"));
     else if (m_type == GoalScored )
         ui->scoreTextLabel->setText(tr("Goal"));
-}
+    else if (m_type == KickOff )
+        ui->scoreTextLabel->setText(tr("Kick Off"));}
 
 void ScreenGraphics::setTeams(Team* home, Team* away)
 {

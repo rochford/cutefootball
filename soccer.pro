@@ -107,7 +107,9 @@ SOURCES += \
     soccerutils.cpp \
     cameraview.cpp \
     aboutFrame.cpp \
-    ingamemenuframe.cpp
+    ingamemenuframe.cpp \
+    pitchscene.cpp \
+    kickoffstate.cpp
 
 HEADERS  += \
     mainwindow.h \
@@ -132,7 +134,9 @@ HEADERS  += \
     soccerutils.h \
     cameraview.h \
     aboutFrame.h \
-    ingamemenuframe.h
+    ingamemenuframe.h \
+    pitchscene.h \
+    kickoffstate.h
 #    teamNameTranslations.h
 
 RESOURCES += \
@@ -207,6 +211,22 @@ OTHER_FILES += \
     teams/Brazil.txt \
     teams/Australia.txt \
     teams/Argentina.txt \
+    teams/Algeria.txt \
+    teams/Cameroon.txt \
+    teams/Canada.txt \
+    teams/Colombia.txt \
+    teams/Ghana.txt \
+    teams/Israel.txt \
+    teams/Jamaica.txt \
+    teams/Jordan.txt \
+    teams/KoreaRepublic.txt \
+    teams/Morocco.txt \
+    teams/NewZealand.txt \
+    teams/Niger.txt \
+    teams/Nigeria.txt \
+    teams/Pakistan.txt \
+    teams/Thailand.txt \
+    teams/Tunisia.txt \
     mobileQVGA.qss \
     mobileVGA.qss \
     info.txt \

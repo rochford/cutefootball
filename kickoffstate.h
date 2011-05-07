@@ -11,52 +11,66 @@
  *    CuteFootball is distributed in the hope that it will be useful,
  *    but WITHOUT ANY WARRANTY; without even the implied warranty of
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    Lesser  GNU General Public License for more details.
+ *    Lesser GNU General Public License for more details.
  *
  *    You should have received a copy of the Lesser GNU General Public License
  *    along with CuteFootball.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
-#ifndef GOALSCOREDSTATE_H
-#define GOALSCOREDSTATE_H
+#ifndef KICKOFFSTATE_H
+#define KICKOFFSTATE_H
 
-#include <QList>
+#include <QTimer>
 #include <QtGlobal>
 #include <QStateMachine>
+#include <QFinalState>
+
+#include <QGraphicsItem>
+#include <QStyleOptionGraphicsItem>
+#include <QList>
 #include <QGraphicsItemAnimation>
+#include <QDebug>
 
 class QTimeLine;
-class QFinalState;
 
-class GameHalf;
 class Pitch;
+class GameHalf;
+class Team;
 
-class GoalScoredState : public QState
+class KickOffState : public QState
 {
     Q_OBJECT
+
 public:
-    GoalScoredState(GameHalf *g, Pitch *p);
-    ~GoalScoredState() {}
+    explicit KickOffState(GameHalf *g, Pitch *p, QObject *parent = 0);
+    ~KickOffState();
 
 public slots:
-    void playFrameCelebrate(int frame);
+    void playFrame(int frame);
+    void prepareForKickOff();
+    void teamToKickOff(Team*);
+
     void pauseGameClock();
     void continueGameClock();
 
 protected:
-    void onEntry ( QEvent * event );
+    void onEntry (QEvent* event );
+    void onExit(QEvent* event);
 
 private:
     void createPlayerAnimationItems();
 
 private:
-    QState *m_celebrate;
+    QState *m_takePositions;
+    QState *m_takeKickOff;
     QFinalState *m_allDone;
-    GameHalf *m_game;
     Pitch* m_pitch;
-    QTimeLine *m_timeLineCelebrate;
+    GameHalf* m_game;
+    QTimeLine *m_timeLineTakePositions;
     QList<QGraphicsItemAnimation*> m_playerAnimationItems;
+
+    Team* m_teamToKickOff; // NOT OWNED
 };
 
-#endif // GOALSCOREDSTATE_H
+#endif // KICKOFFSTATE_H

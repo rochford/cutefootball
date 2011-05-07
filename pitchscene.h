@@ -17,43 +17,23 @@
  *    along with CuteFootball.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-#ifndef SCREENGRAPHICS_H
-#define SCREENGRAPHICS_H
 
-#include <QFrame>
+#ifndef PITCHSCENE_H
+#define PITCHSCENE_H
 
-#include "ui_screengraphicsframe.h"
+#include <QGraphicsScene>
 
-namespace Ui {
-    class ScreenGraphicsFrame;
-}
-
-
-class Team;
-class Pitch;
-
-class ScreenGraphics : public QFrame
+class PitchScene : public QGraphicsScene
 {
+    Q_OBJECT
 public:
-    enum ScreenGraphicsType {
-        ScoreText,
-        GoalScored,
-        Foul,
-        KickOff
-    };
+    explicit PitchScene(const QRectF& footballGroundRect,
+                        QObject *parent = 0);
 
-    ScreenGraphics(Pitch *p);
-    virtual ~ScreenGraphics();
-    void update(QString s);
-    void setTeams(Team* home, Team* away);
+signals:
 
 public slots:
-    void setGraphics(ScreenGraphicsType type);
 
-private:
-    Ui::ScreenGraphicsFrame *ui;
-    Pitch *m_pitch;
-    ScreenGraphicsType m_type;
 };
 
-#endif // SCREENGRAPHICS_H
+#endif // PITCHSCENE_H

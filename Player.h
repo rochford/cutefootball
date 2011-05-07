@@ -94,7 +94,10 @@ public:
     inline void setHasBall(bool hasBall) { m_hasBall = hasBall; }
     inline bool hasBall() const { return m_hasBall; }
     inline Team* team() const { return m_team; }
+
     inline void setAllowedOffPitch(bool isAllowed) { m_allowedOffPitch = isAllowed; }
+    inline void setAllowedInCenterCircle(bool isAllowed) { m_allowedInCenterCircle = isAllowed; }
+
     inline QString name() const { return m_name; }
 
 private slots:
@@ -153,7 +156,10 @@ protected:
     Pitch *m_pitch;
     int m_step;
     QTimer *m_outOfAction;
+
     bool m_allowedOffPitch;
+    bool m_allowedInCenterCircle;
+
     qreal m_speed;
 
     QColor m_hairColor;

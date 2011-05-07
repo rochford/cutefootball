@@ -2,4 +2,4 @@ Nico,GK,black,pink
 Noah,CD,black,pink
 Gabriel,LM,black,pink
 Matteo,RM,black,pink
-uca,CF,black,pink
+Luca,CF,black,pink

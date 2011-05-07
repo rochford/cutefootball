@@ -150,8 +150,8 @@ void Team::setHasBall(bool hasBall)
 
 void Team::goalScored(bool isNorthGoal)
 {
-    if ( (isNorthGoal && m_direction == Team::SouthToNorth)
-        || (!isNorthGoal && m_direction == Team::NorthToSouth) ) {
+    if ( (isNorthGoal && (m_direction == Team::SouthToNorth))
+        || (!isNorthGoal && (m_direction == Team::NorthToSouth)) ) {
         m_goals++;
         m_scoredLastGoal = true;
     } else {

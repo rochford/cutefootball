@@ -40,7 +40,6 @@ class QGraphicsLineItem;
 class QGraphicsView;
 class QGraphicsScene;
 class QTimeLine;
-//class QHistoryState;
 
 class Ball;
 class Player;
@@ -49,6 +48,7 @@ class TeamManager;
 class ScreenGraphics;
 class Game;
 class GameHalf;
+class PitchScene;
 
 class Pitch : public QObject
 {
@@ -126,6 +126,7 @@ signals:
     void pauseGameClock();
     void gameInProgress(bool playing);
     void foul(Team* originatingTeam, QPointF foulLocation);
+    void kickOff(Team* teamToKickOff);
 
 private:
     void createTeamPlayers(Team *team);
@@ -137,7 +138,7 @@ private:
 
 public:
     QList<Player*> m_players;
-    QGraphicsScene *m_scene;
+    PitchScene *m_scene;
     QGraphicsRectItem *m_footballPitch;
 
     QGraphicsPixmapItem* m_grass;
@@ -149,6 +150,7 @@ public:
     QGraphicsEllipseItem *m_centerCircle;
     QGraphicsEllipseItem *m_centerMark;
     ScreenGraphics *m_screenGraphicsLabel;
+    QLabel* m_goalTextLabel;
     QRectF m_pitchArea[KRow][KColumn];
     SoundEffects* m_soundEffects;  // NOT OWNED
 
@@ -173,6 +175,7 @@ private:
 
     CameraView* m_cameraView;
     QGraphicsProxyWidget *m_screenGraphicsFrameProxy;
+    QGraphicsProxyWidget *m_goalTextLabelProxy;
 
     // list of advert boards
     QList<QGraphicsPixmapItem*> m_adverts;
