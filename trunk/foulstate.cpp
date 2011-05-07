@@ -21,6 +21,7 @@
 #include "game.h"
 #include "goalscoredstate.h"
 #include "pitch.h"
+#include "pitchscene.h"
 #include "ball.h"
 #include "Player.h"
 #include "screengraphics.h"

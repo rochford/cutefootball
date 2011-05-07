@@ -37,14 +37,14 @@
 #include "settingsFrame.h"
 #include "cameraview.h"
 #include "soccerutils.h"
-
+#include "pitchscene.h"
 
 Pitch::Pitch(const QRectF& footballGroundRect,
              QGraphicsView* view,
              SoundEffects* se,
              settingsFrame* settingsFrame)
   : QObject(),
-    m_scene(new QGraphicsScene(footballGroundRect)),
+    m_scene(new PitchScene(footballGroundRect)),
     m_view(view),
     m_motionTimer(NULL),
     m_bottomGoal(NULL),
@@ -61,9 +61,6 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     m_view->setScene(m_scene);
     m_cameraView = new CameraView(*m_view, this);
 
-    m_scene->setBackgroundBrush(QBrush(Qt::green));
-    // disable focus selection by user pressing scene items
-    m_scene->setStickyFocus(true);
 
     m_ball = new Ball(this);
 
@@ -204,20 +201,7 @@ void Pitch::setPiece(Team* originatingTeam, SetPiece s, QPointF foulLocation)
         //emit foul(originatingTeam, foulLocation);
         break;
     case Pitch::KickOff:
-        m_screenGraphicsLabel->setGraphics(ScreenGraphics::ScoreText);
-        foreach (Player *p, m_players) {
-                p->setHasBall(false);
-                p->setPos(p->m_startPositionRectF.center());
-            }
-        if (originatingTeam == m_awayTeam) {
-            m_awayTeam->setHasBall(true);
-            m_homeTeam->setHasBall(false);
-        } else {
-            m_awayTeam->setHasBall(false);
-            m_homeTeam->setHasBall(true);
-        }
-        m_scene->addItem(ball());
-        ball()->setPos(m_scene->sceneRect().center());
+        emit kickOff(homeTeam());
         break;
     default:
         break;
@@ -229,16 +213,20 @@ void Pitch::layoutPitchBorder()
     advertVertical.fill(Qt::yellow);
     QPixmap advertHorizontal(m_footballPitch->rect().width(),10);
     advertHorizontal.fill(Qt::yellow);
+
+    qreal rotation(90.0);
     // the right adverts
     QGraphicsPixmapItem* advert = m_scene->addPixmap(advertVertical);
     advert->setPos(m_footballPitch->rect().right()+10, m_footballPitch->rect().top());
     advert->setRotation(90.0);
     m_adverts.append(advert);
+
     advert = NULL;
     // the top adverts
     advert = m_scene->addPixmap(advertHorizontal);
     advert->setPos(m_footballPitch->rect().left(), m_footballPitch->rect().top()-10);
     m_adverts.append(advert);
+
     advert = NULL;
     // the left adverts
     advert = m_scene->addPixmap(advertVertical);
@@ -287,6 +275,13 @@ void Pitch::layoutPitch()
     m_screenGraphicsFrameProxy->setZValue(ZScoreText);
     m_cameraView->appendProxyWidget(m_screenGraphicsFrameProxy, CameraView::TopLeft );
 
+#if 0
+    m_goalTextLabel = new QLabel();
+    m_goalTextLabel->setText(tr("GOAL"));
+    m_goalTextLabelProxy = m_scene->addWidget(m_goalTextLabel);
+    m_goalTextLabelProxy->setZValue(ZScoreText);
+    m_cameraView->appendProxyWidget(m_goalTextLabelProxy, CameraView::Center );
+#endif // 0
     // create the goals
     m_bottomGoal = m_scene->addRect((m_scene->width() / 2)-60, m_scene->height()-KPitchBoundaryWidth,120,KPitchBoundaryWidth/2,
                    KWhitePaintPen,
@@ -405,7 +400,10 @@ void Pitch::newGame(int homeTeam, int awayTeam)
     connect(m_ball, SIGNAL(soundEvent(SoundEffects::GameSound)),
             m_soundEffects, SLOT(soundEvent(SoundEffects::GameSound)));
     m_soundEffects->soundEvent(SoundEffects::CrowdNoise);
+    m_game->setTeamToKickOff(m_homeTeam);
+    emit
     m_gameFSM->start();
+
 }
 
 void Pitch::createTeamPlayers(Team *team)
@@ -521,7 +519,7 @@ void Pitch::setPlayerStartPositions(Team *team)
     startPositions.insert(Player::LeftAttack,
                          m_pitchArea[nToS ? 3 : 4][0]);
     startPositions.insert(Player::CentralAttack,
-                         m_pitchArea[nToS ? 3 : 4][2]);
+                         m_pitchArea[nToS ? 2 : 5][2]);
     startPositions.insert(Player::RightAttack,
                          m_pitchArea[nToS ? 3 : 4][4]);
 

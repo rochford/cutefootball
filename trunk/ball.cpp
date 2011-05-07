@@ -23,6 +23,8 @@
 #include "team.h"
 #include "soundeffects.h"
 #include "Player.h"
+#include "pitchscene.h"
+
 #include <cassert> // assert
 
 #include <QDebug>
@@ -171,7 +173,7 @@ void Ball::kickBall(MWindow::Action action, QPointF destination)
         return;
     if ( m_requiredNextAction != MWindow::NoAction) {
         qDebug() << "Ball::kickBall m_requiredNextAction case";
-        if (action ==  MWindow::Pass || action ==  MWindow::Shot) {
+        if (action ==  m_requiredNextAction) {
             qDebug() << "action accepted";
             setRequiredNextAction(MWindow::NoAction,NULL,NULL);
         } else
@@ -208,6 +210,8 @@ void Ball::kickBall(MWindow::Action action, QPointF destination)
 
     if (action == MWindow::Shot)
         emit shot(team, destination);
+    else if (action == MWindow::Pass)
+        emit pass(team, destination);
     emit soundEvent(SoundEffects::BallKick);
 }
 
@@ -275,7 +279,7 @@ void Ball::setBallOwner(Player* p)
 
         if (m_requiredNextActionPlayer != NULL &&
             p != m_requiredNextActionPlayer ) {
-            //qDebug() << "not allowed to be ball owner";
+            qDebug() << "not allowed to be ball owner";
             return;
         }
 
@@ -288,8 +292,7 @@ void Ball::setBallOwner(Player* p)
 
 void Ball::setRequiredNextAction(MWindow::Action a, Team* t, Player* p)
 {
-//    qDebug() << "Ball::setRequiredNextAction";
+    qDebug() << "Ball::setRequiredNextAction";
     m_requiredNextAction = a;
     m_requiredNextActionPlayer = p;
-
 }

@@ -17,43 +17,14 @@
  *    along with CuteFootball.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-#ifndef SCREENGRAPHICS_H
-#define SCREENGRAPHICS_H
 
-#include <QFrame>
+#include "pitchscene.h"
 
-#include "ui_screengraphicsframe.h"
-
-namespace Ui {
-    class ScreenGraphicsFrame;
-}
-
-
-class Team;
-class Pitch;
-
-class ScreenGraphics : public QFrame
+PitchScene::PitchScene(const QRectF& footballGroundRect,
+                       QObject *parent) :
+    QGraphicsScene(footballGroundRect)
 {
-public:
-    enum ScreenGraphicsType {
-        ScoreText,
-        GoalScored,
-        Foul,
-        KickOff
-    };
-
-    ScreenGraphics(Pitch *p);
-    virtual ~ScreenGraphics();
-    void update(QString s);
-    void setTeams(Team* home, Team* away);
-
-public slots:
-    void setGraphics(ScreenGraphicsType type);
-
-private:
-    Ui::ScreenGraphicsFrame *ui;
-    Pitch *m_pitch;
-    ScreenGraphicsType m_type;
-};
-
-#endif // SCREENGRAPHICS_H
+    setBackgroundBrush(QBrush(Qt::green));
+    // disable focus selection by user pressing scene items
+    setStickyFocus(true);
+}

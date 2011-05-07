@@ -53,6 +53,11 @@ QPointF CameraView::topLeft() const
     return m_view.mapToScene(m_view.rect().topLeft());
 }
 
+QPointF CameraView::center() const
+{
+    return m_view.mapToScene(m_view.rect().center() );
+}
+
 void CameraView::update()
 {
     if (m_object) {
@@ -73,6 +78,10 @@ void CameraView::update()
         switch (item.viewPos) {
         case TopLeft:
             point = topLeft();
+            break;
+        case Center:
+            point = center();
+            point = QPointF(point.x() - item.widget->rect().width() / 2,point.y());
             break;
         default:
             point = topLeft();

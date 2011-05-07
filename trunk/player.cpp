@@ -19,6 +19,7 @@
  */
 #include "Player.h"
 #include "pitch.h"
+#include "pitchscene.h"
 #include "ball.h"
 #include "soundeffects.h"
 #include "soccerutils.h"
@@ -758,6 +759,12 @@ QVariant Player::itemChange(GraphicsItemChange change, const QVariant &value)
              }
             return m_lastPos;
             }
+
+         if (m_pitch->m_centerCircle->boundingRect().contains(newPos)
+             && !m_allowedInCenterCircle)  {
+             qDebug() << "Player::itemChange not allowed in Center circle";
+             return m_lastPos;
+         }
 
          if (!pitch.contains(newPos) && !m_allowedOffPitch)
              return m_lastPos;

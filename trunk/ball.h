@@ -67,6 +67,7 @@ public:
 signals:
     void goalScored(bool topGoal);
     void shot(Team* teamShooting, QPointF destination);
+    void pass(Team* teamPassing, QPointF destination);
     void soundEvent(SoundEffects::GameSound);
 
 public slots:
