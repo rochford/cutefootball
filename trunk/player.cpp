@@ -163,7 +163,7 @@ void Player::createPixmaps()
     pixmapInsert(MWindow::East, "pE.PNG", "pE1.PNG", "pE2.PNG", m_team->m_shirtColor.rgb(), m_team->m_shortColor.rgb());
     pixmapInsert(MWindow::SouthEast, "pSE.PNG", "pSE1.PNG", "pSE2.PNG", m_team->m_shirtColor.rgb(), m_team->m_shortColor.rgb());
     pixmapInsert(MWindow::South, "pS.PNG", "pS1.PNG", "pS2.PNG", m_team->m_shirtColor.rgb(), m_team->m_shortColor.rgb());
-    pixmapInsert(MWindow::SouthWest, "pSWest.PNG", "pSW1.PNG", "pSW2.PNG", m_team->m_shirtColor.rgb(), m_team->m_shortColor.rgb());
+    pixmapInsert(MWindow::SouthWest, "pSW.PNG", "pSW1.PNG", "pSW2.PNG", m_team->m_shirtColor.rgb(), m_team->m_shortColor.rgb());
     pixmapInsert(MWindow::West, "pW.PNG", "pW1.PNG", "pW2.PNG", m_team->m_shirtColor.rgb(), m_team->m_shortColor.rgb());
     pixmapInsert(MWindow::NorthWest, "pNW.PNG", "pNW1.PNG", "pNW2.PNG", m_team->m_shirtColor.rgb(), m_team->m_shortColor.rgb());
 
