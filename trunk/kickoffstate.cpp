@@ -47,7 +47,7 @@ KickOffState::KickOffState(GameHalf *g, Pitch *p, QObject *parent) :
     m_takeKickOff->addTransition(m_pitch->ball(), SIGNAL(pass(Team*,QPointF)), m_allDone);
     connect(m_timeLineTakePositions, SIGNAL(frameChanged(int)), this, SLOT(playFrame(int)));
     connect(m_timeLineTakePositions, SIGNAL(finished()), this, SLOT(prepareForKickOff()));
-    connect(m_pitch, SIGNAL(kickOff(Team*)), this, SLOT(teamToKickOff(Team*)));
+    connect(m_pitch, SIGNAL(kickOff(Team*)), this, SLOT(setTeamToKickOff(Team*)));
 
     connect(m_pitch, SIGNAL(pauseGameClock()), this, SLOT(pauseGameClock()));
     connect(m_pitch, SIGNAL(continueGameClock()), this, SLOT(continueGameClock()));
@@ -64,22 +64,24 @@ KickOffState::~KickOffState()
 void KickOffState::prepareForKickOff()
 {
     qDebug() << "KickOffState::prepareForKickOff";
-    Player* kicker = NULL;
+
     foreach (Player *p, m_pitch->m_players){
         p->setHasBall(false);
         p->setAllowedInCenterCircle(false);
-        if (p->team() == m_teamToKickOff && p->m_role != Player::GoalKeeper ) {
-            kicker = p;
-            p->setAllowedInCenterCircle(true);
-            }
     }
-    Q_ASSERT(kicker);
-    qDebug() << "KickOffState::onEntry " << kicker->name();
+
+    Q_ASSERT(m_kickOffPlayer);
+    Q_ASSERT(m_kickOffSupportPlayer);
+    m_kickOffPlayer->setAllowedInCenterCircle(true);
+    m_kickOffSupportPlayer->setAllowedInCenterCircle(true);
+
+    qDebug() << "KickOffState::prepareForKickOff " << m_kickOffPlayer->name();
 
     // Only 2 players from the team taking the kick off are allowed within the center circle.
     // all others are not allowed in that area.
     // TODO
-    m_pitch->ball()->setRequiredNextAction(MWindow::Pass, m_teamToKickOff, kicker);
+    m_pitch->ball()->setRequiredNextAction(MWindow::Pass, m_teamToKickOff, m_kickOffPlayer);
+    m_kickOffPlayer->setRequiredNextAction(MWindow::Pass);
 
     m_pitch->m_scene->addItem(m_pitch->ball());
     m_pitch->ball()->setPos(m_pitch->m_scene->sceneRect().center());
@@ -88,6 +90,8 @@ void KickOffState::prepareForKickOff()
 
 void KickOffState::onEntry(QEvent * /* event */)
 {
+    m_kickOffPlayer = NULL;
+    m_kickOffSupportPlayer = NULL;
     m_pitch->m_scene->removeItem(m_pitch->ball());
     qDebug() << "KickOffState::onEntry";
     m_game->pauseGameClock();
@@ -126,19 +130,18 @@ void KickOffState::createPlayerAnimationItems()
     qDebug() << "KickOffState::createPlayerAnimationItems start";
 
     // find 2 players from the m_teamToKickOff to take the kick off
-    Player* kickOffPlayer = NULL;
-    Player* kickOffSupportPlayer = NULL;
+
     foreach (Player *p, m_pitch->m_players) {
         if (p->team() == m_teamToKickOff) {
             // last player on the team takes kickoff
-            if (!kickOffSupportPlayer && p->m_role != Player::GoalKeeper) {
-                kickOffSupportPlayer = p;
+            if (!m_kickOffSupportPlayer && p->m_role != Player::GoalKeeper) {
+                m_kickOffSupportPlayer = p;
             } else
-                kickOffPlayer = p;
+                m_kickOffPlayer = p;
         }
     }
-    Q_ASSERT(kickOffPlayer);
-    Q_ASSERT(kickOffSupportPlayer);
+    Q_ASSERT(m_kickOffPlayer);
+    Q_ASSERT(m_kickOffSupportPlayer);
 
     foreach (Player *p, m_pitch->m_players) {
         QGraphicsItemAnimation* anim = new QGraphicsItemAnimation(this);
@@ -151,11 +154,11 @@ void KickOffState::createPlayerAnimationItems()
         QPointF tmp(p->pos());
         anim->setTimeLine(m_timeLineTakePositions);
         MWindow::Action a;
-        if ( p == kickOffPlayer ) {
+        if ( p == m_kickOffPlayer ) {
             stepX = ( m_pitch->m_scene->sceneRect().center().x() - tmp.x()) / 100.0;
             stepY = ( m_pitch->m_scene->sceneRect().center().y() - tmp.y()) / 100.0;
             a = calculateAction(tmp, m_pitch->m_scene->sceneRect().center());
-        } else if ( p == kickOffSupportPlayer ) {
+        } else if ( p == m_kickOffSupportPlayer ) {
             stepX = ( ( m_pitch->m_scene->sceneRect().center().x() - 25) - tmp.x()) / 100.0;
             stepY = ( m_pitch->m_scene->sceneRect().center().y() - tmp.y()) / 100.0;
             a = calculateAction(tmp, m_pitch->m_scene->sceneRect().center());
@@ -182,10 +185,10 @@ void KickOffState::playFrame(int frame)
     m_pitch->m_scene->update();
 }
 
-void KickOffState::teamToKickOff(Team* t)
+void KickOffState::setTeamToKickOff(Team* t)
 {
     if (t){
-        qDebug() << "KickOffState::teamToKickOff" << t->fullName() << " to kickoff";
+        qDebug() << "KickOffState::setTeamToKickOff" << t->fullName() << " to kickoff";
         m_teamToKickOff = t;
     }
 }

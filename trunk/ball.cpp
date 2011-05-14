@@ -123,10 +123,14 @@ void Ball::moveBall(MWindow::Action action, int speed)
         qDebug() << "moveBall positionLocked";
         return;
     }
-    if (m_requiredNextAction != MWindow::NoAction &&
-        action != m_requiredNextAction ) {
-        qDebug() << "moveBall specialAction required -> return";
-        return;
+    if (m_requiredNextAction != MWindow::NoAction) {
+        if (action ==  m_requiredNextAction ) {
+            qDebug() << "action accepted";
+            setRequiredNextAction(MWindow::NoAction,NULL,NULL);
+        } else {
+            qDebug() << "moveBall specialAction required -> return";
+            return;
+        }
     }
 
     if (!m_ballOwner) {
@@ -279,7 +283,7 @@ void Ball::setBallOwner(Player* p)
 
         if (m_requiredNextActionPlayer != NULL &&
             p != m_requiredNextActionPlayer ) {
-            qDebug() << "not allowed to be ball owner";
+            qDebug() << p->name() << " not allowed to be ball owner";
             return;
         }
 

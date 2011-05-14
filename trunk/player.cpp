@@ -51,7 +51,9 @@ Player::Player(QString name,
     m_step(0),
     m_allowedOffPitch(true),
     m_hairColor(hairColor),
-    m_skinColor(skinColor)
+    m_skinColor(skinColor),
+    m_positionLocked(false),
+    m_requiredNextAction(MWindow::NoAction)
 {
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
     m_keyEventTimer = new QTimer(this);
@@ -455,6 +457,7 @@ void Player::move(MWindow::Action action, QPointF destination)
 {
     if (m_outOfAction->isActive())
         return;
+
     if ( m_hasBall ) {
         if ( action == MWindow::ButtonShortPress )
             action = MWindow::Pass;
@@ -464,6 +467,14 @@ void Player::move(MWindow::Action action, QPointF destination)
         if ( action == MWindow::ButtonShortPress
             || action == MWindow::ButtonLongPress )
             action = MWindow::Tackle;
+    }
+
+    if (m_requiredNextAction != MWindow::NoAction ) {
+        if (action ==  m_requiredNextAction) {
+            setRequiredNextAction(MWindow::NoAction);
+        } else {
+            return;
+        }
     }
 
     if ( action == MWindow::Shot
@@ -533,6 +544,14 @@ bool Player::playerCollisionCheck() const
 
 void Player::computerAdvance(int phase)
 {
+    if ( m_requiredNextAction != MWindow::NoAction ) {
+        qDebug() << "Player::computerAdvance " << m_name << " requires Next Action";
+        move(m_requiredNextAction);
+        m_requiredNextAction = MWindow::NoAction;
+        m_hasBall = false;
+        return;
+    }
+
     if (m_hasBall)
          computerAdvanceWithBall();
     else
@@ -755,16 +774,15 @@ QVariant Player::itemChange(GraphicsItemChange change, const QVariant &value)
                  m_hasBall = false;
              }
              if ( hasFocus() ) {
-                 qDebug() << "Player::itemChange penalty!";
+                 //qDebug() << "Player::itemChange penalty!";
              }
             return m_lastPos;
             }
 
          if (m_pitch->m_centerCircle->boundingRect().contains(newPos)
-             && !m_allowedInCenterCircle)  {
-             qDebug() << "Player::itemChange not allowed in Center circle";
+             && !m_allowedInCenterCircle)
              return m_lastPos;
-         }
+
 
          if (!pitch.contains(newPos) && !m_allowedOffPitch)
              return m_lastPos;
@@ -775,3 +793,9 @@ QVariant Player::itemChange(GraphicsItemChange change, const QVariant &value)
      }
      return QGraphicsItem::itemChange(change, value);
  }
+
+void Player::setRequiredNextAction(MWindow::Action a)
+{
+    qDebug() << "Player::setRequiredNextAction";
+    m_requiredNextAction = a;
+}
