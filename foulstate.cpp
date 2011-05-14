@@ -30,20 +30,29 @@
 FoulState::FoulState(GameHalf *g, Pitch *p)
     : QState(g),
       m_game(g),
-      m_pitch(p)
+      m_pitch(p),
+      m_freeKickTaker(NULL)
 {
     m_takePositions = new QState(this);
     m_takeFreeKick = new QState(this);
     m_allDone = new QFinalState(this);
     setInitialState(m_takePositions);
 
-    m_timeLineTakePositions = new QTimeLine(1000*2, this);
+    m_timeLineTakePositions = new QTimeLine(1000*4, this);
     m_timeLineTakePositions->setCurveShape(QTimeLine::LinearCurve);
     m_timeLineTakePositions->setFrameRange(0, 100);
 
     m_takePositions->addTransition(m_timeLineTakePositions, SIGNAL(finished()), m_takeFreeKick);
+    m_takeFreeKick->addTransition(m_pitch->ball(), SIGNAL(pass(Team*,QPointF)), m_allDone);
+
+//    connect(m_pitch->ball(), SIGNAL(shot(Team*,QPointF)),m_game, SLOT(continueGameClock()));
     connect(m_timeLineTakePositions, SIGNAL(frameChanged(int)), this, SLOT(playFrame(int)));
+    connect(m_timeLineTakePositions, SIGNAL(finished()), this, SLOT(prepareForFreeKick()));
+
+    connect(m_pitch, SIGNAL(pauseGameClock()), this, SLOT(pauseGameClock()));
+    connect(m_pitch, SIGNAL(continueGameClock()), this, SLOT(continueGameClock()));
 }
+
 FoulState::~FoulState()
 {
     delete m_timeLineTakePositions;
@@ -55,12 +64,16 @@ FoulState::~FoulState()
 void FoulState::onEntry(QEvent * /* event */)
 {
     qDebug() << "FoulState::onEntry";
+
+    m_pitch->m_scene->removeItem(m_pitch->ball());
+    m_game->pauseGameClock();
+
     m_pitch->m_screenGraphicsLabel->setGraphics(ScreenGraphics::Foul);
     m_pitch->updateDisplayTime(m_game->remainingTimeInHalfMs());
-    m_takeFreeKick->addTransition(m_pitch->ball(), SIGNAL(shot(Team*,QPointF)), m_allDone);
-    connect(m_pitch->ball(), SIGNAL(shot(Team*,QPointF)),m_game, SLOT(continueGameClock()));
 
-    m_game->pauseGameClock();
+    m_freeKickTaker = NULL;
+    m_pitch->ball()->setNoBallOwner();
+
     createPlayerAnimationItems();
     m_timeLineTakePositions->start();
 }
@@ -68,6 +81,9 @@ void FoulState::onEntry(QEvent * /* event */)
 void FoulState::onExit(QEvent* /* event */)
 {
     qDebug() << "FoulState::onExit";
+    m_freeKickTaker = NULL;
+
+    m_game->continueGameClock();
     m_pitch->m_screenGraphicsLabel->setGraphics(ScreenGraphics::ScoreText);
     m_pitch->updateDisplayTime(m_game->remainingTimeInHalfMs());
 }
@@ -79,6 +95,13 @@ void FoulState::createPlayerAnimationItems()
 
     qDebug() << "FoulState::createPlayerAnimationItems start";
     qDebug() << m_game->m_foulingTeam->briefName() << m_game->m_foulingLocation;
+    Team* teamToTakeFreeKick(NULL);
+    if (m_pitch->homeTeam() == m_game->m_foulingTeam)
+        teamToTakeFreeKick = m_pitch->awayTeam();
+    else
+        teamToTakeFreeKick = m_pitch->homeTeam();
+
+    m_freeKickTaker = m_pitch->selectNearestPlayer(teamToTakeFreeKick);
 
     // move the captain to take the freekick near the m_foulingLocation
     // add a second delay prior to able to kick ball
@@ -95,18 +118,24 @@ void FoulState::createPlayerAnimationItems()
         anim->setTimeLine(m_timeLineTakePositions);
         if (p->team() == m_game->m_foulingTeam) {
             // move player away from ball
-            qDebug() << "move away from ball";
+            qDebug() << p->name() << " move away from ball";
             stepX = (p->pos().x() - m_pitch->m_centerMark->rect().center().x() ) / 100;
             stepY = (p->pos().y() - m_pitch->m_centerMark->rect().center().y()) / 100;
+            MWindow::Action a = calculateAction(tmp, m_pitch->m_centerMark->rect().center());
+            p->movePlayer(a);
 
-        } else if (p == m_pitch->selectNearestPlayer(p->team())) {
+        } /* else if (p == m_freeKickTaker) {
+
             stepX = (p->pos().x() - m_game->m_foulingLocation.x()) / 100;
             stepY = (p->pos().y() - m_game->m_foulingLocation.y()) / 100;
 
-            m_pitch->ball()->setRequiredNextAction(MWindow::Shot, p->team(), p);
+            MWindow::Action a = calculateAction(tmp, m_game->m_foulingLocation);
+            p->movePlayer(a);
+        } */ else {
+            // nothing to do for other players on the team taking free-kick
+            p->m_hasBall = false;
+            continue;
         }
-        MWindow::Action a = calculateAction(tmp, m_game->m_foulingLocation);
-        p->movePlayer(a);
 
         for (int i = 0; i < 100; ++i) {
             anim->setPosAt(i / 100.0, QPointF(tmp.x() + stepX,
@@ -123,4 +152,18 @@ void FoulState::playFrame(int frame)
     foreach (QGraphicsItemAnimation *anim, m_playerAnimationItems)
         anim->item()->setPos(anim->posAt(f));
     m_pitch->m_scene->update();
+}
+
+void FoulState::prepareForFreeKick()
+{
+    // set the ball location to be the foul point.
+    m_pitch->m_scene->addItem(m_pitch->ball());
+    m_pitch->ball()->setPos(m_game->m_foulingLocation);
+
+    m_freeKickTaker = m_pitch->selectNearestPlayer(m_freeKickTaker->team());
+    qDebug() << "FoulState::prepareForFreeKick " << m_freeKickTaker->name();
+    m_pitch->ball()->setBallOwner(m_freeKickTaker);
+
+    m_pitch->ball()->setRequiredNextAction(MWindow::Pass, m_freeKickTaker->team(), m_freeKickTaker);
+    m_freeKickTaker->setRequiredNextAction(MWindow::Pass);
 }

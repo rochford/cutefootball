@@ -94,7 +94,7 @@ public:
         { return m_remainingTimeInHalfMs; }
     inline void setGameLength(int totalGameInMinutes)
         { m_remainingTimeInHalfMs = (totalGameInMinutes * 60 *1000)/2.0; }
-    void setTeamToKickOff(Team* t) { m_kickOffState->teamToKickOff(t); }
+    void setTeamToKickOff(Team* t) { m_kickOffState->setTeamToKickOff(t); }
 
 signals:
     void halfOver(QString halfName);

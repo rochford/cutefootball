@@ -63,6 +63,7 @@ public:
     // the next actions on the ball must be "a", performed by player "p".
     // "p" may be null, Team must be a valid value
     void setRequiredNextAction(MWindow::Action a, Team* t, Player* p);
+    inline MWindow::Action requiredNextAction() { return m_requiredNextAction; }
 
 signals:
     void goalScored(bool topGoal);

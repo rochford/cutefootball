@@ -25,7 +25,8 @@
 
 mainMenuFrame::mainMenuFrame(MWindow *parent) :
     QFrame(parent),
-    ui(new Ui::mainMenuFrame)
+    ui(new Ui::mainMenuFrame),
+    m_animationGrp(NULL)
 {
     ui->setupUi(this);
 
@@ -105,8 +106,10 @@ void mainMenuFrame::resizeEvent(QResizeEvent *e)
 
 void mainMenuFrame::animateButtons(const int width)
 {
-    delete m_animationGrp;
-    m_animationGrp = NULL;
+    if (m_animationGrp) {
+        delete m_animationGrp;
+        m_animationGrp = NULL;
+    }
     m_animationGrp = new QParallelAnimationGroup(this);
     const int offset = ui->m_newGameBtn->size().width()/2;
     const int xPoint = width/2 - offset;

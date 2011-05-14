@@ -198,10 +198,10 @@ void Pitch::setPiece(Team* originatingTeam, SetPiece s, QPointF foulLocation)
     m_soundEffects->soundEvent(SoundEffects::Whistle);
     switch(s) {
     case Pitch::Foul: // TODO foul logic
-        //emit foul(originatingTeam, foulLocation);
+        emit foul(originatingTeam, foulLocation);
         break;
     case Pitch::KickOff:
-        emit kickOff(homeTeam());
+        emit kickOff(originatingTeam);
         break;
     default:
         break;
@@ -400,8 +400,8 @@ void Pitch::newGame(int homeTeam, int awayTeam)
     connect(m_ball, SIGNAL(soundEvent(SoundEffects::GameSound)),
             m_soundEffects, SLOT(soundEvent(SoundEffects::GameSound)));
     m_soundEffects->soundEvent(SoundEffects::CrowdNoise);
-    m_game->setTeamToKickOff(m_homeTeam);
-    emit
+    m_game->setTeamToKickOff(m_awayTeam);
+
     m_gameFSM->start();
 
 }

@@ -37,6 +37,7 @@ class QTimeLine;
 class Pitch;
 class GameHalf;
 class Team;
+class Player;
 
 class KickOffState : public QState
 {
@@ -49,7 +50,7 @@ public:
 public slots:
     void playFrame(int frame);
     void prepareForKickOff();
-    void teamToKickOff(Team*);
+    void setTeamToKickOff(Team*);
 
     void pauseGameClock();
     void continueGameClock();
@@ -69,6 +70,9 @@ private:
     GameHalf* m_game;
     QTimeLine *m_timeLineTakePositions;
     QList<QGraphicsItemAnimation*> m_playerAnimationItems;
+
+    Player* m_kickOffPlayer; // NOT OWNED
+    Player* m_kickOffSupportPlayer; // NOT OWNED
 
     Team* m_teamToKickOff; // NOT OWNED
 };

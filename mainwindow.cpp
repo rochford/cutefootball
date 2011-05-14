@@ -65,7 +65,7 @@ MWindow::MWindow(QWidget *parent)
     m_soundEffects->startSound(SoundEffects::GameThemeTune);
 
     setCentralWidget( uiMainWindow.m_graphicsView );
-    // showFrame(MWindow::MainMenu);
+    showFrame(MWindow::MainMenu);
     emit setFrame(MWindow::MainMenu);
 }
 

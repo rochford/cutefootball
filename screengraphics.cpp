@@ -41,14 +41,22 @@ void ScreenGraphics::update(QString s)
     resize(160,50);
     ui->SGFhomeTeamName->setText(QString::number(m_pitch->homeTeam()->m_goals));
     ui->SGFawayTeamName->setText(QString::number(m_pitch->awayTeam()->m_goals));
-    if (m_type == ScoreText)
-        ui->scoreTextLabel->setText(s);
-    else if (m_type == Foul )
-        ui->scoreTextLabel->setText(tr("Foul"));
-    else if (m_type == GoalScored )
-        ui->scoreTextLabel->setText(tr("Goal"));
-    else if (m_type == KickOff )
-        ui->scoreTextLabel->setText(tr("Kick Off"));}
+    switch(m_type)
+        {
+        case ScoreText:
+            ui->scoreTextLabel->setText(s);
+            break;
+        case Foul:
+            ui->scoreTextLabel->setText(tr("Foul"));
+            break;
+        case GoalScored:
+            ui->scoreTextLabel->setText(tr("Goal"));
+            break;
+        case KickOff:
+            ui->scoreTextLabel->setText(tr("Kick Off"));
+            break;
+        }
+}
 
 void ScreenGraphics::setTeams(Team* home, Team* away)
 {

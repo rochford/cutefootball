@@ -87,6 +87,7 @@ public:
     Player* findAvailableTeamMate(QPointF myPos) const;
     void specialAction(MWindow::Action action);
     void setTackled();
+    void setRequiredNextAction(MWindow::Action a);
 
     bool withinShootingDistance() const;
 
@@ -169,6 +170,10 @@ protected:
     QString m_toolTipText;
     QPen m_toolTipPen;
     QPointF m_toolTipTextPos;
+
+    // player position fixed until this is false
+    bool m_positionLocked;
+    MWindow::Action m_requiredNextAction;
 };
 
 #endif // PLAYER_H

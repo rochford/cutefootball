@@ -34,6 +34,7 @@
 
 class QTimeLine;
 
+class Player;
 class Pitch;
 class GameHalf;
 class GoalScoredState;
@@ -47,6 +48,7 @@ public:
 
 public slots:
     void playFrame(int frame);
+    void prepareForFreeKick();
 
 protected:
     void onEntry (QEvent* event );
@@ -56,6 +58,7 @@ private:
     void createPlayerAnimationItems();
 
 private:
+    Player* m_freeKickTaker;
     QState *m_takePositions;
     QState *m_takeFreeKick;
     QFinalState *m_allDone;
