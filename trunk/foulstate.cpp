@@ -167,3 +167,17 @@ void FoulState::prepareForFreeKick()
     m_pitch->ball()->setRequiredNextAction(MWindow::Pass, m_freeKickTaker->team(), m_freeKickTaker);
     m_freeKickTaker->setRequiredNextAction(MWindow::Pass);
 }
+
+void FoulState::pauseGameClock()
+{
+    qDebug() << "FoulState::pauseGameClock";
+    if (m_timeLineTakePositions->state() == QTimeLine::Running)
+        m_timeLineTakePositions->setPaused(true);
+}
+
+void FoulState::continueGameClock()
+{
+    qDebug() << "FoulState::continueGameClock";
+    if (m_timeLineTakePositions->state() == QTimeLine::Paused)
+        m_timeLineTakePositions->setPaused(false);
+}

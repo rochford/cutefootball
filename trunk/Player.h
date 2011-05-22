@@ -71,23 +71,29 @@ public:
 
     virtual void advance(int phase);
     virtual void createPixmaps();
-    void keyPressEvent(QKeyEvent *event);
-    void keyReleaseEvent(QKeyEvent *event);
+
+public: // From QGraphicsItem
+    void mousePressEvent(QGraphicsSceneMouseEvent *e);
 
 protected: // From QGraphicsItem
     void focusInEvent(QFocusEvent * event);
     void focusOutEvent(QFocusEvent * event);
 
+    void keyPressEvent(QKeyEvent *event);
+    void keyReleaseEvent(QKeyEvent *event);
+
+
 public:
     bool ballCollisionCheck() const;
     bool playerCollisionCheck() const;
 
-    void move(MWindow::Action action, QPointF destination= QPointF(0.0,0.0));
-    void movePlayer(MWindow::Action action, QPointF destination= QPointF(0.0,0.0));
+    inline void setDestination(QPointF dest) { m_destination = dest; }
+    void move(MWindow::Action action);
+    void movePlayer(MWindow::Action action);
     Player* findAvailableTeamMate(QPointF myPos) const;
     void specialAction(MWindow::Action action);
     void setTackled();
-    void setRequiredNextAction(MWindow::Action a);
+    inline void setRequiredNextAction(MWindow::Action a) { m_requiredNextAction = a; }
 
     bool withinShootingDistance() const;
 
@@ -103,7 +109,7 @@ public:
 
 private slots:
     void repeatKeyEvent();
-    void standupPlayer();
+    void standupPlayer() { setPixmap(m_images[m_lastAction].at(0)); }
     void foulEventStart(Team* t, QPointF foulLocation);
 
 protected:
@@ -121,6 +127,7 @@ protected:
                       QRgb shortColor);
 
 private:
+    void calculatePlayerDestination(MWindow::Action act);
     void humanAdvance(int phase);
     void computerAdvance(int phase);
     void computerAdvanceWithBall();
@@ -130,7 +137,7 @@ private:
 
     void stopKeyEvent();
     void createKeyboardActions();
-    QPointF calculateDestination(MWindow::Action act);
+    QPointF calculateBallDestination(MWindow::Action act);
 
 public:
     bool m_hasBall;
@@ -149,10 +156,13 @@ private:
     // last position of the player
     QPointF m_lastPos;
 
+
 protected:
     Team* m_team;
     // the previous action of this player
     MWindow::Action m_lastAction;
+    // pressing the same directional key a second time must stop the player movement
+    int m_lastKeyEvent;
     QMap<MWindow::Action,PixmapList> m_images;
     Pitch *m_pitch;
     int m_step;
@@ -174,6 +184,9 @@ protected:
     // player position fixed until this is false
     bool m_positionLocked;
     MWindow::Action m_requiredNextAction;
+
+    // where the player wants to go
+    QPointF m_destination;
 };
 
 #endif // PLAYER_H

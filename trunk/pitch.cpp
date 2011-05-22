@@ -32,19 +32,21 @@
 #include "team.h"
 #include "goalkeeper.h"
 #include "screengraphics.h"
+#include "onscreenbuttonsframe.h"
 #include "game.h"
 #include "soundEffects.h"
 #include "settingsFrame.h"
 #include "cameraview.h"
 #include "soccerutils.h"
 #include "pitchscene.h"
+#include "onscreenbuttonsframe.h"
 
 Pitch::Pitch(const QRectF& footballGroundRect,
              QGraphicsView* view,
              SoundEffects* se,
              settingsFrame* settingsFrame)
   : QObject(),
-    m_scene(new PitchScene(footballGroundRect)),
+    m_scene(new PitchScene(footballGroundRect, this)),
     m_view(view),
     m_motionTimer(NULL),
     m_bottomGoal(NULL),
@@ -61,6 +63,7 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     m_view->setScene(m_scene);
     m_cameraView = new CameraView(*m_view, this);
 
+    m_scene->setInputMethod(m_settingsFrame->inputMethod());
 
     m_ball = new Ball(this);
 
@@ -86,6 +89,10 @@ Pitch::Pitch(const QRectF& footballGroundRect,
 
     connect(m_motionTimer, SIGNAL(timeout()), this, SLOT(selectNearestPlayer()));
     connect(m_settingsFrame, SIGNAL(soundChanged(bool)), m_soundEffects, SLOT(soundEnabled(bool)));
+    connect(m_settingsFrame, SIGNAL(inputMethodChanged(settingsFrame::InputMethod)),
+            m_scene, SLOT(setInputMethod(settingsFrame::InputMethod)));
+    connect(m_settingsFrame, SIGNAL(inputMethodChanged(settingsFrame::InputMethod)),
+            m_screenButtonsLabel, SLOT(setInputMethod(settingsFrame::InputMethod)));
 }
 
 Pitch::~Pitch()
@@ -96,6 +103,8 @@ Pitch::~Pitch()
 
     m_scene->removeItem(m_screenGraphicsFrameProxy);
     delete m_screenGraphicsLabel;
+    m_scene->removeItem(m_screenButtonsFrameProxy);
+    delete m_screenButtonsLabel;
 
     m_scene->removeItem(m_grass);
     delete m_grass;
@@ -275,6 +284,12 @@ void Pitch::layoutPitch()
     m_screenGraphicsFrameProxy->setZValue(ZScoreText);
     m_cameraView->appendProxyWidget(m_screenGraphicsFrameProxy, CameraView::TopLeft );
 
+    // touch on-screen buttons
+    m_screenButtonsLabel = new OnScreenButtonsFrame();
+    m_screenButtonsFrameProxy = m_scene->addWidget(m_screenButtonsLabel);
+    m_screenButtonsFrameProxy->setZValue(ZScoreText);
+    m_cameraView->appendProxyWidget(m_screenButtonsFrameProxy, CameraView::BottomRight );
+
 #if 0
     m_goalTextLabel = new QLabel();
     m_goalTextLabel->setText(tr("GOAL"));
@@ -359,6 +374,7 @@ void Pitch::updateDisplayTime(int timeLeftMs)
         QTime tmp(0,0,0,0);
         tmp = tmp.addMSecs(timeLeftMs);
         m_screenGraphicsLabel->update(tmp.toString(QString("m:ss")));
+        m_screenButtonsLabel->refresh();
     } else {
         qDebug() << "updateDisplayTime FSM not running";
     }

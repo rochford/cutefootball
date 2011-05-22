@@ -117,3 +117,7 @@ QLabel#scoreTextLabel {
     color: black;
     background: white;
 }
+
+QFrame#OnScreenButtonsFrame {
+     background : transparent;
+}

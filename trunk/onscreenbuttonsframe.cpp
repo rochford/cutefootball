@@ -18,35 +18,38 @@
  *
  */
 
-#include "pitchscene.h"
-#include <QGraphicsSceneMouseEvent>
-#include <QDebug>
+#include "onscreenbuttonsframe.h"
+#include "ui_onscreenbuttonsframe.h"
 
-#include "pitch.h"
-#include "Player.h"
-#include "soccerutils.h"
-
-PitchScene::PitchScene(const QRectF& footballGroundRect,
-                       Pitch* pitch,
-                       QObject *parent) :
-    QGraphicsScene(footballGroundRect),
-    m_pitch(pitch),
-    m_inputMethod(settingsFrame::Keyboard)
+OnScreenButtonsFrame::OnScreenButtonsFrame(QWidget *parent) :
+    QFrame(parent),
+    ui(new Ui::OnScreenButtonsFrame)
 {
-    setBackgroundBrush(QBrush(Qt::green));
-    // disable focus selection by user pressing scene items
-    setStickyFocus(true);
+    ui->setupUi(this);
+//    connect(ui->actionPause, SIGNAL(triggered()), m_pitch, SLOT(pause()));
 }
 
-void PitchScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
+OnScreenButtonsFrame::~OnScreenButtonsFrame()
 {
-    qDebug() << "mousePressEvent " << e->buttonDownScenePos(Qt::LeftButton);
-    if (m_inputMethod != settingsFrame::Mouse)
-        return;
-
-    Player* p = static_cast<Player*>(focusItem());
-    if (!p)
-        return;
-    p->mousePressEvent(e);
+    delete ui;
 }
 
+void OnScreenButtonsFrame::refresh()
+{
+    if (m_inputMethod != settingsFrame::Touch)
+        return;
+
+    resize(100,40);
+}
+
+void OnScreenButtonsFrame::setInputMethod(settingsFrame::InputMethod method)
+{
+    m_inputMethod = method;
+    if (m_inputMethod != settingsFrame::Touch) {
+        setEnabled(false);
+        setVisible(false);
+    } else {
+        setEnabled(true);
+        setVisible(true);
+    }
+}

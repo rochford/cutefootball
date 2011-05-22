@@ -33,6 +33,12 @@ class settingsFrame : public QFrame
 
 public:
 
+    enum InputMethod {
+        Keyboard,
+        Mouse,
+        Touch
+    };
+
     enum ExtraTime {
         NoExtraTime,
         ExtraTimeAndPenalties,
@@ -40,11 +46,13 @@ public:
     };
     explicit settingsFrame(MWindow *parent = 0);
     ~settingsFrame();
-    int gameLengthMinutes() const { return m_gameLengthMinutes; }
-    bool soundEnabled() const { return m_soundEnabled; }
-    ExtraTime extraTimeAllowed() const { return m_extraTime; }
+    inline int gameLengthMinutes() const { return m_gameLengthMinutes; }
+    inline bool soundEnabled() const { return m_soundEnabled; }
+    inline ExtraTime extraTimeAllowed() const { return m_extraTime; }
+    inline InputMethod inputMethod() const { return m_inputMethod; }
 signals:
     void soundChanged(bool enabled);
+    void inputMethodChanged(settingsFrame::InputMethod method);
 
 public slots:
     void showFrame(MWindow::Frame f);
@@ -56,6 +64,7 @@ private:
     Ui::settingsFrame *ui;
     int m_gameLengthMinutes;
     bool m_soundEnabled;
+    InputMethod m_inputMethod;
     ExtraTime m_extraTime;
 };
 

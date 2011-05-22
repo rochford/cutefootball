@@ -29,12 +29,27 @@
      font: bold large "Times";
  }
 
- QComboxBox {
+QComboxBox {
+    text-align: left;
+    background: yellow;
+    color: red;
+    selection-color: green;
+}
+
+ QCheckbox {
      background-color: yellow;
-     background: yellow;
+     border-style: solid;
+     border-width: 2px;
+     border-color: red;
+     border-radius: 12px;
+
+     padding: 2px;
+
+     color: red;
+     font-size: 14px;
  }
 
- QPushButton, QCheckbox {
+ QPushButton {
      background-color: yellow;
      border-style: solid;
      border-width: 2px;
@@ -87,12 +102,6 @@
      color: yellow;
  }
 
- QComboBox {
-     color: red;
-     background-color: yellow;
-     font-size: 18px;
- }
-
  QFrame#ScreenGraphicsFrame {
      background : transparent;
  }
@@ -118,3 +127,6 @@
      background: white;
  }
 
+QFrame#OnScreenButtonsFrame {
+     background : transparent;
+}

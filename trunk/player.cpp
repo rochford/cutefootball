@@ -53,7 +53,8 @@ Player::Player(QString name,
     m_hairColor(hairColor),
     m_skinColor(skinColor),
     m_positionLocked(false),
-    m_requiredNextAction(MWindow::NoAction)
+    m_requiredNextAction(MWindow::NoAction),
+    m_destination(QPointF(0.0,0.0))
 {
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
     m_keyEventTimer = new QTimer(this);
@@ -78,8 +79,6 @@ Player::Player(QString name,
     m_toolTipPen = KPlayerNameUnfocused;
     m_toolTipTextPos = QPointF(boundingRect().center().x()-2,
                                boundingRect().y()-5);
-
-
 }
 
 Player::~Player()
@@ -106,16 +105,10 @@ void Player::foulEventStart(Team* t, QPointF foulLocation)
                                                              Qt::IntersectsItemShape,
                                                              Qt::AscendingOrder);
         foreach (QGraphicsItem *item, list) {
-            if (item == this) {
+            if (item == this)
                 qDebug() << this->name() << " needs to move away from ball";
-            }
         }
     }
-}
-
-void Player::standupPlayer()
-{
-    setPixmap(m_images[m_lastAction].at(0));
 }
 
 void Player::pixmapInsert(MWindow::Action a, QString s1, QString s2, QString s3, QRgb shirtColor, QRgb shortColor)
@@ -236,21 +229,18 @@ QPainterPath Player::shape() const
     return path;
 }
 
-void Player::movePlayer(MWindow::Action action, QPointF destination)
+void Player::movePlayer(MWindow::Action action)
 {
     // if the ball is not owned then take ownership
     if (ballCollisionCheck() && !m_pitch->ball()->ballOwner()) {
-//        qDebug() << "Player::movePlayer taken ball";
         m_hasBall = true;
         m_pitch->ball()->setBallOwner(this);
-    } else if (!ballCollisionCheck()) {
+    } else if (!ballCollisionCheck())
         m_hasBall = false;
-//        qDebug() << "Player::movePlayer no ball";
-    }
-    if (m_hasBall) {
-//        qDebug() << "Player::movePlayer moving ball";
+
+    if (m_hasBall)
         m_pitch->ball()->moveBall(action, m_speed);
-    }
+
     m_step++;
     // make the move
     switch(action)
@@ -275,14 +265,19 @@ void Player::movePlayer(MWindow::Action action, QPointF destination)
 
         setPixmap(m_images[action].at(m_step % 3));
         // if the destination is less than move distance, only move that much
-        QLineF diff(pos(), destination);
+        QLineF diff(pos(), m_destination);
         if (diff.length() < tragectory.length())
             tragectory.setLength(diff.length());
         moveBy(tragectory.dx(), tragectory.dy());
         m_lastAction = action;
     }
         break;
+    case MWindow::NoAction:
+        setPixmap(m_images[action].at(0));
+        m_lastAction = action;
+        break;
     default:
+        Q_ASSERT(0);
         break;
     }
 }
@@ -291,18 +286,18 @@ bool Player::withinShootingDistance() const
 {
     QPointF diff;
 
-    if (m_team->getDirection() == Team::NorthToSouth) {
+    if (m_team->getDirection() == Team::NorthToSouth)
         diff = m_pitch->m_bottomGoal->pos() - m_pitch->ball()->pos();
-    } else {
+    else
         diff = m_pitch->ball()->pos() - m_pitch->m_topGoal->pos();
-    }
+
     if ( ( (m_pitch->m_footballPitch->rect().height() / 5.0 )*2.0) > diff.manhattanLength())
         return true;
     else
         return false;
 }
 
-QPointF Player::calculateDestination(MWindow::Action act)
+QPointF Player::calculateBallDestination(MWindow::Action act)
 {
     const QPointF p(pos());
     const int KShotPower = m_pitch->m_scene->sceneRect().height() / 4;
@@ -399,12 +394,12 @@ void Player::specialAction(MWindow::Action action)
                 Player *p = m_pitch->ball()->ballOwner();
                 if (p)
                     p->setTackled();
-                QPointF ballDest = calculateDestination(MWindow::Pass);
+                QPointF ballDest = calculateBallDestination(MWindow::Pass);
                 m_pitch->ball()->kickBall(MWindow::Pass, ballDest);
                 m_hasBall = false;
             }
             else if ( !playerCollision && ballCollision ) {
-                QPointF ballDest = calculateDestination(MWindow::Pass);
+                QPointF ballDest = calculateBallDestination(MWindow::Pass);
                 m_pitch->ball()->kickBall(MWindow::Pass, ballDest);
                 m_hasBall = false;
             }
@@ -423,7 +418,7 @@ void Player::specialAction(MWindow::Action action)
             break;
     }
 
-    QPointF dest = calculateDestination(action);
+    QPointF dest = calculateBallDestination(action);
 
     // if not have ball then must be tackle
     // if have ball then either shot or pass
@@ -444,16 +439,7 @@ void Player::specialAction(MWindow::Action action)
     }
 }
 
-void Player::setTackled()
-{
-    if ( m_hasBall ) {
-        m_pitch->ball()->setNoBallOwner();
-        m_hasBall = false;
-    }
-    move(MWindow::FallenOver);
-}
-
-void Player::move(MWindow::Action action, QPointF destination)
+void Player::move(MWindow::Action action)
 {
     if (m_outOfAction->isActive())
         return;
@@ -485,7 +471,7 @@ void Player::move(MWindow::Action action, QPointF destination)
         || action == MWindow::DiveWest )
         specialAction(action);
     else
-        movePlayer(action, destination);
+        movePlayer(action);
 }
 
 // same team
@@ -569,7 +555,7 @@ void Player::computerAdvanceWithoutBall()
         MWindow::Action action;
         const QPointF ballPos(m_pitch->ball()->pos());
 
-        QPointF diff(pos() - ballPos);
+        //QPointF diff(pos() - ballPos);
         int dx = abs(pos().x() - m_pitch->ball()->pos().x());
         int dy = abs(pos().y() - m_pitch->ball()->pos().y());
         if ( m_pitch->ball()->ballOwner() && ( (dx < 10) && (dy < 10)) ) {
@@ -577,7 +563,8 @@ void Player::computerAdvanceWithoutBall()
             move(action);
         } else {
             action = calculateAction(pos(), ballPos);
-            move(action, ballPos);
+            m_destination = ballPos;
+            move(action);
         }
     }
     else
@@ -590,11 +577,11 @@ void Player::computerAdvanceWithBall()
 
     QPointF destination;
     if (m_team->getDirection() == Team::SouthToNorth )
-        destination = QPointF(m_pitch->m_topGoal->rect().center().x(), m_pitch->m_topGoal->rect().bottom());
+        m_destination = QPointF(m_pitch->m_topGoal->rect().center().x(), m_pitch->m_topGoal->rect().bottom());
     else
-        destination = QPointF(m_pitch->m_bottomGoal->rect().center().x(), m_pitch->m_bottomGoal->rect().top());
+        m_destination = QPointF(m_pitch->m_bottomGoal->rect().center().x(), m_pitch->m_bottomGoal->rect().top());
 
-    MWindow::Action act = calculateAction(pos(), destination);
+    MWindow::Action act = calculateAction(pos(), m_destination);
 
     switch(m_role) {
     case Player::GoalKeeper:
@@ -606,7 +593,7 @@ void Player::computerAdvanceWithBall()
             m_hasBall = false;
         }
         else
-            move(act, destination);
+            move(act);
         break;
     }
 }
@@ -622,10 +609,12 @@ void Player::automove()
         // If the ball enters m_defendZone then move towards it
         if ( m_defendZone.contains( m_pitch->ball()->pos() ) ) {
             act = calculateAction( pos(), m_pitch->ball()->pos() );
-            move(act, m_pitch->ball()->pos());
+            m_destination = m_pitch->ball()->pos();
+            move(act);
         } else {
             act = calculateAction( pos(), m_startPositionRectF.center() );
-            move(act, m_startPositionRectF.center());
+            m_destination = m_startPositionRectF.center();
+            move(act);
         }
     }
 }
@@ -657,9 +646,10 @@ void Player::keyPressEvent(QKeyEvent *event)
     //qDebug() << "keyPressEvent";
     MWindow::Action a = m_actions[ event->key() ];
 
-    if (a == m_lastAction) {
+    if (m_lastKeyEvent == event->key()) {
         //qDebug() << "halt";
         m_lastAction = MWindow::NoAction;
+        m_lastKeyEvent = -1; // some invalid value
         move(MWindow::NoAction);
         event->accept();
         m_keyEventTimer->stop();
@@ -679,7 +669,9 @@ void Player::keyPressEvent(QKeyEvent *event)
     case MWindow::SouthWest:
     case MWindow::West:
     case MWindow::NorthWest:
+        calculatePlayerDestination(a);
         m_lastAction = a;
+        m_lastKeyEvent = event->key();
         move(a);
         // start a timer
         m_keyEventTimer->start();
@@ -692,6 +684,49 @@ void Player::keyPressEvent(QKeyEvent *event)
     }
 
     event->accept();
+}
+
+void Player::calculatePlayerDestination(MWindow::Action act)
+{
+    // the idea is that player wishes to travel in a direction
+    // for an infinite amount of time
+    const int KSomeBigDistance = 500;
+    QPointF dst = pos();
+    switch ( act )
+    {
+    case MWindow::North:
+        dst.setY(0);
+        break;
+    case MWindow::NorthEast:
+        dst.setY(0);
+        dst.setX(KSomeBigDistance);
+        break;
+    case MWindow::East:
+        dst.setX(KSomeBigDistance);
+        break;
+    case MWindow::SouthEast:
+        dst.setY(KSomeBigDistance);
+        dst.setX(KSomeBigDistance);
+        break;
+    case MWindow::South:
+        dst.setY(KSomeBigDistance);
+        break;
+    case MWindow::SouthWest:
+        dst.setY(KSomeBigDistance);
+        dst.setX(0);
+        break;
+    case MWindow::West:
+        dst.setX(0);
+        break;
+    case MWindow::NorthWest:
+        dst.setY(0);
+        dst.setX(0);
+        break;
+    default:
+        Q_ASSERT(0);
+        break;
+    }
+    m_destination = dst;
 }
 
 void Player::keyReleaseEvent(QKeyEvent *event)
@@ -715,14 +750,16 @@ void Player::keyReleaseEvent(QKeyEvent *event)
 
 void Player::repeatKeyEvent()
 {
-   //qDebug() << "repeatKeyEvent";
-   move(m_lastAction);
+    // repeating the last Key Event works ok with keyboard, but not with mouse.
+    // so need to calculate next action based upon m_destination.
+    MWindow::Action a = calculateAction(pos(), m_destination);
+    m_lastAction = a;
+    move(a);
    m_keyEventTimer->start();
 }
 
 void Player::stopKeyEvent()
 {
-    //qDebug() << "stopKeyEvent";
     if (m_keyEventTimer->isActive())
         m_keyEventTimer->stop();
 }
@@ -794,8 +831,23 @@ QVariant Player::itemChange(GraphicsItemChange change, const QVariant &value)
      return QGraphicsItem::itemChange(change, value);
  }
 
-void Player::setRequiredNextAction(MWindow::Action a)
+void Player::setTackled()
 {
-    qDebug() << "Player::setRequiredNextAction";
-    m_requiredNextAction = a;
+    if ( m_hasBall ) {
+        m_pitch->ball()->setNoBallOwner();
+        m_hasBall = false;
+    }
+    move(MWindow::FallenOver);
 }
+
+void Player::mousePressEvent(QGraphicsSceneMouseEvent *e)
+{
+    qDebug() << "Player mousePressEvent " << e->buttonDownScenePos(Qt::LeftButton);
+    QPointF scenePos = e->buttonDownScenePos(Qt::LeftButton);
+    setDestination(scenePos);
+    MWindow::Action a = calculateAction(pos(), scenePos);
+    m_lastAction = a;
+    move(a);
+    m_keyEventTimer->start();
+}
+

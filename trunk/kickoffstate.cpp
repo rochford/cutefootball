@@ -155,14 +155,18 @@ void KickOffState::createPlayerAnimationItems()
         anim->setTimeLine(m_timeLineTakePositions);
         MWindow::Action a;
         if ( p == m_kickOffPlayer ) {
+            p->setDestination(m_pitch->m_scene->sceneRect().center());
             stepX = ( m_pitch->m_scene->sceneRect().center().x() - tmp.x()) / 100.0;
             stepY = ( m_pitch->m_scene->sceneRect().center().y() - tmp.y()) / 100.0;
             a = calculateAction(tmp, m_pitch->m_scene->sceneRect().center());
         } else if ( p == m_kickOffSupportPlayer ) {
+            p->setDestination(QPointF(m_pitch->m_scene->sceneRect().center().x() - 25,
+                                      m_pitch->m_scene->sceneRect().center().y()));
             stepX = ( ( m_pitch->m_scene->sceneRect().center().x() - 25) - tmp.x()) / 100.0;
             stepY = ( m_pitch->m_scene->sceneRect().center().y() - tmp.y()) / 100.0;
             a = calculateAction(tmp, m_pitch->m_scene->sceneRect().center());
         } else {
+            p->setDestination(p->m_startPositionRectF.center());
             stepX = ( p->m_startPositionRectF.center().x() - tmp.x()) / 100.0;
             stepY = ( p->m_startPositionRectF.center().y() - tmp.y()) / 100.0;
             a = calculateAction(tmp, p->m_startPositionRectF.center());
