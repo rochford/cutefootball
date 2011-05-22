@@ -46,6 +46,7 @@ class Player;
 class Team;
 class TeamManager;
 class ScreenGraphics;
+class OnScreenButtonsFrame;
 class Game;
 class GameHalf;
 class PitchScene;
@@ -150,6 +151,7 @@ public:
     QGraphicsEllipseItem *m_centerCircle;
     QGraphicsEllipseItem *m_centerMark;
     ScreenGraphics *m_screenGraphicsLabel;
+    OnScreenButtonsFrame *m_screenButtonsLabel;
     QLabel* m_goalTextLabel;
     QRectF m_pitchArea[KRow][KColumn];
     SoundEffects* m_soundEffects;  // NOT OWNED
@@ -175,6 +177,7 @@ private:
 
     CameraView* m_cameraView;
     QGraphicsProxyWidget *m_screenGraphicsFrameProxy;
+    QGraphicsProxyWidget *m_screenButtonsFrameProxy;
     QGraphicsProxyWidget *m_goalTextLabelProxy;
 
     // list of advert boards

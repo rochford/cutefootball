@@ -56,11 +56,16 @@ void GoalKeeper::goalAttempt(Team* t, QPointF dest)
         && m_pitch->m_topPenaltyArea->contains(dest)) ) ){
 
         qDebug() << "need to save it";
-        action = calculateAction(pos(), dest);
-        if (action == MWindow::East)
-            move(MWindow::DiveEast, QPointF(pos().x()+KDiveDistance,pos().y()));
-        else
-            move(MWindow::DiveWest, QPointF(pos().x()-KDiveDistance,pos().y()));
+        m_destination = dest;
+        action = calculateAction(pos(), m_destination);
+        if (action == MWindow::East) {
+            m_destination = QPointF(pos().x()+KDiveDistance,pos().y());
+            move(MWindow::DiveEast);
+        }
+        else if (action == MWindow::West) {
+            m_destination = QPointF(pos().x()-KDiveDistance,pos().y());
+            move(MWindow::DiveWest);
+        }
     }
 }
 
@@ -129,25 +134,25 @@ void GoalKeeper::gkAdvanceWithoutBall()
     Team::Direction dir = m_team->getDirection();
     MWindow::Action action;
 
-    QPointF dst;
+//    QPointF dst;
     if ( (dir == Team::SouthToNorth
         && m_pitch->m_bottomPenaltyArea->contains(m_pitch->ball()->pos()) )
     || (dir == Team::NorthToSouth
         && m_pitch->m_topPenaltyArea->contains(m_pitch->ball()->pos())) )
         //qDebug() << "GoalKeeper::gkAdvanceWithoutBall";
-        dst = m_pitch->ball()->pos();
+        m_destination = m_pitch->ball()->pos();
     else {
         // if the ball x point is within the goal range, then move the keeper to the same x pos
         const qreal goalMinX = m_pitch->m_bottomGoal->pos().x() + m_pitch->m_bottomGoal->rect().topLeft().x();
         const qreal goalMaxX = goalMinX + m_pitch->m_bottomGoal->rect().width();
         const qreal ballX = m_pitch->ball()->pos().x();
         if ( (goalMinX < ballX) && (ballX < goalMaxX)  )
-            dst = QPointF(ballX, m_startPositionRectF.center().y());
+            m_destination = QPointF(ballX, m_startPositionRectF.center().y());
         else
-            dst = m_startPositionRectF.center();
+            m_destination = m_startPositionRectF.center();
     }
-    action = calculateAction(pos(), dst);
-    move(action, dst);
+    action = calculateAction(pos(), m_destination);
+    move(action);
 }
 
 void GoalKeeper::gkAdvanceWithBall()

@@ -18,31 +18,30 @@
  *
  */
 
-#ifndef PITCHSCENE_H
-#define PITCHSCENE_H
+#ifndef ONSCREENBUTTONSFRAME_H
+#define ONSCREENBUTTONSFRAME_H
 
-#include <QGraphicsScene>
-
+#include <QFrame>
 #include "settingsFrame.h"
 
-class Pitch;
+namespace Ui {
+    class OnScreenButtonsFrame;
+}
 
-class PitchScene : public QGraphicsScene
+class OnScreenButtonsFrame : public QFrame
 {
-    Q_OBJECT;
+    Q_OBJECT
+
 public:
-    explicit PitchScene(const QRectF& footballGroundRect,
-                        Pitch* pitch,
-                        QObject *parent = 0);
+    explicit OnScreenButtonsFrame(QWidget *parent = 0);
+    ~OnScreenButtonsFrame();
+    void refresh();
 public slots:
-    void setInputMethod(settingsFrame::InputMethod method) { m_inputMethod = method; }
+    void setInputMethod(settingsFrame::InputMethod method);
 
 private:
-    void mousePressEvent(QGraphicsSceneMouseEvent *e);
-
-private:
-    Pitch* m_pitch;
+    Ui::OnScreenButtonsFrame *ui;
     settingsFrame::InputMethod m_inputMethod;
 };
 
-#endif // PITCHSCENE_H
+#endif // ONSCREENBUTTONSFRAME_H

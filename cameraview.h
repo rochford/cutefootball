@@ -38,7 +38,8 @@ public:
 
     enum ViewPosition {
         TopLeft,
-        Center
+        Center,
+        BottomRight
     };
     struct PositionedProxyWidget {
         QGraphicsProxyWidget *widget;
@@ -50,6 +51,7 @@ public:
     // returns the top left of the view in scene co-ordinates
     QPointF topLeft() const;
     QPointF center() const;
+    QPointF bottomRight() const;
     QGraphicsItem* centeredItem() const { return m_object; }
     void appendProxyWidget(QGraphicsProxyWidget *item, ViewPosition viewPos);
 signals:
