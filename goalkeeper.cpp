@@ -142,14 +142,7 @@ void GoalKeeper::gkAdvanceWithoutBall()
         //qDebug() << "GoalKeeper::gkAdvanceWithoutBall";
         m_destination = m_pitch->ball()->pos();
     else {
-        // if the ball x point is within the goal range, then move the keeper to the same x pos
-        const qreal goalMinX = m_pitch->m_bottomGoal->pos().x() + m_pitch->m_bottomGoal->rect().topLeft().x();
-        const qreal goalMaxX = goalMinX + m_pitch->m_bottomGoal->rect().width();
-        const qreal ballX = m_pitch->ball()->pos().x();
-        if ( (goalMinX < ballX) && (ballX < goalMaxX)  )
-            m_destination = QPointF(ballX, m_startPositionRectF.center().y());
-        else
-            m_destination = m_startPositionRectF.center();
+        m_destination = m_startPositionRectF.center();
     }
     action = calculateAction(pos(), m_destination);
     move(action);

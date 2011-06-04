@@ -144,33 +144,61 @@
     </message>
 </context>
 <context>
+    <name>OnScreenButtonsFrame</name>
+    <message>
+        <location filename="../onscreenbuttonsframe.ui" line="14"/>
+        <source>Frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../onscreenbuttonsframe.ui" line="35"/>
+        <location filename="../onscreenbuttonsframe.ui" line="76"/>
+        <source>Tackle</source>
+        <translation>Puuttua</translation>
+    </message>
+    <message>
+        <location filename="../onscreenbuttonsframe.ui" line="42"/>
+        <location filename="../onscreenbuttonsframe.ui" line="81"/>
+        <source>Pause</source>
+        <translation>Tauko</translation>
+    </message>
+</context>
+<context>
+    <name>Pitch</name>
+    <message>
+        <location filename="../pitch.cpp" line="296"/>
+        <source>GOAL</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <source>version %1.%2</source>
         <translation type="obsolete">versio %1 %2</translation>
     </message>
     <message>
-        <location filename="../game.cpp" line="34"/>
+        <location filename="../game.cpp" line="36"/>
         <source>First half</source>
         <translation>Ensimmäinen puoliaika</translation>
     </message>
     <message>
-        <location filename="../game.cpp" line="35"/>
+        <location filename="../game.cpp" line="37"/>
         <source>Second half</source>
         <translation>Toinen puoliaika</translation>
     </message>
     <message>
-        <location filename="../game.cpp" line="36"/>
+        <location filename="../game.cpp" line="38"/>
         <source>Extra Time First half</source>
         <translation>Jatkoaika ensimmäinen puoliaika</translation>
     </message>
     <message>
-        <location filename="../game.cpp" line="37"/>
+        <location filename="../game.cpp" line="39"/>
         <source>Extra Time Second half</source>
         <translation>Jatkoaika toinen puoliaika</translation>
     </message>
     <message>
-        <location filename="../game.cpp" line="38"/>
+        <location filename="../game.cpp" line="40"/>
         <source>penalty shoot out</source>
         <translation>Rangaistuspotkut</translation>
     </message>
@@ -433,14 +461,19 @@
 <context>
     <name>ScreenGraphics</name>
     <message>
-        <location filename="../screengraphics.cpp" line="47"/>
+        <location filename="../screengraphics.cpp" line="50"/>
         <source>Foul</source>
         <translation>Potku</translation>
     </message>
     <message>
-        <location filename="../screengraphics.cpp" line="49"/>
+        <location filename="../screengraphics.cpp" line="53"/>
         <source>Goal</source>
         <translation>Maali</translation>
+    </message>
+    <message>
+        <location filename="../screengraphics.cpp" line="56"/>
+        <source>Kick Off</source>
+        <translation>Käynnistää</translation>
     </message>
 </context>
 <context>
@@ -460,7 +493,7 @@
         <location filename="../teamSelectionFrame.cpp" line="34"/>
         <location filename="../teamSelectionFrame.cpp" line="136"/>
         <source>Continue</source>
-        <translation type="unfinished">Jatka</translation>
+        <translation>Jatka</translation>
     </message>
     <message>
         <location filename="../teamSelectionFrame.cpp" line="85"/>
@@ -483,31 +516,23 @@
     <name>aboutFrame</name>
     <message>
         <location filename="../aboutFrame.ui" line="37"/>
-        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Lucida Grande&apos;; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;This game is distributed under the Lesser GNU Public License which can be read at &lt;a href=&quot;http://www.gnu.org/licenses/lgpl.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;http://www.gnu.org/licenses/lgpl.html&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation></translation>
+        <source>This game is distributed under the Lesser GNU Public License which can be read at http://www.gnu.org/licenses/lgpl.html</source>
+        <translation>Tämä peli on jaettu alle Lesser GNU Public License, joka voidaan lukea http://www.gnu.org/licenses/lgpl.html</translation>
     </message>
     <message>
-        <location filename="../aboutFrame.ui" line="75"/>
+        <location filename="../aboutFrame.ui" line="71"/>
         <source>Version X.X</source>
         <translation>versio %1 %2</translation>
     </message>
     <message>
-        <location filename="../aboutFrame.ui" line="102"/>
+        <location filename="../aboutFrame.ui" line="98"/>
         <source>Main Menu</source>
         <translation>Päävalikko</translation>
     </message>
     <message>
-        <location filename="../aboutFrame.ui" line="137"/>
-        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Lucida Grande&apos;; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Full source code for this production is available at &lt;a href=&quot;http://code.google.com/p/cutefootball/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;http://code.google.com/p/cutefootball/&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation></translation>
+        <location filename="../aboutFrame.ui" line="133"/>
+        <source>Full source code for this product is available at http://code.google.com/p/cutefootball/</source>
+        <translation>Koko lähdekoodi tästä lääkevalmisteesta on saatavilla osoitteessa http://code.google.com/p/cutefootball/</translation>
     </message>
 </context>
 <context>
@@ -522,9 +547,13 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Vain maalivahdit ovat sallittuja rangaistusalueella. Kenttäpelaajan astuminen rangaistusalueelle johtaa virheeseen.</translation>
     </message>
     <message>
-        <location filename="../helpFrame.ui" line="35"/>
         <source>Only goalkeepers are allowed in the penalty area. </source>
-        <translation>Vain maalivahdit ovat sallittuja rangaistusalueella.</translation>
+        <translation type="obsolete">Vain maalivahdit ovat sallittuja rangaistusalueella.</translation>
+    </message>
+    <message>
+        <location filename="../helpFrame.ui" line="35"/>
+        <source>Only goalkeepers are allowed in the penalty area. The goalkeeper cannot be controlled. No fouls.</source>
+        <translation>Vain maalivahdit ovat sallittuja rangaistus alueella. Maalivahti ei voi valvoa. Ei Virheet.</translation>
     </message>
 </context>
 <context>
@@ -606,9 +635,34 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>settingsFrame</name>
     <message>
-        <location filename="../settingsFrame.ui" line="90"/>
+        <location filename="../settingsFrame.ui" line="41"/>
+        <source>Game Length</source>
+        <translation>Pelin pituus (minuuttia)</translation>
+    </message>
+    <message>
+        <location filename="../settingsFrame.ui" line="68"/>
         <source>Sound</source>
         <translation>Äänet</translation>
+    </message>
+    <message>
+        <location filename="../settingsFrame.ui" line="92"/>
+        <source>Keyboard</source>
+        <translation>Näppäimistö</translation>
+    </message>
+    <message>
+        <location filename="../settingsFrame.ui" line="97"/>
+        <source>Mouse</source>
+        <translation>Hiiri</translation>
+    </message>
+    <message>
+        <location filename="../settingsFrame.ui" line="102"/>
+        <source>Touch</source>
+        <translation>Koskettaa</translation>
+    </message>
+    <message>
+        <location filename="../settingsFrame.ui" line="110"/>
+        <source>Controls</source>
+        <translation>Valvonta</translation>
     </message>
     <message>
         <source>Extra Time</source>
@@ -627,9 +681,8 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Kultainen maali</translation>
     </message>
     <message>
-        <location filename="../settingsFrame.ui" line="41"/>
         <source>Game Length (minutes)</source>
-        <translation>Pelin pituus (minuuttia)</translation>
+        <translation type="obsolete">Pelin pituus (minuuttia)</translation>
     </message>
     <message>
         <location filename="../settingsFrame.cpp" line="32"/>

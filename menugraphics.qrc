@@ -12,9 +12,6 @@
         <file>images/keyboard/9.png</file>
         <file>images/keyboard/hash.png</file>
         <file>images/keyboard/star.png</file>
-        <file>images/splash100x100.svg</file>
-        <file>images/splash240x320.svg</file>
-        <file>images/splash320x240.svg</file>
         <file>images/5soccer.svg</file>
     </qresource>
 </RCC>

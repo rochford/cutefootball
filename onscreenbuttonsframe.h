@@ -28,12 +28,14 @@ namespace Ui {
     class OnScreenButtonsFrame;
 }
 
+class Pitch;
+
 class OnScreenButtonsFrame : public QFrame
 {
     Q_OBJECT
 
 public:
-    explicit OnScreenButtonsFrame(QWidget *parent = 0);
+    explicit OnScreenButtonsFrame(Pitch* p, QWidget *parent = 0);
     ~OnScreenButtonsFrame();
     void refresh();
 public slots:
@@ -41,6 +43,7 @@ public slots:
 
 private:
     Ui::OnScreenButtonsFrame *ui;
+    Pitch* m_pitch;
     settingsFrame::InputMethod m_inputMethod;
 };
 

@@ -20,32 +20,41 @@
 
 #include "onscreenbuttonsframe.h"
 #include "ui_onscreenbuttonsframe.h"
+#include "pitch.h"
+#include "QDebug"
 
-OnScreenButtonsFrame::OnScreenButtonsFrame(QWidget *parent) :
-    QFrame(parent),
+OnScreenButtonsFrame::OnScreenButtonsFrame(Pitch* p,
+                                           QWidget *parent) :
+    QFrame(NULL),
+    m_pitch(p),
     ui(new Ui::OnScreenButtonsFrame)
 {
     ui->setupUi(this);
-//    connect(ui->actionPause, SIGNAL(triggered()), m_pitch, SLOT(pause()));
+    connect(ui->actionPause, SIGNAL(triggered()), m_pitch, SLOT(pause()));
 }
 
 OnScreenButtonsFrame::~OnScreenButtonsFrame()
 {
     delete ui;
+    m_pitch = NULL;
 }
 
 void OnScreenButtonsFrame::refresh()
 {
-    if (m_inputMethod != settingsFrame::Touch)
+    if (m_inputMethod == settingsFrame::Keyboard)
         return;
+    setEnabled(true);
+    setVisible(true);
 
-    resize(100,40);
+    qDebug() << "OnScreenButtonsFrame::refresh";
+//    resize(100,40);
 }
 
 void OnScreenButtonsFrame::setInputMethod(settingsFrame::InputMethod method)
 {
+    qDebug() << "OnScreenButtonsFrame::setInputMethod" << method;
     m_inputMethod = method;
-    if (m_inputMethod != settingsFrame::Touch) {
+    if (m_inputMethod == settingsFrame::Keyboard) {
         setEnabled(false);
         setVisible(false);
     } else {
