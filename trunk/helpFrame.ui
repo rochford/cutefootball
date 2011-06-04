@@ -32,7 +32,7 @@
     <item>
      <widget class="QLabel" name="label">
       <property name="text">
-       <string>Only goalkeepers are allowed in the penalty area. </string>
+       <string>Only goalkeepers are allowed in the penalty area. The goalkeeper cannot be controlled. No fouls.</string>
       </property>
       <property name="textFormat">
        <enum>Qt::PlainText</enum>

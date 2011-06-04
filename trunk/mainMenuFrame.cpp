@@ -31,8 +31,8 @@ mainMenuFrame::mainMenuFrame(MWindow *parent) :
     ui->setupUi(this);
 
     // TODO disable these until ready
-    //ui->m_settingsBtn->setVisible(false);
-    // ui->m_settingsBtn->setEnabled(false);
+    ui->m_settingsBtn->setVisible(false);
+    ui->m_settingsBtn->setEnabled(false);
     ui->m_playCupGameBtn->setVisible(false);
     ui->m_playCupGameBtn->setEnabled(false);
 

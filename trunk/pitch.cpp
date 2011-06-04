@@ -206,8 +206,9 @@ void Pitch::setPiece(Team* originatingTeam, SetPiece s, QPointF foulLocation)
 {
     m_soundEffects->soundEvent(SoundEffects::Whistle);
     switch(s) {
-    case Pitch::Foul: // TODO foul logic
-        emit foul(originatingTeam, foulLocation);
+    case Pitch::Foul:
+        // TODO fouls are disabled
+        //emit foul(originatingTeam, foulLocation);
         break;
     case Pitch::KickOff:
         emit kickOff(originatingTeam);
@@ -285,10 +286,10 @@ void Pitch::layoutPitch()
     m_cameraView->appendProxyWidget(m_screenGraphicsFrameProxy, CameraView::TopLeft );
 
     // touch on-screen buttons
-    m_screenButtonsLabel = new OnScreenButtonsFrame();
+    m_screenButtonsLabel = new OnScreenButtonsFrame(this);
     m_screenButtonsFrameProxy = m_scene->addWidget(m_screenButtonsLabel);
-    m_screenButtonsFrameProxy->setZValue(ZScoreText);
-    m_cameraView->appendProxyWidget(m_screenButtonsFrameProxy, CameraView::BottomRight );
+    m_screenButtonsFrameProxy->setZValue(ZOnScreenBtns);
+    m_cameraView->appendProxyWidget(m_screenButtonsFrameProxy, CameraView::TopLeft );
 
 #if 0
     m_goalTextLabel = new QLabel();

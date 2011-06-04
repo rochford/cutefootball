@@ -76,6 +76,7 @@ public:
         ZBall,
         ZGoalObject,
         ZScoreText,
+        ZOnScreenBtns,
         ZMenus,
         ZMainMenu
     };
