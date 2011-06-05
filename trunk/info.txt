@@ -1,15 +1,13 @@
 
 THE GAME:
-Choose from 48 international teams and play 5-a side football.
+Choose from 64 international teams and play 5-a side football.
 
 INSTALLATION:
 
-  http://cutefootball.googlecode.com/files/5soccer_package_0.3.sis
-
-From a PC computer download the game from the above link and then install it on the mobile phone.
+From a PC computer download the game from the download link and then install it on the mobile phone.
 The installation package will also install Qt 4.7.1 on the mobile phone.
 
-The following Nokia mobile devices should work:
+The game should work with following Nokia mobile devices:
 C5-00,
 C5-01,
 E5-00,
