@@ -575,7 +575,6 @@ void Player::computerAdvanceWithBall()
 {
     setZValue(Pitch::ZFocusedPlayer);
 
-    QPointF destination;
     if (m_team->getDirection() == Team::SouthToNorth )
         m_destination = QPointF(m_pitch->m_topGoal->rect().center().x(), m_pitch->m_topGoal->rect().bottom());
     else
@@ -591,9 +590,21 @@ void Player::computerAdvanceWithBall()
         if (withinShootingDistance()) {
             move(MWindow::Shot);
             m_hasBall = false;
-        }
-        else
+        } else {
+            // is there an opposition player in the way?
+            Team* oppTeam = m_pitch->homeTeam();
+            if (team() == m_pitch->homeTeam())
+                oppTeam = m_pitch->awayTeam();
+
+            Player* opposition = m_pitch->selectNearestPlayer(oppTeam);
+            const int KProximity = 30;
+            QRectF area(QPointF(pos().x() - KProximity,pos().y() - KProximity),QSize(KProximity,KProximity));
+            if ( area.contains(opposition->pos())) {
+                qDebug() << "computerAdvanceWithBall need to avoid player";
+                act = MWindow::Pass;
+            }
             move(act);
+        }
         break;
     }
 }
@@ -816,7 +827,7 @@ QVariant Player::itemChange(GraphicsItemChange change, const QVariant &value)
             return m_lastPos;
             }
 
-         if (m_pitch->m_centerCircle->boundingRect().contains(newPos)
+         if (m_pitch->m_centerCircle->shape().contains(newPos)
              && !m_allowedInCenterCircle)
              return m_lastPos;
 
