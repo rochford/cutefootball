@@ -48,9 +48,6 @@ Ball::Ball(Pitch* pitch)
     QSize pixmapSize = pixmap().size();
     pixmapSize.scale(QSizeF(20,20).toSize(), Qt::KeepAspectRatio);
 
-    QBitmap bitmap = pixmap().createMaskFromColor(KCuteFootballMaskColor);
-    pixmap().setMask(bitmap);
-
     setTransformOriginPoint(boundingRect().center());
     setZValue(Pitch::ZBall);
 
@@ -225,7 +222,7 @@ void Ball::updateBall(int frame)
     // animation may no longer be running due to a goal
     if ( (m_animationTimeLine->state() == QTimeLine::Running) && !m_positionLocked ) {
         QPointF newPos = m_animation->posAt(frame/40.0);
-        if (!m_pitch->m_footballPitch->contains(newPos))
+        if (!m_pitch->m_footballPitch.contains(newPos))
             qDebug() << "Ball::updateBall XXX error" << frame;
         setPos(newPos);
         // Rotation in animations does not seem to work
@@ -244,7 +241,7 @@ QVariant Ball::itemChange(GraphicsItemChange change, const QVariant &value)
          // Ball is either on the pitch or in a goal, otherwise return last position
          // value is the new position.
          QPointF newPos = value.toPointF();
-         QRectF pitchRect = m_pitch->m_footballPitch->rect();
+         QRectF pitchRect = m_pitch->m_footballPitch;
 
          // has a goal been scored?
          if (m_pitch->m_topGoal->contains(newPos)

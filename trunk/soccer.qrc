@@ -37,5 +37,6 @@
         <file>images/red/tackleNE.PNG</file>
         <file>images/red/diveE.PNG</file>
         <file>images/red/diveW.PNG</file>
+        <file>images/pitch4.png</file>
     </qresource>
 </RCC>
