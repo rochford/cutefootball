@@ -119,9 +119,9 @@ void FoulState::createPlayerAnimationItems()
         if (p->team() == m_game->m_foulingTeam) {
             // move player away from ball
             qDebug() << p->name() << " move away from ball";
-            stepX = (p->pos().x() - m_pitch->m_centerMark->rect().center().x() ) / 100;
-            stepY = (p->pos().y() - m_pitch->m_centerMark->rect().center().y()) / 100;
-            MWindow::Action a = calculateAction(tmp, m_pitch->m_centerMark->rect().center());
+            stepX = (p->pos().x() - m_pitch->m_centerMark.x() ) / 100;
+            stepY = (p->pos().y() - m_pitch->m_centerMark.y()) / 100;
+            MWindow::Action a = calculateAction(tmp, m_pitch->m_centerMark);
             p->movePlayer(a);
 
         } /* else if (p == m_freeKickTaker) {

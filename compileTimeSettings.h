@@ -44,11 +44,6 @@ const int KColumn = 5; // Left, l-Centre, centre, r-centre, Right
 // goalkepper-defence-midfield-attack,attack-midfield-defence-goalkepper
 const int KRow = 8;
 
-// scale factor for players & ball
-//const qreal KScaleFactor = 1.0;
-
-const QColor KCuteFootballMaskColor(103,123,9);
-
 // distance opposing team needs to be away from ball when foul
 const qreal KFoulDistance = 25.0;
 

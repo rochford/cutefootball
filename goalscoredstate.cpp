@@ -91,9 +91,9 @@ void GoalScoredState::createPlayerAnimationItems()
         qreal stepY;
 
         anim->setTimeLine(m_timeLineCelebrate);
-        stepX = ( m_pitch->m_footballPitch->rect().center().x() - tmp.x() ) / 100.0;
-        stepY = ( m_pitch->m_footballPitch->rect().center().y() - tmp.y() ) / 100.0;
-        MWindow::Action a = calculateAction(tmp, m_pitch->m_footballPitch->rect().center());
+        stepX = ( m_pitch->m_footballPitch.center().x() - tmp.x() ) / 100.0;
+        stepY = ( m_pitch->m_footballPitch.center().y() - tmp.y() ) / 100.0;
+        MWindow::Action a = calculateAction(tmp, m_pitch->m_footballPitch.center());
 
         p->movePlayer(a);
         for (int i = 0; i < 100; ++i) {

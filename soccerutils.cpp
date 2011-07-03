@@ -59,7 +59,6 @@ void teamColorTransform(QPixmap &pixmap, QString pix,
                         QRgb hairColor, QRgb skinColor)
 {
     QImage img(pix);
-    QRect rect = img.rect();
     for (int w = 0; w < img.width(); w++) {
         for (int h = 0; h < img.height(); h++) {
             QRgb rgb = img.pixel(w, h);
@@ -67,16 +66,13 @@ void teamColorTransform(QPixmap &pixmap, QString pix,
                 img.setPixel(QPoint(w,h), shirtColor);
             else if (qRed(rgb) < 8 && qBlue(rgb) < 8 && qGreen(rgb) > 250)
                 img.setPixel(QPoint(w,h), shortColor);
-            else if (qRed(rgb) == 195 && qBlue(rgb) == 74 && qGreen(rgb) == 74)
+            else if (qRed(rgb) == 255 && qBlue(rgb) == 122 && qGreen(rgb) == 40)
                 img.setPixel(QPoint(w,h), hairColor);
             else if (qRed(rgb) == 255 && qBlue(rgb) == 156 && qGreen(rgb) == 200)
                 img.setPixel(QPoint(w,h), skinColor);
         }
     }
     pixmap = QPixmap::fromImage(img);
-
-    QBitmap bitmap = pixmap.createMaskFromColor(KCuteFootballMaskColor);
-    pixmap.setMask(bitmap);
 }
 
 

@@ -287,11 +287,13 @@ bool Player::withinShootingDistance() const
     QPointF diff;
 
     if (m_team->getDirection() == Team::NorthToSouth)
-        diff = m_pitch->m_bottomGoal->pos() - m_pitch->ball()->pos();
+        // TODO XXX TIM is center() correct ???
+        diff = m_pitch->m_bottomGoal->center() - m_pitch->ball()->pos();
     else
-        diff = m_pitch->ball()->pos() - m_pitch->m_topGoal->pos();
+        // TODO XXX TIM is center() correct ???
+        diff = m_pitch->ball()->pos() - m_pitch->m_topGoal->center();
 
-    if ( ( (m_pitch->m_footballPitch->rect().height() / 5.0 )*2.0) > diff.manhattanLength())
+    if ( ( (m_pitch->m_footballPitch.height() / 5.0 )*2.0) > diff.manhattanLength())
         return true;
     else
         return false;
@@ -494,7 +496,7 @@ Player* Player::findAvailableTeamMate(QPointF myPos) const
 //        const int dy = p->pos().y() - myPos.y();
 
 //        if (qAbs(dx) < 50 && qAbs(dy) < 50)
-        if (diff.manhattanLength() < (m_pitch->m_footballPitch->rect().height() / 3.0))
+        if (diff.manhattanLength() < (m_pitch->m_footballPitch.height() / 3.0))
             bestPlayer = p;
     }
     return bestPlayer;
@@ -576,9 +578,9 @@ void Player::computerAdvanceWithBall()
     setZValue(Pitch::ZFocusedPlayer);
 
     if (m_team->getDirection() == Team::SouthToNorth )
-        m_destination = QPointF(m_pitch->m_topGoal->rect().center().x(), m_pitch->m_topGoal->rect().bottom());
+        m_destination = QPointF(m_pitch->m_topGoal->center().x(), m_pitch->m_topGoal->bottom());
     else
-        m_destination = QPointF(m_pitch->m_bottomGoal->rect().center().x(), m_pitch->m_bottomGoal->rect().top());
+        m_destination = QPointF(m_pitch->m_bottomGoal->center().x(), m_pitch->m_bottomGoal->top());
 
     MWindow::Action act = calculateAction(pos(), m_destination);
 
@@ -811,11 +813,11 @@ QVariant Player::itemChange(GraphicsItemChange change, const QVariant &value)
      if (change == ItemPositionChange && scene()) {
          // value is the new position.
          QPointF newPos = value.toPointF();
-         QRectF pitch = m_pitch->m_footballPitch->rect();
+         QRectF pitch = m_pitch->m_footballPitch;
 
          if ( ( m_role != Player::GoalKeeper )
-             && ( m_pitch->m_bottomPenaltyArea->contains(newPos)
-                || m_pitch->m_topPenaltyArea->contains(newPos) ) ) {
+             && ( m_pitch->m_bottomPenaltyArea.contains(newPos)
+                || m_pitch->m_topPenaltyArea.contains(newPos) ) ) {
              if ( m_hasBall ) {
                  qDebug() << "Player::itemChange has ball";
                  m_pitch->ball()->setNoBallOwner();

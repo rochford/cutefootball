@@ -132,7 +132,6 @@ signals:
 
 private:
     void createTeamPlayers(Team *team);
-    void layoutPitchBorder();
     void layoutPitch();
     void setPlayerDefendZone(Player *p);
 
@@ -141,16 +140,19 @@ private:
 public:
     QList<Player*> m_players;
     PitchScene *m_scene;
-    QGraphicsRectItem *m_footballPitch;
+    QRectF m_footballPitch;
 
     QGraphicsPixmapItem* m_grass;
-    QGraphicsRectItem *m_bottomGoal;
-    QGraphicsRectItem *m_topGoal;
-    QGraphicsPathItem *m_bottomPenaltyArea;
-    QGraphicsPathItem *m_topPenaltyArea;
-    QGraphicsLineItem *m_centerLine;
+    QRectF *m_bottomGoal;
+    QRectF *m_topGoal;
+    QPainterPath m_bottomPenaltyArea;
+    QPainterPath m_topPenaltyArea;
+
+    QLineF *m_centerLine;
+
     QGraphicsEllipseItem *m_centerCircle;
-    QGraphicsEllipseItem *m_centerMark;
+    QPointF m_centerMark;
+
     ScreenGraphics *m_screenGraphicsLabel;
 //    OnScreenButtonsFrame *m_screenButtonsLabel;
     QLabel* m_goalTextLabel;

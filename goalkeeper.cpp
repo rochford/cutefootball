@@ -51,9 +51,9 @@ void GoalKeeper::goalAttempt(Team* t, QPointF dest)
     MWindow::Action action;
 
     if ( (dir == Team::SouthToNorth
-        && m_pitch->m_bottomPenaltyArea->contains(dest)
+        && m_pitch->m_bottomPenaltyArea.contains(dest)
     || (dir == Team::NorthToSouth
-        && m_pitch->m_topPenaltyArea->contains(dest)) ) ){
+        && m_pitch->m_topPenaltyArea.contains(dest)) ) ){
 
         qDebug() << "need to save it";
         m_destination = dest;
@@ -136,9 +136,9 @@ void GoalKeeper::gkAdvanceWithoutBall()
 
 //    QPointF dst;
     if ( (dir == Team::SouthToNorth
-        && m_pitch->m_bottomPenaltyArea->contains(m_pitch->ball()->pos()) )
+        && m_pitch->m_bottomPenaltyArea.contains(m_pitch->ball()->pos()) )
     || (dir == Team::NorthToSouth
-        && m_pitch->m_topPenaltyArea->contains(m_pitch->ball()->pos())) )
+        && m_pitch->m_topPenaltyArea.contains(m_pitch->ball()->pos())) )
         //qDebug() << "GoalKeeper::gkAdvanceWithoutBall";
         m_destination = m_pitch->ball()->pos();
     else {

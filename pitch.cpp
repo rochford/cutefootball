@@ -53,7 +53,6 @@ Pitch::Pitch(const QRectF& footballGroundRect,
     m_topGoal(NULL),
     m_centerLine(NULL),
     m_centerCircle(NULL),
-    m_centerMark(NULL),
     m_settingsFrame(settingsFrame),
     m_soundEffects(se),
     m_teamMgr(new TeamManager)
@@ -217,66 +216,27 @@ void Pitch::setPiece(Team* originatingTeam, SetPiece s, QPointF foulLocation)
         break;
     }
 }
-void Pitch::layoutPitchBorder()
-{
-    QPixmap advertVertical(m_footballPitch->rect().height(),10);
-    advertVertical.fill(Qt::yellow);
-    QPixmap advertHorizontal(m_footballPitch->rect().width(),10);
-    advertHorizontal.fill(Qt::yellow);
-
-    qreal rotation(90.0);
-    // the right adverts
-    QGraphicsPixmapItem* advert = m_scene->addPixmap(advertVertical);
-    advert->setPos(m_footballPitch->rect().right()+10, m_footballPitch->rect().top());
-    advert->setRotation(90.0);
-    m_adverts.append(advert);
-
-    advert = NULL;
-    // the top adverts
-    advert = m_scene->addPixmap(advertHorizontal);
-    advert->setPos(m_footballPitch->rect().left(), m_footballPitch->rect().top()-10);
-    m_adverts.append(advert);
-
-    advert = NULL;
-    // the left adverts
-    advert = m_scene->addPixmap(advertVertical);
-    advert->setRotation(-90.0);
-    advert->setPos(m_footballPitch->rect().left()-10, m_footballPitch->rect().bottom());
-    m_adverts.append(advert);
-    advert = NULL;
-    // the bottom adverts
-    advert = m_scene->addPixmap(advertHorizontal);
-    advert->setPos(m_footballPitch->rect().left(), m_footballPitch->rect().bottom());
-    m_adverts.append(advert);
-}
 
 void Pitch::layoutPitch()
 {
     const int KPitchBoundaryWidth = 40;
-    QPixmap pitchUnscaled(QString(":/images/pitch3.png"));
+    QPixmap pitchUnscaled(QString(":/images/pitch4.png"));
     m_grass = new QGraphicsPixmapItem(pitchUnscaled /* pitchScaled */);
     m_scene->addItem(m_grass);
 
     // create the pitch
-    m_footballPitch = m_scene->addRect(KPitchBoundaryWidth, KPitchBoundaryWidth,
-                                       m_scene->width()-(KPitchBoundaryWidth*2), m_scene->height()-(KPitchBoundaryWidth*2),
-                                    KWhitePaintPen,
-                                    QBrush(Qt::white,Qt::NoBrush) );
-
-    layoutPitchBorder();
+    m_footballPitch = QRectF(KPitchBoundaryWidth, KPitchBoundaryWidth,
+                                 m_scene->width()-(KPitchBoundaryWidth*2), m_scene->height()-(KPitchBoundaryWidth*2));
 
     // half way line
-    m_centerLine = m_scene->addLine(m_footballPitch->rect().left(), (m_footballPitch->rect().height()/2.0)+KPitchBoundaryWidth,
-                                    m_footballPitch->rect().right(),(m_footballPitch->rect().height()/2.0)+KPitchBoundaryWidth,
-                                    KWhitePaintPen);
+    m_centerLine = new QLineF(m_footballPitch.left(), (m_footballPitch.height()/2.0)+KPitchBoundaryWidth,
+                             m_footballPitch.right(),(m_footballPitch.height()/2.0)+KPitchBoundaryWidth);
 
     // center circle
     m_centerCircle = m_scene->addEllipse((m_scene->width()/2.0)-40,(m_scene->height()/2.0)-40,
                       80.0, 80.0, KWhitePaintPen);
     // center mark
-    m_centerMark = m_scene->addEllipse((m_scene->width()/2.0)-4,(m_scene->height()/2.0)-4,
-                      4.0, 4.0, KWhitePaintPen);
-
+    m_centerMark = QPointF((m_scene->width()/2.0)-4,(m_scene->height()/2.0)-4);
     // simple text
 
     // half statistics frame
@@ -301,45 +261,33 @@ void Pitch::layoutPitch()
     m_cameraView->appendProxyWidget(m_goalTextLabelProxy, CameraView::Center );
 #endif // 0
     // create the goals
-    m_bottomGoal = m_scene->addRect((m_scene->width() / 2)-60, m_scene->height()-KPitchBoundaryWidth,120,KPitchBoundaryWidth/2,
-                   KWhitePaintPen,
-                   QBrush(Qt::white,Qt::Dense5Pattern) );
-    m_bottomGoal->setZValue(ZGoalObject);
-    m_topGoal = m_scene->addRect((m_scene->width() / 2)-60,KPitchBoundaryWidth/2,120,KPitchBoundaryWidth/2,
-                   KWhitePaintPen,
-                   QBrush(Qt::white,Qt::Dense5Pattern) );
-    m_topGoal->setZValue(ZGoalObject);
 
+    m_bottomGoal = new QRectF( (m_scene->width() / 2)-60,
+                               m_scene->height()-KPitchBoundaryWidth,
+                               120,
+                               KPitchBoundaryWidth/2);
+    m_topGoal = new QRectF((m_scene->width() / 2)-60,KPitchBoundaryWidth/2,120,KPitchBoundaryWidth/2);
     // penalty areas
-    QPainterPath path;
     QRectF penaltyRectF((m_scene->width() / 2)-80, 0, 160, KPitchBoundaryWidth*2 );
-    path.moveTo(penaltyRectF.center());
-    path.arcTo(penaltyRectF,180.0,180.0);
-    path.closeSubpath();
+    m_topPenaltyArea.moveTo(penaltyRectF.center());
+    m_topPenaltyArea.arcTo(penaltyRectF,180.0,180.0);
+    m_topPenaltyArea.closeSubpath();
 
-    m_topPenaltyArea = m_scene->addPath(path,
-                                        KWhitePaintPen,
-                                        QBrush(Qt::white,Qt::NoBrush) );
-
-    QPainterPath path2;
     QRectF penaltyRectF2((m_scene->width() / 2)-80, m_scene->height()-(KPitchBoundaryWidth*2), 160, KPitchBoundaryWidth*2);
-    path2.moveTo(penaltyRectF2.center());
-    path2.arcTo(penaltyRectF2,180.0,-180.0);
-    path2.closeSubpath();
-    m_bottomPenaltyArea = m_scene->addPath(path2,
-                                        KWhitePaintPen,
-                                        QBrush(Qt::white,Qt::NoBrush) );
+    m_bottomPenaltyArea.moveTo(penaltyRectF2.center());
+    m_bottomPenaltyArea.arcTo(penaltyRectF2,180.0,-180.0);
+    m_bottomPenaltyArea.closeSubpath();
 
     m_entrancePoint = QPointF(0, (m_scene->sceneRect().height())/2);
     // divide the pitch into areas
     // makes it easier for computer based movement
-    QPointF tlTopHalf = m_footballPitch->rect().topLeft();
-    QPointF brBottomHalf = m_footballPitch->rect().bottomRight();
-    QPointF brTopHalf = brBottomHalf - QPointF(m_footballPitch->rect().height()/2,0);
-    QPointF tlBottomHalf = tlTopHalf + QPointF(m_footballPitch->rect().height()/2,0);
+    QPointF tlTopHalf = m_footballPitch.topLeft();
+    QPointF brBottomHalf = m_footballPitch.bottomRight();
+    QPointF brTopHalf = brBottomHalf - QPointF(m_footballPitch.height()/2,0);
+    QPointF tlBottomHalf = tlTopHalf + QPointF(m_footballPitch.height()/2,0);
 
-    const qreal w = m_footballPitch->rect().width();
-    const qreal h = m_footballPitch->rect().height();
+    const qreal w = m_footballPitch.width();
+    const qreal h = m_footballPitch.height();
 
     for (int row = 0; row < KRow; row++) {
         for (int col = 0; col < KColumn; col++) {
