@@ -33,7 +33,7 @@ PitchScene::PitchScene(const QRectF& footballGroundRect,
     m_pitch(pitch),
     m_inputMethod(settingsFrame::Keyboard)
 {
-    setBackgroundBrush(QBrush(Qt::green));
+    setBackgroundBrush(QBrush(QPixmap(QString(":/images/pitch4.png"))));
     // disable focus selection by user pressing scene items
     setStickyFocus(true);
 }

@@ -22,56 +22,100 @@
 #include "pitch.h"
 #include "team.h"
 
-ScreenGraphics::ScreenGraphics(Pitch *p)
-  :  QFrame(NULL),
-    m_pitch(p),
-    ui(new Ui::ScreenGraphicsFrame),
-    m_type(ScoreText)
+ScreenGraphics::ScreenGraphics(Pitch& p,
+                               QStatusBar& bar)
+  : m_pitch(p),
+    m_type(ScoreText),
+    m_bar(bar),
+    mSGFhomeTeamFlag(new QLabel()),
+    mSGFhomeTeamName(new QLabel()),
+    mSGFhomeTeamGoals(new QLabel()),
+    mSGFawayTeamFlag(new QLabel()),
+    mSGFawayTeamName(new QLabel()),
+    mSGFawayTeamGoals(new QLabel()),
+    mTime(new QLabel())
 {
-    ui->setupUi(this);
+    mSGFhomeTeamFlag->setObjectName("homeTeamFlag");
+    mSGFawayTeamFlag->setObjectName("awayTeamFlag");
+    mSGFhomeTeamName->setObjectName("homeTeamName");
+    mSGFawayTeamName->setObjectName("awayTeamName");
+    mSGFhomeTeamGoals->setObjectName("homeTeamGoals");
+    mSGFawayTeamGoals->setObjectName("awayTeamGoals");
+    mTime->setObjectName("scoreText");
 }
 
 ScreenGraphics::~ScreenGraphics()
 {
-    delete ui;
+    removeWidgets();
+    delete mSGFhomeTeamFlag;
+    delete mSGFhomeTeamName;
+    delete mSGFhomeTeamGoals;
+    delete mSGFawayTeamFlag;
+    delete mSGFawayTeamName;
+    delete mSGFawayTeamGoals;
+    delete mTime;
 }
 
 void ScreenGraphics::update(QString s)
 {
-    resize(160,50);
-    ui->SGFhomeTeamName->setText(QString::number(m_pitch->homeTeam()->m_goals));
-    ui->SGFawayTeamName->setText(QString::number(m_pitch->awayTeam()->m_goals));
+    mSGFhomeTeamGoals->setText(QString::number(m_pitch.homeTeam()->m_goals));
+    mSGFawayTeamGoals->setText(QString::number(m_pitch.awayTeam()->m_goals));
+
+    QString str;
     switch(m_type)
         {
-        case ScoreText:
-            ui->scoreTextLabel->setText(s);
-            break;
         case Foul:
-            ui->scoreTextLabel->setText(tr("Foul"));
+            str = QObject::tr("Foul");
             break;
         case GoalScored:
-            ui->scoreTextLabel->setText(tr("Goal"));
+            str = QObject::tr("Goal");
             break;
         case KickOff:
-            ui->scoreTextLabel->setText(tr("Kick Off"));
+            str = QObject::tr("Kick Off");
+            break;
+        default:
+        case ScoreText:
+            str += s;
             break;
         }
-}
-
-void ScreenGraphics::setTeams(Team* home, Team* away)
-{
-    ui->SGFhomeTeamFlag->setPixmap(
-                QPixmap(home->flag()).scaled(20,15));
-    ui->SGFhomeTeamName->setText(home->briefName());
-    ui->SGFawayTeamFlag->setPixmap(
-                QPixmap(away->flag()).scaled(20,15));
-    ui->SGFawayTeamName->setText(away->briefName());
+    mTime->setText(str);
 }
 
 void ScreenGraphics::setGraphics(ScreenGraphicsType type)
 {
-    qDebug() << "ScreenGraphics::setGraphics";
     m_type = type;
 }
 
+void ScreenGraphics::setTeams(Team* home, Team* away)
+{
+    mSGFhomeTeamFlag->setPixmap(
+                QPixmap(home->flag()).scaled(20,15));
+    mSGFhomeTeamName->setText(home->briefName());
+    mSGFawayTeamFlag->setPixmap(
+                QPixmap(away->flag()).scaled(20,15));
+    mSGFawayTeamName->setText(away->briefName());
 
+    addWidgets();
+}
+
+void ScreenGraphics::addWidgets()
+{
+    m_bar.addWidget(mSGFhomeTeamFlag);
+    m_bar.addWidget(mSGFhomeTeamName);
+    m_bar.addWidget(mSGFhomeTeamGoals);
+    m_bar.addWidget(mSGFawayTeamFlag);
+    m_bar.addWidget(mSGFawayTeamName);
+    m_bar.addWidget(mSGFawayTeamGoals);
+    m_bar.addWidget(mTime);
+}
+
+void ScreenGraphics::removeWidgets()
+{
+    m_bar.removeWidget(mSGFhomeTeamFlag);
+    m_bar.removeWidget(mSGFhomeTeamName);
+    m_bar.removeWidget(mSGFhomeTeamGoals);
+    m_bar.removeWidget(mSGFawayTeamFlag);
+    m_bar.removeWidget(mSGFawayTeamName);
+    m_bar.removeWidget(mSGFawayTeamGoals);
+    m_bar.removeWidget(mTime);
+}

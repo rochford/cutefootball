@@ -75,9 +75,9 @@ Player::Player(QString name,
     createKeyboardActions();
     setTransformOriginPoint(boundingRect().center());
 
-    m_toolTipText = QString::number(m_number);
-    m_toolTipPen = KPlayerNameUnfocused;
-    m_toolTipTextPos = QPointF(boundingRect().center().x()-2,
+    m_toolTipText = "";
+    m_toolTipPen = KPlayerNameFocused;
+    m_toolTipTextPos = QPointF(boundingRect().topLeft().x()-2,
                                boundingRect().y()-5);
 }
 
@@ -101,7 +101,7 @@ void Player::foulEventStart(Team* t, QPointF foulLocation)
         // not allowed within certain distance of foulLocation
         QPainterPath path;
         path.addEllipse(foulLocation, KFoulDistance, KFoulDistance);
-        QList<QGraphicsItem *> list = m_pitch->m_scene->items ( path,
+        QList<QGraphicsItem *> list = m_pitch->scene()->items ( path,
                                                              Qt::IntersectsItemShape,
                                                              Qt::AscendingOrder);
         foreach (QGraphicsItem *item, list) {
@@ -187,11 +187,11 @@ void Player::paint(QPainter *painter,
                    const QStyleOptionGraphicsItem *option,
                    QWidget *widget)
 {
-//    KPlayerToolTipFont.setStyleStrategy(QFont::NoAntialias);
-
-    painter->setPen(m_toolTipPen);
-    painter->setFont(KPlayerToolTipFont);
-    painter->drawText(m_toolTipTextPos, m_toolTipText);
+    if (m_toolTipText != "") {
+        painter->setPen(m_toolTipPen);
+        painter->setFont(KPlayerToolTipFont);
+        painter->drawText(m_toolTipTextPos, m_toolTipText);
+    }
 
     // Draw QGraphicsPixmapItem face
     if (!pixmap())
@@ -205,17 +205,11 @@ void Player::focusInEvent(QFocusEvent * event)
 {
     //qDebug() << " Player::focusInEvent " << m_name;
     m_toolTipText = m_name;
-    m_toolTipPen = KPlayerNameFocused;
-    m_toolTipTextPos = QPointF(boundingRect().topLeft().x()-2,
-                               boundingRect().y()-5);
 }
 void Player::focusOutEvent(QFocusEvent * event)
 {
     //qDebug() << " Player::focusOutEvent " << m_name;
-    m_toolTipText = QString::number(m_number);
-    m_toolTipPen = KPlayerNameUnfocused;
-    m_toolTipTextPos = QPointF(boundingRect().center().x()-2,
-                               boundingRect().y()-5);
+    m_toolTipText = "";
     // stop any key events
     stopKeyEvent();
 }
@@ -293,7 +287,7 @@ bool Player::withinShootingDistance() const
         // TODO XXX TIM is center() correct ???
         diff = m_pitch->ball()->pos() - m_pitch->m_topGoal->center();
 
-    if ( ( (m_pitch->m_footballPitch.height() / 5.0 )*2.0) > diff.manhattanLength())
+    if ( ( (m_pitch->footballPitch().height() / 5.0 )*2.0) > diff.manhattanLength())
         return true;
     else
         return false;
@@ -302,8 +296,8 @@ bool Player::withinShootingDistance() const
 QPointF Player::calculateBallDestination(MWindow::Action act)
 {
     const QPointF p(pos());
-    const int KShotPower = m_pitch->m_scene->sceneRect().height() / 4;
-    const int KPassPower = m_pitch->m_scene->sceneRect().height() / 5;
+    const int KShotPower = m_pitch->scene()->sceneRect().height() / 4;
+    const int KPassPower = m_pitch->scene()->sceneRect().height() / 5;
     QPointF shotDest(p);
     QPointF passDest(p);
     switch(m_lastAction)
@@ -496,7 +490,7 @@ Player* Player::findAvailableTeamMate(QPointF myPos) const
 //        const int dy = p->pos().y() - myPos.y();
 
 //        if (qAbs(dx) < 50 && qAbs(dy) < 50)
-        if (diff.manhattanLength() < (m_pitch->m_footballPitch.height() / 3.0))
+        if (diff.manhattanLength() < (m_pitch->footballPitch().height() / 3.0))
             bestPlayer = p;
     }
     return bestPlayer;
@@ -604,6 +598,7 @@ void Player::computerAdvanceWithBall()
             if ( area.contains(opposition->pos())) {
                 qDebug() << "computerAdvanceWithBall need to avoid player";
                 act = MWindow::Pass;
+                m_hasBall = false;
             }
             move(act);
         }
@@ -813,7 +808,7 @@ QVariant Player::itemChange(GraphicsItemChange change, const QVariant &value)
      if (change == ItemPositionChange && scene()) {
          // value is the new position.
          QPointF newPos = value.toPointF();
-         QRectF pitch = m_pitch->m_footballPitch;
+         QRectF pitch = m_pitch->footballPitch();
 
          if ( ( m_role != Player::GoalKeeper )
              && ( m_pitch->m_bottomPenaltyArea.contains(newPos)
@@ -829,7 +824,7 @@ QVariant Player::itemChange(GraphicsItemChange change, const QVariant &value)
             return m_lastPos;
             }
 
-         if (m_pitch->m_centerCircle->shape().contains(newPos)
+         if (m_pitch->m_centerCircle.contains(newPos)
              && !m_allowedInCenterCircle)
              return m_lastPos;
 

@@ -29,6 +29,7 @@
 #include "mainMenuFrame.h"
 #include "ingamemenuframe.h"
 #include "aboutFrame.h"
+#include "ui_mainwindow.h"
 
 MWindow::MWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -45,16 +46,17 @@ MWindow::MWindow(QWidget *parent)
     m_settingsFrame = new settingsFrame(this);
     m_mainMenuFrame = new mainMenuFrame(this);
 
-    uiMainWindow.setupUi(this);
+    uiMainWindow->setupUi(this);
     // these frames are dependent on uiMainWindow actions, construct
     // after uiMainWindow
     m_halfStatisticsFrame = new HalfStatisticsFrame(this);
 
     QRectF footballGround(0,0,340,420);
     m_pitch = new Pitch(footballGround,
-                        uiMainWindow.m_graphicsView,
+                        uiMainWindow->m_graphicsView,
                         m_soundEffects,
-                        m_settingsFrame);
+                        m_settingsFrame,
+                        uiMainWindow->statusBar);
     m_teamSelectionFrame = new TeamSelectionFrame(this);
     m_inGameMenuFrame = new InGameMenuFrame(this);
 
@@ -64,7 +66,7 @@ MWindow::MWindow(QWidget *parent)
 
     m_soundEffects->startSound(SoundEffects::GameThemeTune);
 
-    setCentralWidget( uiMainWindow.m_graphicsView );
+    setCentralWidget( uiMainWindow->m_graphicsView );
     showFrame(MWindow::MainMenu);
     emit setFrame(MWindow::MainMenu);
 }
@@ -98,26 +100,26 @@ void MWindow::createConnections()
     connect(this, SIGNAL(setFrame(MWindow::Frame)),
             this, SLOT(showFrame(MWindow::Frame)));
 
-    connect(uiMainWindow.actionSingleGame, SIGNAL(triggered()),
+    connect(uiMainWindow->actionSingleGame, SIGNAL(triggered()),
             this, SLOT(showSingleGameTeamSelection()));
-    connect(uiMainWindow.actionGameCup, SIGNAL(triggered()),
+    connect(uiMainWindow->actionGameCup, SIGNAL(triggered()),
             this, SLOT(showCupTeamSelection()));
-    connect(uiMainWindow.actionSettings, SIGNAL(triggered()),
+    connect(uiMainWindow->actionSettings, SIGNAL(triggered()),
             this, SLOT(showSettingsFrame()));
-    connect(uiMainWindow.actionInputSettings, SIGNAL(triggered()),
+    connect(uiMainWindow->actionInputSettings, SIGNAL(triggered()),
             this, SLOT(showInputSettingsFrame()));
-    connect(uiMainWindow.actionHelp, SIGNAL(triggered()),
+    connect(uiMainWindow->actionHelp, SIGNAL(triggered()),
             this, SLOT(showHelpFrame()));
-    connect(uiMainWindow.actionMainMenu, SIGNAL(triggered()),
+    connect(uiMainWindow->actionMainMenu, SIGNAL(triggered()),
             this, SLOT(showMainMenuFrame()));
-    connect(uiMainWindow.actionMainMenu, SIGNAL(triggered()),
+    connect(uiMainWindow->actionMainMenu, SIGNAL(triggered()),
             m_pitch, SLOT(gameStop()));
-    connect(uiMainWindow.actionAbout, SIGNAL(triggered()),
+    connect(uiMainWindow->actionAbout, SIGNAL(triggered()),
             this, SLOT(showAboutFrame()));
 
-    connect(uiMainWindow.actionContinue, SIGNAL(triggered()),
+    connect(uiMainWindow->actionContinue, SIGNAL(triggered()),
             this, SLOT(hideInGameMenu()));
-    connect(uiMainWindow.actionQuit, SIGNAL(triggered()),
+    connect(uiMainWindow->actionQuit, SIGNAL(triggered()),
             this, SLOT(close()));
 
     connect(m_pitch, SIGNAL(gameInProgress(bool)),
@@ -157,15 +159,15 @@ void MWindow::enableActions(bool gameInProgress)
 {
     qDebug() << "MWindow::enableActions" << gameInProgress;
     m_gameInProgress = gameInProgress;
-    uiMainWindow.actionSingleGame->setEnabled(!gameInProgress);
-    uiMainWindow.actionGameCup->setEnabled(!gameInProgress);
-    uiMainWindow.actionSettings->setEnabled(!gameInProgress);
-    uiMainWindow.actionInputSettings->setEnabled(!gameInProgress);
-    uiMainWindow.actionHelp->setEnabled(!gameInProgress);
-    uiMainWindow.actionAbout->setEnabled(!gameInProgress);
-    uiMainWindow.actionQuit->setEnabled(true);
-    uiMainWindow.actionPause->setEnabled(gameInProgress);
-    uiMainWindow.actionContinue->setEnabled(gameInProgress);
+    uiMainWindow->actionSingleGame->setEnabled(!gameInProgress);
+    uiMainWindow->actionGameCup->setEnabled(!gameInProgress);
+    uiMainWindow->actionSettings->setEnabled(!gameInProgress);
+    uiMainWindow->actionInputSettings->setEnabled(!gameInProgress);
+    uiMainWindow->actionHelp->setEnabled(!gameInProgress);
+    uiMainWindow->actionAbout->setEnabled(!gameInProgress);
+    uiMainWindow->actionQuit->setEnabled(true);
+    uiMainWindow->actionPause->setEnabled(gameInProgress);
+    uiMainWindow->actionContinue->setEnabled(gameInProgress);
 
     // TODO this needs to be moved to be triggered by game FSM
     // complete.
@@ -179,13 +181,13 @@ void MWindow::showFrame(Frame f)
 {
     qDebug() << "MWindow::showFrame " << f;
     if ( f == GraphicsView) {
-        uiMainWindow.m_graphicsView->activateWindow();
+        uiMainWindow->m_graphicsView->activateWindow();
         m_soundEffects->stopSound(SoundEffects::GameThemeTune);
-        uiMainWindow.m_graphicsView->showMaximized();
-        uiMainWindow.m_graphicsView->setFocus();
+        uiMainWindow->m_graphicsView->showMaximized();
+        uiMainWindow->m_graphicsView->setFocus();
     } else {
-        uiMainWindow.m_graphicsView->setVisible(false);
-        uiMainWindow.m_graphicsView->clearFocus();
+        uiMainWindow->m_graphicsView->setVisible(false);
+        uiMainWindow->m_graphicsView->clearFocus();
     }
 }
 

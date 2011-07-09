@@ -65,7 +65,7 @@ void GoalScoredState::continueGameClock()
 void GoalScoredState::onEntry(QEvent * /* event */)
 {
     qDebug() << "GoalScoredState::onEntry parent " << parent()->objectName();
-    m_pitch->m_screenGraphicsLabel->setGraphics(ScreenGraphics::GoalScored);
+    m_pitch->setGraphics(ScreenGraphics::GoalScored);
     m_pitch->updateDisplayTime(m_game->remainingTimeInHalfMs());
     m_game->pauseGameClock();
     createPlayerAnimationItems();
@@ -91,9 +91,9 @@ void GoalScoredState::createPlayerAnimationItems()
         qreal stepY;
 
         anim->setTimeLine(m_timeLineCelebrate);
-        stepX = ( m_pitch->m_footballPitch.center().x() - tmp.x() ) / 100.0;
-        stepY = ( m_pitch->m_footballPitch.center().y() - tmp.y() ) / 100.0;
-        MWindow::Action a = calculateAction(tmp, m_pitch->m_footballPitch.center());
+        stepX = ( m_pitch->footballPitch().center().x() - tmp.x() ) / 100.0;
+        stepY = ( m_pitch->footballPitch().center().y() - tmp.y() ) / 100.0;
+        MWindow::Action a = calculateAction(tmp, m_pitch->footballPitch().center());
 
         p->movePlayer(a);
         for (int i = 0; i < 100; ++i) {
@@ -115,6 +115,6 @@ void GoalScoredState::playFrameCelebrate(int frame)
 
     foreach (QGraphicsItemAnimation *anim, m_playerAnimationItems)
         anim->item()->setPos(anim->posAt(f));
-    m_pitch->m_scene->update();
+    m_pitch->scene()->update();
 }
 

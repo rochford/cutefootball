@@ -88,9 +88,9 @@ MWindow::Action calculateAction(QPointF source,
 
     if (dx > 0 && dy == 0)
         return MWindow::West;
-    else if (dx <= 0 && dy == 0)
+    else if (dx < 0 && dy == 0)
         return MWindow::East;
-    else if (dx >= 0 && dy < 0)
+    else if (dx > 0 && dy < 0)
         return MWindow::SouthWest;
     else if (dx > 0 && dy > 0)
         return MWindow::NorthWest;
@@ -98,10 +98,12 @@ MWindow::Action calculateAction(QPointF source,
         return MWindow::NorthEast;
     else if (dx < 0 && dy < 0)
         return MWindow::SouthEast;
-    else if (dx == 0 && dy >= 0)
+    else if (dx == 0 && dy > 0)
         return MWindow::North;
-    else if (dx == 0 && dy <= 0)
+    else if (dx == 0 && dy < 0)
         return MWindow::South;
+    else
+        return MWindow::NoAction;
 }
 
 int calculateTackleRotationFromLastAction(MWindow::Action lastAction)

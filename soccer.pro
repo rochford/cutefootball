@@ -105,12 +105,10 @@ SOURCES += \
     inputsettingsframe.cpp \
     halfstatisticsframe.cpp \
     soccerutils.cpp \
-    cameraview.cpp \
     aboutFrame.cpp \
     ingamemenuframe.cpp \
     pitchscene.cpp \
-    kickoffstate.cpp \
-    onscreenbuttonsframe.cpp
+    kickoffstate.cpp
 
 HEADERS  += \
     mainwindow.h \
@@ -133,12 +131,10 @@ HEADERS  += \
     halfstatisticsframe.h \
     version.h \
     soccerutils.h \
-    cameraview.h \
     aboutFrame.h \
     ingamemenuframe.h \
     pitchscene.h \
-    kickoffstate.h \
-    onscreenbuttonsframe.h
+    kickoffstate.h
 #    teamNameTranslations.h
 
 RESOURCES += \
@@ -156,10 +152,8 @@ FORMS += \
     helpFrame.ui \
     inputSettingsFrame.ui \
     halfstatisticsframe.ui \
-    screengraphicsframe.ui \
     aboutFrame.ui \
-    ingamemenuframe.ui \
-    onscreenbuttonsframe.ui
+    ingamemenuframe.ui
 
 OTHER_FILES += \
     teams/teams.txt \

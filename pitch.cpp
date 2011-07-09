@@ -25,6 +25,7 @@
 #include <QGraphicsEllipseItem>
 
 #include <QGraphicsItemAnimation>
+#include <QStatusBar>
 
 #include "pitch.h"
 #include "ball.h"
@@ -32,35 +33,31 @@
 #include "team.h"
 #include "goalkeeper.h"
 #include "screengraphics.h"
-#include "onscreenbuttonsframe.h"
 #include "game.h"
 #include "soundEffects.h"
 #include "settingsFrame.h"
-#include "cameraview.h"
 #include "soccerutils.h"
 #include "pitchscene.h"
-#include "onscreenbuttonsframe.h"
 
 Pitch::Pitch(const QRectF& footballGroundRect,
              QGraphicsView* view,
              SoundEffects* se,
-             settingsFrame* settingsFrame)
+             settingsFrame* settingsFrame,
+             QStatusBar* bar)
   : QObject(),
     m_scene(new PitchScene(footballGroundRect, this)),
     m_view(view),
     m_motionTimer(NULL),
     m_bottomGoal(NULL),
     m_topGoal(NULL),
-    m_centerLine(NULL),
-    m_centerCircle(NULL),
     m_settingsFrame(settingsFrame),
     m_soundEffects(se),
-    m_teamMgr(new TeamManager)
+    m_teamMgr(new TeamManager),
+    m_bar(bar)
 {
     m_view->scale(1.4,1.4);
 
     m_view->setScene(m_scene);
-    m_cameraView = new CameraView(*m_view, this);
 
     m_scene->setInputMethod(m_settingsFrame->inputMethod());
 
@@ -81,7 +78,6 @@ Pitch::Pitch(const QRectF& footballGroundRect,
 
     m_teamMgr->createTeams();
 
-    connect(m_motionTimer, SIGNAL(timeout()), m_cameraView, SLOT(update()));
     connect(m_motionTimer, SIGNAL(timeout()), m_scene, SLOT(advance()));
     connect(m_motionTimer, SIGNAL(timeout()), m_scene, SLOT(update()));
     connect(m_motionTimer, SIGNAL(timeout()), this, SLOT(hasBallCheck()));
@@ -96,18 +92,7 @@ Pitch::Pitch(const QRectF& footballGroundRect,
 
 Pitch::~Pitch()
 {
-    // some items are dependent on the scene...
-    while (!m_adverts.isEmpty())
-        delete m_adverts.takeFirst();
-
-    m_scene->removeItem(m_screenGraphicsFrameProxy);
-    delete m_screenGraphicsLabel;
-//    m_scene->removeItem(m_screenButtonsFrameProxy);
-//    delete m_screenButtonsLabel;
-
-    m_scene->removeItem(m_grass);
-    delete m_grass;
-
+    delete m_statusBarInfo;
     delete m_scene;
 
     if (m_motionTimer->isActive())
@@ -117,19 +102,18 @@ Pitch::~Pitch()
 
     delete m_ball;
     delete m_teamMgr;
-    delete m_cameraView;
-
 }
 
-void Pitch::centerOn(QPointF point)
+void Pitch::centerOn()
 {
-    m_cameraView->centerOn(point);
+    m_view->centerOn(m_centerOn);
 }
 
 
 void Pitch::centerOn(QGraphicsItem *item)
 {
-    m_cameraView->centerOn(item);
+    m_centerOn = item;
+    m_view->centerOn(m_centerOn);
 }
 
 void Pitch::selectNearestPlayer()
@@ -180,6 +164,8 @@ void Pitch::gameStarted()
 void Pitch::gameStopped()
 {
     qDebug() << "Pitch::gameStopped";
+    m_statusBarInfo->removeWidgets();
+
     const QString initialStateName = static_cast<GameHalf*>(m_gameFSM->initialState())->objectName();
     if ( initialStateName == m_game->firstHalfState()->objectName()
             && extraTimeAllowed() && extraTime() ) {
@@ -220,46 +206,20 @@ void Pitch::setPiece(Team* originatingTeam, SetPiece s, QPointF foulLocation)
 void Pitch::layoutPitch()
 {
     const int KPitchBoundaryWidth = 40;
-    QPixmap pitchUnscaled(QString(":/images/pitch4.png"));
-    m_grass = new QGraphicsPixmapItem(pitchUnscaled /* pitchScaled */);
-    m_scene->addItem(m_grass);
 
     // create the pitch
     m_footballPitch = QRectF(KPitchBoundaryWidth, KPitchBoundaryWidth,
                                  m_scene->width()-(KPitchBoundaryWidth*2), m_scene->height()-(KPitchBoundaryWidth*2));
 
-    // half way line
-    m_centerLine = new QLineF(m_footballPitch.left(), (m_footballPitch.height()/2.0)+KPitchBoundaryWidth,
-                             m_footballPitch.right(),(m_footballPitch.height()/2.0)+KPitchBoundaryWidth);
-
-    // center circle
-    m_centerCircle = m_scene->addEllipse((m_scene->width()/2.0)-40,(m_scene->height()/2.0)-40,
-                      80.0, 80.0, KWhitePaintPen);
     // center mark
     m_centerMark = QPointF((m_scene->width()/2.0)-4,(m_scene->height()/2.0)-4);
-    // simple text
+
+    // center circle
+    m_centerCircle.addEllipse(m_centerMark,40.0,40.0);
 
     // half statistics frame
-    m_screenGraphicsLabel = new ScreenGraphics(this);
-    m_screenGraphicsFrameProxy = m_scene->addWidget(m_screenGraphicsLabel);
-    m_screenGraphicsFrameProxy->setZValue(ZScoreText);
-    m_cameraView->appendProxyWidget(m_screenGraphicsFrameProxy, CameraView::TopLeft );
+    m_statusBarInfo = new ScreenGraphics(*this, *m_bar);
 
-#if 0
-    // touch on-screen buttons
-    m_screenButtonsLabel = new OnScreenButtonsFrame(this);
-    m_screenButtonsFrameProxy = m_scene->addWidget(m_screenButtonsLabel);
-    m_screenButtonsFrameProxy->setZValue(ZOnScreenBtns);
-    m_cameraView->appendProxyWidget(m_screenButtonsFrameProxy, CameraView::TopLeft );
-#endif
-
-#if 0
-    m_goalTextLabel = new QLabel();
-    m_goalTextLabel->setText(tr("GOAL"));
-    m_goalTextLabelProxy = m_scene->addWidget(m_goalTextLabel);
-    m_goalTextLabelProxy->setZValue(ZScoreText);
-    m_cameraView->appendProxyWidget(m_goalTextLabelProxy, CameraView::Center );
-#endif // 0
     // create the goals
 
     m_bottomGoal = new QRectF( (m_scene->width() / 2)-60,
@@ -282,9 +242,6 @@ void Pitch::layoutPitch()
     // divide the pitch into areas
     // makes it easier for computer based movement
     QPointF tlTopHalf = m_footballPitch.topLeft();
-    QPointF brBottomHalf = m_footballPitch.bottomRight();
-    QPointF brTopHalf = brBottomHalf - QPointF(m_footballPitch.height()/2,0);
-    QPointF tlBottomHalf = tlTopHalf + QPointF(m_footballPitch.height()/2,0);
 
     const qreal w = m_footballPitch.width();
     const qreal h = m_footballPitch.height();
@@ -324,7 +281,7 @@ void Pitch::updateDisplayTime(int timeLeftMs)
     if ( m_gameFSM->isRunning() ) {
         QTime tmp(0,0,0,0);
         tmp = tmp.addMSecs(timeLeftMs);
-        m_screenGraphicsLabel->update(tmp.toString(QString("m:ss")));
+        m_statusBarInfo->update(tmp.toString(QString("m:ss")));
         //m_screenButtonsLabel->refresh();
     } else {
         qDebug() << "updateDisplayTime FSM not running";
@@ -357,8 +314,6 @@ void Pitch::newGame(int homeTeam, int awayTeam)
     m_awayTeam = m_teamMgr->at(awayTeam);
     m_awayTeam->newGame();
 
-    m_screenGraphicsLabel->setTeams(m_homeTeam, m_awayTeam);
-
     createTeamPlayers(m_homeTeam);
     createTeamPlayers(m_awayTeam);
     connect(m_ball, SIGNAL(shot(Team*,QPointF)), this, SLOT(countShots(Team*,QPointF)));
@@ -369,14 +324,13 @@ void Pitch::newGame(int homeTeam, int awayTeam)
     m_soundEffects->soundEvent(SoundEffects::CrowdNoise);
     m_game->setTeamToKickOff(m_awayTeam);
 
+    m_statusBarInfo->setTeams(m_homeTeam, m_awayTeam);
     m_gameFSM->start();
 
 }
 
 void Pitch::createTeamPlayers(Team *team)
 {
-    QStringList names;
-
     bool isHomeTeam(false);
     if (team == m_homeTeam)
         isHomeTeam = true;

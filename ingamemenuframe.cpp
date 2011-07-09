@@ -18,6 +18,7 @@
  *
  */
 #include "ingamemenuframe.h"
+#include "ui_mainwindow.h"
 
 InGameMenuFrame::InGameMenuFrame(MWindow *parent) :
     QFrame(parent),
@@ -29,11 +30,11 @@ InGameMenuFrame::InGameMenuFrame(MWindow *parent) :
             this, SLOT(showFrame(MWindow::Frame)));
     connect(ui->continueBtn,
             SIGNAL(clicked()),
-            parent->uiMainWindow.actionContinue,
+            parent->uiMainWindow->actionContinue,
             SLOT(trigger()));
     connect(ui->mainMenuBtn,
             SIGNAL(clicked()),
-            parent->uiMainWindow.actionMainMenu,
+            parent->uiMainWindow->actionMainMenu,
             SLOT(trigger()));
 }
 

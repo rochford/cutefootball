@@ -74,7 +74,7 @@ void Ball::updateBallOwner()
 {
     // find a player who is near the ball.
     // that player, now controls the ball
-    QList<QGraphicsItem*> list = m_pitch->m_scene->collidingItems(this,
+    QList<QGraphicsItem*> list = m_pitch->scene()->collidingItems(this,
                                      Qt::IntersectsItemBoundingRect);
 
     foreach(QGraphicsItem* i, list) {
@@ -165,6 +165,8 @@ void Ball::moveBall(MWindow::Action action, int speed)
     case MWindow::Shot:
         // TODO shootBall(speed);
         break;
+    default:
+        break;
     }
 }
 
@@ -222,7 +224,7 @@ void Ball::updateBall(int frame)
     // animation may no longer be running due to a goal
     if ( (m_animationTimeLine->state() == QTimeLine::Running) && !m_positionLocked ) {
         QPointF newPos = m_animation->posAt(frame/40.0);
-        if (!m_pitch->m_footballPitch.contains(newPos))
+        if (!m_pitch->footballPitch().contains(newPos))
             qDebug() << "Ball::updateBall XXX error" << frame;
         setPos(newPos);
         // Rotation in animations does not seem to work
@@ -233,6 +235,9 @@ void Ball::updateBall(int frame)
 QVariant Ball::itemChange(GraphicsItemChange change, const QVariant &value)
  {
      if (change == ItemPositionChange && scene() ) {
+
+         m_pitch->centerOn();
+
          if (m_positionLocked)
              return m_lastPos;
 
@@ -241,7 +246,7 @@ QVariant Ball::itemChange(GraphicsItemChange change, const QVariant &value)
          // Ball is either on the pitch or in a goal, otherwise return last position
          // value is the new position.
          QPointF newPos = value.toPointF();
-         QRectF pitchRect = m_pitch->m_footballPitch;
+         QRectF pitchRect = m_pitch->footballPitch();
 
          // has a goal been scored?
          if (m_pitch->m_topGoal->contains(newPos)

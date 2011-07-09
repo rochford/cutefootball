@@ -247,7 +247,7 @@ void GameHalf::playFrame(int frame)
     foreach (QGraphicsItemAnimation *anim, m_playerAnimationItems)
         anim->item()->setPos(anim->posAt(f));
 
-    m_pitch.m_scene->update();
+    m_pitch.scene()->update();
 }
 
 // animate from present player position to another point.
@@ -282,7 +282,7 @@ void GameHalf::onEntry(QEvent * /* event */)
     qDebug() << "GameHalf::onEntry " << objectName();
     m_game->setCurrentState(this);
 
-    m_pitch.m_screenGraphicsLabel->setGraphics(ScreenGraphics::ScoreText);
+    m_pitch.setGraphics(ScreenGraphics::ScoreText);
     m_pitch.updateDisplayTime(remainingTimeInHalfMs());
     if (  m_isFirstHalf ) {
         m_pitch.homeTeam()->setDirection(Team::NorthToSouth);
@@ -310,7 +310,7 @@ void GameHalf::onExit(QEvent * /* event */)
     } else if (objectName() == KPenaltyShootOut)
         m_pitch.setPenaltyShootOut(false);
 
-    m_pitch.m_scene->removeItem(m_pitch.ball());
+    m_pitch.scene()->removeItem(m_pitch.ball());
 
     if (m_1second->isActive())
         m_1second->stop();

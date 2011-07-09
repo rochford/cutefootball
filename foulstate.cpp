@@ -65,10 +65,10 @@ void FoulState::onEntry(QEvent * /* event */)
 {
     qDebug() << "FoulState::onEntry";
 
-    m_pitch->m_scene->removeItem(m_pitch->ball());
+    m_pitch->scene()->removeItem(m_pitch->ball());
     m_game->pauseGameClock();
 
-    m_pitch->m_screenGraphicsLabel->setGraphics(ScreenGraphics::Foul);
+    m_pitch->setGraphics(ScreenGraphics::Foul);
     m_pitch->updateDisplayTime(m_game->remainingTimeInHalfMs());
 
     m_freeKickTaker = NULL;
@@ -84,7 +84,7 @@ void FoulState::onExit(QEvent* /* event */)
     m_freeKickTaker = NULL;
 
     m_game->continueGameClock();
-    m_pitch->m_screenGraphicsLabel->setGraphics(ScreenGraphics::ScoreText);
+    m_pitch->setGraphics(ScreenGraphics::ScoreText);
     m_pitch->updateDisplayTime(m_game->remainingTimeInHalfMs());
 }
 
@@ -119,9 +119,9 @@ void FoulState::createPlayerAnimationItems()
         if (p->team() == m_game->m_foulingTeam) {
             // move player away from ball
             qDebug() << p->name() << " move away from ball";
-            stepX = (p->pos().x() - m_pitch->m_centerMark.x() ) / 100;
-            stepY = (p->pos().y() - m_pitch->m_centerMark.y()) / 100;
-            MWindow::Action a = calculateAction(tmp, m_pitch->m_centerMark);
+            stepX = (p->pos().x() - m_pitch->centerMark().x() ) / 100;
+            stepY = (p->pos().y() - m_pitch->centerMark().y()) / 100;
+            MWindow::Action a = calculateAction(tmp, m_pitch->centerMark());
             p->movePlayer(a);
 
         } /* else if (p == m_freeKickTaker) {
@@ -151,13 +151,13 @@ void FoulState::playFrame(int frame)
     qreal f = frame/ 100.00;
     foreach (QGraphicsItemAnimation *anim, m_playerAnimationItems)
         anim->item()->setPos(anim->posAt(f));
-    m_pitch->m_scene->update();
+    m_pitch->scene()->update();
 }
 
 void FoulState::prepareForFreeKick()
 {
     // set the ball location to be the foul point.
-    m_pitch->m_scene->addItem(m_pitch->ball());
+    m_pitch->scene()->addItem(m_pitch->ball());
     m_pitch->ball()->setPos(m_game->m_foulingLocation);
 
     m_freeKickTaker = m_pitch->selectNearestPlayer(m_freeKickTaker->team());

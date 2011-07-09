@@ -83,8 +83,8 @@ void KickOffState::prepareForKickOff()
     m_pitch->ball()->setRequiredNextAction(MWindow::Pass, m_teamToKickOff, m_kickOffPlayer);
     m_kickOffPlayer->setRequiredNextAction(MWindow::Pass);
 
-    m_pitch->m_scene->addItem(m_pitch->ball());
-    m_pitch->ball()->setPos(m_pitch->m_scene->sceneRect().center());
+    m_pitch->scene()->addItem(m_pitch->ball());
+    m_pitch->ball()->setPos(m_pitch->scene()->sceneRect().center());
     m_pitch->centerOn(m_pitch->ball());
 }
 
@@ -92,11 +92,11 @@ void KickOffState::onEntry(QEvent * /* event */)
 {
     m_kickOffPlayer = NULL;
     m_kickOffSupportPlayer = NULL;
-    m_pitch->m_scene->removeItem(m_pitch->ball());
+    m_pitch->scene()->removeItem(m_pitch->ball());
     qDebug() << "KickOffState::onEntry";
     m_game->pauseGameClock();
 
-    m_pitch->m_screenGraphicsLabel->setGraphics(ScreenGraphics::KickOff);
+    m_pitch->setGraphics(ScreenGraphics::KickOff);
     m_pitch->updateDisplayTime(m_game->remainingTimeInHalfMs());
 
     // players allowed to wander thru circle
@@ -112,7 +112,7 @@ void KickOffState::onExit(QEvent* /* event */)
 {
     qDebug() << "KickOffState::onExit";
 
-    m_pitch->m_screenGraphicsLabel->setGraphics(ScreenGraphics::ScoreText);
+    m_pitch->setGraphics(ScreenGraphics::ScoreText);
     m_pitch->updateDisplayTime(m_game->remainingTimeInHalfMs());
     m_game->continueGameClock();
 
@@ -155,16 +155,16 @@ void KickOffState::createPlayerAnimationItems()
         anim->setTimeLine(m_timeLineTakePositions);
         MWindow::Action a;
         if ( p == m_kickOffPlayer ) {
-            p->setDestination(m_pitch->m_scene->sceneRect().center());
-            stepX = ( m_pitch->m_scene->sceneRect().center().x() - tmp.x()) / 100.0;
-            stepY = ( m_pitch->m_scene->sceneRect().center().y() - tmp.y()) / 100.0;
-            a = calculateAction(tmp, m_pitch->m_scene->sceneRect().center());
+            p->setDestination(m_pitch->scene()->sceneRect().center());
+            stepX = ( m_pitch->scene()->sceneRect().center().x() - tmp.x()) / 100.0;
+            stepY = ( m_pitch->scene()->sceneRect().center().y() - tmp.y()) / 100.0;
+            a = calculateAction(tmp, m_pitch->scene()->sceneRect().center());
         } else if ( p == m_kickOffSupportPlayer ) {
-            p->setDestination(QPointF(m_pitch->m_scene->sceneRect().center().x() - 25,
-                                      m_pitch->m_scene->sceneRect().center().y()));
-            stepX = ( ( m_pitch->m_scene->sceneRect().center().x() - 25) - tmp.x()) / 100.0;
-            stepY = ( m_pitch->m_scene->sceneRect().center().y() - tmp.y()) / 100.0;
-            a = calculateAction(tmp, m_pitch->m_scene->sceneRect().center());
+            p->setDestination(QPointF(m_pitch->scene()->sceneRect().center().x() - 25,
+                                      m_pitch->scene()->sceneRect().center().y()));
+            stepX = ( ( m_pitch->scene()->sceneRect().center().x() - 25) - tmp.x()) / 100.0;
+            stepY = ( m_pitch->scene()->sceneRect().center().y() - tmp.y()) / 100.0;
+            a = calculateAction(tmp, m_pitch->scene()->sceneRect().center());
         } else {
             p->setDestination(p->m_startPositionRectF.center());
             stepX = ( p->m_startPositionRectF.center().x() - tmp.x()) / 100.0;
@@ -186,7 +186,7 @@ void KickOffState::playFrame(int frame)
     qreal f = frame/ 100.00;
     foreach (QGraphicsItemAnimation *anim, m_playerAnimationItems)
         anim->item()->setPos(anim->posAt(f));
-    m_pitch->m_scene->update();
+    m_pitch->scene()->update();
 }
 
 void KickOffState::setTeamToKickOff(Team* t)
