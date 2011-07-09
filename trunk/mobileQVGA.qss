@@ -93,31 +93,18 @@ QComboBox {
     font-size: 18px;
 }
 
-QFrame#ScreenGraphicsFrame {
-    background : transparent;
-}
+ QStatusBar {
+     background: white;
+ }
 
-QLabel#SGFawayTeamName,
-QLabel#SGFhomeTeamName {
-    font-size: 12px;
-    color: red;
-    background: transparent;
-}
-
-QLabel#SGFawayGoals,
-QLabel#SGFhomeGoals,
-QLabel#SGFBlank {
-    font-size: 8px;
-    color: black;
-    background: white;
-}
-
-QLabel#scoreTextLabel {
-    font-size: 9px;
-    color: black;
-    background: white;
-}
-
-QFrame#OnScreenButtonsFrame {
-     background : transparent;
-}
+ QLabel#homeTeamName,
+ QLabel#awayTeamName,
+ QLabel#homeTeamFlag,
+ QLabel#awayTeamFlag,
+ QLabel#homeTeamGoals,
+ QLabel#awayTeamGoals,
+ QLabel#scoreText {
+     font-size: 8px;
+     color: red;
+     background: white;
+ }

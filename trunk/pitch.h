@@ -32,7 +32,7 @@
 #include "team.h" // Team::Direction
 #include "soundeffects.h"
 #include "settingsFrame.h"
-#include "cameraview.h"
+#include "screengraphics.h"
 #include <QStateMachine>
 
 class QGraphicsEllipseItem;
@@ -40,6 +40,7 @@ class QGraphicsLineItem;
 class QGraphicsView;
 class QGraphicsScene;
 class QTimeLine;
+class QStatusBar;
 
 class Ball;
 class Player;
@@ -84,7 +85,8 @@ public:
     Pitch(const QRectF& footballGroundRect,
           QGraphicsView* view,
           SoundEffects* se,
-          settingsFrame* settingsDlg);
+          settingsFrame* settingsDlg,
+          QStatusBar* bar);
     ~Pitch();
 
     inline Ball* ball() const { return m_ball; }
@@ -103,12 +105,16 @@ public:
     inline void setPenaltyShootOut(bool penalties) { m_isPenalties = penalties; }
     inline bool extraTime() const {
         return (homeTeam()->m_goals == awayTeam()->m_goals); }
-
     void centerOn(QGraphicsItem* item);
-    void centerOn(QPointF point);
-    inline QPointF camerTopLeft() const { return m_cameraView->topLeft(); }
+    PitchScene* scene() const { return m_scene; }
+    QRectF footballPitch() const
+        { return m_footballPitch; }
+    void setGraphics(ScreenGraphics::ScreenGraphicsType s)
+        { m_statusBarInfo->setGraphics(s);}
+    QPointF centerMark() const { return m_centerMark; }
 
 public slots:
+    void centerOn();
     void pause();
     void continueGame();
     void newGame(int homeTeam, int awayTeam);
@@ -139,27 +145,22 @@ private:
 
 public:
     QList<Player*> m_players;
-    PitchScene *m_scene;
-    QRectF m_footballPitch;
-
-    QGraphicsPixmapItem* m_grass;
     QRectF *m_bottomGoal;
     QRectF *m_topGoal;
     QPainterPath m_bottomPenaltyArea;
     QPainterPath m_topPenaltyArea;
+    QPainterPath m_centerCircle;
 
-    QLineF *m_centerLine;
+private:
+    PitchScene *m_scene;
+    QRectF m_footballPitch;
 
-    QGraphicsEllipseItem *m_centerCircle;
     QPointF m_centerMark;
 
-    ScreenGraphics *m_screenGraphicsLabel;
-//    OnScreenButtonsFrame *m_screenButtonsLabel;
-    QLabel* m_goalTextLabel;
+    ScreenGraphics *m_statusBarInfo;
     QRectF m_pitchArea[KRow][KColumn];
     SoundEffects* m_soundEffects;  // NOT OWNED
 
-private:
     QGraphicsView *m_view;  // NOT OWNED
     TeamManager* m_teamMgr;
 
@@ -178,13 +179,9 @@ private:
 
     settingsFrame *m_settingsFrame;
 
-    CameraView* m_cameraView;
-    QGraphicsProxyWidget *m_screenGraphicsFrameProxy;
-//    QGraphicsProxyWidget *m_screenButtonsFrameProxy;
-    QGraphicsProxyWidget *m_goalTextLabelProxy;
-
-    // list of advert boards
-    QList<QGraphicsPixmapItem*> m_adverts;
+    QStatusBar* m_bar;
+    // item to center the graphics view on
+    QGraphicsItem* m_centerOn;
 };
 
 #endif // PITCH_H

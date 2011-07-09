@@ -22,7 +22,6 @@
 
 #include <QtGui>
 #include <qmap.h>
-#include "ui_mainwindow.h"
 class TeamSelectionFrame;
 
 class aboutFrame;
@@ -34,6 +33,10 @@ class inputSettingsFrame;
 class mainMenuFrame;
 class HalfStatisticsFrame;
 class InGameMenuFrame;
+
+namespace Ui {
+    class MainWindow;
+}
 
 class MWindow : public QMainWindow
 {
@@ -162,7 +165,7 @@ private:
     aboutFrame* m_aboutFrame;
     bool m_gameInProgress;
 public:
-    Ui::MainWindow uiMainWindow;
+    Ui::MainWindow* uiMainWindow;
     };
 
 #endif // MAINWINDOW_H

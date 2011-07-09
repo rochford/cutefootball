@@ -18,6 +18,7 @@
  *
  */
 #include "halfstatisticsframe.h"
+#include "ui_mainwindow.h"
 
 HalfStatisticsFrame::HalfStatisticsFrame(MWindow *parent) :
     QFrame(parent),
@@ -31,12 +32,12 @@ HalfStatisticsFrame::HalfStatisticsFrame(MWindow *parent) :
     /*
     connect(ui->continueBtn,
             SIGNAL(clicked()),
-            parent->uiMainWindow.actionContinue,
+            parent->uiMainWindow->actionContinue,
             SLOT(trigger()));
             */
     connect(ui->mainMenuBtn,
             SIGNAL(clicked()),
-            parent->uiMainWindow.actionMainMenu,
+            parent->uiMainWindow->actionMainMenu,
             SLOT(trigger()));
 }
 

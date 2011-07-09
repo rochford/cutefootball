@@ -20,20 +20,15 @@
 #ifndef SCREENGRAPHICS_H
 #define SCREENGRAPHICS_H
 
-#include <QFrame>
+#include <QtGui>
+#include <QStatusBar>
 
-#include "ui_screengraphicsframe.h"
-
-namespace Ui {
-    class ScreenGraphicsFrame;
-}
-
-
-class Team;
 class Pitch;
+class Team;
 
-class ScreenGraphics : public QFrame
+class ScreenGraphics : public QObject
 {
+    Q_OBJECT;
 public:
     enum ScreenGraphicsType {
         ScoreText,
@@ -42,18 +37,28 @@ public:
         KickOff
     };
 
-    ScreenGraphics(Pitch *p);
-    virtual ~ScreenGraphics();
+    ScreenGraphics(Pitch& p, QStatusBar& bar);
+    ~ScreenGraphics();
     void update(QString s);
     void setTeams(Team* home, Team* away);
+    void addWidgets();
+    void removeWidgets();
 
 public slots:
     void setGraphics(ScreenGraphicsType type);
 
 private:
-    Ui::ScreenGraphicsFrame *ui;
-    Pitch *m_pitch;
+    Pitch& m_pitch; // NOT OWNED
     ScreenGraphicsType m_type;
+    QStatusBar& m_bar; // NOT OWNED
+
+    QLabel* mSGFhomeTeamFlag;
+    QLabel* mSGFhomeTeamName;
+    QLabel* mSGFhomeTeamGoals;
+    QLabel* mSGFawayTeamFlag;
+    QLabel* mSGFawayTeamName;
+    QLabel* mSGFawayTeamGoals;
+    QLabel* mTime;
 };
 
 #endif // SCREENGRAPHICS_H
