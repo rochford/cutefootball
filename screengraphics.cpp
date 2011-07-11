@@ -107,6 +107,13 @@ void ScreenGraphics::addWidgets()
     m_bar.addWidget(mSGFawayTeamName);
     m_bar.addWidget(mSGFawayTeamGoals);
     m_bar.addWidget(mTime);
+    mSGFhomeTeamFlag->show();
+    mSGFhomeTeamName->show();
+    mSGFhomeTeamGoals->show();
+    mSGFawayTeamFlag->show();
+    mSGFawayTeamName->show();
+    mSGFawayTeamGoals->show();
+    mTime->show();
 }
 
 void ScreenGraphics::removeWidgets()
