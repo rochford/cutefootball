@@ -33,9 +33,10 @@
 
 MWindow::MWindow(QWidget *parent)
     : QMainWindow(parent),
-      m_gameInProgress(false),
       m_homeTeamIndex(-1),
-      m_awayTeamIndex(-1)
+      m_awayTeamIndex(-1),
+      m_gameInProgress(false),
+      uiMainWindow(new Ui::MainWindow)
 {
     m_soundEffects = new SoundEffects(this);
 
@@ -83,6 +84,7 @@ MWindow::~MWindow()
     delete m_aboutFrame;
     delete m_inputSettingsFrame;
     delete m_pitch;
+    delete uiMainWindow;
 }
 
 void MWindow::removeContextMenus()
