@@ -25,6 +25,7 @@
 
 #include "settingsFrame.h"
 
+class QTimer;
 class Pitch;
 
 class PitchScene : public QGraphicsScene
@@ -34,6 +35,7 @@ public:
     explicit PitchScene(const QRectF& footballGroundRect,
                         Pitch* pitch,
                         QObject *parent = 0);
+    virtual ~PitchScene();
 public slots:
     void setInputMethod(settingsFrame::InputMethod method) { m_inputMethod = method; }
 
@@ -43,6 +45,8 @@ private:
 private:
     Pitch* m_pitch;
     settingsFrame::InputMethod m_inputMethod;
+    QTimer* m_doubleTapTimer;
+    QPointF m_lastTapPoint;
 };
 
 #endif // PITCHSCENE_H

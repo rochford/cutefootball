@@ -64,7 +64,6 @@ TeamSelectionFrame::~TeamSelectionFrame()
 
 void TeamSelectionFrame::setTeam()
 {
-    //
     switch(m_selection) {
     case ComputerTeamOnly:
         m_parent->setComputerTeam(ui->m_teamComboBox->currentIndex());
@@ -72,6 +71,8 @@ void TeamSelectionFrame::setTeam()
     case PlayerAndComputerTeam:
     case PlayerTeamOnly:
         m_parent->setPlayerTeam(ui->m_teamComboBox->currentIndex());
+        ui->m_teamComboBox->setCurrentIndex(
+                (ui->m_teamComboBox->currentIndex() % ui->m_teamComboBox->count()) + 1);
         break;
     default:
         break;
@@ -109,7 +110,7 @@ void TeamSelectionFrame::showFrame(MWindow::Frame f)
 {
     qDebug() << "TeamSelectionFrame::showFrame" << f;
     if ( f == MWindow::TeamSelection ) {
-        ui->m_teamComboBox->setCurrentIndex(0);
+        //ui->m_teamComboBox->setCurrentIndex(0);
         updateTeamDetails(0);
 
         ui->buttonBox->button(QDialogButtonBox::Ok)->setFocus();

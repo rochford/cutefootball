@@ -26,7 +26,7 @@
 class Pitch;
 class Team;
 
-class ScreenGraphics : public QObject
+class ScreenGraphics : public QWidget
 {
     Q_OBJECT;
 public:
@@ -52,13 +52,16 @@ private:
     ScreenGraphicsType m_type;
     QStatusBar& m_bar; // NOT OWNED
 
-    QLabel* mSGFhomeTeamFlag;
-    QLabel* mSGFhomeTeamName;
-    QLabel* mSGFhomeTeamGoals;
-    QLabel* mSGFawayTeamFlag;
-    QLabel* mSGFawayTeamName;
-    QLabel* mSGFawayTeamGoals;
-    QLabel* mTime;
+    QLabel* m_SGFhomeTeamFlag;
+    QLabel* m_SGFhomeTeamName;
+    QLabel* m_SGFhomeTeamGoals;
+    QLabel* m_SGFawayTeamFlag;
+    QLabel* m_SGFawayTeamName;
+    QLabel* m_SGFawayTeamGoals;
+    QLabel* m_Time;
+#if defined(SOCCER_VGA)
+    QPushButton* m_pauseBtn;
+#endif
 };
 
 #endif // SCREENGRAPHICS_H

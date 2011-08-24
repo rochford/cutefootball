@@ -372,13 +372,22 @@ void Pitch::createTeamPlayers(Team *team)
                     skinColor);
 
         } else {
+            qreal speed;
+            if (m_settingsFrame->inputMethod() != settingsFrame::Keyboard) {
+                if (isHomeTeam)
+                    speed += 0.5;
+                else
+                    speed -= 0.5;
+            } else
+                speed = team->speed();
+
             pl = new Player(
                     name,
                     i+1,
                     !isHomeTeam,
                     this,
                     team,
-                    team->speed(),
+                    speed,
                     r,
                     hairColor,
                     skinColor);

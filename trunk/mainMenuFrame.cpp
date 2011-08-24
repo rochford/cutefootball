@@ -31,8 +31,10 @@ mainMenuFrame::mainMenuFrame(MWindow *parent) :
     ui->setupUi(this);
 
     // TODO disable these until ready
-    ui->m_settingsBtn->setVisible(false);
-    ui->m_settingsBtn->setEnabled(false);
+    //ui->m_settingsBtn->setVisible(false);
+    //ui->m_settingsBtn->setEnabled(false);
+    ui->m_inputBtn->setVisible(false);
+    ui->m_inputBtn->setEnabled(false);
     ui->m_playCupGameBtn->setVisible(false);
     ui->m_playCupGameBtn->setEnabled(false);
 
@@ -96,7 +98,8 @@ void mainMenuFrame::resizeEvent(QResizeEvent *e)
         ui->m_playCupGameBtn->setProperty("pos", QPoint(xPos,ui->m_playCupGameBtn->property("pos").toPoint().y()));
     if (ui->m_settingsBtn->isEnabled())
         ui->m_settingsBtn->setProperty("pos", QPoint(xPos,ui->m_settingsBtn->property("pos").toPoint().y()));
-    ui->m_inputBtn->setProperty("pos", QPoint(xPos,ui->m_inputBtn->property("pos").toPoint().y()));
+    if (ui->m_inputBtn->isEnabled())
+        ui->m_inputBtn->setProperty("pos", QPoint(xPos,ui->m_inputBtn->property("pos").toPoint().y()));
     ui->m_informationBtn->setProperty("pos", QPoint(xPos,ui->m_informationBtn->property("pos").toPoint().y()));
     ui->m_aboutBtn->setProperty("pos", QPoint(xPos,ui->m_aboutBtn->property("pos").toPoint().y()));
     ui->m_quitBtn->setProperty("pos", QPoint(xPos,ui->m_quitBtn->property("pos").toPoint().y()));
@@ -119,7 +122,8 @@ void mainMenuFrame::animateButtons(const int width)
         m_animationGrp->addAnimation(createAnimation(ui->m_playCupGameBtn, QPoint(xPoint,yPoint+=30)));
     if (ui->m_settingsBtn->isEnabled())
         m_animationGrp->addAnimation(createAnimation(ui->m_settingsBtn, QPoint(xPoint,yPoint+=30)));
-    m_animationGrp->addAnimation(createAnimation(ui->m_inputBtn, QPoint(xPoint,yPoint+=30)));
+    if (ui->m_inputBtn->isEnabled())
+        m_animationGrp->addAnimation(createAnimation(ui->m_inputBtn, QPoint(xPoint,yPoint+=30)));
     m_animationGrp->addAnimation(createAnimation(ui->m_informationBtn, QPoint(xPoint,yPoint+=30)));
     m_animationGrp->addAnimation(createAnimation(ui->m_aboutBtn, QPoint(xPoint,yPoint+=30)));
     m_animationGrp->addAnimation(createAnimation(ui->m_quitBtn, QPoint(xPoint,yPoint+=30)));

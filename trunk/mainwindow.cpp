@@ -48,6 +48,10 @@ MWindow::MWindow(QWidget *parent)
     m_mainMenuFrame = new mainMenuFrame(this);
 
     uiMainWindow->setupUi(this);
+#if defined(Q_OS_SYMBIAN) || defined(Q_WS_SIMULATOR)
+    uiMainWindow->statusBar->setSizeGripEnabled(false);
+#endif
+
     // these frames are dependent on uiMainWindow actions, construct
     // after uiMainWindow
     m_halfStatisticsFrame = new HalfStatisticsFrame(this);
@@ -84,7 +88,7 @@ MWindow::~MWindow()
     delete m_aboutFrame;
     delete m_inputSettingsFrame;
     delete m_pitch;
-    delete uiMainWindow;
+    //delete uiMainWindow;
 }
 
 void MWindow::removeContextMenus()

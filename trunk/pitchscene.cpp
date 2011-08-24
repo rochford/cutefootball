@@ -21,6 +21,7 @@
 #include "pitchscene.h"
 #include <QGraphicsSceneMouseEvent>
 #include <QDebug>
+#include <QTimer>
 
 #include "pitch.h"
 #include "Player.h"
@@ -36,17 +37,35 @@ PitchScene::PitchScene(const QRectF& footballGroundRect,
     setBackgroundBrush(QBrush(QPixmap(QString(":/images/pitch4.png"))));
     // disable focus selection by user pressing scene items
     setStickyFocus(true);
+    m_doubleTapTimer = new QTimer(this);
+    m_doubleTapTimer->setSingleShot(true);
+    m_doubleTapTimer->setInterval(KDoubleTapInterval);
+}
+
+PitchScene::~PitchScene()
+{
+    delete m_doubleTapTimer;
 }
 
 void PitchScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
 {
     qDebug() << "mousePressEvent " << e->buttonDownScenePos(Qt::LeftButton);
-    if (m_inputMethod != settingsFrame::Mouse)
+    if (m_inputMethod == settingsFrame::Keyboard)
         return;
 
     Player* p = static_cast<Player*>(focusItem());
     if (!p)
         return;
-    p->mousePressEvent(e);
+    QLineF dist(m_lastTapPoint, e->buttonDownScenePos(Qt::LeftButton));
+    // if double tap timer is active then this event is the 2nd event in the double tap
+    if (m_doubleTapTimer->isActive() && dist.length() < 20) {
+        qDebug() << "mousePressEvent doubleTap";
+        p->move(MWindow::ButtonLongPress);
+        m_doubleTapTimer->stop();
+    } else {
+        m_lastTapPoint = e->buttonDownScenePos(Qt::LeftButton);
+        p->mousePressEvent(e);
+        m_doubleTapTimer->start();
+    }
 }
 
