@@ -24,7 +24,12 @@
 settingsFrame::settingsFrame(MWindow *parent) :
     QFrame(parent),
     ui(new Ui::settingsFrame),
-    m_extraTime(NoExtraTime)
+    m_extraTime(NoExtraTime),
+#if defined(SOCCER_VGA)
+    m_inputMethod(Touch)
+#else
+    m_inputMethod(Keyboard)
+#endif
 {
     ui->setupUi(this);
 //    ui->buttonBox->button(QDialogButtonBox::Save)->setEnabled(false);
@@ -34,6 +39,8 @@ settingsFrame::settingsFrame(MWindow *parent) :
             ->setText(tr("Main Menu"));
     connect(parent, SIGNAL(setFrame(MWindow::Frame)),
             this, SLOT(showFrame(MWindow::Frame)));
+
+    ui->inputMethod->setCurrentIndex(m_inputMethod);
 
 //    connect(ui->gameLengthSlider, SIGNAL(sliderMoved(int)),ui->buttonBox->button(QDialogButtonBox::Save),SLOT(setEnabled(bool)));
 //    connect(ui->checkBoxSound, SIGNAL(stateChanged(int)),ui->buttonBox->button(QDialogButtonBox::Save),SLOT(setEnabled(bool)));

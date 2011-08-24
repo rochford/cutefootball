@@ -46,4 +46,6 @@ const int KRow = 8;
 // distance opposing team needs to be away from ball when foul
 const qreal KFoulDistance = 25.0;
 
+// Double tap detection
+const int KDoubleTapInterval = 400; // ms
 #endif // COMPILETIMESETTINGS_H

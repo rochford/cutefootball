@@ -89,6 +89,7 @@ void GoalKeeper::createPixmaps()
     pixmapInsert(MWindow::TackleSW, "tackleSW.PNG", "tackleSW.PNG", "tackleSW.PNG", KGKShirtColor, KGKShortColor);
     pixmapInsert(MWindow::TackleW, "tackleW.PNG", "tackleW.PNG", "tackleW.PNG", KGKShirtColor, KGKShortColor);
     pixmapInsert(MWindow::FallenOver, "pTackled.PNG", "pTackled.PNG", "pTackled.PNG", KGKShirtColor, KGKShortColor);
+    pixmapInsert(MWindow::NoAction, "pS.PNG", "pS1.PNG", "pS2.PNG", KGKShirtColor, KGKShortColor);
 
     pixmapInsert(MWindow::DiveEast, "diveE.PNG", "diveE.PNG", "diveE.PNG", KGKShirtColor, KGKShortColor);
     pixmapInsert(MWindow::DiveWest, "diveW.PNG", "diveW.PNG", "diveW.PNG", KGKShirtColor, KGKShortColor);
